@@ -17,6 +17,20 @@ This codebase is generated using `node.js` and `express`, to interact with the N
 
 This code is currently in preliminary release.
 
+## Required Files
+
+Along with the files in this repository a user will need a file called `db_connect.json`, to be located in the root directory.
+
+```json
+{
+   "host": "localhost",
+   "port": 5432,
+   "database": "YOUR_DATABASE_NAME",
+   "user": "postgres",
+   "password": "postgres"
+}
+```
+
 # Funding
 
-This work is funded by NSF grants to Neotoma: []() and []().
+This work is funded by NSF grants to Neotoma: NSF Geoinformatics - [1550707](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1550707&HistoricalAwards=false) and NSF EarthCube [1541002](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1541002&HistoricalAwards=false).
