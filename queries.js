@@ -16,15 +16,15 @@ var db = pgp(ctStr);
 
 module.exports = {
   geopoliticalunits: geopoliticalunits,
-  geopoliticalunit_id: geopoliticalunit_id,
   publications:publications,
   publication_id:publication_id,
-  table:table
+  tables:tables
 };
 
 function publication_id(req, res, next) {
   
   var pubID = parseInt(req.params.id);
+  
   db.one('select * from "Publications" where "PublicationID" = $1', pubID)
     .then(function (data) {
       res.status(200)
@@ -60,10 +60,9 @@ function publications(req, res, next) {
 
 }
 
+function tables(req, res, next) {
 
-
-function table(req, res, next) {
-  db.any('SELECT table_name AS table FROM information_schema.tables AS ischeme WHERE ischeme.table_schema=\'public\';')
+  db.any('SELECT table_name AS table FROM information_schema.tables AS ischeme;')
     .then(function (data) {
       res.status(200)
         .json({
@@ -78,23 +77,17 @@ function table(req, res, next) {
 }
 
 function geopoliticalunits(req, res, next) {
-  db.any('select * from "GeoPoliticalUnits"')
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved GeoPoliticalUnits'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-}
 
-function geopoliticalunit_id(req, res, next) {
   var gpuID = parseInt(req.params.id);
-  db.one('select * from "GeoPoliticalUnits" where "GeoPoliticalID" = $1', gpuID)
+  if (isNaN(gpuID)) {
+  	var query = 'select * from "GeoPoliticalUnits"';
+  } else {
+  	var query = 'select * from "GeoPoliticalUnits" where "GeoPoliticalID" = ' + gpuID;
+  } 
+  
+  console.log(gpuID);
+
+  db.any(query)
     .then(function (data) {
       res.status(200)
         .json({

@@ -4,7 +4,7 @@ var supertest = require('supertest');
 var api = supertest('http://localhost:3000/');
 
 // *************************************************
-// Testing 200 responses:
+// Geopolitical Units:
 //
 it('should return a 200 response', function(done) {
 	api.get('/v2/data/geopoliticalunits/')
@@ -18,6 +18,9 @@ it('should return a 200 response', function(done) {
 	.expect(200, done);
 })
 
+// *************************************************
+// Publications:
+//
 it('should return a 200 response', function(done) {
 	api.get('/v2/data/publications')
 	.set('Accept', 'application/json')
