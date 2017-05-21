@@ -9,17 +9,13 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/v2/data/geopoliticalunits/', db.geopoliticalunits);
-router.get('/v2/data/geopoliticalunits/:id', db.geopoliticalunits);
+router.get('/v2/data/geopoliticalunits/:id', db.geopoliticalunit_id);
 
 router.get('/v2/data/publications/', db.publications);
 
 router.get('/v2/data/publications/:id', db.publication_id);
 
 router.get('/v2/data/table/', db.table);
-
-//router.get('/api/puppies/:id', db.getSinglePuppy);
-//router.post('/api/puppies', db.createPuppy);
-//router.put('/api/puppies/:id', db.updatePuppy);
-//router.delete('/api/puppies/:id', db.removePuppy);
+// router.get('/v2/data/site/', db.site);
 
 module.exports = router;

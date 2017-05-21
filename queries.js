@@ -22,6 +22,46 @@ module.exports = {
   table:table
 };
 
+function publication_id(req, res, next) {
+  
+  var pubID = parseInt(req.params.id);
+  db.one('select * from "Publications" where "PublicationID" = $1', pubID)
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved Publications'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function publications(req, res, next) {
+  
+  // Get the query string:
+  var query = {'pubid':req.query.pubid,
+               'contactid':req.query.contactid,
+               'datasetid':req.query.datasetid,
+               'author':req.query.author,
+               'pubtype':req.query.pubtype,
+               'year':req.query.year,
+               'search':req.query.search
+             };
+
+  res.status(200)
+    .json({
+    	status: 'success',
+    	query: query,
+    	message: 'Retrieved all tables'
+    	})
+
+}
+
+
+
 function table(req, res, next) {
   db.any('SELECT table_name AS table FROM information_schema.tables AS ischeme WHERE ischeme.table_schema=\'public\';')
     .then(function (data) {
@@ -61,39 +101,6 @@ function geopoliticalunit_id(req, res, next) {
           status: 'success',
           data: data,
           message: 'Retrieved GeoPoliticalUnit ' + gpuID 
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-}
-
-
-function publications(req, res, next) {
-  db.any('select * from "Publications"')
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved Publications'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-}
-
-function publication_id(req, res, next) {
-  
-  var pubID = parseInt(req.params.id);
-  db.one('select * from "Publications" where "PublicationID" = $1', pubID)
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved Publications'
         });
     })
     .catch(function (err) {
