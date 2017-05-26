@@ -4,7 +4,7 @@ This repository is intended to act as the core repository for the Neotoma API.  
 
 # Development
 
-* Simon Goring [http://goring.org]()
+* Simon Goring - website: [http://goring.org]()
 * Mike Stryker
 
 # Contribution
@@ -30,6 +30,16 @@ Along with the files in this repository a user will need a file called `db_conne
    "password": "postgres"
 }
 ```
+
+## To Run
+
+To start the server locally you must first clone the repository.  Once the repository is cloned you must use the `npm` package installer to download the required packages.  The required packages are listed in `package.json`.  You can use the command `npm install` to install the packages locally.
+
+Once the directory is set up and the packages have been installed, use `npm start` to start the server locally.  This will create a local server, serving data to `localhost:3000`.
+
+## To Edit
+
+Feel free to make changes to the code.  In particular, if there are new endpoints required, or changes in the way data are returned or documentation is provided, please let us know, or contribute directly.  The code for running the queries is in `./queries.js`, the routing is in `./routes/index.js`.
 
 # Funding
 

@@ -8,36 +8,122 @@ var options = {
 var pgp = require('pg-promise')(options);
 var ctStr = require("./db_connect.json");
 
-console.log(ctStr);
-
+// Connecting to the database:
 var db = pgp(ctStr);
 
 // add query functions
 
 module.exports = {
-  geopoliticalunits: geopoliticalunits,
+  geopoliticalunits:geopoliticalunits,
   publications:publications,
-  publication_id:publication_id,
-  tables:tables
+  dbtables:dbtables,
+  chronology:chronology,
+  contacts:contacts,
+  occurrence:occurrence,
+  pollen:pollen,
+  taxa:taxa,
+  site:site,
+  sites:site
 };
 
-function publication_id(req, res, next) {
+function site(req, res, next) {
   
-  var pubID = parseInt(req.params.id);
-  
-  db.one('select * from "Publications" where "PublicationID" = $1', pubID)
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved Publications'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
+  // Get the query string:
+  var query = {};
+
+  console.log(req.query);
+
+  res.status(200)
+    .json({
+      status: 'success',
+      query: query,
+      message: 'Retrieved sites'
+      })
+
 }
+
+function taxa(req, res, next) {
+  
+  // Get the query string:
+  var query = {};
+
+  console.log(req.query);
+
+  res.status(200)
+    .json({
+      status: 'success',
+      query: query,
+      message: 'Retrieved taxa'
+      })
+
+}
+
+function pollen(req, res, next) {
+  
+  // Get the query string:
+  var query = {};
+
+  console.log(req.query);
+
+  res.status(200)
+    .json({
+      status: 'success',
+      query: query,
+      message: 'Retrieved pollen'
+      })
+
+}
+
+function occurrence(req, res, next) {
+  
+  // Get the query string:
+  var query = {};
+
+  console.log(req.query);
+
+  res.status(200)
+    .json({
+      status: 'success',
+      query: query,
+      message: 'Retrieved occurrences'
+      })
+
+}
+
+
+function contacts(req, res, next) {
+  
+  // Get the query string:
+  var query = {};
+
+  console.log(req.query);
+
+  res.status(200)
+    .json({
+      status: 'success',
+      query: query,
+      message: 'Retrieved contacts'
+      })
+
+}
+
+
+function chronology(req, res, next) {
+  
+  // Get the query string:
+  var query = {};
+
+  console.log(query);
+
+  res.status(200)
+    .json({
+      status: 'success',
+      query: query,
+      message: 'Retrieved chronology'
+      })
+
+}
+
 
 function publications(req, res, next) {
   
@@ -51,6 +137,8 @@ function publications(req, res, next) {
                'search':req.query.search
              };
 
+  console.log(query);
+
   res.status(200)
     .json({
     	status: 'success',
@@ -60,9 +148,16 @@ function publications(req, res, next) {
 
 }
 
-function tables(req, res, next) {
+function dbtables(req, res, next) {
 
-  db.any('SELECT table_name AS table FROM information_schema.tables AS ischeme;')
+  var tableID = parseInt(req.params.id);
+  if (isNaN(tableID)) {
+  	var query = 'SELECT table_name AS table FROM information_schema.tables AS ischeme;';
+  } else {
+  	var query = 'select * from "' + tableID + '"';
+  } 
+
+  db.any(query)
     .then(function (data) {
       res.status(200)
         .json({
