@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var swaggerJSDoc = require('swagger-jsdoc');
 
 const querystring = require('querystring');
 
@@ -12,6 +13,28 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+
+// swagger definition
+var swaggerDefinition = {
+  info: {
+    title: 'Node Swagger API',
+    version: '1.0.0',
+    description: 'Demonstrating how to describe a RESTful API with Swagger',
+  },
+  host: 'localhost:3000',
+  basePath: '/',
+};
+
+// options for the swagger docs
+var options = {
+  // import swaggerDefinitions
+  swaggerDefinition: swaggerDefinition,
+  // path to the API docs
+  apis: ['./routes/*.js'],
+};
+
+// initialize swagger-jsdoc
+var swaggerSpec = swaggerJSDoc(options);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -28,16 +51,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 
-// catch 404 and forward to error handler
-//app.get('*', function(req, res){
- // res.send('what???', 404);
-//});
-//app.use(function(req, res, next) {
-//  console.log(next)
-//  var err = new Error('Not Found');
-//  err.status = 404;
-//  next(err);
-//});
+
+app.get('/swagger.json', function(req, res) {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
 
 // error handler
 app.use(function(err, req, res, next) {
