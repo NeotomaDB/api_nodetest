@@ -128,14 +128,33 @@ function chronology(req, res, next) {
 function publications(req, res, next) {
   
   // Get the query string:
-  var query = {'pubid':req.query.pubid,
+  var query = {'PublicationID':req.pubid,
+               'PublicationID':req.query.pubid,
                'contactid':req.query.contactid,
                'datasetid':req.query.datasetid,
                'author':req.query.author,
-               'pubtype':req.query.pubtype,
-               'year':req.query.year,
+               'PubType':req.query.pubtype,
+               'Year':req.query.year,
                'search':req.query.search
              };
+
+  query = Object.keys(query).filter(function(key) {
+      return !isNaN(query[key]);
+      });
+
+  db.any('SELECT * FROM publications WHERE')
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+
 
   console.log(query);
 
@@ -146,16 +165,16 @@ function publications(req, res, next) {
     	message: 'Retrieved all tables'
     	})
 
-}
+};
 
 function dbtables(req, res, next) {
 
-  var tableID = parseInt(req.params.id);
+  var tableID = parseInt(req.params.table);
   if (isNaN(tableID)) {
   	var query = 'SELECT table_name AS table FROM information_schema.tables AS ischeme;';
   } else {
   	var query = 'select * from "' + tableID + '"';
-  } 
+  }
 
   db.any(query)
     .then(function (data) {
@@ -169,11 +188,11 @@ function dbtables(req, res, next) {
     .catch(function (err) {
       return next(err);
     });
-}
+};
 
 function geopoliticalunits(req, res, next) {
 
-  var gpuID = parseInt(req.params.id);
+  var gpuID = parseInt(req.params.gpid);
   if (isNaN(gpuID)) {
   	var query = 'select * from "GeoPoliticalUnits"';
   } else {
