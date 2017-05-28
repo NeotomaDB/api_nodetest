@@ -17,9 +17,9 @@ var app = express();
 // swagger definition
 var swaggerDefinition = {
   info: {
-    title: 'Node Swagger API',
-    version: '1.0.0',
-    description: 'Demonstrating how to describe a RESTful API with Swagger',
+    title: 'Neotoma API',
+    version: '2.0.0',
+    description: 'API Documentation for the Neotoma Paleoecological Database',
   },
   host: 'localhost:3000',
   basePath: '/',
