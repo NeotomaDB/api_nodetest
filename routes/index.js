@@ -4,150 +4,40 @@ var router = express.Router();
 var db = require('../queries');
 
 /* GET home page. */
+// This just reroutes to the swagger docs when you go to the main endpoint.
 router.get('/', function(req, res, next) {
   res.redirect('/api-docs');
   //res.render('index', { title: 'Express' });
 });
 
-// Note, I'm getting a response that says definition is deprecated.
+/* (Approximate) LINE NUMBERS & Status:
+[ Use CTRL-G + Line number in Sublime Text ]
 
-/**
-* @swagger
-* definition:
-*   geopolitical:
-*     properties:
-*       gpid:
-*         type: integer
-*         format: int64
-*       gpname:
-*         type: string
-*/
+36   - chronology
+123  - contacts
+187  - datasets
+234  - dbtables
+267  - downloads
+DownloadsCSV
+DownloadMultiple
+DownloadMultipleCSV
+DownloadZip
+301 - GeoPoliticalUnits
+339 - occurrence
+419 - pollen
+529 - publications
+SampleData
+site
+sites
+585 - taxa
 
-/**
-* @swagger
-* /v2/data/geopoliticalunits:
-*   get:
-*     summary: Returns information about geopolitical units.
-*     parameters:
-*       - name: gpid
-*         in: path
-*         description: Numeric ID for the geopolitical unit.
-*         required: false
-*         type: integer
-*       - name: gpname
-*         in: query
-*         description: Name of the geopolitical unit.
-*         required: false
-*         type: string
-*     produces:
-*       - application/json
-*     responses:
-*       '200':
-*         description: An array of geopolitical units.
-*         schema:
-*           type: array
-*           items:
-*             $ref: '#/definitions/geopolitical'
 */
 
 
-router.get('/v2/data/geopoliticalunits', db.geopoliticalunits);
-router.get('/v2/data/geopoliticalunits/:gpid', db.geopoliticalunits);
-
-// Note, I'm getting a response that says definition is deprecated.
-
 /**
+
 * @swagger
-* definition:
-*   publication:
-*     properties:
-*       PublicationID:
-*         type: integer
-*       Year:
-*         type: string
-*       PubType:
-*         type: string
-*       Authors:
-*         type: array
-*       Citation:
-*         type: string
-*/
-
-/**
- * @swagger
- * /v2/data/publication:
- *   get:
- *     summary: Returns information about Neotoma publications
- *     description: Returns information about Neotoma publications
- *     parameters:
- *       - name: pubid
- *         description: Numeric ID for publications.
- *         in: path
- *         required: false
- *         type: integer
- *         format: int32
- *       - name: datasetid
- *         description: Related dataset identifier.
- *         in: query
- *         required: false
- *         type: integer
- *         format: int32
- *       - name: siteid
- *         description: Related site identifier.
- *         in: query
- *         required: false
- *     	   type: integer
- *     	   format: int32
- *     produces:
- *       - application/json
- *     responses:
- *       200:
- *         description: An array of geopolitical units.
- *         schema:
- *           type: array
- *           items:
- *             $ref: '#/definitions/publication'
-*/
-
-router.get('/v2/data/publications/', db.publications);
-router.get('/v2/data/publications/:pubid', db.publications);
-
-/**
-* @swagger
-* definition:
-*   dbtables:
-*     properties:
-*       type: object
-*/
-
-/**
-* @swagger
-* /v2/data/dbtables:
-*   get:
-*     summary: Returns the named Neotoma Database table.
-*     description: Returns the named Neotoma Database table.
-*     parameters:
-*       - name: table
-*         description: Table name.
-*         in: path
-*         required: true
-*         type: string
-*     produces:
-*       - application/json
-*     responses:
-*       200:
-*        description: Returned table.
-*        schema:
-*          type: array
-*          items:
-*            $ref: '#/definitions/dbtables'
-*/
-
-router.get('/v2/dbtables/:table', db.dbtables);
-
-/**
-* @swagger
-* definition:
+* definitions:
 *   chronology:
 *     properties:
 *       ChronologyID:
@@ -203,9 +93,7 @@ router.get('/v2/dbtables/:table', db.dbtables);
 *             type: integer
 *             format: int64
 *           DatasetType:
-*             type: string
-*       
-*       
+*             type: string 
 */
 
 /**
@@ -235,7 +123,7 @@ router.get('/v2/data/chronology/:id', db.chronology);
 
 /**
 * @swagger
-* definition:
+* definitions:
 *   contact:
 *     properties:
 *       ContactID:
@@ -298,7 +186,159 @@ router.get('/v2/data/contacts/:id', db.contacts);
 
 /**
 * @swagger
-* definition:
+* definitions:
+*   datasets:
+*     properties:
+*       Datasets:
+*         type: string
+*       
+*/
+
+/**
+ * @swagger
+ * /v2/data/datasets:
+ *   get:
+ *     summary: Dataset information.
+ *     description: Returns information about Neotoma datasets
+ *     parameters:
+ *       - name: datasetid
+ *         description: Numeric ID for datasets.
+ *         in: path
+ *         required: false
+ *         type: integer
+ *         format: int32
+ *       - name: siteid
+ *         description: Related site identifier.
+ *         in: query
+ *         required: false
+ *     	   type: integer
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+*         description: An array of geopolitical units.
+*         schema:
+*           type: array
+*           items:
+*             $ref: '#/definitions/datasets'
+*/
+
+router.get('/v2/data/datasets/', db.datasets);
+router.get('/v2/data/datasets/:id', db.datasets);
+
+/**
+* @swagger
+* definitions:
+*   dbtables:
+*     properties:
+*       type: object
+*/
+
+/**
+* @swagger
+* /v2/data/dbtables:
+*   get:
+*     summary: Returns the named Neotoma Database table.
+*     description: Returns the named Neotoma Database table.
+*     parameters:
+*       - name: table
+*         description: Table name.
+*         in: path
+*         required: true
+*         type: string
+*     produces:
+*       - application/json
+*     responses:
+*       200:
+*        description: Returned table.
+*        schema:
+*          type: array
+*          items:
+*            $ref: '#/definitions/dbtables'
+*/
+
+router.get('/v2/dbtables/:table', db.dbtables);
+
+/**
+* @swagger
+* definitions:
+*   downloads:
+*     properties:
+*       type: object
+*/
+
+/**
+* @swagger
+* /v2/data/downloads:
+*   get:
+*     summary: Returns the named Neotoma Database table.
+*     description: Returns the named Neotoma Database table.
+*     parameters:
+*       - name: datasetid
+*         description: Table name.
+*         in: path
+*         required: true
+*         type: string
+*     produces:
+*       - application/json
+*     responses:
+*       200:
+*        description: Returned download object.
+*        schema:
+*          type: array
+*          items:
+*            $ref: '#/definitions/downloads'
+*/
+
+router.get('/v2/downloads/:datasetid', db.downloads);
+
+/**
+* @swagger
+* definitions:
+*   geopolitical:
+*     properties:
+*       gpid:
+*         type: integer
+*         format: int32
+*       gpname:
+*         type: string
+*/
+
+/**
+* @swagger
+* /v2/data/geopoliticalunits:
+*   get:
+*     summary: Returns information about geopolitical units.
+*     parameters:
+*       - name: gpid
+*         in: path
+*         description: Numeric ID for the geopolitical unit.
+*         required: false
+*         type: integer
+*       - name: gpname
+*         in: query
+*         description: Name of the geopolitical unit.
+*         required: false
+*         type: string
+*     produces:
+*       - application/json
+*     responses:
+*       '200':
+*         description: An array of geopolitical units.
+*         schema:
+*           type: array
+*           items:
+*             $ref: '#/definitions/geopolitical'
+*/
+
+
+router.get('/v2/data/geopoliticalunits', db.geopoliticalunits);
+router.get('/v2/data/geopoliticalunits/:gpid', db.geopoliticalunits);
+
+
+/**
+* @swagger
+* definitions:
 *   occurrence:
 *     properties:
 *       OccurID: 
@@ -377,7 +417,7 @@ router.get('/v2/data/occurrence/:id', db.occurrence);
 
 /**
 * @swagger
-* definition:
+* definitions:
 *   pollen:
 *     properties:
 *       TaxonName:
@@ -485,9 +525,66 @@ router.get('/v2/data/occurrence/:id', db.occurrence);
 router.get('/v2/data/pollen/', db.pollen);
 router.get('/v2/data/pollen/:id', db.pollen);
 
+
 /**
 * @swagger
-* definition:
+* definitions:
+*   publication:
+*     properties:
+*       PublicationID:
+*         type: integer
+*       Year:
+*         type: string
+*       PubType:
+*         type: string
+*       Authors:
+*         type: array
+*       Citation:
+*         type: string
+*/
+
+/**
+ * @swagger
+ * /v2/data/publication:
+ *   get:
+ *     summary: Returns information about Neotoma publications
+ *     description: Returns information about Neotoma publications
+ *     parameters:
+ *       - name: pubid
+ *         description: Numeric ID for publications.
+ *         in: path
+ *         required: false
+ *         type: integer
+ *         format: int32
+ *       - name: datasetid
+ *         description: Related dataset identifier.
+ *         in: query
+ *         required: false
+ *         type: integer
+ *         format: int32
+ *       - name: siteid
+ *         description: Related site identifier.
+ *         in: query
+ *         required: false
+ *     	   type: integer
+ *     	   format: int32
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: An array of geopolitical units.
+ *         schema:
+ *           type: array
+ *           items:
+ *             $ref: '#/definitions/publication'
+*/
+
+router.get('/v2/data/publications/', db.publications);
+router.get('/v2/data/publications/:pubid', db.publications);
+
+/**
+* @swagger
+* definitions:
 *   taxa:
 *     properties:
 *       TaxonName:
@@ -555,7 +652,7 @@ router.get('/v2/data/taxa/:id', db.taxa);
 
 /**
 * @swagger
-* definition:
+* definitions:
 *   sites:
 *     properties:
 *       SiteID:
