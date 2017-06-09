@@ -23,7 +23,8 @@ module.exports = {
   pollen:pollen,
   taxa:taxa,
   site:site,
-  sites:site
+  sites:site,
+  datasets:datasets
 };
 
 function site(req, res, next) {
@@ -96,6 +97,20 @@ function contacts(req, res, next) {
   // Get the query string:
   var query = {};
 
+    db.any('SELECT * FROM "Contacts"')
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+
+
   console.log(req.query);
 
   res.status(200)
@@ -107,6 +122,22 @@ function contacts(req, res, next) {
 
 }
 
+
+function datasets(req, res, next) {
+  
+  // Get the query string:
+  var query = {};
+
+  console.log(query);
+
+  res.status(200)
+    .json({
+      status: 'success',
+      query: query,
+      message: 'Retrieved chronology'
+      })
+
+}
 
 function chronology(req, res, next) {
   
@@ -137,11 +168,15 @@ function publications(req, res, next) {
                'Year':req.query.year,
                'search':req.query.search
              };
+  console.log(query);
 
   query = Object.keys(query).filter(function(key) {
       return !isNaN(query[key]);
       });
-
+  
+  console.log('...');
+  console.log(query);
+  
   db.any('SELECT * FROM publications WHERE')
     .then(function (data) {
       res.status(200)
