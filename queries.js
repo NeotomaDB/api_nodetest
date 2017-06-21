@@ -11,7 +11,7 @@ var ctStr = require("./db_connect.json");
 // Connecting to the database:
 var db = pgp(ctStr);
 
-// add query functions
+// Defining the query functions:
 
 module.exports = {
   geopoliticalunits:geopoliticalunits,
@@ -24,16 +24,44 @@ module.exports = {
   taxa:taxa,
   site:site,
   sites:site,
-  datasets:datasets,
+  dataset:dataset,
   download:download
 };
+
+function dbtables(req, res, next) {
+
+  var tableID = req.params.table;
+
+  if (tableID == null) {
+    var query = 'SELECT table_name AS table FROM information_schema.tables AS ischeme;';
+  } else {
+    var query = 'select * from "' + tableID + '"';
+  }
+
+  db.any(query)
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+      res.status(500)
+        .json({
+          status:'error',
+          data: err,
+          message:'Got an error.'
+        });
+    });
+};
+
 
 function site(req, res, next) {
   
   // Get the query string:
   var query = {};
-
-  console.log(req.query);
 
   res.status(200)
     .json({
@@ -124,7 +152,7 @@ function contacts(req, res, next) {
 }
 
 
-function datasets(req, res, next) {
+function dataset(req, res, next) {
   
   // Get the query string:
   var query = {};
@@ -220,28 +248,6 @@ function publications(req, res, next) {
 
 };
 
-function dbtables(req, res, next) {
-
-  var tableID = parseInt(req.params.table);
-  if (isNaN(tableID)) {
-  	var query = 'SELECT table_name AS table FROM information_schema.tables AS ischeme;';
-  } else {
-  	var query = 'select * from "' + tableID + '"';
-  }
-
-  db.any(query)
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved all tables'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-};
 
 function geopoliticalunits(req, res, next) {
 
