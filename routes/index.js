@@ -1,3 +1,12 @@
+/*
+
+index.js
+By: Simon Goring
+Last Updated: June 21, 2017
+
+
+ */
+
 var express = require('express');
 var router = express.Router();
 
@@ -13,23 +22,23 @@ router.get('/', function(req, res, next) {
 /* (Approximate) LINE NUMBERS & Status:
 [ Use CTRL-G + Line number in Sublime Text ]
 
-36   - chronology
-123  - contacts
-187  - datasets
-234  - dbtables
-267  - downloads
-DownloadsCSV
-DownloadMultiple
-DownloadMultipleCSV
-DownloadZip
-301 - GeoPoliticalUnits
-339 - occurrence
-419 - pollen
-529 - publications
-SampleData
-site
-sites
-585 - taxa
+  36   - chronology
+  123  - contacts
+  187  - datasets
+  234  - dbtables
+  267  - downloads
+         DownloadsCSV
+         DownloadMultiple
+         DownloadMultipleCSV
+         DownloadZip
+  301  - GeoPoliticalUnits
+  339  - occurrence
+  419  - pollen
+  529  - publications
+         SampleData
+  586  - site
+         sites
+  585 - taxa
 
 */
 
@@ -182,7 +191,7 @@ router.get('/v2/data/chronology/:id', db.chronology);
 *            $ref: '#/definitions/contact'
 */
 router.get('/v2/data/contacts/', db.contacts);
-router.get('/v2/data/contacts/:id', db.contacts);
+router.get('/v2/data/contacts/:contactid', db.contacts);
 
 /**
 * @swagger
@@ -223,8 +232,8 @@ router.get('/v2/data/contacts/:id', db.contacts);
 *             $ref: '#/definitions/datasets'
 */
 
-router.get('/v2/data/datasets/', db.datasets);
-router.get('/v2/data/datasets/:id', db.datasets);
+router.get('/v2/data/dataset/', db.dataset);
+router.get('/v2/data/dataset/:id', db.dataset);
 
 /**
 * @swagger
@@ -257,7 +266,8 @@ router.get('/v2/data/datasets/:id', db.datasets);
 *            $ref: '#/definitions/dbtables'
 */
 
-router.get('/v2/dbtables/:table', db.dbtables);
+router.get('/v2/data/dbtables/', db.dbtables);
+router.get('/v2/data/dbtables/:table', db.dbtables);
 
 /**
 * @swagger
@@ -290,7 +300,8 @@ router.get('/v2/dbtables/:table', db.dbtables);
 *            $ref: '#/definitions/download'
 */
 
-router.get('/v2/download/:datasetid', db.download);
+router.get('/v2/data/download/', db.download);
+router.get('/v2/data/download/:datasetid', db.download);
 
 /**
 * @swagger
