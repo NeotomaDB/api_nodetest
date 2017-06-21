@@ -262,14 +262,14 @@ router.get('/v2/dbtables/:table', db.dbtables);
 /**
 * @swagger
 * definitions:
-*   downloads:
+*   download:
 *     properties:
 *       type: object
 */
 
 /**
 * @swagger
-* /v2/data/downloads:
+* /v2/data/download:
 *   get:
 *     summary: Returns the named Neotoma Database table.
 *     description: Returns the named Neotoma Database table.
@@ -287,10 +287,10 @@ router.get('/v2/dbtables/:table', db.dbtables);
 *        schema:
 *          type: array
 *          items:
-*            $ref: '#/definitions/downloads'
+*            $ref: '#/definitions/download'
 */
 
-router.get('/v2/downloads/:datasetid', db.downloads);
+router.get('/v2/download/:datasetid', db.download);
 
 /**
 * @swagger
@@ -582,73 +582,6 @@ router.get('/v2/data/pollen/:id', db.pollen);
 router.get('/v2/data/publications/', db.publications);
 router.get('/v2/data/publications/:pubid', db.publications);
 
-/**
-* @swagger
-* definitions:
-*   taxa:
-*     properties:
-*       TaxonName:
-*         type: string
-*       EcolGroups:
-*         type: array
-*         items:
-*           type: string
-*       TaxonCode: 
-*         type: string
-*       Author:
-*         type: string
-*       PublicationID:
-*         type: integer
-*         format: int32
-*       TaxonID:
-*         type: integer
-*         format: int32
-*       TaxaGroupID:
-*         type: string
-*       HigherTaxonID:
-*         type: integer
-*         format: int32
-*       Extinct:
-*         type: boolean
-*       Notes:
-*         type: string
-*/
-
-/**
- * @swagger
- * /v2/data/taxa:
- *   get:
- *     summary: Taxonomic information.
- *     description: Returns information about a taxon and (if requested) related taxa.
- *     parameters:
- *       - name: taxonid
- *         description: Numeric ID for taxa.
- *         in: path
- *         required: false
- *         type: integer
- *       - name: datasetid
- *         description: Related dataset identifier.
- *         in: query
- *         required: false
- *         type: integer
- *       - name: siteid
- *         description: Related site identifier.
- *         in: query
- *         required: false
- *     	   type: integer
- *     produces:
- *       - application/json
- *     responses:
- *       200:
-*         description: A taxon or array of taxa.
-*         schema:
-*           type: array
-*           items:
-*             $ref: '#/definitions/taxa'
-*/
-
-router.get('/v2/data/taxa/', db.taxa);
-router.get('/v2/data/taxa/:id', db.taxa);
 
 /**
 * @swagger
@@ -727,5 +660,73 @@ router.get('/v2/data/taxa/:id', db.taxa);
 
 router.get('/v2/data/sites/', db.sites);
 router.get('/v2/data/sites/:id', db.sites);
+
+/**
+* @swagger
+* definitions:
+*   taxa:
+*     properties:
+*       TaxonName:
+*         type: string
+*       EcolGroups:
+*         type: array
+*         items:
+*           type: string
+*       TaxonCode: 
+*         type: string
+*       Author:
+*         type: string
+*       PublicationID:
+*         type: integer
+*         format: int32
+*       TaxonID:
+*         type: integer
+*         format: int32
+*       TaxaGroupID:
+*         type: string
+*       HigherTaxonID:
+*         type: integer
+*         format: int32
+*       Extinct:
+*         type: boolean
+*       Notes:
+*         type: string
+*/
+
+/**
+ * @swagger
+ * /v2/data/taxa:
+ *   get:
+ *     summary: Taxonomic information.
+ *     description: Returns information about a taxon and (if requested) related taxa.
+ *     parameters:
+ *       - name: taxonid
+ *         description: Numeric ID for taxa.
+ *         in: path
+ *         required: false
+ *         type: integer
+ *       - name: datasetid
+ *         description: Related dataset identifier.
+ *         in: query
+ *         required: false
+ *         type: integer
+ *       - name: siteid
+ *         description: Related site identifier.
+ *         in: query
+ *         required: false
+ *     	   type: integer
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+*         description: A taxon or array of taxa.
+*         schema:
+*           type: array
+*           items:
+*             $ref: '#/definitions/taxa'
+*/
+
+router.get('/v2/data/taxa/', db.taxa);
+router.get('/v2/data/taxa/:id', db.taxa);
 
 module.exports = router;

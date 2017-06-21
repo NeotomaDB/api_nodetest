@@ -24,7 +24,8 @@ module.exports = {
   taxa:taxa,
   site:site,
   sites:site,
-  datasets:datasets
+  datasets:datasets,
+  download:download
 };
 
 function site(req, res, next) {
@@ -138,6 +139,23 @@ function datasets(req, res, next) {
       })
 
 }
+
+function download(req, res, next) {
+  
+  // Get the query string:
+  var query = {};
+
+  console.log(query);
+
+  res.status(200)
+    .json({
+      status: 'success',
+      query: query,
+      message: 'Retrieved chronology'
+      })
+
+}
+
 
 function chronology(req, res, next) {
   
