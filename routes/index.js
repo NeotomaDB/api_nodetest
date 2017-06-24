@@ -225,7 +225,7 @@ router.get('/v2/data/contacts/:contactid', db.contacts);
  *       - application/json
  *     responses:
  *       200:
-*         description: An array of geopolitical units.
+*         description: An array of datasets.
 *         schema:
 *           type: array
 *           items:
@@ -323,6 +323,11 @@ router.get('/v2/data/download/:datasetid', db.download);
 *     parameters:
 *       - name: gpid
 *         in: path
+*         description: Numeric ID for the geopolitical unit.
+*         required: false
+*         type: integer
+*       - name: gpid
+*         in: query
 *         description: Numeric ID for the geopolitical unit.
 *         required: false
 *         type: integer
@@ -638,7 +643,7 @@ router.get('/v2/data/publications/:pubid', db.publications);
 
 /**
  * @swagger
- * /v2/data/sites:
+ * /v2/data/site:
  *   get:
  *     summary: Site information.
  *     description: Returns information about Neotoma publications
@@ -669,8 +674,8 @@ router.get('/v2/data/publications/:pubid', db.publications);
 *             $ref: '#/definitions/sites'
 */
 
-router.get('/v2/data/sites/', db.sites);
-router.get('/v2/data/sites/:id', db.sites);
+router.get('/v2/data/site/', db.site);
+router.get('/v2/data/site/:id', db.site);
 
 /**
 * @swagger

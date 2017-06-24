@@ -23,10 +23,11 @@ module.exports = {
   pollen:pollen,
   taxa:taxa,
   site:site,
-  sites:site,
   dataset:dataset,
   download:download
 };
+
+/* All the Endpoint functions */
 
 function dbtables(req, res, next) {
 
@@ -35,7 +36,7 @@ function dbtables(req, res, next) {
   if (tableID == null) {
     var query = 'SELECT table_name AS table FROM information_schema.tables AS ischeme;';
   } else {
-    var query = 'select * from "' + tableID + '"';
+    var query = 'SELECT * FROM "' + tableID + '"';
   }
 
   db.any(query)
@@ -60,24 +61,43 @@ function dbtables(req, res, next) {
 
 function site(req, res, next) {
   
+  // Get the input parameters:
+  
+  var pubid = req.query.pubid;
+  var datasetid = req.query.datasetid;
+  var siteid = req.query.siteid;
+
   // Get the query string:
-  var query = {};
+  var query = 'SELECT * FROM "NDB"."Sites" as sts WHERE ';
 
-  res.status(200)
-    .json({
-      status: 'success',
-      query: query,
-      message: 'Retrieved sites'
-      })
+  if (!!siteid) {
+    query = query + 'sts."SiteID" = '  + siteid;
+  }
 
+  db.any(query)
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+      /*res.status(500)
+        .json({
+          status:'error',
+          data: err,
+          message:'Got an error.'
+        });*/
+        next(err)
+    });
 }
 
 function taxa(req, res, next) {
   
   // Get the query string:
   var query = {};
-
-  console.log(req.query);
 
   res.status(200)
     .json({
@@ -93,8 +113,6 @@ function pollen(req, res, next) {
   // Get the query string:
   var query = {};
 
-  console.log(req.query);
-
   res.status(200)
     .json({
       status: 'success',
@@ -108,8 +126,6 @@ function occurrence(req, res, next) {
   
   // Get the query string:
   var query = {};
-
-  console.log(req.query);
 
   res.status(200)
     .json({
@@ -140,8 +156,6 @@ function contacts(req, res, next) {
     });
 
 
-  console.log(req.query);
-
   res.status(200)
     .json({
       status: 'success',
@@ -155,16 +169,34 @@ function contacts(req, res, next) {
 function dataset(req, res, next) {
   
   // Get the query string:
-  var query = {};
+  var pubid = req.query.pubid;
+  var datasetid = req.query.datasetid;
+  var siteid = req.query.siteid;
 
-  console.log(query);
+  // Get the query string:
+  var query = 'SELECT * FROM "Datasets" as dts WHERE ';
 
-  res.status(200)
-    .json({
-      status: 'success',
-      query: query,
-      message: 'Retrieved chronology'
-      })
+  if (!!datasetid) {
+    query = query + 'dts."DatasetID" = '  + datasetid;
+  }
+
+  db.any(query)
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+      res.status(500)
+        .json({
+          status:'error',
+          data: err,
+          message:'Got an error.'
+        });
+    });
 
 }
 
@@ -172,8 +204,6 @@ function download(req, res, next) {
   
   // Get the query string:
   var query = {};
-
-  console.log(query);
 
   res.status(200)
     .json({
@@ -190,8 +220,6 @@ function chronology(req, res, next) {
   // Get the query string:
   var query = {};
 
-  console.log(query);
-
   res.status(200)
     .json({
       status: 'success',
@@ -200,7 +228,6 @@ function chronology(req, res, next) {
       })
 
 }
-
 
 function publications(req, res, next) {
   
@@ -214,14 +241,10 @@ function publications(req, res, next) {
                'Year':req.query.year,
                'search':req.query.search
              };
-  console.log(query);
 
   query = Object.keys(query).filter(function(key) {
       return !isNaN(query[key]);
       });
-  
-  console.log('...');
-  console.log(query);
   
   db.any('SELECT * FROM publications WHERE')
     .then(function (data) {
@@ -236,9 +259,6 @@ function publications(req, res, next) {
       return next(err);
     });
 
-
-  console.log(query);
-
   res.status(200)
     .json({
     	status: 'success',
@@ -251,22 +271,66 @@ function publications(req, res, next) {
 
 function geopoliticalunits(req, res, next) {
 
-  var gpuID = parseInt(req.params.gpid);
-  if (isNaN(gpuID)) {
-  	var query = 'select * from "GeoPoliticalUnits"';
-  } else {
-  	var query = 'select * from "GeoPoliticalUnits" where "GeoPoliticalID" = ' + gpuID;
-  } 
+  /*
+  Geopolitical units work this way:
+    Can pass a string or identifier to figure out names & IDs.
+      - Not really sure why this is important. . . 
+    Should be able to pass in site IDs, or dataset IDs to then figure out
+      where the records are, with regards to political units.
+  */ 
   
-  console.log(gpuID);
+  if (!!req.params.gpid) {
+  
+    var gpuID = parseInt(req.params.gpid);
 
-  db.any(query)
+    var query = 'select * from "GeoPoliticalUnits" where "GeoPoliticalID" = ' + gpuID;
+    var outarray = [];
+
+  } else {
+    
+    var outobj = {   'gpid':req.query.gpid,
+                   'gpname':req.query.gpname
+                 };
+
+    var outarray = [];
+
+    // Clean out undefined values, turning them to null
+
+    for(var key in outobj) {
+      if(outobj[key] === undefined) {
+        outarray.push(null);
+      } else {
+        outarray.push(outobj[key]);
+      }
+    };
+
+    var query = 'SELECT * FROM "GeoPoliticalUnits" ' +
+                'WHERE ' + 
+                '($1 IS NULL OR "GeoPoliticalID" = $1) ' +
+                'AND ($2 IS NULL OR "GeoPoliticalName" LIKE $2)';
+  } 
+
+  db.any(query, outarray)
     .then(function (data) {
+
+      // Testing for zero length data:      
+      output = data;
+
+      if(output.length == 0) {
+        // We're returning the structure, but nothing inside it:
+        output = [{"GeoPoliticalID": null,
+                  "HigherGeoPoliticalID": null,
+                  "Rank": null,
+                  "GeoPoliticalUnit": null,
+                  "GeoPoliticalName": null,
+                  "RecDateCreated": null,
+                  "RecDateModified": null}]
+      }
+
       res.status(200)
         .json({
           status: 'success',
-          data: data,
-          message: 'Retrieved GeoPoliticalUnit ' + gpuID 
+          data: output
         });
     })
     .catch(function (err) {
