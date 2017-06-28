@@ -231,22 +231,60 @@ function chronology(req, res, next) {
 
 function publications(req, res, next) {
   
-  // Get the query string:
-  var query = {'PublicationID':req.pubid,
-               'PublicationID':req.query.pubid,
-               'contactid':req.query.contactid,
-               'datasetid':req.query.datasetid,
-               'author':req.query.author,
-               'PubType':req.query.pubtype,
-               'Year':req.query.year,
-               'search':req.query.search
+  if (!!req.params.pubid) {
+    var pubid = parseInt(req.params.pubid);
+
+    var query = 'select * from "Publications" where "PublicationID" = ' + pubid;
+    var outarray = [];
+
+  } else {
+
+    // Get the query string:
+    var outobj = {    'pubid':req.query.pubid,
+                  'contactid':req.query.contactid,
+                  'datasetid':req.query.datasetid,
+                     'siteid':req.query.siteid,
+                     'author':req.query.author,
+                    'pubtype':req.query.pubtype,
+                       'year':req.query.year,
+                     'search':req.query.search
              };
 
-  query = Object.keys(query).filter(function(key) {
-      return !isNaN(query[key]);
-      });
-  
-  db.any('SELECT * FROM publications WHERE')
+    var outarray = [];
+
+    // Clean out undefined values, turning them to null
+
+    for(var key in outobj) {
+      if(outobj[key] === undefined) {
+        outarray.push(null);
+      } else {
+        outarray.push(outobj[key]);
+      }
+    };
+
+    var query = 'SELECT * FROM "Publications" AS pubs  ' +
+                'WHERE                                 ' +
+                '(${pubid} IS NULL OR "PublicationID" = ${pubid})  ' +
+                'AND (${contactid} IS NULL OR "PublicationID" IN ' +
+                '    (SELECT "PublicationID" FROM "PublicationAuthors" ' +
+                '     WHERE "ContactID" = ${contactid})' +
+                '    )' +
+                'AND (${datasetid} IS NULL OR "PublicationID" IN ' +
+                    '(SELECT "PublicationID" FROM "DatasetPublications" ' +
+                    ' WHERE "DatasetID" = ${datasetid}) ' +
+                    ') ' +
+                'AND (${siteid} IS NULL OR "PublicationID" IN ' +
+                    '(SELECT "PublicationID" FROM "DatasetPublications" as dpub ' +
+                     'INNER JOIN ' +
+                     '"Datasets" as ds ON ds."DatasetID" = dpub."DatasetID" ' +
+                     'INNER JOIN ' +
+                     '"CollectionUnits" as cu ON cu."CollectionUnitID" = ds."CollectionUnitID" ' +
+                     'WHERE cu."SiteID" = ${siteid}) ' +
+                    ')';
+
+  }
+
+  output = db.any(query, outarray)
     .then(function (data) {
       res.status(200)
         .json({
@@ -258,14 +296,6 @@ function publications(req, res, next) {
     .catch(function (err) {
       return next(err);
     });
-
-  res.status(200)
-    .json({
-    	status: 'success',
-    	query: query,
-    	message: 'Retrieved all tables'
-    	})
-
 };
 
 
@@ -284,53 +314,55 @@ function geopoliticalunits(req, res, next) {
     var gpuID = parseInt(req.params.gpid);
 
     var query = 'select * from "GeoPoliticalUnits" where "GeoPoliticalID" = ' + gpuID;
-    var outarray = [];
+    var outobj = [];
 
   } else {
     
     var outobj = {   'gpid':req.query.gpid,
-                   'gpname':req.query.gpname
+                   'gpname':req.query.gpname,
+                     'rank':req.query.rank,
+                    'lower':req.query.lower
                  };
 
-    var outarray = [];
+    var query = 'WITH gid AS ' +
+                '(SELECT * ' +
+                'FROM "GeoPoliticalUnits" AS gpu WHERE ' +
+                '(${gpid} IS NULL OR gpu."GeoPoliticalID" = 1) ' +
+                'AND (${gpname} IS NULL OR gpu."GeoPoliticalName" LIKE ${gpname}) ' +
+                'AND (${rank} IS NULL OR gpu."Rank" = ${rank}))' +
+                'SELECT * FROM "GeoPoliticalUnits" AS gpu ' +
+                'WHERE gpu."GeoPoliticalID" IN ' +
+                '(SELECT "GeoPoliticalID" FROM gid) ' +
+                'UNION ' +
+                'SELECT * FROM "GeoPoliticalUnits" AS gpu ' +
+                'WHERE (${lower} IS true AND gpu."HigherGeoPoliticalID" IN ' +
+                '(SELECT "GeoPoliticalID" FROM gid))';
+  }
 
-    // Clean out undefined values, turning them to null
-
-    for(var key in outobj) {
-      if(outobj[key] === undefined) {
-        outarray.push(null);
-      } else {
-        outarray.push(outobj[key]);
-      }
-    };
-
-    var query = 'SELECT * FROM "GeoPoliticalUnits" ' +
-                'WHERE ' + 
-                '($1 IS NULL OR "GeoPoliticalID" = $1) ' +
-                'AND ($2 IS NULL OR "GeoPoliticalName" LIKE $2)';
-  } 
-
-  db.any(query, outarray)
+  db.any(query, outobj)
     .then(function (data) {
 
-      // Testing for zero length data:      
-      output = data;
-
-      if(output.length == 0) {
+      if(data.length == 0) {
         // We're returning the structure, but nothing inside it:
-        output = [{"GeoPoliticalID": null,
-                  "HigherGeoPoliticalID": null,
-                  "Rank": null,
-                  "GeoPoliticalUnit": null,
-                  "GeoPoliticalName": null,
-                  "RecDateCreated": null,
-                  "RecDateModified": null}]
+        returner = [{"GeoPoliticalID": null,
+                     "HigherGeoPoliticalID": null,
+                     "Rank": null,
+                     "GeoPoliticalUnit": null,
+                     "GeoPoliticalName": null,
+                     "Higher": null,
+                     "Lower": null,
+                     "RecDateCreated": null,
+                     "RecDateModified": null}]
+      } else {
+        returner = data.sort(function(obj1, obj2) {
+          return obj1.Rank - obj2.Rank;
+        });
       }
-
+      
       res.status(200)
         .json({
           status: 'success',
-          data: output
+          data: returner
         });
     })
     .catch(function (err) {
