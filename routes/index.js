@@ -308,11 +308,25 @@ router.get('/v2/data/download/:datasetid', db.download);
 * definitions:
 *   geopolitical:
 *     properties:
-*       gpid:
+*       GeoPoliticalID:
 *         type: integer
 *         format: int32
-*       gpname:
+*       HigherGeoPoliticalID:
+*         type: integer
+*         format: int32
+*       Rank:
+*         type: integer
+*         format: int32
+*       GeoPoliticalUnit:
 *         type: string
+*       GeoPoliticalName:
+*         type: string
+*       RecDateCreated: 
+*         type: string
+*         format: dateTime
+*     	RecDateModified:
+*     	  type: string
+*     	  format: dateTime
 */
 
 /**
@@ -336,6 +350,16 @@ router.get('/v2/data/download/:datasetid', db.download);
 *         description: Name of the geopolitical unit.
 *         required: false
 *         type: string
+*       - name: rank
+*         in: query
+*         description: The unit rank.  Ranges from 1 (country) - 4 (e.g., parks).
+*         required: false
+*         type: integer
+*       - name: lower
+*         in: query
+*         description: Should all lower ranked units below the target unit be returned?
+*         required: false
+*         type: boolean  
 *     produces:
 *       - application/json
 *     responses:
@@ -350,6 +374,7 @@ router.get('/v2/data/download/:datasetid', db.download);
 
 router.get('/v2/data/geopoliticalunits', db.geopoliticalunits);
 router.get('/v2/data/geopoliticalunits/:gpid', db.geopoliticalunits);
+router.get('/v2/data/geopoliticalunits/sites/:siteid', db.geopolbysite);
 
 
 /**
@@ -595,9 +620,10 @@ router.get('/v2/data/pollen/:id', db.pollen);
  *             $ref: '#/definitions/publication'
 */
 
-router.get('/v2/data/publications/', db.publications);
-router.get('/v2/data/publications/:pubid', db.publications);
-
+router.get('/v2/data/publications/', db.publicationquery);
+router.get('/v2/data/publications/:pubid', db.publicationid);
+router.get('/v2/data/publications/datasets/:datasetid', db.publicationbydataset);
+router.get('/v2/data/publications/sites/:siteid', db.publicationbysite);
 
 /**
 * @swagger
