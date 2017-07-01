@@ -14,17 +14,21 @@ var db = pgp(ctStr);
 // Defining the query functions:
 
 module.exports = {
-  geopoliticalunits:geopoliticalunits,
-  publications:publications,
-  dbtables:dbtables,
   chronology:chronology,
   contacts:contacts,
+  dataset:dataset,
+  dbtables:dbtables,
+  download:download,
+  geopoliticalunits:geopoliticalunits,
+  geopolbysite:geopolbysite,
   occurrence:occurrence,
   pollen:pollen,
+  publicationid:publicationid,
+  publicationquery:publicationquery,
+  publicationbydataset:publicationbydataset,
+  publicationbysite:publicationbysite,
   taxa:taxa,
-  site:site,
-  dataset:dataset,
-  download:download
+  site:site
 };
 
 /* All the Endpoint functions */
@@ -49,12 +53,7 @@ function dbtables(req, res, next) {
         });
     })
     .catch(function (err) {
-      res.status(500)
-        .json({
-          status:'error',
-          data: err,
-          message:'Got an error.'
-        });
+      next(err);
     });
 };
 
@@ -90,7 +89,7 @@ function site(req, res, next) {
           data: err,
           message:'Got an error.'
         });*/
-        next(err)
+        return next(err);
     });
 }
 
@@ -190,12 +189,7 @@ function dataset(req, res, next) {
         });
     })
     .catch(function (err) {
-      res.status(500)
-        .json({
-          status:'error',
-          data: err,
-          message:'Got an error.'
-        });
+      next(err);
     });
 
 }
@@ -229,76 +223,6 @@ function chronology(req, res, next) {
 
 }
 
-function publications(req, res, next) {
-  
-  if (!!req.params.pubid) {
-    var pubid = parseInt(req.params.pubid);
-
-    var query = 'select * from "Publications" where "PublicationID" = ' + pubid;
-    var outarray = [];
-
-  } else {
-
-    // Get the query string:
-    var outobj = {    'pubid':req.query.pubid,
-                  'contactid':req.query.contactid,
-                  'datasetid':req.query.datasetid,
-                     'siteid':req.query.siteid,
-                     'author':req.query.author,
-                    'pubtype':req.query.pubtype,
-                       'year':req.query.year,
-                     'search':req.query.search
-             };
-
-    var outarray = [];
-
-    // Clean out undefined values, turning them to null
-
-    for(var key in outobj) {
-      if(outobj[key] === undefined) {
-        outarray.push(null);
-      } else {
-        outarray.push(outobj[key]);
-      }
-    };
-
-    var query = 'SELECT * FROM "Publications" AS pubs  ' +
-                'WHERE                                 ' +
-                '(${pubid} IS NULL OR "PublicationID" = ${pubid})  ' +
-                'AND (${contactid} IS NULL OR "PublicationID" IN ' +
-                '    (SELECT "PublicationID" FROM "PublicationAuthors" ' +
-                '     WHERE "ContactID" = ${contactid})' +
-                '    )' +
-                'AND (${datasetid} IS NULL OR "PublicationID" IN ' +
-                    '(SELECT "PublicationID" FROM "DatasetPublications" ' +
-                    ' WHERE "DatasetID" = ${datasetid}) ' +
-                    ') ' +
-                'AND (${siteid} IS NULL OR "PublicationID" IN ' +
-                    '(SELECT "PublicationID" FROM "DatasetPublications" as dpub ' +
-                     'INNER JOIN ' +
-                     '"Datasets" as ds ON ds."DatasetID" = dpub."DatasetID" ' +
-                     'INNER JOIN ' +
-                     '"CollectionUnits" as cu ON cu."CollectionUnitID" = ds."CollectionUnitID" ' +
-                     'WHERE cu."SiteID" = ${siteid}) ' +
-                    ')';
-
-  }
-
-  output = db.any(query, outarray)
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved all tables'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-};
-
-
 function geopoliticalunits(req, res, next) {
 
   /*
@@ -311,10 +235,10 @@ function geopoliticalunits(req, res, next) {
   
   if (!!req.params.gpid) {
   
-    var gpuID = parseInt(req.params.gpid);
+    var gpid = parseInt(req.params.gpid);
 
-    var query = 'select * from "GeoPoliticalUnits" where "GeoPoliticalID" = ' + gpuID;
-    var outobj = [];
+    var query = 'select * from "GeoPoliticalUnits" where "GeoPoliticalID" = ${gpid}';
+    var outobj = {'gpid':gpid};
 
   } else {
     
@@ -327,7 +251,7 @@ function geopoliticalunits(req, res, next) {
     var query = 'WITH gid AS ' +
                 '(SELECT * ' +
                 'FROM "GeoPoliticalUnits" AS gpu WHERE ' +
-                '(${gpid} IS NULL OR gpu."GeoPoliticalID" = 1) ' +
+                '(${gpid} IS NULL OR gpu."GeoPoliticalID" = ${gpid}) ' +
                 'AND (${gpname} IS NULL OR gpu."GeoPoliticalName" LIKE ${gpname}) ' +
                 'AND (${rank} IS NULL OR gpu."Rank" = ${rank}))' +
                 'SELECT * FROM "GeoPoliticalUnits" AS gpu ' +
@@ -367,5 +291,99 @@ function geopoliticalunits(req, res, next) {
     })
     .catch(function (err) {
       return next(err);
+    });
+}
+
+function geopolbysite(req, res, next) {
+
+  /*
+  Get geopolitical units by associated site IDs:
+  */
+
+
+  if (!!req.params.siteid) {
+  
+    var siteid = String(req.params.siteid).split(',').map(function(item) {
+      return parseInt(item, 10);
+    });
+
+    console.log(siteid);
+
+  }
+
+  res.status(200)
+  .json({
+    status: 'success',
+    data: siteid
+  });
+}
+
+function publicationid(req, res, next) {
+  
+  if (!!req.params.pubid) {
+    var pubid = parseInt(req.params.pubid);
+  } else {
+    var pubid = null;
+  }
+  
+  var query = 'select * from "Publications" where "PublicationID" = ' + pubid;
+  
+  output = db.any(query, pubid)
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+};
+
+function publicationquery(req, res, next) {
+  
+};
+
+function publicationbysite(req, res, next) {
+
+}
+
+function publicationbydataset(req, res, next) {
+
+  /*
+  Get geopolitical units by associated site IDs:
+  */
+
+
+  if (!!req.params.datasetid) {
+  
+    var datasetid = String(req.params.datasetid).split(',').map(function(item) {
+      return parseInt(item, 10);
+    });
+
+    query = 'WITH dpub AS '+
+            '(SELECT * FROM "DatasetPublications" as dp ' +
+            'WHERE ($1 IS NULL OR dp."DatasetID" IN ($1:csv))) ' +
+            'SELECT * FROM "Publications" AS pub ' +
+            'WHERE pub."PublicationID" IN (SELECT "PublicationID" FROM dpub)'
+
+  }
+  
+  console.log(datasetid);
+
+  output = db.any(query, [datasetid])
+    .then(function (data) {
+
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+      next(err);
     });
 }
