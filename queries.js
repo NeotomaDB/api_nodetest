@@ -7,6 +7,7 @@ var options = {
 
 var pgp = require('pg-promise')(options);
 var ctStr = require("./db_connect.json");
+const bib   = require('./helpers/bib_format');
 
 // Connecting to the database:
 var db = pgp(ctStr);
@@ -371,15 +372,15 @@ function publicationbydataset(req, res, next) {
 
   }
   
-  console.log(datasetid);
-
   output = db.any(query, [datasetid])
     .then(function (data) {
+
+      bib_output = bib.formatpublbib(data);
 
       res.status(200)
         .json({
           status: 'success',
-          data: data,
+          data: bib_output,
           message: 'Retrieved all tables'
         });
     })
