@@ -2,7 +2,7 @@
 
 index.js
 By: Simon Goring
-Last Updated: June 21, 2017
+Last Updated: July 9, 2017
 
 
  */
@@ -25,7 +25,7 @@ router.get('/', function(req, res, next) {
   36   - chronology
   123  - contacts
   187  - datasets
-  234  - dbtables
+  234  - dbtablessites
   267  - downloads
          DownloadsCSV
          DownloadMultiple
@@ -234,6 +234,7 @@ router.get('/v2/data/contacts/:contactid', db.contacts);
 
 router.get('/v2/data/dataset/', db.dataset);
 router.get('/v2/data/dataset/:id', db.dataset);
+router.get('/v2/data/datasets/:datasetid/publications', db.publicationbydataset);
 
 /**
 * @swagger
@@ -374,8 +375,6 @@ router.get('/v2/data/download/:datasetid', db.download);
 
 router.get('/v2/data/geopoliticalunits', db.geopoliticalunits);
 router.get('/v2/data/geopoliticalunits/:gpid', db.geopoliticalunits);
-router.get('/v2/data/geopoliticalunits/sites/:siteid', db.geopolbysite);
-
 
 /**
 * @swagger
@@ -622,7 +621,6 @@ router.get('/v2/data/pollen/:id', db.pollen);
 
 router.get('/v2/data/publications/', db.publicationquery);
 router.get('/v2/data/publications/:pubid', db.publicationid);
-router.get('/v2/data/publications/datasets/:datasetid', db.publicationbydataset);
 router.get('/v2/data/publications/sites/:siteid', db.publicationbysite);
 
 /**
@@ -700,8 +698,10 @@ router.get('/v2/data/publications/sites/:siteid', db.publicationbysite);
 *             $ref: '#/definitions/sites'
 */
 
-router.get('/v2/data/site/', db.site);
-router.get('/v2/data/site/:id', db.site);
+router.get('/v2/data/sites/', db.site);
+router.get('/v2/data/sites/:siteid', db.site);
+router.get('/v2/data/sites/:siteid/geopoliticalunits', db.geopolbysite);
+
 
 /**
 * @swagger
@@ -747,6 +747,11 @@ router.get('/v2/data/site/:id', db.site);
  *         in: path
  *         required: false
  *         type: integer
+ *       - name: name
+ *         description: Taxon name or partial name.
+ *         in: query
+ *         required: false
+ *         type: string
  *       - name: datasetid
  *         description: Related dataset identifier.
  *         in: query
@@ -768,7 +773,9 @@ router.get('/v2/data/site/:id', db.site);
 *             $ref: '#/definitions/taxa'
 */
 
-router.get('/v2/data/taxa/', db.taxa);
-router.get('/v2/data/taxa/:id', db.taxa);
+//router.get('/v2/data/taxa/', db.taxonquery);
+router.get('/v2/data/taxa/:taxonid', db.taxonid);
+router.get('/v2/data/taxa/', db.taxonquery);
+
 
 module.exports = router;

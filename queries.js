@@ -28,7 +28,8 @@ module.exports = {
   publicationquery:publicationquery,
   publicationbydataset:publicationbydataset,
   publicationbysite:publicationbysite,
-  taxa:taxa,
+  taxonid:gettaxa,
+  taxonquery:gettaxonquery,
   site:site
 };
 
@@ -92,20 +93,6 @@ function site(req, res, next) {
         });*/
         return next(err);
     });
-}
-
-function taxa(req, res, next) {
-  
-  // Get the query string:
-  var query = {};
-
-  res.status(200)
-    .json({
-      status: 'success',
-      query: query,
-      message: 'Retrieved taxa'
-      })
-
 }
 
 function pollen(req, res, next) {
@@ -331,13 +318,14 @@ function publicationid(req, res, next) {
   
   output = db.any(query, pubid)
     .then(function (data) {
+      bib_output = bib.formatpublbib(data);
+
       res.status(200)
         .json({
           status: 'success',
-          data: data,
+          data: bib_output,
           message: 'Retrieved all tables'
-        });
-    })
+        });    })
     .catch(function (err) {
       return next(err);
     });
@@ -367,10 +355,14 @@ function publicationbydataset(req, res, next) {
     query = 'WITH dpub AS '+
             '(SELECT * FROM "DatasetPublications" as dp ' +
             'WHERE ($1 IS NULL OR dp."DatasetID" IN ($1:csv))) ' +
-            'SELECT * FROM "Publications" AS pub ' +
+            'SELECT * FROM "Publications" AS pub INNER JOIN ' +
+            '"PublicationAuthors" AS pa ON pub."PublicationID" = pa."PublicationID" INNER JOIN ' +
+            '"Contacts" as ca ON ca."ContactID" = pa."ContactID" ' +
             'WHERE pub."PublicationID" IN (SELECT "PublicationID" FROM dpub)'
 
   }
+
+  console.log(query);
   
   output = db.any(query, [datasetid])
     .then(function (data) {
@@ -386,5 +378,72 @@ function publicationbydataset(req, res, next) {
     })
     .catch(function (err) {
       next(err);
+    });
+}
+
+function gettaxa(req, res, next) {
+  
+  var taxonid = String(req.params.taxonid).split(',').map(function(item) {
+    return parseInt(item, 10);
+  });
+
+  // Get the query string:
+    // Get the query string:
+  var query = 'SELECT * FROM "Taxa" as taxa WHERE ';
+
+  if (!!taxonid) {
+    query = query + 'taxa."TaxonID" IN ($1:csv)';
+  }
+
+  db.any(query, [taxonid])
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+        return next(err);
+    });
+}
+
+function gettaxonquery(req, res, next) {
+ 
+  if(!!taxonid) {
+    var taxonid = String(req.query.taxonid).split(',').map(function(item) {
+      return parseInt(item, 10);
+    });
+  }
+
+  var outobj = {'taxonid':taxonid,
+                   'name':req.query.name,
+              'ecolgroup':req.query.ecolgroup,
+                  'lower':req.query.lower
+               };
+
+  var query = 'WITH taxid AS ' +
+              '(SELECT * FROM "Taxa" AS taxa WHERE ' +
+              '(${taxonid} IS NULL OR taxa."TaxonID" = ${taxonid}) ' +
+              'AND (${name} IS NULL OR taxa."TaxonName" LIKE ${name}) ' +
+              'AND (${ecolgroup} IS NULL OR taxa."TaxaGroupID" = ${ecolgroup})) ' +
+              'SELECT * FROM taxid ' +
+              'UNION ' +
+              'SELECT * FROM "Taxa" AS taxa ' +
+              'WHERE (${lower} IS true AND taxa."HigherTaxonID" IN ' +
+              '(SELECT "TaxonID" FROM taxid))';
+
+  db.any(query, outobj)
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+        return next(err);
     });
 }
