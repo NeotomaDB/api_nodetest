@@ -40,9 +40,9 @@ function dbtables(req, res, next) {
   var tableID = req.params.table;
 
   if (tableID == null) {
-    var query = 'SELECT table_name AS table FROM information_schema.tables AS ischeme;';
+    var query = "SELECT tablename FROM pg_tables WHERE schemaname='ndb';";
   } else {
-    var query = 'SELECT * FROM "' + tableID + '"';
+    var query = 'SELECT * FROM ndb.' + tableID + ';'
   }
 
   db.any(query)
