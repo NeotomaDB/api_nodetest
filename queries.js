@@ -310,9 +310,11 @@ function publicationid(req, res, next) {
     var pubid = null;
   }
   
-  var query = 'select * from "Publications" where "PublicationID" = ' + pubid;
+  var query = 'select * from ndb.publications AS pubs where pubs.publicationid = ' + pubid;
   
-  output = db.any(query, pubid)
+
+
+  output = db.any(query)
     .then(function (data) {
       bib_output = bib.formatpublbib(data);
 
@@ -338,9 +340,8 @@ function publicationbysite(req, res, next) {
 function publicationbydataset(req, res, next) {
 
   /*
-  Get geopolitical units by associated site IDs:
+  Get publications by associated dataset IDs:
   */
-
 
   if (!!req.params.datasetid) {
   
@@ -349,20 +350,17 @@ function publicationbydataset(req, res, next) {
     });
 
     query = 'WITH dpub AS '+
-            '(SELECT * FROM "DatasetPublications" as dp ' +
-            'WHERE ($1 IS NULL OR dp."DatasetID" IN ($1:csv))) ' +
-            'SELECT * FROM "Publications" AS pub INNER JOIN ' +
-            '"PublicationAuthors" AS pa ON pub."PublicationID" = pa."PublicationID" INNER JOIN ' +
-            '"Contacts" as ca ON ca."ContactID" = pa."ContactID" ' +
-            'WHERE pub."PublicationID" IN (SELECT "PublicationID" FROM dpub)'
+            '(SELECT * FROM ndb.datasetpublications as dp ' +
+            'WHERE ($1 IS NULL OR dp.datasetid IN ($1:csv))) ' +
+            'SELECT * FROM ndb.publications AS pub INNER JOIN ' +
+            'ndb.publicationauthors AS pa ON pub.publicationid = pa.publicationid INNER JOIN ' +
+            'ndb.contacts as ca ON ca.contactid = pa.contactid ' +
+            'WHERE pub.publicationid IN (SELECT publicationid FROM dpub)'
 
   }
-
-  console.log(query);
   
   output = db.any(query, [datasetid])
     .then(function (data) {
-
       bib_output = bib.formatpublbib(data);
 
       res.status(200)
