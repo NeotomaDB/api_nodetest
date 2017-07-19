@@ -698,8 +698,8 @@ router.get('/v2/data/publications/sites/:siteid', db.publicationbysite);
 *             $ref: '#/definitions/sites'
 */
 
-router.get('/v2/data/sites/', db.site);
-router.get('/v2/data/sites/:siteid', db.site);
+router.get('/v2/data/sites/', db.sites);
+router.get('/v2/data/sites/:siteid', db.sites);
 router.get('/v2/data/sites/:siteid/geopoliticalunits', db.geopolbysite);
 
 
@@ -773,7 +773,6 @@ router.get('/v2/data/sites/:siteid/geopoliticalunits', db.geopolbysite);
 *             $ref: '#/definitions/taxa'
 */
 
-//router.get('/v2/data/taxa/', db.taxonquery);
 router.get('/v2/data/taxa/:taxonid', db.taxonid);
 router.get('/v2/data/taxa/', db.taxonquery);
 

@@ -30,7 +30,7 @@ module.exports = {
   publicationbysite:publicationbysite,
   taxonid:gettaxa,
   taxonquery:gettaxonquery,
-  site:site
+  sites:sites
 };
 
 /* All the Endpoint functions */
@@ -60,20 +60,22 @@ function dbtables(req, res, next) {
 };
 
 
-function site(req, res, next) {
+function sites(req, res, next) {
   
   // Get the input parameters:
-  
-  var pubid = req.query.pubid;
-  var datasetid = req.query.datasetid;
-  var siteid = req.query.siteid;
 
   // Get the query string:
-  var query = 'SELECT * FROM "NDB"."Sites" as sts WHERE ';
+  var query = 'SELECT * FROM ndb.sites as sts WHERE ';
 
-  if (!!siteid) {
-    query = query + 'sts."SiteID" = '  + siteid;
+  if (!!req.params.siteid) {
+    query = query + 'sts.siteid = '  + req.params.siteid + ';';
+  } else {
+    var pubid = req.query.pubid;
+    var datasetid = req.query.datasetid;
+    var siteid = req.query.siteid;
   }
+
+  console.log(query);
 
   db.any(query)
     .then(function (data) {
@@ -85,12 +87,6 @@ function site(req, res, next) {
         });
     })
     .catch(function (err) {
-      /*res.status(500)
-        .json({
-          status:'error',
-          data: err,
-          message:'Got an error.'
-        });*/
         return next(err);
     });
 }
@@ -389,11 +385,13 @@ function gettaxa(req, res, next) {
 
   // Get the query string:
     // Get the query string:
-  var query = 'SELECT * FROM "Taxa" as taxa WHERE ';
+  var query = 'SELECT * FROM ndb.taxa WHERE ';
 
   if (!!taxonid) {
-    query = query + 'taxa."TaxonID" IN ($1:csv)';
+    query = query + 'taxa.taxonid IN ($1:csv)';
   }
+
+  console.log(query);
 
   db.any(query, [taxonid])
     .then(function (data) {
@@ -410,32 +408,28 @@ function gettaxa(req, res, next) {
 }
 
 function gettaxonquery(req, res, next) {
- 
-  if(!!taxonid) {
-    var taxonid = String(req.query.taxonid).split(',').map(function(item) {
-      return parseInt(item, 10);
-    });
-  }
 
-  var outobj = {'taxonid':taxonid,
+  var outobj = {'taxonid':req.query.taxonid,
                    'name':req.query.name,
               'ecolgroup':req.query.ecolgroup,
                   'lower':req.query.lower
                };
 
   var query = 'WITH taxid AS ' +
-              '(SELECT * FROM "Taxa" AS taxa WHERE ' +
-              '(${taxonid} IS NULL OR taxa."TaxonID" = ${taxonid}) ' +
-              'AND (${name} IS NULL OR taxa."TaxonName" LIKE ${name}) ' +
-              'AND (${ecolgroup} IS NULL OR taxa."TaxaGroupID" = ${ecolgroup})) ' +
+              '(SELECT * FROM ndb.taxa AS taxa WHERE ' +
+              '(${taxonid} IS NULL OR taxa.taxonid = ${taxonid}) ' +
+              'AND (${name} IS NULL OR taxa.taxonname LIKE ${name}) ' +
+              'AND (${ecolgroup} IS NULL OR taxa.taxagroupid = ${ecolgroup})) ' +
               'SELECT * FROM taxid ' +
               'UNION ' +
-              'SELECT * FROM "Taxa" AS taxa ' +
-              'WHERE (${lower} IS true AND taxa."HigherTaxonID" IN ' +
-              '(SELECT "TaxonID" FROM taxid))';
+              'SELECT * FROM ndb.taxa AS taxa ' +
+              'WHERE (${lower} IS true AND taxa.highertaxonid IN ' +
+              '(SELECT taxonid FROM taxid))';
 
   db.any(query, outobj)
     .then(function (data) {
+      console.log(outobj.taxonid);
+
       res.status(200)
         .json({
           status: 'success',
