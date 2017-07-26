@@ -196,7 +196,7 @@ router.get('/v2/data/contacts/:contactid', db.contacts);
 /**
 * @swagger
 * definitions:
-*   datasets:
+*   dataset:
 *     properties:
 *       Datasets:
 *         type: string
@@ -205,13 +205,13 @@ router.get('/v2/data/contacts/:contactid', db.contacts);
 
 /**
  * @swagger
- * /v2/data/datasets:
+ * /v2/data/dataset:
  *   get:
  *     summary: Dataset information.
- *     description: Returns information about Neotoma datasets
+ *     description: Returns information about Neotoma dataset
  *     parameters:
  *       - name: datasetid
- *         description: Numeric ID for datasets.
+ *         description: Numeric ID for dataset.
  *         in: path
  *         required: false
  *         type: integer
@@ -229,7 +229,7 @@ router.get('/v2/data/contacts/:contactid', db.contacts);
 *         schema:
 *           type: array
 *           items:
-*             $ref: '#/definitions/datasets'
+*             $ref: '#/definitions/dataset'
 */
 
 router.get('/v2/data/dataset/', db.dataset);
