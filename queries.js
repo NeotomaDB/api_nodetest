@@ -132,11 +132,13 @@ function dataset(req, res, next) {
   var siteid = req.query.siteid;
 
   // Get the query string:
-  var query = 'SELECT * FROM "Datasets" as dts WHERE ';
+  var query = 'select * from ndb.datasets as dts where ';
 
   if (!!datasetid) {
-    query = query + 'dts."DatasetID" = '  + datasetid;
+    query = query + 'dts.datasetid = '  + datasetid;
   }
+
+  console.log("query is: "+query);
 
   db.any(query)
     .then(function (data) {
