@@ -621,7 +621,8 @@ router.get('/v2/data/pollen/:id', db.pollen);
 
 router.get('/v2/data/publications/', db.publicationquery);
 router.get('/v2/data/publications/:pubid', db.publicationid);
-router.get('/v2/data/publications/sites/:siteid', db.publicationbysite);
+router.get('/v2/data/sites/:siteid/publications', db.publicationbysite);
+router.get('/v2/data/dataset/:datasetid/publications', db.publicationbydataset);
 
 /**
 * @swagger
@@ -698,8 +699,9 @@ router.get('/v2/data/publications/sites/:siteid', db.publicationbysite);
 *             $ref: '#/definitions/sites'
 */
 
-router.get('/v2/data/sites/', db.sites);
-router.get('/v2/data/sites/:siteid', db.sites);
+router.get('/v2/data/sites/', db.sitesquery);
+router.get('/v2/data/sites/:siteid', db.sitesbyid);
+router.get('/v2/data/datasets/:datasetid/site', db.sitesbydataset);
 router.get('/v2/data/sites/:siteid/geopoliticalunits', db.geopolbysite);
 
 
