@@ -38,7 +38,6 @@ module.exports = {
     var pollen = require('./helpers/pollen.js');
     pollen(req, res, next);
   },
-
 // RETURNING SITES:
   sitesbyid: function (req, res, next) { 
     var sites = require('./helpers/sites/sites.js');
@@ -51,6 +50,10 @@ module.exports = {
   sitesbydataset:function (req, res, next) { 
     var sites = require('./helpers/sites/sites.js');
     sites.sitesbydataset(req, res, next); 
+  },
+  sitesbygeopol:function (req, res, next) { 
+    var sites = require('./helpers/sites/sites.js');
+    sites.sitesbygeopol(req, res, next); 
   },
 // RETURNING GEOPOLITICAL UNITS
   geopoliticalunits: function (req, res, next) { 

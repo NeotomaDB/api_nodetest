@@ -375,6 +375,7 @@ router.get('/v2/data/download/:datasetid', db.download);
 
 router.get('/v2/data/geopoliticalunits', db.geopoliticalunits);
 router.get('/v2/data/geopoliticalunits/:gpid', db.geopoliticalunits);
+router.get('/v2/data/sites/:siteid/geopoliticalunits', db.geopolbysite); // Geopolitical Units by site.
 
 /**
 * @swagger
@@ -629,46 +630,42 @@ router.get('/v2/data/dataset/:datasetid/publications', db.publicationbydataset);
 * definitions:
 *   sites:
 *     properties:
-*       SiteID:
+*       siteid:
 *         type: integer
 *         format: int64
-*       SiteName:
+*       sitename:
 *         type: string
-*       SiteDescription:
+*       sitedescription:
 *         type: string
-*       LongitudeWest:
-*         type: float
-*       LongitudeEast:
-*         type: float
-*       LatitudeNorth:
-*         type: float
-*       LatitudeSout:
-*         type: float
-*       Altitude:
+*       geography:
+*         type: string
+*       altitude:
 *         type: float
 *       CollectionUnits:
 *         type: object
 *         properties:
-*           CollectionUnitID:
+*           collectionunit:
+*             type: string
+*           collectionunitid:
 *             type: integer
 *             format:  int64
-*           Handle:
+*           handle:
 *             type: string
-*           CollType:
+*           collectionunittype:
 *             type: string
-*           Datasets:
+*           datasets:
 *             type: object
 *             properties:
-*               DatasetType:
+*               datasettype:
 *                 type: string
-*               DatasetID:
+*               datasetid:
 *                 type: integer
 *                 format: int64
 */
 
 /**
  * @swagger
- * /v2/data/site:
+ * /v2/data/sites:
  *   get:
  *     summary: Site information.
  *     description: Returns information about Neotoma publications
@@ -699,11 +696,12 @@ router.get('/v2/data/dataset/:datasetid/publications', db.publicationbydataset);
 *             $ref: '#/definitions/sites'
 */
 
-router.get('/v2/data/sites/', db.sitesquery);
-router.get('/v2/data/sites/:siteid', db.sitesbyid);
-router.get('/v2/data/datasets/:datasetid/site', db.sitesbydataset);
-router.get('/v2/data/sites/:siteid/geopoliticalunits', db.geopolbysite);
-
+router.get('/v2/data/sites/', db.sitesquery); // Goes to the queries.
+router.get('/v2/data/sites/:siteid', db.sitesbyid); // Takes integers, including comma separated
+router.get('/v2/data/datasets/:datasetid/site', db.sitesbydataset); // Takes a dataset ID.
+//router.get('/v2/data/publications/:pubid/site', db.sitesbypublication);
+router.get('/v2/data/geopoliticalunits/:gpid/site', db.sitesbygeopol);
+//router.get('/v2/data/contacts/:contactid/site', db.sitesbycontacts);
 
 /**
 * @swagger
