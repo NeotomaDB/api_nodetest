@@ -27,11 +27,11 @@ module.exports = {
   publicationbydataset:publicationbydataset,
   publicationbysite:publicationbysite,
   taxonid: function (req, res, next) { 
-    var taxon = require('./helpers/taxa.js');
+    var taxon = require('./helpers/taxa/taxa.js');
     taxon.gettaxa(req, res, next);
   },
   taxonquery: function (req, res, next) { 
-    var taxon = require('./helpers/taxa.js');
+    var taxon = require('./helpers/taxa/taxa.js');
     taxon.gettaxonquery(req, res, next);
   },
   pollen: function (req, res, next) { 

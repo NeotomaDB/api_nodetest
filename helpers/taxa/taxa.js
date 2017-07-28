@@ -30,8 +30,8 @@ var options = {
 };
 
 var pgp = require('pg-promise')(options);
-var ctStr = require("../db_connect.json");
-const bib   = require('./bib_format');
+var ctStr = require("../../db_connect.json");
+const bib   = require('./../bib_format');
 
 // For the empty responses (automatically drops if any of these are true & returns false:
 function checkProperties(obj) {
