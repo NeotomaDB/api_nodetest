@@ -108,3 +108,6 @@ function geopolbysite(req, res, next) {
     data: siteid
   });
 }
+
+module.exports.geopoliticalunits = geopoliticalunits;
+module.exports.geopolbysite = geopolbysite;

@@ -57,12 +57,12 @@ module.exports = {
   },
 // RETURNING GEOPOLITICAL UNITS
   geopoliticalunits: function (req, res, next) { 
-    var dbtable = require('./helpers/geopoliticalunits.js');
-    dbtable(req, res, next); 
+    var geopol = require('./helpers/geopoliticalunits.js');
+    geopol.geopoliticalunits(req, res, next); 
   },
   geopolbysite: function (req, res, next) { 
-    var dbtable = require('./helpers/geopoliticalunits.js');
-    dbtable(req, res, next); 
+    var geopol = require('./helpers/geopoliticalunits.js');
+    geopol.geopolbysite(req, res, next); 
   },
 // RETURNING DATASETS
   dataset: function (req, res, next) { 
