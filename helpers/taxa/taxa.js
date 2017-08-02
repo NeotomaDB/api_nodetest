@@ -1,5 +1,8 @@
 // Taxa query:
 
+// This returns an empty object in the case of error.  I might propagate this to other
+// endpoints.
+
 var empty = {
   "query":{   'taxonid':null,
                    'name':null,
@@ -20,7 +23,9 @@ var empty = {
          "validatedate": null,
                 "notes": null
     }};
+// Sites query:
 
+const path = require('path');
 
 var promise = require('bluebird');
 
@@ -33,19 +38,21 @@ var pgp = require('pg-promise')(options);
 var ctStr = require("../../db_connect.json");
 const bib   = require('./../bib_format');
 
-// For the empty responses (automatically drops if any of these are true & returns false:
-function checkProperties(obj) {
-    for (var key in obj) {
-      console.log(obj[key])
-        if (obj[key] !== null && obj[key] != "" && typeof(obj[key]) !== 'undefined')
-            return false;
-    }
-    return true;
-}
-
 // Connecting to the database:
 var db = pgp(ctStr);
 
+// Helper for linking to external query files:
+function sql(file) {
+    const fullPath = path.join(__dirname, file);
+    return new pgp.QueryFile(fullPath, {minify: true});
+}
+
+// Create a QueryFile globally, once per file:
+const taxonquerylower  = sql('./taxonquerylower.sql');
+const taxonquerystatic = sql('./taxonquerystatic.sql');
+
+// Actual functions:
+// 
 function gettaxa(req, res, next) {
   
   var taxonid = String(req.params.taxonid).split(',').map(function(item) {
@@ -80,7 +87,7 @@ function gettaxa(req, res, next) {
 
 function gettaxonquery(req, res, next) {
 
-  var outobj = {'taxonid':req.query.taxonid,
+  var outobj = {'taxonid':null,
               'taxonname':req.query.taxonname,
                  'status':req.query.status,
               'taxagroup':req.query.taxagroup,   
@@ -88,45 +95,45 @@ function gettaxonquery(req, res, next) {
                   'lower':req.query.lower
                };
 
-  var empty_test = checkProperties(outobj);
-
-  if (empty_test) {
-
-    res.status(500)
-        .json({
-          status: 'failure',
-          data: empty,
-          message: 'Must pass either queries or an integer sequence.'
-        });
-  }
-
-  var query = 'WITH taxid AS ' +
-              '(SELECT * FROM ndb.taxa AS taxa WHERE ' +
-              '(${taxonid} IS NULL OR taxa.taxonid = ${taxonid}) ' +
-              'AND (${taxonname} IS NULL OR taxa.taxonname LIKE ${taxonname}) ' +
-              'AND (${status} IS NULL OR taxa.extinct'
-              'AND (${taxagroup} IS NULL OR taxa.taxagroupid = ${taxagroup})) ' +
-              'SELECT * FROM taxid ' +
-              'UNION ALL ' +
-              'SELECT * FROM ndb.taxa AS taxa ' +
-              'WHERE (${lower} IS true AND taxa.highertaxonid IN ' +
-              '(SELECT taxonid FROM taxid));';
-
-console.log(outobj);
-
-  db.any(query, outobj)
-    .then(function (data) {
-
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved all tables'
-        });
-    })
-    .catch(function (err) {
-        return next(err);
+  if (!!req.query.taxonid) {
+    outobj.taxonid = String(req.query.taxonid).split(',').map(function(item) {
+      return parseInt(item, 10);
     });
+  };
+
+  console.log(outobj);
+
+  if(outobj.lower === 'true') {
+    db.any(taxonquerylower, outobj)
+      .then(function (data) {
+
+        res.status(200)
+          .json({
+            status: 'success',
+            data: data,
+            message: 'Retrieved all tables'
+          });
+      })
+      .catch(function (err) {
+          return next(err);
+      });
+  };
+
+  if(typeof outobj.lower === 'undefined') {
+    db.any(taxonquerystatic, outobj)
+      .then(function (data) {
+
+        res.status(200)
+          .json({
+            status: 'success',
+            data: data,
+            message: 'Retrieved all tables'
+          });
+      })
+      .catch(function (err) {
+          return next(err);
+      });
+  };
 }
 
 module.exports.gettaxa = gettaxa;

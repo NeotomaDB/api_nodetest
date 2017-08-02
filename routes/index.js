@@ -708,31 +708,23 @@ router.get('/v2/data/geopoliticalunits/:gpid/site', db.sitesbygeopol);
 * definitions:
 *   taxa:
 *     properties:
-*       TaxonName:
+*       taxonid:
+*         type: integer
+*         format: int32
+*       taxonname:
 *         type: string
-*       EcolGroups:
+*       author:
+*         type: string
+*       ecolgroup:
 *         type: array
-*         items:
-*           type: string
-*       TaxonCode: 
-*         type: string
-*       Author:
-*         type: string
-*       PublicationID:
+*       highertaxonid:
 *         type: integer
 *         format: int32
-*       TaxonID:
+*       publicationid:
 *         type: integer
 *         format: int32
-*       TaxaGroupID:
-*         type: string
-*       HigherTaxonID:
-*         type: integer
-*         format: int32
-*       Extinct:
+*       status:
 *         type: boolean
-*       Notes:
-*         type: string
 */
 
 /**
@@ -747,7 +739,7 @@ router.get('/v2/data/geopoliticalunits/:gpid/site', db.sitesbygeopol);
  *         in: path
  *         required: false
  *         type: integer
- *       - name: name
+ *       - name: taxonname
  *         description: Taxon name or partial name.
  *         in: query
  *         required: false
@@ -775,6 +767,5 @@ router.get('/v2/data/geopoliticalunits/:gpid/site', db.sitesbygeopol);
 
 router.get('/v2/data/taxa/:taxonid', db.taxonid);
 router.get('/v2/data/taxa/', db.taxonquery);
-
 
 module.exports = router;
