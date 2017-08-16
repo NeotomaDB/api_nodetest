@@ -21,8 +21,9 @@ var swaggerDefinition = {
     version: '2.0.0',
     description: 'API Documentation for the Neotoma Paleoecological Database',
   },
-  host: 'localhost:3000',
+  host: 'http://api-dev.neotomadb.org',
   basePath: '/',
+  url: 'http://api-dev.neotomadb.org/swagger.json'
 };
 
 // options for the swagger docs
