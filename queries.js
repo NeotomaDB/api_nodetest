@@ -57,24 +57,29 @@ module.exports = {
   },
 // RETURNING GEOPOLITICAL UNITS
   geopoliticalunits: function (req, res, next) { 
-    var geopol = require('./helpers/geopoliticalunits.js');
+    var geopol = require('./helpers/geopoliticalunits/geopoliticalunits.js');
     geopol.geopoliticalunits(req, res, next); 
   },
+  geopoliticalbyid: function (req, res, next) { 
+    var geopol = require('./helpers/geopoliticalunits/geopoliticalunits.js');
+    geopol.geopoliticalbyid(req, res, next); 
+  },
+
   geopolbysite: function (req, res, next) { 
-    var geopol = require('./helpers/geopoliticalunits.js');
+    var geopol = require('./helpers/geopoliticalunits/geopoliticalunits.js');
     geopol.geopolbysite(req, res, next); 
   },
 // RETURNING DATASETS
   dataset: function (req, res, next) { 
-    var dataset = require('./helpers/datasets.js');
+    var dataset = require('./helpers/datasets/datasets.js');
     dataset.datasetbyid(req, res, next); 
   },
   datasetquery: function (req, res, next) { 
-    var datasetquery = require('./helpers/datasets.js');
+    var datasetquery = require('./helpers/datasets/datasets.js');
     dataset.datasetquery(req, res, next); 
   },
   dbtables: function (req, res, next) { 
-    var dbtable = require('./helpers/dbtables.js');
+    var dbtable = require('./helpers/datasets/dbtables.js');
     dbtable.dbtables(req, res, next); 
   }
 
@@ -126,7 +131,6 @@ function contacts(req, res, next) {
 
 }
 
-
 function dataset(req, res, next) {
   
   // Get the query string:
@@ -140,8 +144,6 @@ function dataset(req, res, next) {
   if (!!datasetid) {
     query = query + 'dts.datasetid = '  + datasetid;
   }
-
-  console.log("query is: "+query);
 
   db.any(query)
     .then(function (data) {
