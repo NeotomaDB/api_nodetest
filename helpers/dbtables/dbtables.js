@@ -8,8 +8,7 @@ var options = {
 };
 
 var pgp = require('pg-promise')(options);
-var ctStr = require("../db_connect.json");
-const bib   = require('./bib_format');
+var ctStr = require("../../db_connect.json");
 
 // Connecting to the database:
 var db = pgp(ctStr);
@@ -18,12 +17,10 @@ var db = pgp(ctStr);
 
 function dbtables(req, res, next) {
 
-  var tableID = req.params.table;
-
-  if (tableID == null) {
-    var query = "SELECT tablename FROM pg_tables WHERE schemaname='ndb';";
+  if (!!req.query.table) {
+    var query = 'SELECT * FROM ndb.' + req.query.table + ';'
   } else {
-    var query = 'SELECT * FROM ndb.' + tableID + ';'
+    var query = "SELECT tablename FROM pg_tables WHERE schemaname='ndb';";
   }
 
   db.any(query)

@@ -79,7 +79,7 @@ module.exports = {
     dataset.datasetquery(req, res, next); 
   },
   dbtables: function (req, res, next) { 
-    var dbtable = require('./helpers/datasets/dbtables.js');
+    var dbtable = require('./helpers/dbtables/dbtables.js');
     dbtable.dbtables(req, res, next); 
   }
 

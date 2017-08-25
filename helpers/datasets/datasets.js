@@ -1,4 +1,5 @@
 // Sites query:
+const path = require('path');
 
 var promise = require('bluebird');
 
@@ -14,9 +15,16 @@ const bib   = require('./../bib_format');
 // Connecting to the database:
 var db = pgp(ctStr);
 
-const datasetbyid = sql('./datasetbyid.sql');
+// Helper for linking to external query files:
+function sql(file) {
+    const fullPath = path.join(__dirname, file);
+    return new pgp.QueryFile(fullPath, {minify: true});
+}
+
+const datasetbyidsql = sql('./datasetbyid.sql');
 
 function datasetbyid(req, res, next) {
+  console.log(req.params.datasetid);
   
   if (!!req.params.datasetid) {
     var datasetid = String(req.params.datasetid).split(',').map(function(item) {
@@ -31,7 +39,7 @@ function datasetbyid(req, res, next) {
         });
   }
 
-  db.any(datasetbyid, [datasetid])
+  db.any(datasetbyidsql, [datasetid])
     .then(function (data) {
       res.status(200)
         .json({
