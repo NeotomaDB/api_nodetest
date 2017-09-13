@@ -13,13 +13,7 @@ SELECT json_build_object(       'siteid', sts.siteid,
                                 'datasettype', dst.datasettype,
                                 'datasetnotes', dts.notes,
                                 'database', cstdb.databasename,
-                                        'doi', doi.doi,
-                                 'datasetpi', json_build_object('contactid', cnt.contactid, 
-                                                                'contactname', cnt.contactname,
-                                                                'familyname', cnt.familyname,
-                                                                'firstname', cnt.givennames,
-                                                                'initials', cnt.leadinginitials)))
-                                 AS dataset FROM
+                                        'doi', doi.doi)) AS dataset FROM
 ndb.datasets AS dts LEFT OUTER JOIN
 ndb.collectionunits AS clu ON clu.collectionunitid = dts.collectionunitid LEFT OUTER JOIN
 ndb.sites AS sts ON sts.siteid = clu.siteid  LEFT OUTER JOIN
@@ -27,8 +21,6 @@ ndb.datasettypes AS dst ON dst.datasettypeid = dts.datasettypeid LEFT OUTER JOIN
 ndb.datasetdoi AS doi ON dts.datasetid = doi.datasetid LEFT OUTER JOIN
 ndb.collectiontypes as cts ON clu.colltypeid = cts.colltypeid LEFT OUTER JOIN
 ndb.datasetdatabases AS dsdb ON dsdb.datasetid = dts.datasetid LEFT OUTER JOIN
-ndb.datasetpis AS dspi ON dspi.datasetid = dts.datasetid LEFT OUTER JOIN
-ndb.contacts AS cnt ON cnt.contactid = dspi.contactid LEFT OUTER JOIN
 ndb.constituentdatabases AS cstdb ON dsdb.databaseid = cstdb.databaseid WHERE
-dts.datasetid IN ($1:csv)
+sts.siteid IN ($1:csv)
 GROUP BY sts.siteid, clu.collectionunitid, cts.colltype;
