@@ -66,5 +66,8 @@ typings/
 # dotenv environment variables file
 .env
 
+# Adding the swagger project files:
+api_project.sublime-project
+api_project.sublime-workspace
 
-# End of https://www.gitignore.io/api/node
+db_connect_remote.json

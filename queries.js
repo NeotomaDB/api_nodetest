@@ -72,7 +72,15 @@ module.exports = {
 // RETURNING DATASETS
   dataset: function (req, res, next) { 
     var dataset = require('./helpers/datasets/datasets.js');
+    dataset.datasetquery(req, res, next); 
+  },
+  datasetbyid: function (req, res, next) { 
+    var dataset = require('./helpers/datasets/datasets.js');
     dataset.datasetbyid(req, res, next); 
+  },
+  datasetbysiteid: function (req, res, next) { 
+    var dataset = require('./helpers/datasets/datasets.js');
+    dataset.datasetbysiteid(req, res, next); 
   },
   datasetquery: function (req, res, next) { 
     var datasetquery = require('./helpers/datasets/datasets.js');

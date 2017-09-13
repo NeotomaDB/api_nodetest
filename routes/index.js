@@ -24,7 +24,7 @@ router.get('/', function(req, res, next) {
 * definitions:
 *   contact:
 *     properties:
-*       ContactID:
+*       contactid:
 *         type: integer
 *         format: int64
 *       ContactName:
@@ -120,7 +120,8 @@ router.get('/v2/data/contacts/:contactid', db.contacts);
 */
 
 router.get('/v2/data/dataset/', db.dataset);
-router.get('/v2/data/dataset/:datasetid', db.dataset);
+router.get('/v2/data/dataset/:datasetid', db.datasetbyid);
+router.get('/v2/data/sites/:siteid/datasets', db.datasetbysiteid);
 
 /**
 * @swagger
@@ -157,6 +158,7 @@ router.get('/v2/data/dbtables/', db.dbtables);
 router.get('/v2/data/dbtables/:table', db.dbtables);
 
 
+
 /**
 * @swagger
 * definitions:
@@ -177,10 +179,10 @@ router.get('/v2/data/dbtables/:table', db.dbtables);
 *         format: int32
 *       recdatecreated: 
 *         type: string
-*         format: dateTime
+*         format: date-time
 *     	recdatemodified:
-*     	  type: string
-*     	  format: dateTime
+*         type: string
+*         format: date-time
 */
 
 /**
@@ -289,7 +291,7 @@ router.get('/v2/data/dataset/:datasetid/publications', db.publicationbydataset);
 /**
 * @swagger
 * definitions:
-*   site:
+*   sites:
 *     properties:
 *       siteid:
 *         type: integer
@@ -359,9 +361,9 @@ router.get('/v2/data/dataset/:datasetid/publications', db.publicationbydataset);
 
 router.get('/v2/data/sites/', db.sitesquery); // Goes to the queries.
 router.get('/v2/data/sites/:siteid', db.sitesbyid); // Takes integers, including comma separated
-router.get('/v2/data/dataset/:datasetid/site', db.sitesbydataset); // Takes a dataset ID.
+router.get('/v2/data/dataset/:datasetid/sites', db.sitesbydataset); // Takes a dataset ID.
 //router.get('/v2/data/publications/:pubid/site', db.sitesbypublication);
-router.get('/v2/data/geopoliticalunits/:gpid/site', db.sitesbygeopol);
+router.get('/v2/data/geopoliticalunits/:gpid/sites', db.sitesbygeopol);
 //router.get('/v2/data/contacts/:contactid/site', db.sitesbycontacts);
 
 /**

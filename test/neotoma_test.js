@@ -19,11 +19,19 @@ it('should return a 200 response', function(done) {
 	.expect(200, done);
 })
 
+
+
 // *************************************************
 // Publications:
 //
 it('should return a 200 response', function(done) {
 	api.get('/v2/data/publications')
+	.set('Accept', 'application/json')
+	.expect(200, done);
+})
+
+it('should return a 200 response', function(done) {
+	api.get('/v2/data/publications/10')
 	.set('Accept', 'application/json')
 	.expect(200, done);
 })
