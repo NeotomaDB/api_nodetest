@@ -22,6 +22,7 @@ function sql(file) {
 }
 
 const datasetbyidsql = sql('./datasetbyid.sql');
+const datasetbysite = sql('./datasetbysite.sql');
 
 function datasetbyid(req, res, next) {
   console.log(req.params.datasetid);
@@ -51,8 +52,39 @@ function datasetbyid(req, res, next) {
     .catch(function (err) {
       next(err);
     });
-
 }
+
+
+function datasetbysiteid(req, res, next) {
+  console.log(req.params.siteid);
+  
+  if (!!req.params.siteid) {
+    var siteid = String(req.params.siteid).split(',').map(function(item) {
+      return parseInt(item, 10);
+    });
+  } else {
+    res.status(500)
+        .json({
+          status: 'failure',
+          data: null,
+          message: 'Must pass an integer sequence.'
+        });
+  }
+
+  db.any(datasetbysite, [siteid])
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+      next(err);
+    });
+}
+
 
 function datasetquery(req, res, next) {
   
@@ -81,3 +113,5 @@ function datasetquery(req, res, next) {
 }
 
 module.exports.datasetbyid = datasetbyid;
+module.exports.datasetbysiteid = datasetbysiteid;
+module.exports.datasetquery = datasetquery;
