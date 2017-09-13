@@ -19,10 +19,11 @@ function datasetbyid(req, res, next) {
   var datasetid = req.params.datasetid;
 
   // Get the query string:
-  var query = 'SELECT * FROM ndb.datasets as dts WHERE ';
+  var query = 'select * from ndb.datasets as dts where ';
 
-  if (!!datasetid) {
+  if (datasetid) {
     query = query + 'dts.datasetid = '  + datasetid;
+    console.log("query is: "+query);
   }
 
   db.any(query)
@@ -45,9 +46,9 @@ function datasetquery(req, res, next) {
   var datasetid = req.params.datasetid;
 
   // Get the query string:
-  var query = 'SELECT * FROM ndb.datasets as dts WHERE ';
+  var query = 'select * from ndb.datasets as dts where ';
 
-  if (!!datasetid) {
+  if (datasetid) {
     query = query + 'dts.datasetid = '  + datasetid;
   }
 

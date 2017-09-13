@@ -15,15 +15,35 @@ var users = require('./routes/users');
 var app = express();
 
 // swagger definition
+var swaggerDefinitionJson = require('./swaggerdefn.json');
+console.log(swaggerDefinitionJson);
+
+// options for the swagger docs
+var options = {
+  // import swaggerDefinitions
+  swaggerDefinition: swaggerDefinitionJson,
+  // path to the API docs
+  apis: ['./routes/*.js'],
+};
+/*
 var swaggerDefinition = {
   info: {
     title: 'Neotoma API',
     version: '2.0.0',
     description: 'API Documentation for the Neotoma Paleoecological Database',
   },
-  host: 'localhost:3000',
+  
+  host: 'http://api-dev.neotomadb.org',
   basePath: '/',
+  url: 'http://api-dev.neotomadb.org/swagger.json',
+  urls: {
+    url: 'http://api-dev.neotomadb.org/swagger.json',
+    name: 'the url'
+  }
+  
 };
+
+
 
 // options for the swagger docs
 var options = {
@@ -32,6 +52,7 @@ var options = {
   // path to the API docs
   apis: ['./routes/*.js'],
 };
+*/
 
 // initialize swagger-jsdoc
 var swaggerSpec = swaggerJSDoc(options);
