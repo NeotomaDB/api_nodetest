@@ -9,14 +9,21 @@ var swaggerJSDoc = require('swagger-jsdoc');
 const querystring = require('querystring');
 
 // Locations of files:
+
+//default route
 var index = require('./routes/index');
-var users = require('./routes/users');
+//data API routes
+var data = require('./routes/data');
+//apps API routes
+var apps = require('./routes/apps');
+//dbtables API routes
+var dbtables = require('./routes/dbtables');
 
 var app = express();
 
+
 // swagger definition
 var swaggerDefinitionJson = require('./swaggerdefn.json');
-console.log(swaggerDefinitionJson);
 
 // options for the swagger docs
 var options = {
@@ -25,34 +32,6 @@ var options = {
   // path to the API docs
   apis: ['./routes/*.js'],
 };
-/*
-var swaggerDefinition = {
-  info: {
-    title: 'Neotoma API',
-    version: '2.0.0',
-    description: 'API Documentation for the Neotoma Paleoecological Database',
-  },
-  
-  host: 'http://api-dev.neotomadb.org',
-  basePath: '/',
-  url: 'http://api-dev.neotomadb.org/swagger.json',
-  urls: {
-    url: 'http://api-dev.neotomadb.org/swagger.json',
-    name: 'the url'
-  }
-  
-};
-
-
-
-// options for the swagger docs
-var options = {
-  // import swaggerDefinitions
-  swaggerDefinition: swaggerDefinition,
-  // path to the API docs
-  apis: ['./routes/*.js'],
-};
-*/
 
 // initialize swagger-jsdoc
 var swaggerSpec = swaggerJSDoc(options);
@@ -70,7 +49,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/users', users);
+app.use('/v2/apps', apps);
+app.use('/v2/data', data);
+app.use('/v2/dbtables', dbtables);
 
 
 app.get('/swagger.json', function(req, res) {

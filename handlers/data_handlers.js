@@ -1,23 +1,8 @@
-/*
-OLD WAY OF INITIALIZING DB
-var promise = require('bluebird');
-
-var options = {
-  // Initialization Options
-  promiseLib: promise
-};
-
-var pgp = require('pg-promise')(options);
-var ctStr = require("./db_connect.json");
-*/
-const bib   = require('./helpers/bib_format');
-
-//database object
-//var db = require('./database/pgp_db');
-
+const bib   = require('../helpers/bib_format');
+//db connection pool
+var db = require('../database/pgp_db');
 
 // Defining the query functions:
-
 module.exports = {
   chronology:chronology,
   contacts:contacts,
@@ -28,54 +13,54 @@ module.exports = {
   publicationbydataset:publicationbydataset,
   publicationbysite:publicationbysite,
   taxonid: function (req, res, next) { 
-    var taxon = require('./helpers/taxa/taxa.js');
+    var taxon = require('../helpers/taxa/taxa.js');
     taxon.gettaxa(req, res, next);
   },
   taxonquery: function (req, res, next) { 
-    var taxon = require('./helpers/taxa/taxa.js');
+    var taxon = require('../helpers/taxa/taxa.js');
     taxon.gettaxonquery(req, res, next);
   },
   pollen: function (req, res, next) { 
-    var pollen = require('./helpers/pollen.js');
+    var pollen = require('../helpers/pollen.js');
     pollen(req, res, next);
   },
 // RETURNING SITES:
   sitesbyid: function (req, res, next) { 
-    var sites = require('./helpers/sites/sites.js');
+    var sites = require('../helpers/sites/sites.js');
     sites.sitesbyid(req, res, next);
   },
   sitesquery:function (req, res, next) { 
-    var sites = require('./helpers/sites/sites.js');
+    var sites = require('../helpers/sites/sites.js');
     sites.sitesquery(req, res, next); 
   },
   sitesbydataset:function (req, res, next) { 
-    var sites = require('./helpers/sites/sites.js');
+    var sites = require('../helpers/sites/sites.js');
     sites.sitesbydataset(req, res, next); 
   },
   sitesbygeopol:function (req, res, next) { 
-    var sites = require('./helpers/sites/sites.js');
+    var sites = require('../helpers/sites/sites.js');
     sites.sitesbygeopol(req, res, next); 
   },
 // RETURNING GEOPOLITICAL UNITS
   geopoliticalunits: function (req, res, next) { 
-    var geopol = require('./helpers/geopoliticalunits.js');
+    var geopol = require('../helpers/geopoliticalunits.js');
     geopol.geopoliticalunits(req, res, next); 
   },
   geopolbysite: function (req, res, next) { 
-    var geopol = require('./helpers/geopoliticalunits.js');
+    var geopol = require('../helpers/geopoliticalunits.js');
     geopol.geopolbysite(req, res, next); 
   },
 // RETURNING DATASETS
   dataset: function (req, res, next) { 
-    var dataset = require('./helpers/datasets.js');
+    var dataset = require('../helpers/datasets.js');
     dataset.datasetbyid(req, res, next); 
   },
   datasetquery: function (req, res, next) { 
-    var datasetquery = require('./helpers/datasets.js');
+    var datasetquery = require('../helpers/datasets.js');
     dataset.datasetquery(req, res, next); 
   },
   dbtables: function (req, res, next) { 
-    var dbtable = require('./helpers/dbtables.js');
+    var dbtable = require('../helpers/dbtables.js');
     dbtable.dbtables(req, res, next); 
   }
 
