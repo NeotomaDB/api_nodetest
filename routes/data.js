@@ -13,12 +13,6 @@ var router = express.Router();
 
 var handlers = require('../handlers/data_handlers');
 
-/* GET home page. */
-// This just reroutes to the swagger docs when you go to the main endpoint.
-router.get('/', function(req, res, next) {
-  res.redirect('/api-docs');
-  //res.render('index', { title: 'Express' });
-});
 
 /* (Approximate) LINE NUMBERS & Status:
 [ Use CTRL-G + Line number in Sublime Text ]
@@ -108,7 +102,7 @@ router.get('/', function(req, res, next) {
 
 /**
 * @swagger
-* /v2/data/chronology:
+* /chronology:
 *   get:
 *     summary: Chronology metadata for a dataset.
 *     description: Returns the chronology and chronological controls used for a dataset age model.
@@ -128,8 +122,8 @@ router.get('/', function(req, res, next) {
 *          items:
 *            $ref: '#/definitions/chronology'
 */
-router.get('/v2/data/chronology', handlers.chronology);
-router.get('/v2/data/chronology/:id', handlers.chronology);
+router.get('/chronology', handlers.chronology);
+router.get('/chronology/:id', handlers.chronology);
 
 /**
 * @swagger
@@ -170,7 +164,7 @@ router.get('/v2/data/chronology/:id', handlers.chronology);
 
 /**
 * @swagger
-* /v2/data/contacts:
+* /contacts:
 *   get:
 *     summary: Contact information for Neotoma contributors.
 *     description: Returns researcher contact information associated with a record.
@@ -191,8 +185,8 @@ router.get('/v2/data/chronology/:id', handlers.chronology);
 *          items:
 *            $ref: '#/definitions/contact'
 */
-router.get('/v2/data/contacts/', handlers.contacts);
-router.get('/v2/data/contacts/:contactid', handlers.contacts);
+router.get('/contacts/', handlers.contacts);
+router.get('/contacts/:contactid', handlers.contacts);
 
 /**
 * @swagger
@@ -206,7 +200,7 @@ router.get('/v2/data/contacts/:contactid', handlers.contacts);
 
 /**
  * @swagger
- * /v2/data/dataset:
+ * /dataset:
  *   get:
  *     summary: Dataset information.
  *     description: Returns information about Neotoma dataset
@@ -233,9 +227,9 @@ router.get('/v2/data/contacts/:contactid', handlers.contacts);
 *             $ref: '#/definitions/dataset'
 */
 
-router.get('/v2/data/dataset/', handlers.dataset);
-router.get('/v2/data/dataset/:id', handlers.dataset);
-router.get('/v2/data/datasets/:datasetid/publications', handlers.publicationbydataset);
+router.get('/dataset/', handlers.dataset);
+router.get('/dataset/:id', handlers.dataset);
+router.get('/datasets/:datasetid/publications', handlers.publicationbydataset);
 
 /**
 * @swagger
@@ -247,7 +241,7 @@ router.get('/v2/data/datasets/:datasetid/publications', handlers.publicationbyda
 
 /**
 * @swagger
-* /v2/data/dbtables:
+* /dbtables:
 *   get:
 *     summary: Returns the named Neotoma Database table.
 *     description: Returns the named Neotoma Database table.
@@ -268,8 +262,8 @@ router.get('/v2/data/datasets/:datasetid/publications', handlers.publicationbyda
 *            $ref: '#/definitions/dbtables'
 */
 
-router.get('/v2/data/dbtables/', handlers.dbtables);
-router.get('/v2/data/dbtables/:table', handlers.dbtables);
+router.get('/dbtables/', handlers.dbtables);
+router.get('/dbtables/:table', handlers.dbtables);
 
 /**
 * @swagger
@@ -281,7 +275,7 @@ router.get('/v2/data/dbtables/:table', handlers.dbtables);
 
 /**
 * @swagger
-* /v2/data/download:
+* /download:
 *   get:
 *     summary: Returns the named Neotoma Database table.
 *     description: Returns the named Neotoma Database table.
@@ -302,8 +296,8 @@ router.get('/v2/data/dbtables/:table', handlers.dbtables);
 *            $ref: '#/definitions/download'
 */
 
-router.get('/v2/data/download/', handlers.download);
-router.get('/v2/data/download/:datasetid', handlers.download);
+router.get('/download/', handlers.download);
+router.get('/download/:datasetid', handlers.download);
 
 /**
 * @swagger
@@ -333,7 +327,7 @@ router.get('/v2/data/download/:datasetid', handlers.download);
 
 /**
 * @swagger
-* /v2/data/geopoliticalunits:
+* /geopoliticalunits:
 *   get:
 *     summary: Returns information about geopolitical units.
 *     parameters:
@@ -374,9 +368,9 @@ router.get('/v2/data/download/:datasetid', handlers.download);
 */
 
 
-router.get('/v2/data/geopoliticalunits', handlers.geopoliticalunits);
-router.get('/v2/data/geopoliticalunits/:gpid', handlers.geopoliticalunits);
-router.get('/v2/data/sites/:siteid/geopoliticalunits', handlers.geopolbysite); // Geopolitical Units by site.
+router.get('/geopoliticalunits', handlers.geopoliticalunits);
+router.get('/geopoliticalunits/:gpid', handlers.geopoliticalunits);
+router.get('/sites/:siteid/geopoliticalunits', handlers.geopolbysite); // Geopolitical Units by site.
 
 /**
 * @swagger
@@ -432,7 +426,7 @@ router.get('/v2/data/sites/:siteid/geopoliticalunits', handlers.geopolbysite); /
 
 /**
 * @swagger
-* /v2/data/occurrence:
+* /occurrence:
 *   get:
 *     summary: Individual occurrence records for Neotoma records.
 *     description: Returns occurrence information for a particular taxon, geographic region or temporal slice.
@@ -454,8 +448,8 @@ router.get('/v2/data/sites/:siteid/geopoliticalunits', handlers.geopolbysite); /
 *            $ref: '#/definitions/occurrence'
 */
 
-router.get('/v2/data/occurrence/', handlers.occurrence);
-router.get('/v2/data/occurrence/:id', handlers.occurrence);
+router.get('/occurrence/', handlers.occurrence);
+router.get('/occurrence/:id', handlers.occurrence);
 
 /**
 * @swagger
@@ -491,7 +485,7 @@ router.get('/v2/data/occurrence/:id', handlers.occurrence);
 
 /**
  * @swagger
- * /v2/data/pollen:
+ * /pollen:
  *   get:
  *     summary: Pollen data from Neotoma.
  *     description: Returns information about pollen.
@@ -564,8 +558,8 @@ router.get('/v2/data/occurrence/:id', handlers.occurrence);
 *             $ref: '#/definitions/pollen'
 */
 
-router.get('/v2/data/pollen/', handlers.pollen);
-router.get('/v2/data/pollen/:id', handlers.pollen);
+router.get('/pollen/', handlers.pollen);
+router.get('/pollen/:id', handlers.pollen);
 
 
 /**
@@ -587,7 +581,7 @@ router.get('/v2/data/pollen/:id', handlers.pollen);
 
 /**
  * @swagger
- * /v2/data/publication:
+ * /publication:
  *   get:
  *     summary: Returns information about Neotoma publications
  *     description: Returns information about Neotoma publications
@@ -621,10 +615,10 @@ router.get('/v2/data/pollen/:id', handlers.pollen);
  *             $ref: '#/definitions/publication'
 */
 
-router.get('/v2/data/publications/', handlers.publicationquery);
-router.get('/v2/data/publications/:pubid', handlers.publicationid);
-router.get('/v2/data/sites/:siteid/publications', handlers.publicationbysite);
-router.get('/v2/data/dataset/:datasetid/publications', handlers.publicationbydataset);
+router.get('/publications/', handlers.publicationquery);
+router.get('/publications/:pubid', handlers.publicationid);
+router.get('/sites/:siteid/publications', handlers.publicationbysite);
+router.get('/dataset/:datasetid/publications', handlers.publicationbydataset);
 
 /**
 * @swagger
@@ -666,7 +660,7 @@ router.get('/v2/data/dataset/:datasetid/publications', handlers.publicationbydat
 
 /**
  * @swagger
- * /v2/data/sites:
+ * /sites:
  *   get:
  *     summary: Site information.
  *     description: Returns information about Neotoma publications
@@ -697,12 +691,12 @@ router.get('/v2/data/dataset/:datasetid/publications', handlers.publicationbydat
 *             $ref: '#/definitions/sites'
 */
 
-router.get('/v2/data/sites/', handlers.sitesquery); // Goes to the queries.
-router.get('/v2/data/sites/:siteid', handlers.sitesbyid); // Takes integers, including comma separated
-router.get('/v2/data/datasets/:datasetid/site', handlers.sitesbydataset); // Takes a dataset ID.
-//router.get('/v2/data/publications/:pubid/site', handlers.sitesbypublication);
-router.get('/v2/data/geopoliticalunits/:gpid/site', handlers.sitesbygeopol);
-//router.get('/v2/data/contacts/:contactid/site', handlers.sitesbycontacts);
+router.get('/sites/', handlers.sitesquery); // Goes to the queries.
+router.get('/sites/:siteid', handlers.sitesbyid); // Takes integers, including comma separated
+router.get('/datasets/:datasetid/site', handlers.sitesbydataset); // Takes a dataset ID.
+//router.get('/publications/:pubid/site', handlers.sitesbypublication);
+router.get('/geopoliticalunits/:gpid/site', handlers.sitesbygeopol);
+//router.get('/contacts/:contactid/site', handlers.sitesbycontacts);
 
 /**
 * @swagger
@@ -730,7 +724,7 @@ router.get('/v2/data/geopoliticalunits/:gpid/site', handlers.sitesbygeopol);
 
 /**
  * @swagger
- * /v2/data/taxa:
+ * /taxa:
  *   get:
  *     summary: Taxonomic information.
  *     description: Returns information about a taxon and (if requested) related taxa.
@@ -767,6 +761,6 @@ router.get('/v2/data/geopoliticalunits/:gpid/site', handlers.sitesbygeopol);
 */
 
 router.get('/taxa/:taxonid', handlers.taxonid);
-router.get('/v2/data/taxa/', handlers.taxonquery);
+router.get('/taxa/', handlers.taxonquery);
 
 module.exports = router;

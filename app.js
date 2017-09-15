@@ -1,9 +1,9 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
+     var express = require('express');
+        var path = require('path');
+     var favicon = require('serve-favicon');
+      var logger = require('morgan');
 var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+  var bodyParser = require('body-parser');
 var swaggerJSDoc = require('swagger-jsdoc');
 
 const querystring = require('querystring');
@@ -24,7 +24,6 @@ var app = express();
 
 // swagger definition
 var swaggerDefinitionJson = require('./swaggerdefn.json');
-
 // options for the swagger docs
 var options = {
   // import swaggerDefinitions
