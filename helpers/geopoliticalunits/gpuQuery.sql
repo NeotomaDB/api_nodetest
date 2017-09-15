@@ -1,6 +1,6 @@
 WITH gid AS 
   (SELECT * FROM ndb.geopoliticalunits AS gpu 
-      WHERE (  ${gpid} IS NULL OR gpu.geopoliticalid = ${gpid}))
+      WHERE (  ${gpid} IS NULL OR gpu.geopoliticalid = ${gpid})
         AND (${gpname} IS NULL OR gpu.geopoliticalname LIKE ${gpname})
         AND (  ${rank} IS NULL OR gpu.rank = ${rank}))
 SELECT * FROM ndb.geopoliticalunits AS gpu 
