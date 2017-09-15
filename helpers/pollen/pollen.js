@@ -1,18 +1,10 @@
 // pollen query:
 
-var promise = require('bluebird');
+//get global database object
+var db = require('../../database/pgp_db');
+var pgp = db.$config.pgp;
 
-var options = {
-  // Initialization Options
-  promiseLib: promise
-};
-
-var pgp = require('pg-promise')(options);
-var ctStr = require("../db_connect.json");
 const bib   = require('./bib_format');
-
-// Connecting to the database:
-var db = pgp(ctStr);
 
 function pollen(req, res, next) {
   

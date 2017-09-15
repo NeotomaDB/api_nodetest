@@ -2,19 +2,9 @@
 
 const path = require('path');
 
-var promise = require('bluebird');
-
-var options = {
-  // Initialization Options
-  promiseLib: promise
-};
-
-var pgp = require('pg-promise')(options);
-var ctStr = require("../../db_connect.json");
-const bib   = require('./../bib_format');
-
-// Connecting to the database:
-var db = pgp(ctStr);
+//get global database object
+var db = require('../../database/pgp_db');
+var pgp = db.$config.pgp;
 
 // Helper for linking to external query files:
 function sql(file) {

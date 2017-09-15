@@ -15,7 +15,7 @@ var handlers = require('../handlers/dbtables_handlers');
 
 
 router.get('/', function(req, res, next) {
-  res.send('DBTABLES API: please provide a valid request');
+  res.send('NeotomaDB dbtables API: please provide a valid request');
 });
 
 //router.get('/RelativeAgeScales', handlers.relativeagescales);

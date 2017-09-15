@@ -13,7 +13,9 @@ var router = express.Router();
 
 var handlers = require('../handlers/data_handlers');
 
-
+router.get('/', function(req, res, next) {
+  res.send('NeotomaDB data API: please provide a valid request');
+});
 /* (Approximate) LINE NUMBERS & Status:
 [ Use CTRL-G + Line number in Sublime Text ]
 

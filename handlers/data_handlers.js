@@ -1,6 +1,7 @@
 const bib   = require('../helpers/bib_format');
-//db connection pool
+//get global database object
 var db = require('../database/pgp_db');
+var pgp = db.$config.pgp;
 
 // Defining the query functions:
 module.exports = {
@@ -21,7 +22,7 @@ module.exports = {
     taxon.gettaxonquery(req, res, next);
   },
   pollen: function (req, res, next) { 
-    var pollen = require('../helpers/pollen.js');
+    var pollen = require('../helpers/pollen/pollen.js');
     pollen(req, res, next);
   },
 // RETURNING SITES:
@@ -43,24 +44,24 @@ module.exports = {
   },
 // RETURNING GEOPOLITICAL UNITS
   geopoliticalunits: function (req, res, next) { 
-    var geopol = require('../helpers/geopoliticalunits.js');
+    var geopol = require('../helpers/geopoliticalunits/geopoliticalunits.js');
     geopol.geopoliticalunits(req, res, next); 
   },
   geopolbysite: function (req, res, next) { 
-    var geopol = require('../helpers/geopoliticalunits.js');
+    var geopol = require('../helpers/geopoliticalunits/geopoliticalunits.js');
     geopol.geopolbysite(req, res, next); 
   },
 // RETURNING DATASETS
   dataset: function (req, res, next) { 
-    var dataset = require('../helpers/datasets.js');
+    var dataset = require('../helpers/datasets/datasets.js');
     dataset.datasetbyid(req, res, next); 
   },
   datasetquery: function (req, res, next) { 
-    var datasetquery = require('../helpers/datasets.js');
+    var datasetquery = require('../helpers/datasets/datasets.js');
     dataset.datasetquery(req, res, next); 
   },
   dbtables: function (req, res, next) { 
-    var dbtable = require('../helpers/dbtables.js');
+    var dbtable = require('../helpers/dbtables/dbtables.js');
     dbtable.dbtables(req, res, next); 
   }
 

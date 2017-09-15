@@ -15,7 +15,7 @@ var handlers = require('../handlers/apps_handlers');
 
 
 router.get('/', function(req, res, next) {
-  res.send('APPS API: please provide a valid request');
+  res.send('NeotomaDB apps API: please provide a valid request');
 });
 
 router.get('/DatasetTypes', handlers.datasettypes);
