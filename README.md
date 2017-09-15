@@ -1,8 +1,8 @@
 # Neotoma API Implementation
 
-This repository is intended to act as the core repository for the Neotoma API version 2 and greater.  There are two main branches.  `master` and `dev`.  Master is intended as the production branch, while `dev` is the main testing and development branch.  For documentation of the Neotoma Paleoecology Database see (this)[http://neotoma-manual.readthedocs.io/en/latest/neotoma_introduction.html] and of the community see (this)[https://www.neotomadb.org/].  Version 1 of the API is documented (here)[http://api.neotomadb.org/doc/home].
+This repository is intended to act as the core repository for the Neotoma API version 2 and greater.  There are two main branches, `master` and `dev`.  Master is intended as the production branch, while `dev` is the main testing and development branch.  For documentation of the Neotoma Paleoecology Database see [this](http://neotoma-manual.readthedocs.io/en/latest/neotoma_introduction.html) and of the community see [this](https://www.neotomadb.org/).  Version 1 of the API is documented [here](http://api.neotomadb.org/doc/home).
 
-Currently [http://api-dev.neotomadb.org]() is the home for the API, and will resolve to a [Swagger](http://swagger.io) landing page with API documentation.  This is generated dynamically using [swagger-jsdoc](https://www.npmjs.com/package/swagger-jsdoc), as implemented in the routes files.  For an example, see [`routes/data.js`](https://github.com/NeotomaDB/api_nodetest/blob/master/routes/data.js).
+Currently [http://api-dev.neotomadb.org]() is the home for the API, and will resolve to a [Swagger](http://swagger.io) landing page with API documentation.  This is generated dynamically using [swagger-jsdoc](https://www.npmjs.com/package/swagger-jsdoc), as implemented in the routes files.  For an example, see [`routes/data.js`](https://github.com/NeotomaDB/api_nodetest/blob/dev/routes/data.js).
 
 ## Development
 
@@ -15,7 +15,7 @@ We welcome open contribution to this project.  All contributors are expected to 
 
 ## Description
 
-This codebase is generated using `node.js`, `express` and `pg-promise` to interact with the Neotoma `postgres` database. The API endpoints are organized conceptually by applications (apps), data, and direct access to specific tables (dbtables). This project is based on a migration of an existing API implementation with a backend of .NET and SQLServer to one using nodejs and Postgresql.
+This codebase is generated using `node.js`, `express` and `pg-promise` to interact with the Neotoma `postgres` database. The API endpoints are organized conceptually by applications (apps), data, and direct access to specific tables (dbtables). This project is based on and replaces an existing API implemented with .NET and SQLServer.
 
 This code is currently in preliminary release.
 
