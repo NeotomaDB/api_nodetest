@@ -5,6 +5,16 @@ WITH sitid AS
 		(${gpid} IS NULL OR sgp.geopoliticalid IN (${gpid:csv}))
 	)
 
+WITH RECURSIVE lowertaxa AS (SELECT
+              txa.taxonid, 
+              txa.highertaxonid
+         FROM ndb.taxa AS txa
+        WHERE txa.taxonid IN (${taxonid:csv})
+        UNION ALL
+       SELECT m.taxonid, m.highertaxonid
+         FROM ndb.taxa AS m
+         JOIN lowertaxa ON lowertaxa.taxonid = m.highertaxonid)
+
 SELECT
 	  samples.sampleid,
 	  tx.taxonid,
@@ -18,7 +28,7 @@ SELECT
 	  sts.siteid,
 	  sts.sitename,
 	  sts.altitude,
-	  ST_AsGeoJSON(sts.geog,5,2)
+	  ST_AsGeoJSON(sts.geog,5,2) AS location
 	FROM
 	ndb.samples AS samples
 	LEFT JOIN ndb.data AS data ON samples.sampleid = data.sampleid
@@ -42,3 +52,4 @@ WHERE
 	(${altmax} IS NULL OR sts.altitude > ${altmax}) AND
 	(${loc} IS NULL OR st_contains(ST_GeomFromText(${loc}), sts.geom)) AND
 	sts.siteid IN (SELECT siteid FROM sitid)
+LIMIT 25;

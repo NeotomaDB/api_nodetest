@@ -157,8 +157,6 @@ router.get('/v2/data/sites/:siteid/datasets', db.datasetbysiteid);
 router.get('/v2/data/dbtables/', db.dbtables);
 router.get('/v2/data/dbtables/:table', db.dbtables);
 
-
-
 /**
 * @swagger
 * definitions:
@@ -289,6 +287,39 @@ router.get('/v2/data/sites/:siteid/publications', db.publicationbysite);
 router.get('/v2/data/dataset/:datasetid/publications', db.publicationbydataset);
 
 /**
+ * @swagger
+ * /v2/data/sites:
+ *   get:
+ *     summary: Site information.
+ *     description: Returns information about Neotoma sites
+ *     parameters:
+ *       - name: siteid
+ *         description: Numeric ID for publications.
+ *         in: path
+ *         required: false
+ *         type: integer
+ *       - name: datasetid
+ *         description: Related dataset identifier.
+ *         in: query
+ *         required: false
+ *         type: integer
+ *       - name: site
+ *         description: Related site identifier.
+ *         in: query
+ *         required: false
+ *     	   type: integer
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+*         description: An array of geopolitical units.
+*         schema:
+*           type: array
+*           items:
+*             $ref: '#/definitions/sites'
+*/
+
+/**
 * @swagger
 * definitions:
 *   sites:
@@ -324,39 +355,6 @@ router.get('/v2/data/dataset/:datasetid/publications', db.publicationbydataset);
 *               datasetid:
 *                 type: integer
 *                 format: int64
-*/
-
-/**
- * @swagger
- * /v2/data/sites:
- *   get:
- *     summary: Site information.
- *     description: Returns information about Neotoma sites
- *     parameters:
- *       - name: siteid
- *         description: Numeric ID for publications.
- *         in: path
- *         required: false
- *         type: integer
- *       - name: datasetid
- *         description: Related dataset identifier.
- *         in: query
- *         required: false
- *         type: integer
- *       - name: site
- *         description: Related site identifier.
- *         in: query
- *         required: false
- *     	   type: integer
- *     produces:
- *       - application/json
- *     responses:
- *       200:
-*         description: An array of geopolitical units.
-*         schema:
-*           type: array
-*           items:
-*             $ref: '#/definitions/sites'
 */
 
 router.get('/v2/data/sites/', db.sitesquery); // Goes to the queries.
@@ -430,5 +428,7 @@ router.get('/v2/data/geopoliticalunits/:gpid/sites', db.sitesbygeopol);
 
 router.get('/v2/data/taxa/:taxonid', db.taxonid);
 router.get('/v2/data/taxa/', db.taxonquery);
+
+router.get('/v2/data/occurrence/', db.occurrencequery);
 
 module.exports = router;

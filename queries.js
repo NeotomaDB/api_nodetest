@@ -21,7 +21,6 @@ module.exports = {
   chronology:chronology,
   contacts:contacts,
   download:download,
-  occurrence:occurrence,
   publicationid:publicationid,
   publicationquery:publicationquery,
   publicationbydataset:publicationbydataset,
@@ -64,7 +63,6 @@ module.exports = {
     var geopol = require('./helpers/geopoliticalunits/geopoliticalunits.js');
     geopol.geopoliticalbyid(req, res, next); 
   },
-
   geopolbysite: function (req, res, next) { 
     var geopol = require('./helpers/geopoliticalunits/geopoliticalunits.js');
     geopol.geopolbysite(req, res, next); 
@@ -86,30 +84,16 @@ module.exports = {
     var datasetquery = require('./helpers/datasets/datasets.js');
     dataset.datasetquery(req, res, next); 
   },
-  dbtables: function (req, res, next) { 
+  dbtables: function (req, res, next) {
     var dbtable = require('./helpers/dbtables/dbtables.js');
     dbtable.dbtables(req, res, next); 
+  },
+// RETURNING OCCURRENCES
+  occurrencequery: function (req, res, next) {
+    var occurrences = require('./helpers/occurrence/occurrence.js')
+    occurrences.occurrencequery(req, res, next);
   }
-
 };
-
-/* All the Endpoint functions */
-
-
-function occurrence(req, res, next) {
-  
-  // Get the query string:
-  var query = {};
-
-  res.status(200)
-    .json({
-      status: 'success',
-      query: query,
-      message: 'Retrieved occurrences'
-      })
-
-}
-
 
 function contacts(req, res, next) {
   
