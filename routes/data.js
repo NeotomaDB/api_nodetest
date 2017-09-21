@@ -765,4 +765,6 @@ router.get('/geopoliticalunits/:gpid/site', handlers.sitesbygeopol);
 router.get('/taxa/:taxonid', handlers.taxonid);
 router.get('/taxa/', handlers.taxonquery);
 
+router.get('/occurrence/', handlers.occurrencequery);
+
 module.exports = router;
