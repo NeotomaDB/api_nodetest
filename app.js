@@ -9,18 +9,25 @@ var swaggerJSDoc = require('swagger-jsdoc');
 const querystring = require('querystring');
 
 // Locations of files:
+
+//default route
 var index = require('./routes/index');
-var users = require('./routes/users');
+//data API routes
+var data = require('./routes/data');
+//apps API routes
+var apps = require('./routes/apps');
+//dbtables API routes
+var dbtables = require('./routes/dbtables');
 
 var app = express();
 
-// swagger definition
-var swaggerDefinition = require('./swaggerdefn.json');
 
+// swagger definition
+var swaggerDefinitionJson = require('./swaggerdefn.json');
 // options for the swagger docs
 var options = {
   // import swaggerDefinitions
-  swaggerDefinition: swaggerDefinition,
+  swaggerDefinition: swaggerDefinitionJson,
   // path to the API docs
   apis: ['./routes/*.js'],
 };
@@ -41,7 +48,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/users', users);
+app.use('/v2/apps', apps);
+app.use('/v2/data', data);
+app.use('/v2/dbtables', dbtables);
 
 
 app.get('/swagger.json', function(req, res) {
