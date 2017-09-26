@@ -17,18 +17,11 @@ WITH RECURSIVE lowertaxa AS (SELECT
 
 SELECT
 	  samples.sampleid,
-	  tx.taxonid,
-	  tx.taxonname,
-	  ages.age,
-	  ages.ageolder,
-	  ages.ageyounger,
-	  ds.datasetid,
-	  dt.datasettype,
-	  cdb.databasename,
-	  sts.siteid,
-	  sts.sitename,
-	  sts.altitude,
-	  ST_AsGeoJSON(sts.geog,5,2) AS location
+	  json_build_object('taxonid', tx.taxonid, 'taxonname', tx.taxonname) AS taxon,
+	  json_build_object('age', ages.age,  'ageolder', ages.ageolder, 'ageyounger', ages.ageyounger) AS ages,
+	  json_build_object('datasetid', ds.datasetid, 'siteid', sts.siteid, 'sitename', sts.sitename, 
+	                    'altitude', sts.altitude, 'location', ST_AsGeoJSON(sts.geog,5,2), 
+	                    'datasettype', dt.datasettype, 'database', cdb.databasename) AS site  
 	FROM
 	ndb.samples AS samples
 	LEFT JOIN ndb.data AS data ON samples.sampleid = data.sampleid
@@ -41,7 +34,7 @@ SELECT
 	LEFT JOIN ndb.taxa AS tx on var.taxonid = tx.taxonid
 	LEFT JOIN ndb.datasettypes AS dt ON ds.datasettypeid = dt.datasettypeid
 	LEFT JOIN (ndb.datasetdatabases AS dd 
-		LEFT JOIN ndb.constituentdatabases AS cdb ON dd.databaseid = cdb.databaseid) ON ds.datasetid = dd.datasetid
+	LEFT JOIN ndb.constituentdatabases AS cdb ON dd.databaseid = cdb.databaseid) ON ds.datasetid = dd.datasetid
 WHERE 
 	(${taxonname} IS NULL OR tx.taxonname LIKE ${taxonname}) AND
 	(${taxonid} IS NULL OR var.taxonid IN (${taxonid:csv})) AND
@@ -51,5 +44,8 @@ WHERE
  	(${altmin} IS NULL OR sts.altitude > ${altmin}) AND
 	(${altmax} IS NULL OR sts.altitude > ${altmax}) AND
 	(${loc} IS NULL OR st_contains(ST_GeomFromText(${loc}), sts.geom)) AND
-	sts.siteid IN (SELECT siteid FROM sitid)
+	sts.siteid IN (SELECT siteid FROM sitid) AND
+	(${age} IS NULL OR ages.ageolder > ${age} AND ages.ageyounger < ${age}) AND
+	(${ageold} IS NULL OR ages.ageolder > ${ageold}) AND
+	(${ageyoung} IS NULL OR ages.ageyounger > ${ageyoung})
 LIMIT 25;

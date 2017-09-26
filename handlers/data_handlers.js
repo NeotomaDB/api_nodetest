@@ -7,10 +7,30 @@ var pgp = db.$config.pgp;
 module.exports = {
   chronology:chronology,
   contacts:contacts,
+  publicationbydataset:publicationbydataset,
+  dbtables: function (req, res, next) { 
+    var dbtable = require('../helpers/dbtables/dbtables.js');
+    dbtable.dbtables(req, res, next); 
+  },
   download:download,
+  geopoliticalunits: function (req, res, next) { 
+    var geopol = require('../helpers/geopoliticalunits/geopoliticalunits.js');
+    geopol.geopoliticalunits(req, res, next); 
+  },
+  geopolbysite: function (req, res, next) { 
+    var geopol = require('../helpers/geopoliticalunits/geopoliticalunits.js');
+    geopol.geopolbysite(req, res, next); 
+  },
+  geopoliticalbyid: function (req, res, next) { 
+    var geopol = require('../helpers/geopoliticalunits/geopoliticalunits.js');
+    geopol.geopoliticalbyid(req, res, next); 
+  },
+  occurrencequery: function (req, res, next) {
+    var occurrences = require('./helpers/occurrence/occurrence.js')
+    occurrences.occurrencequery(req, res, next);
+  },
   publicationid:publicationid,
   publicationquery:publicationquery,
-  publicationbydataset:publicationbydataset,
   publicationbysite:publicationbysite,
   taxonid: function (req, res, next) { 
     var taxon = require('../helpers/taxa/taxa.js');
@@ -33,28 +53,13 @@ module.exports = {
     var sites = require('../helpers/sites/sites.js');
     sites.sitesquery(req, res, next); 
   },
-  sitesbydataset:function (req, res, next) { 
-    var sites = require('../helpers/sites/sites.js');
-    sites.sitesbydataset(req, res, next); 
-  },
   sitesbygeopol:function (req, res, next) { 
     var sites = require('../helpers/sites/sites.js');
     sites.sitesbygeopol(req, res, next); 
   },
-// RETURNING GEOPOLITICAL UNITS
-  geopoliticalunits: function (req, res, next) { 
-    var geopol = require('../helpers/geopoliticalunits/geopoliticalunits.js');
-    geopol.geopoliticalunits(req, res, next); 
-  },
-
-  geopoliticalbyid: function (req, res, next) { 
-    var geopol = require('./helpers/geopoliticalunits/geopoliticalunits.js');
-    geopol.geopoliticalbyid(req, res, next); 
-  },
-
-  geopolbysite: function (req, res, next) { 
-    var geopol = require('../helpers/geopoliticalunits/geopoliticalunits.js');
-    geopol.geopolbysite(req, res, next); 
+  sitesbydataset:function (req, res, next) { 
+    var sites = require('../helpers/sites/sites.js');
+    sites.sitesbydataset(req, res, next); 
   },
 // RETURNING DATASETS
   dataset: function (req, res, next) { 
@@ -64,15 +69,6 @@ module.exports = {
   datasetquery: function (req, res, next) { 
     var datasetquery = require('../helpers/datasets/datasets.js');
     dataset.datasetquery(req, res, next); 
-  },
-  dbtables: function (req, res, next) { 
-    var dbtable = require('../helpers/dbtables/dbtables.js');
-    dbtable.dbtables(req, res, next); 
-  },
-// RETURNING OCCURRENCES
-  occurrencequery: function (req, res, next) {
-    var occurrences = require('./helpers/occurrence/occurrence.js')
-    occurrences.occurrencequery(req, res, next);
   }
 };
 
@@ -198,7 +194,7 @@ function publicationquery(req, res, next) {
 
 function publicationbysite(req, res, next) {
 
-}
+};
 
 function publicationbydataset(req, res, next) {
 
