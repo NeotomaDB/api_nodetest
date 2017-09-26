@@ -26,20 +26,22 @@ function geopoliticalbyid(req, res, next) {
     });
   };
 
+  console.log(gpid);
+
   db.any(gpuid, [gpid])
     .then(function (data) {
 
       if(data.length == 0) {
         // We're returning the structure, but nothing inside it:
-        returner = [{"GeoPoliticalID": null,
-                     "HigherGeoPoliticalID": null,
-                     "Rank": null,
-                     "GeoPoliticalUnit": null,
-                     "GeoPoliticalName": null,
-                     "Higher": null,
-                     "Lower": null,
-                     "RecDateCreated": null,
-                     "RecDateModified": null}]
+        returner = [{"geopoliticalid": null,
+                     "highergeopoliticalid": null,
+                     "rank": null,
+                     "geopoliticalunit": null,
+                     "geopoliticalname": null,
+                     "higher": null,
+                     "lower": null,
+                     "recdatecreated": null,
+                     "recdatemodified": null}]
       } else {
         returner = data.sort(function(obj1, obj2) {
           return obj1.Rank - obj2.Rank;
@@ -79,15 +81,15 @@ function geopoliticalunits(req, res, next) {
 
       if(data.length == 0) {
         // We're returning the structure, but nothing inside it:
-        returner = [{"GeoPoliticalID": null,
-                     "HigherGeoPoliticalID": null,
-                     "Rank": null,
-                     "GeoPoliticalUnit": null,
-                     "GeoPoliticalName": null,
-                     "Higher": null,
-                     "Lower": null,
-                     "RecDateCreated": null,
-                     "RecDateModified": null}]
+        returner = [{"geopoliticalid": null,
+                     "highergeopoliticalid": null,
+                     "rank": null,
+                     "geopoliticalunit": null,
+                     "geopoliticalname": null,
+                     "higher": null,
+                     "lower": null,
+                     "recdatecreated": null,
+                     "recdatemodified": null}]
       } else {
         returner = data.sort(function(obj1, obj2) {
           return obj1.Rank - obj2.Rank;
