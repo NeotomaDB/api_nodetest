@@ -14,7 +14,9 @@ var router = express.Router();
 var handlers = require('../handlers/data_handlers');
 
 router.get('/', function(req, res, next) {
-  res.send('NeotomaDB data API: please provide a valid request');
+  res.redirect('/api-docs');
+
+  /* res.send('NeotomaDB data API: please provide a valid request'); */
 });
 /* (Approximate) LINE NUMBERS & Status:
 [ Use CTRL-G + Line number in Sublime Text ]
@@ -38,7 +40,6 @@ router.get('/', function(req, res, next) {
   585 - taxa
 
 */
-
 
 /**
 
@@ -306,25 +307,32 @@ router.get('/download/:datasetid', handlers.download);
 * definitions:
 *   geopolitical:
 *     properties:
-*       GeoPoliticalID:
+*       geopoliticalid:
+*         example: 757
 *         type: integer
 *         format: int32
-*       HigherGeoPoliticalID:
+*       highergeopoliticalid:
 *         type: integer
 *         format: int32
-*       Rank:
+*         example: 756
+*       rank:
 *         type: integer
 *         format: int32
-*       GeoPoliticalUnit:
+*         example: 2
+*       geopoliticalunit:
 *         type: string
-*       GeoPoliticalName:
+*         example: Alberta
+*       geopoliticalname:
 *         type: string
-*       RecDateCreated: 
+*         example: province
+*       recdatecreated: 
 *         type: string
 *         format: dateTime
-*     	RecDateModified:
-*     	  type: string
-*     	  format: dateTime
+*         example: 2013-09-30T21:02:51.000Z
+*       recdatemodified:
+*         type: string
+*         format: dateTime
+*         example: 2013-09-30T21:02:51.000Z
 */
 
 /**
@@ -371,8 +379,8 @@ router.get('/download/:datasetid', handlers.download);
 
 
 router.get('/geopoliticalunits', handlers.geopoliticalunits);
-router.get('/geopoliticalunits/:gpid', handlers.geopoliticalunits);
-router.get('/sites/:siteid/geopoliticalunits', handlers.geopolbysite); // Geopolitical Units by site.
+router.get('/geopoliticalunits/:gpid', handlers.geopoliticalbyid);
+router.get('/sites/:siteid/geopoliticalunits', handlers.geopolbysite);
 
 /**
 * @swagger
@@ -450,8 +458,8 @@ router.get('/sites/:siteid/geopoliticalunits', handlers.geopolbysite); // Geopol
 *            $ref: '#/definitions/occurrence'
 */
 
-router.get('/occurrence/', handlers.occurrence);
-router.get('/occurrence/:id', handlers.occurrence);
+router.get('/occurrence/', handlers.occurrencequery);
+router.get('/occurrence/:id', handlers.occurrencequery);
 
 /**
 * @swagger
@@ -695,9 +703,9 @@ router.get('/dataset/:datasetid/publications', handlers.publicationbydataset);
 
 router.get('/sites/', handlers.sitesquery); // Goes to the queries.
 router.get('/sites/:siteid', handlers.sitesbyid); // Takes integers, including comma separated
-router.get('/datasets/:datasetid/site', handlers.sitesbydataset); // Takes a dataset ID.
+router.get('/datasets/:datasetid/sites', handlers.sitesbydataset); // Takes a dataset ID.
 //router.get('/publications/:pubid/site', handlers.sitesbypublication);
-router.get('/geopoliticalunits/:gpid/site', handlers.sitesbygeopol);
+router.get('/geopoliticalunits/:gpid/sites', handlers.sitesbygeopol);
 //router.get('/contacts/:contactid/site', handlers.sitesbycontacts);
 
 /**
@@ -764,6 +772,93 @@ router.get('/geopoliticalunits/:gpid/site', handlers.sitesbygeopol);
 
 router.get('/taxa/:taxonid', handlers.taxonid);
 router.get('/taxa/', handlers.taxonquery);
+
+/**
+* @swagger
+* definitions:
+*   occurrence:
+*     properties:
+*       sampleid:
+*         type: integer
+*         format: int32
+*       taxon:
+*         type: object
+*         properties:
+*           taxonid:
+*             type: integer
+*             format: int32
+*           taxonname:
+*             type: string
+*       ages:
+*         type: object
+*         properties:
+*           age:
+*             type: integer
+*             format: int32
+*           ageolder:
+*             type: integer
+*             format: int32
+*           ageyounger:
+*             type: integer
+*             format: int32
+*       site:
+*         type: object
+*         properties:
+*           datasetid:
+*             type: integer
+*             format: int32
+*           siteid:
+*             type: integer
+*             format: int32
+*           sitename:
+*             type: string
+*           altitude:
+*             type: integer
+*             format: int32
+*           location:
+*           datasettype:
+*             type: string
+*           database:
+*             type: string
+*/
+
+/**
+ * @swagger
+ * /occurrence:
+ *   get:
+ *     summary: Occurrence information for a taxon and sample.
+ *     description: Given a set of query parameters, return individual occurrence information for a particular sample.
+ *     parameters:
+ *       - name: taxonid
+ *         description: Numeric ID for taxa.
+ *         in: path
+ *         required: false
+ *         type: integer
+ *       - name: taxonname
+ *         description: Taxon name or partial name.
+ *         in: query
+ *         required: false
+ *         type: string
+ *       - name: datasetid
+ *         description: Related dataset identifier.
+ *         in: query
+ *         required: false
+ *         type: integer
+ *       - name: siteid
+ *         description: Related site identifier.
+ *         in: query
+ *         required: false
+ *         type: integer
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+*         description: A taxon or array of taxa.
+*         schema:
+*           type: array
+*           items:
+*             $ref: '#/definitions/occurrence'
+*/
 
 router.get('/occurrence/', handlers.occurrencequery);
 
