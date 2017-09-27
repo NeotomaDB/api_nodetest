@@ -53,7 +53,12 @@ function occurrencequery(req, res, next) {
                                 .map(function(item) {
                                   return parseInt(item, 10);
                                 }),
-                    'loc':String(req.query.loc)
+                    'loc':String(req.query.loc),
+                    'age':req.query.age,
+                    'ageold':req.query.ageold,
+                    'ageyoung':req.query.ageyoung,
+                    'offset':req.query.offset,
+                    'limit':req.query.limit
                };
 
   // Clear variables to set to null for pg-promise:

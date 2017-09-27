@@ -26,7 +26,7 @@ module.exports = {
     geopol.geopoliticalbyid(req, res, next); 
   },
   occurrencequery: function (req, res, next) {
-    var occurrences = require('./helpers/occurrence/occurrence.js')
+    var occurrences = require('../helpers/occurrence/occurrence.js')
     occurrences.occurrencequery(req, res, next);
   },
   publicationid:publicationid,
