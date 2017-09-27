@@ -52,7 +52,6 @@ app.use('/v2/apps', apps);
 app.use('/v2/data', data);
 app.use('/v2/dbtables', dbtables);
 
-
 app.get('/swagger.json', function(req, res) {
   res.setHeader('Content-Type', 'application/json');
   res.send(swaggerSpec);

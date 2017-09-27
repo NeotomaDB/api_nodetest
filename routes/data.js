@@ -861,5 +861,6 @@ router.get('/taxa/', handlers.taxonquery);
 */
 
 router.get('/occurrence/', handlers.occurrencequery);
+router.get('/taxa/:taxonid/occurrence/', handlers.occurrencebytaxon);
 
 module.exports = router;

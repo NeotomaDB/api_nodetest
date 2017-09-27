@@ -29,6 +29,10 @@ module.exports = {
     var occurrences = require('../helpers/occurrence/occurrence.js')
     occurrences.occurrencequery(req, res, next);
   },
+  occurrencebytaxon: function (req, res, next) {
+    var occurrences = require('../helpers/occurrence/occurrence.js')
+    occurrences.occurrencebytaxon(req, res, next);
+  },
   publicationid:publicationid,
   publicationquery:publicationquery,
   publicationbysite:publicationbysite,

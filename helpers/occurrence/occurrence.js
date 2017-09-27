@@ -1,20 +1,10 @@
-// Occurrences query:
+// Sites query:
 
 const path = require('path');
 
-var promise = require('bluebird');
-
-var options = {
-  // Initialization Options
-  promiseLib: promise
-};
-
-var pgp = require('pg-promise')(options);
-var ctStr = require("../../db_connect.json");
-const bib   = require('./../bib_format');
-
-// Connecting to the database:
-var db = pgp(ctStr);
+//get global database object
+var db = require('../../database/pgp_db');
+var pgp = db.$config.pgp;
 
 // Helper for linking to external query files:
 function sql(file) {
@@ -23,6 +13,7 @@ function sql(file) {
 }
 
 const occurrencequerysql = sql('./occurrencequery.sql');
+const occurrencetaxonquerysql = sql('./occurrencebytaxon.sql');
 
 function occurrencequery(req, res, next) {
  
@@ -93,4 +84,37 @@ function occurrencequery(req, res, next) {
     });
 };
 
+function occurrencebytaxon(req, res, next) {
+
+
+
+  if (!!req.params.taxonid) {
+    var taxonlist = String(req.params.taxonid).split(',').map(function(item) {
+      return parseInt(item, 10);
+    });
+
+  } else {
+    res.status(500)
+        .json({
+          status: 'failure',
+          data: null,
+          message: 'Must pass either queries or an integer sequence.'
+        });
+  }
+
+  db.any(occurrencetaxonquerysql, [taxonlist])
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+        return next(err);
+    });
+};
+
 module.exports.occurrencequery = occurrencequery;
+module.exports.occurrencebytaxon = occurrencebytaxon;
