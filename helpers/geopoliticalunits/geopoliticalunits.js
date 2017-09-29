@@ -24,6 +24,12 @@ function geopoliticalbyid(req, res, next) {
     var gpid = String(req.params.gpid).split(',').map(function(item) {
       return parseInt(item, 10);
     });
+  } else {
+    res.status(200)
+      .json({
+        status: 'success',
+        data: returner
+    });
   };
 
   console.log(gpid);
@@ -47,7 +53,6 @@ function geopoliticalbyid(req, res, next) {
           return obj1.Rank - obj2.Rank;
         });
       }
-      
       res.status(200)
         .json({
           status: 'success',
@@ -73,38 +78,44 @@ function geopoliticalunits(req, res, next) {
   var outobj = {   'gpid':req.query.gpid,
                  'gpname':req.query.gpname,
                    'rank':req.query.rank,
-                  'lower':req.query.lower
+                  'lower':req.query.lower,
+                  'limit':req.query.limit,
+                  'offset':req.query.offset
                };
 
-  db.any(gpuQuery, outobj)
-    .then(function (data) {
+  if(Object.keys(outobj).every(function(x) { return typeof outobj[x]==='undefined';}) === false){
+    db.any(gpuQuery, outobj)
+      .then(function (data) {
 
-      if(data.length == 0) {
-        // We're returning the structure, but nothing inside it:
-        returner = [{"geopoliticalid": null,
-                     "highergeopoliticalid": null,
-                     "rank": null,
-                     "geopoliticalunit": null,
-                     "geopoliticalname": null,
-                     "higher": null,
-                     "lower": null,
-                     "recdatecreated": null,
-                     "recdatemodified": null}]
-      } else {
-        returner = data.sort(function(obj1, obj2) {
-          return obj1.Rank - obj2.Rank;
-        });
-      }
-      
-      res.status(200)
-        .json({
-          status: 'success',
-          data: returner
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
+        if(data.length == 0) {
+          // We're returning the structure, but nothing inside it:
+          returner = [{"geopoliticalid": null,
+                       "highergeopoliticalid": null,
+                       "rank": null,
+                       "geopoliticalunit": null,
+                       "geopoliticalname": null,
+                       "higher": null,
+                       "lower": null,
+                       "recdatecreated": null,
+                       "recdatemodified": null}]
+        } else {
+          returner = data.sort(function(obj1, obj2) {
+            return obj1.Rank - obj2.Rank;
+          });
+        }
+        
+        res.status(200)
+          .json({
+            status: 'success',
+            data: {query: outobj, result: returner}
+          });
+      })
+      .catch(function (err) {
+        return next(err);
+      });
+    } else {
+      res.redirect('/api-docs');
+    }
 }
 
 
