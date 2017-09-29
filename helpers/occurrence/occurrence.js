@@ -59,6 +59,11 @@ function occurrencequery(req, res, next) {
     }
   };
 
+  var novalues = Object.keys(outobj).every(function(x) { 
+    return typeof outobj[x]==='undefined' || !outobj[x];
+  });
+
+
   if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
     res.status(500)
       .json({
@@ -68,20 +73,27 @@ function occurrencequery(req, res, next) {
 
   }
 
-  console.log([outobj]);
+  if(novalues == true) {
+    if(!!req.accepts('json') & !req.accepts('html')) {
+      res.redirect('/swagger.json');
+    } else {
+      res.redirect('/api-docs');
+    };
+  } else {
 
-  db.any(occurrencequerysql, outobj)
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved all tables'
-        });
-    })
-    .catch(function (err) {
-        return next(err);
-    });
+    db.any(occurrencequerysql, outobj)
+      .then(function (data) {
+        res.status(200)
+          .json({
+            status: 'success',
+            data: data,
+            message: 'Retrieved all tables'
+          });
+      })
+      .catch(function (err) {
+          return next(err);
+      });
+  };
 };
 
 function occurrencebytaxon(req, res, next) {
