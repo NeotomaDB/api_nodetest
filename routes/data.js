@@ -133,36 +133,36 @@ router.get('/chronology/:id', handlers.chronology);
 * definitions:
 *   contact:
 *     properties:
-*       ContactID:
+*       contactid:
 *         type: integer
 *         format: int64
-*       ContactName:
+*         example: 123
+*       contactname:
 *         type: string
-*       GivenName:
+*         example: Simon J Goring
+*       lastname:
 *         type: string
-*       FamilyName:
+*         example: Goring
+*       firstname:
 *         type: string
-*       LeadingInitials:
+*         example: Simon
+*       status:
 *         type: string
-*       Title:
+*         example: Active
+*       address:
 *         type: string
-*       Suffix:
+*         example: 550 N Park St, Madison WI, USA
+*       url:
 *         type: string
-*       ContactStatus:
+*         example: http://goring.org
+*       recdatecreated: 
 *         type: string
-*       Address:
+*         format: dateTime
+*         example: 2013-09-30T21:02:51.000Z
+*       recdatemodified:
 *         type: string
-*       Email:
-*         type: string
-*       URL:
-*         type: string
-*       Phone:
-*         type: string
-*       Notes:
-*         type: string
-*       AliasID:
-*         type: integer
-*         format: int32
+*         format: dateTime
+*         example: 2013-09-30T21:02:51.000Z
 */
 
 /**
@@ -188,8 +188,8 @@ router.get('/chronology/:id', handlers.chronology);
 *          items:
 *            $ref: '#/definitions/contact'
 */
-router.get('/contacts/', handlers.contacts);
-router.get('/contacts/:contactid', handlers.contacts);
+router.get('/contacts/', handlers.contactquery);
+router.get('/contacts/:contactid', handlers.contactsbyid);
 
 /**
 * @swagger
