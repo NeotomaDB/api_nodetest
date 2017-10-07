@@ -14,7 +14,67 @@ function sql(file) {
 
 // Create a QueryFile globally, once per file:
 const contactbyid = sql('./contactbyid.sql');
+const contactquery = sql('./contactquery.sql');
  
+
+function contacts(req, res, next) {
+
+  if (!!req.query.contactid) {
+    var contactid = String(req.query.contactid).split(',').map(function(item) {
+      return parseInt(item, 10);
+    });
+  };
+
+  var outobj = {   'lastname':req.query.lastname,
+                'contactname':req.query.contactname,
+                     'status':req.query.status,
+                  'contactid':contactid,
+                  'limit':req.query.limit,
+                  'offset':req.query.offset
+               };
+
+  var novalues = Object.keys(outobj).every(function(x) { 
+    return typeof outobj[x]==='undefined' || !outobj[x];
+  });
+
+if(novalues == true) {
+    if(!!req.accepts('json') & !req.accepts('html')) {
+      res.redirect('/swagger.json');
+    } else {
+      res.redirect('/api-docs');
+    };
+  } else {
+    if(Object.keys(outobj).every(function(x) { return typeof outobj[x]==='undefined';}) === false){
+      db.any(contactquery, outobj)
+        .then(function (data) {
+
+          if(data.length == 0) {
+            // We're returning the structure, but nothing inside it:
+            returner = [{"contactid": null,
+                         "contactname": null,
+                         "familyname": null,
+                         "givennames": null,
+                         "status": null,
+                         "url": null,
+                         "address": null}]
+          } else {
+            returner = data;
+          }
+          
+          res.status(200)
+            .json({
+              status: 'success',
+              data: {query: outobj, result: returner}
+            });
+        })
+        .catch(function (err) {
+          return next(err);
+        });
+      };
+    };
+}
+
+
 function contactsbyid(req, res, next) {
 
   if (!!req.params.contactid) {
@@ -44,3 +104,6 @@ function contactsbyid(req, res, next) {
         return next(err);
     }) 
 }
+
+module.exports.contactquery = contacts;
+module.exports.contactsbyid = contactsbyid;

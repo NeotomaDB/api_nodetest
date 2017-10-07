@@ -6,7 +6,6 @@ var pgp = db.$config.pgp;
 // Defining the query functions:
 module.exports = {
   chronology:chronology,
-  contacts:contacts,
   publicationbydataset:publicationbydataset,
   dbtables: function (req, res, next) { 
     var dbtable = require('../helpers/dbtables/dbtables.js');
@@ -59,7 +58,7 @@ module.exports = {
   },
   sitesbygeopol:function (req, res, next) { 
     var sites = require('../helpers/sites/sites.js');
-    sites.sitesbygeopol(req, res, next); 
+    sites.sitesbygeopol(req, res, next);
   },
   sitesbydataset:function (req, res, next) { 
     var sites = require('../helpers/sites/sites.js');
@@ -71,39 +70,20 @@ module.exports = {
     dataset.datasetbyid(req, res, next); 
   },
   datasetquery: function (req, res, next) { 
-    var datasetquery = require('../helpers/datasets/datasets.js');
+    var dataset = require('../helpers/datasets/datasets.js');
     dataset.datasetquery(req, res, next); 
-  }
+  },
+  contactquery: function (req, res, next) { 
+    var contact = require('../helpers/contacts/contacts.js');
+    contact.contactquery(req, res, next); 
+  },
+  contactsbyid: function (req, res, next) { 
+    var contact = require('../helpers/contacts/contacts.js');
+    contact.contactsbyid(req, res, next); 
+  },
+
+
 };
-
-function contacts(req, res, next) {
-  
-  // Get the query string:
-  var query = {};
-
-    db.any('SELECT * FROM "Contacts"')
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved all tables'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-
-
-  res.status(200)
-    .json({
-      status: 'success',
-      query: query,
-      message: 'Retrieved contacts'
-      })
-
-}
-
 
 function dataset(req, res, next) {
   
