@@ -14,7 +14,7 @@ FROM
 WHERE 
   (${lastname} IS NULL OR cnt.familyname LIKE ${lastname})
   AND (${contactname} IS NULL OR cnt.contactname LIKE ${contactname})
-  AND (${status} IS NULL OR cst.contactstatus LIKE ${status})
+  AND (${status} IS NULL OR LOWER(cst.contactstatus) LIKE LOWER(${status}))
 OFFSET (CASE WHEN ${offset} IS NULL THEN 0
             ELSE ${offset}
        END)
