@@ -770,7 +770,7 @@ router.get('/geopoliticalunits/:gpid/sites', handlers.sitesbygeopol);
 *             $ref: '#/definitions/taxa'
 */
 
-router.get('/taxa/:taxonid', handlers.taxonid);
+router.get('/taxa/:taxonid', handlers.taxonbyid);
 router.get('/taxa/', handlers.taxonquery);
 
 /**

@@ -35,9 +35,9 @@ module.exports = {
   publicationid:publicationid,
   publicationquery:publicationquery,
   publicationbysite:publicationbysite,
-  taxonid: function (req, res, next) { 
+  taxonbyid: function (req, res, next) { 
     var taxon = require('../helpers/taxa/taxa.js');
-    taxon.gettaxa(req, res, next);
+    taxon.taxonbyid(req, res, next);
   },
   taxonquery: function (req, res, next) { 
     var taxon = require('../helpers/taxa/taxa.js');
@@ -84,37 +84,6 @@ module.exports = {
 
 
 };
-
-function dataset(req, res, next) {
-  
-  // Get the query string:
-  var pubid = req.query.pubid;
-  var datasetid = req.query.datasetid;
-  var siteid = req.query.siteid;
-
-  // Get the query string:
-  var query = 'select * from ndb.datasets as dts where ';
-
-  if (!!datasetid) {
-    query = query + 'dts.datasetid = '  + datasetid;
-  }
-
-  console.log("query is: "+query);
-
-  db.any(query)
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved all tables'
-        });
-    })
-    .catch(function (err) {
-      next(err);
-    });
-
-}
 
 function download(req, res, next) {
   
