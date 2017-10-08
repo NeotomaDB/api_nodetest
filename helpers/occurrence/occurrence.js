@@ -14,6 +14,38 @@ function sql(file) {
 
 const occurrencequerysql = sql('./occurrencequery.sql');
 const occurrencetaxonquerysql = sql('./occurrencebytaxon.sql');
+const occurrencebyidsql = sql('./occurrencebyid.sql');
+
+
+function occurrencebyid(req, res, next) {
+
+  if (!!req.params.occurrenceid) {
+    var occurrenceid = String(req.params.occurrenceid).split(',').map(function(item) {
+      return parseInt(item, 10);
+    });
+  } else {
+    res.status(500)
+        .json({
+          status: 'failure',
+          data: null,
+          message: 'Must pass either queries or an integer sequence.'
+        });
+  };
+
+  db.any(occurrencebyidsql, [occurrenceid])
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+        return next(err);
+    }) 
+}
+
 
 function occurrencequery(req, res, next) {
  
@@ -98,8 +130,6 @@ function occurrencequery(req, res, next) {
 
 function occurrencebytaxon(req, res, next) {
 
-
-
   if (!!req.params.taxonid) {
     var taxonlist = String(req.params.taxonid).split(',').map(function(item) {
       return parseInt(item, 10);
@@ -130,3 +160,4 @@ function occurrencebytaxon(req, res, next) {
 
 module.exports.occurrencequery = occurrencequery;
 module.exports.occurrencebytaxon = occurrencebytaxon;
+module.exports.occurrencebyid = occurrencebyid;

@@ -24,6 +24,10 @@ module.exports = {
     var geopol = require('../helpers/geopoliticalunits/geopoliticalunits.js');
     geopol.geopoliticalbyid(req, res, next); 
   },
+  occurrencebyid: function (req, res, next) {
+    var occurrences = require('../helpers/occurrence/occurrence.js')
+    occurrences.occurrencebyid(req, res, next);
+  },
   occurrencequery: function (req, res, next) {
     var occurrences = require('../helpers/occurrence/occurrence.js')
     occurrences.occurrencequery(req, res, next);

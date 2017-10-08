@@ -1,5 +1,6 @@
 SELECT
-	  samples.sampleid,
+	  data.dataid AS occurrence,
+	  samples.sampleid AS sample,
 	  json_build_object('taxonid', tx.taxonid, 'taxonname', tx.taxonname) AS taxon,
 	  json_build_object('age', ages.age,  'ageolder', ages.ageolder, 'ageyounger', ages.ageyounger) AS ages,
 	  json_build_object('datasetid', ds.datasetid, 'siteid', sts.siteid, 'sitename', sts.sitename, 
@@ -19,4 +20,10 @@ SELECT
 	LEFT JOIN (ndb.datasetdatabases AS dd 
 	LEFT JOIN ndb.constituentdatabases AS cdb ON dd.databaseid = cdb.databaseid) ON ds.datasetid = dd.datasetid
 WHERE 
-	var.taxonid IN ($1:csv);
+	var.taxonid IN ($1:csv)
+OFFSET (CASE WHEN ${offset} IS NULL THEN 0
+            ELSE ${offset}
+       END)
+LIMIT (CASE WHEN ${limit} IS NULL THEN 25
+            ELSE ${limit}
+       END)

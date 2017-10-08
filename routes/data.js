@@ -459,7 +459,8 @@ router.get('/sites/:siteid/geopoliticalunits', handlers.geopolbysite);
 */
 
 router.get('/occurrence/', handlers.occurrencequery);
-router.get('/occurrence/:id', handlers.occurrencequery);
+router.get('/occurrence/:occurrenceid', handlers.occurrencebyid);
+router.get('/taxa/:taxonid/occurrence', handlers.occurrencebytaxon);
 
 /**
 * @swagger
