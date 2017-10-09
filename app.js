@@ -52,7 +52,6 @@ app.use('/v2/apps', apps);
 app.use('/v2/data', data);
 app.use('/v2/dbtables', dbtables);
 
-
 app.get('/swagger.json', function(req, res) {
   res.setHeader('Content-Type', 'application/json');
   res.send(swaggerSpec);
@@ -67,6 +66,10 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+app.all('*', function(req, res) {
+  res.redirect("/api-docs");
 });
 
 module.exports = app;

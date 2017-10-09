@@ -6,16 +6,42 @@ var pgp = db.$config.pgp;
 // Defining the query functions:
 module.exports = {
   chronology:chronology,
-  contacts:contacts,
+  publicationbydataset:publicationbydataset,
+  dbtables: function (req, res, next) { 
+    var dbtable = require('../helpers/dbtables/dbtables.js');
+    dbtable.dbtables(req, res, next); 
+  },
   download:download,
-  occurrence:occurrence,
+  geopoliticalunits: function (req, res, next) { 
+    var geopol = require('../helpers/geopoliticalunits/geopoliticalunits.js');
+    geopol.geopoliticalunits(req, res, next); 
+  },
+  geopolbysite: function (req, res, next) { 
+    var geopol = require('../helpers/geopoliticalunits/geopoliticalunits.js');
+    geopol.geopolbysite(req, res, next); 
+  },
+  geopoliticalbyid: function (req, res, next) { 
+    var geopol = require('../helpers/geopoliticalunits/geopoliticalunits.js');
+    geopol.geopoliticalbyid(req, res, next); 
+  },
+  occurrencebyid: function (req, res, next) {
+    var occurrences = require('../helpers/occurrence/occurrence.js')
+    occurrences.occurrencebyid(req, res, next);
+  },
+  occurrencequery: function (req, res, next) {
+    var occurrences = require('../helpers/occurrence/occurrence.js')
+    occurrences.occurrencequery(req, res, next);
+  },
+  occurrencebytaxon: function (req, res, next) {
+    var occurrences = require('../helpers/occurrence/occurrence.js')
+    occurrences.occurrencebytaxon(req, res, next);
+  },
   publicationid:publicationid,
   publicationquery:publicationquery,
-  publicationbydataset:publicationbydataset,
   publicationbysite:publicationbysite,
-  taxonid: function (req, res, next) { 
+  taxonbyid: function (req, res, next) { 
     var taxon = require('../helpers/taxa/taxa.js');
-    taxon.gettaxa(req, res, next);
+    taxon.taxonbyid(req, res, next);
   },
   taxonquery: function (req, res, next) { 
     var taxon = require('../helpers/taxa/taxa.js');
@@ -34,22 +60,13 @@ module.exports = {
     var sites = require('../helpers/sites/sites.js');
     sites.sitesquery(req, res, next); 
   },
+  sitesbygeopol:function (req, res, next) { 
+    var sites = require('../helpers/sites/sites.js');
+    sites.sitesbygeopol(req, res, next);
+  },
   sitesbydataset:function (req, res, next) { 
     var sites = require('../helpers/sites/sites.js');
     sites.sitesbydataset(req, res, next); 
-  },
-  sitesbygeopol:function (req, res, next) { 
-    var sites = require('../helpers/sites/sites.js');
-    sites.sitesbygeopol(req, res, next); 
-  },
-// RETURNING GEOPOLITICAL UNITS
-  geopoliticalunits: function (req, res, next) { 
-    var geopol = require('../helpers/geopoliticalunits/geopoliticalunits.js');
-    geopol.geopoliticalunits(req, res, next); 
-  },
-  geopolbysite: function (req, res, next) { 
-    var geopol = require('../helpers/geopoliticalunits/geopoliticalunits.js');
-    geopol.geopolbysite(req, res, next); 
   },
 // RETURNING DATASETS
   dataset: function (req, res, next) { 
@@ -57,93 +74,20 @@ module.exports = {
     dataset.datasetbyid(req, res, next); 
   },
   datasetquery: function (req, res, next) { 
-    var datasetquery = require('../helpers/datasets/datasets.js');
+    var dataset = require('../helpers/datasets/datasets.js');
     dataset.datasetquery(req, res, next); 
   },
-  dbtables: function (req, res, next) { 
-    var dbtable = require('../helpers/dbtables/dbtables.js');
-    dbtable.dbtables(req, res, next); 
-  }
+  contactquery: function (req, res, next) { 
+    var contact = require('../helpers/contacts/contacts.js');
+    contact.contactquery(req, res, next); 
+  },
+  contactsbyid: function (req, res, next) { 
+    var contact = require('../helpers/contacts/contacts.js');
+    contact.contactsbyid(req, res, next); 
+  },
+
 
 };
-
-/* All the Endpoint functions */
-
-
-function occurrence(req, res, next) {
-  
-  // Get the query string:
-  var query = {};
-
-  res.status(200)
-    .json({
-      status: 'success',
-      query: query,
-      message: 'Retrieved occurrences'
-      })
-
-}
-
-
-function contacts(req, res, next) {
-  
-  // Get the query string:
-  var query = {};
-
-    db.any('SELECT * FROM "Contacts"')
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved all tables'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-
-
-  res.status(200)
-    .json({
-      status: 'success',
-      query: query,
-      message: 'Retrieved contacts'
-      })
-
-}
-
-
-function dataset(req, res, next) {
-  
-  // Get the query string:
-  var pubid = req.query.pubid;
-  var datasetid = req.query.datasetid;
-  var siteid = req.query.siteid;
-
-  // Get the query string:
-  var query = 'select * from ndb.datasets as dts where ';
-
-  if (!!datasetid) {
-    query = query + 'dts.datasetid = '  + datasetid;
-  }
-
-  console.log("query is: "+query);
-
-  db.any(query)
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved all tables'
-        });
-    })
-    .catch(function (err) {
-      next(err);
-    });
-
-}
 
 function download(req, res, next) {
   
@@ -158,7 +102,6 @@ function download(req, res, next) {
       })
 
 }
-
 
 function chronology(req, res, next) {
   
@@ -208,7 +151,7 @@ function publicationquery(req, res, next) {
 
 function publicationbysite(req, res, next) {
 
-}
+};
 
 function publicationbydataset(req, res, next) {
 

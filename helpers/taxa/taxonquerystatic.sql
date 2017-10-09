@@ -1,4 +1,4 @@
-SELECT taxa.taxonid,
+SELECT DISTINCT taxa.taxonid,
        taxa.taxonname,
        taxa.author AS author,
        ecg.ecolgroupid AS ecolgroup,
@@ -18,6 +18,12 @@ SELECT taxa.taxonid,
   ndb.variables AS var ON var.taxonid = taxa.taxonid
   WHERE
   (${taxonid} IS NULL OR taxa.taxonid IN (${taxonid:csv}))
-  AND (${taxonname} IS NULL OR taxa.taxonname LIKE ${taxonname})
+  AND (${taxonname} IS NULL OR LOWER(taxa.taxonname) LIKE LOWER(${taxonname}))
   AND (${status} IS NULL OR taxa.extinct = ${status})
-  AND (${taxagroup} IS NULL OR taxa.taxagroupid = ${taxagroup});
+  AND (${taxagroup} IS NULL OR taxa.taxagroupid = ${taxagroup})
+OFFSET (CASE WHEN ${offset} IS NULL THEN 0
+            ELSE ${offset}
+       END)
+LIMIT (CASE WHEN ${limit} IS NULL THEN 25
+            ELSE ${limit}
+       END);

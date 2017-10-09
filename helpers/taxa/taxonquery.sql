@@ -12,7 +12,8 @@ SELECT txa.taxonid,
        txa.taxonname,
        txa.author AS author,
        ecg.ecolgroupid AS ecolgroup,
-       txa.highertaxonid,
+       txa.highertaxonid,  lowertaxa AS taxa
+
        CASE WHEN txa.extinct = 0 THEN 'extant'
             WHEN txa.extinct = 1 THEN 'extinct'
        END AS status,
