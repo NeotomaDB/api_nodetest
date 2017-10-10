@@ -1,0 +1,12 @@
+{
+  "info": {
+    "title": "Neotoma API",
+    "version": "2.0.0",
+    "description": "API Documentation for the Neotoma Paleoecological Database"
+  },
+  "host": "localhost",
+  "scheme": "http",
+  "port": 3000,
+  "basePath": "/",
+  "url": "http://localhost:3000/swagger.json"
+}

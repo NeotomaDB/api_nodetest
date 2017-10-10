@@ -1,17 +1,8 @@
 // Returns the data tables:
 
-var promise = require('bluebird');
-
-var options = {
-  // Initialization Options
-  promiseLib: promise
-};
-
-var pgp = require('pg-promise')(options);
-var ctStr = require("../../db_connect.json");
-
-// Connecting to the database:
-var db = pgp(ctStr);
+//get global database object
+var db = require('../../database/pgp_db');
+var pgp = db.$config.pgp;
 
 // Defining the query function:
 
