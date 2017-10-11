@@ -18,7 +18,7 @@ module.exports = {
   },
   geopolbysite: function (req, res, next) { 
     var geopol = require('../helpers/geopoliticalunits/geopoliticalunits.js');
-    geopol.geopolbysite(req, res, next); 
+    geopol.geopolbysite(req, res, next);
   },
   geopoliticalbyid: function (req, res, next) { 
     var geopol = require('../helpers/geopoliticalunits/geopoliticalunits.js');
@@ -69,7 +69,7 @@ module.exports = {
     sites.sitesbydataset(req, res, next); 
   },
 // RETURNING DATASETS
-  dataset: function (req, res, next) { 
+  datasetbyid: function (req, res, next) { 
     var dataset = require('../helpers/datasets/datasets.js');
     dataset.datasetbyid(req, res, next); 
   },

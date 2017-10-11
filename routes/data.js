@@ -2,9 +2,8 @@
 
 data.js
 By: Simon Goring
-Last Updated: September 14, 2017
+Last Updated: October 10, 2017
 Updated by: Michael Stryker
-
 
  */
 
@@ -15,31 +14,7 @@ var handlers = require('../handlers/data_handlers');
 
 router.get('/', function(req, res, next) {
   res.redirect('/api-docs');
-
-  /* res.send('NeotomaDB data API: please provide a valid request'); */
 });
-/* (Approximate) LINE NUMBERS & Status:
-[ Use CTRL-G + Line number in Sublime Text ]
-
-  36   - chronology
-  123  - contacts
-  187  - datasets
-  234  - dbtablessites
-  267  - downloads
-         DownloadsCSV
-         DownloadMultiple
-         DownloadMultipleCSV
-         DownloadZip
-  301  - GeoPoliticalUnits
-  339  - occurrence
-  419  - pollen
-  529  - publications
-         SampleData
-  586  - site
-         sites
-  585 - taxa
-
-*/
 
 /**
 
@@ -175,9 +150,25 @@ router.get('/chronology/:id', handlers.chronology);
 *       - name: contactid
 *         description: Unique contact identifier.
 *         in: path
-*         required: true
+*         required: false
 *         type: integer
 *         format: int64
+*       - name: lastname
+*         description: Last name of the researcher
+*         in: query
+*         required: false
+*         type: string
+*       - name: contactname
+*         description: Full name of the the researcher (may use wildcards)
+*         in: query
+*         required: false
+*         type: string
+*         example: \*Goring\*
+*       - name: status
+*         in: query
+*         description: Current employment status
+*         type: string
+*         enum: ["active","deceased", "defunct", "extant", "inactive", "retired", "unknown"]
 *     produces:
 *       - application/json
 *     responses:
@@ -230,8 +221,8 @@ router.get('/contacts/:contactid', handlers.contactsbyid);
 *             $ref: '#/definitions/dataset'
 */
 
-router.get('/dataset/', handlers.dataset);
-router.get('/dataset/:id', handlers.dataset);
+router.get('/datasets/', handlers.datasetquery);
+router.get('/datasets/:datasetid', handlers.datasetbyid);
 router.get('/datasets/:datasetid/publications', handlers.publicationbydataset);
 
 /**
@@ -387,52 +378,51 @@ router.get('/sites/:siteid/geopoliticalunits', handlers.geopolbysite);
 * definitions:
 *   occurrence:
 *     properties:
-*       OccurID: 
+*       occurrence:
 *         type: integer
 *         format: int64
-*       Age:
-*         type: number
-*         format: float
-*       TaxonID:
+*       sample:
 *         type: integer
-*         format: int32
-*       TaxonName:
-*         type: string
-*       AgeYounger:
-*         type: number
-*         format: float
-*       AgeOlder:
-*         type: number
-*         format: float
-*       DatasetID:
-*         type: integer
-*         format: int32
-*       DatabaseName:
-*         type: string
-*       DatasetType:
-*         type: string
-*       SiteName:
-*         type: string
-*       SiteID: 
-*         type: integer
-*         format: int32
-*       Altitude:
-*         type: number
-*         format: float
-*       LongitudeWest:
-*         type: number
-*         format: float
-*       LongitudeEast:
-*         type: number
-*         format: float
-*       LatitudeNorth:
-*         type: number
-*         format: float
-*       LatitudeSouth:
-*         type: number
-*         format: float
+*         format: int64
+*       taxon:
+*         type: object
+*         properties:
+*           taxonid:
+*             type: integer
+*             format: int64
+*           taxonname:
+*             type: string
+*       ages:
+*         type: object
+*         properties:
+*           age:
+*             type: integer
+*             format: int64
+*           ageolder:
+*             type: integer
+*             format: int64
+*           ageyounger:
+*             type: integer
+*             format: int64
+*       site:
+*         type: object
+*         properties:
+*           datasetid:
+*             type: integer
+*             format: int64
+*           siteid:
+*             type: integer
+*             format: int64
+*           sitename:
+*             type: string
+*             altitude: int32
+*           location:
+*             type: string
+*           datasettype:
+*             type: string
+*           database:
+*             type: string
 */
-
 
 /**
 * @swagger
@@ -444,14 +434,84 @@ router.get('/sites/:siteid/geopoliticalunits', handlers.geopolbysite);
 *       - name: occid
 *         description: Unique occurrence identifier.
 *         in: path
-*         required: true
+*         required: false
+*         type: integer
+*       - name: taxonname
+*         description: Name of the taxon for which occurrences are requested.
+*         in: query
+*         required: false
+*         type: string
+*       - name: taxonid
+*         description: Unique taxonomic identifier (from the Neotoma taxon table).
+*         in: query
+*         required: false
+*         type: integer
+*       - name: siteid
+*         description: The unique site identifier (from the Neotoma sites table).
+*         in: query
+*         required: false
+*         type: integer
+*       - name: sitename
+*         description: Site name for the record.
+*         in: query
+*         required: false
+*         type: string
+*       - name: datasettype
+*         description: Neotoma contains data for a number of dataset types.  This returns a subset of data types.
+*         in: query
+*         required: false
+*         type: string
+*       - name: altmin
+*         description: Lower altitude boundary for occurrence searches.
+*         in: query
+*         required: false
+*         type: integer
+*         format: int32
+*       - name: altmax
+*         description: Upper altitude boundary for occurrence searches.
+*         in: query
+*         required: false
+*         type: integer
+*         format: int32
+*       - name: loc
+*         description: geoJSON string for search boundaries.
+*         in: query
+*         required: false
+*         type: string
+*       - name: age
+*         description: A single age for a search
+*         in: query
+*         required: false
+*         type: integer
+*       - name: ageyounger
+*         description: The most recent age for occurrences within a query.
+*         in: query
+*         required: false
 *         type: integer
 *         format: int64
+*       - name: ageolder
+*         description: The oldest age for occurrences to be returned by the query.
+*         in: query
+*         required: false
+*         type: integer
+*         format: int64
+*       - name: limit
+*         description: The maximum number of records to be returned, default is 25.
+*         type: integer
+*         format: int32
+*         in: query
+*         required: false
+*       - name: offset
+*         description: The offset for returned records.  Default is 0.
+*         in: query
+*         required: false
+*         type: integer
+*         format: int32
 *     produces:
 *       - application/json
 *     responses:
 *       200:
-*        description: Occurrence
+*        description: occurrence
 *        schema:
 *          type: object
 *          items:
@@ -773,95 +833,5 @@ router.get('/geopoliticalunits/:gpid/sites', handlers.sitesbygeopol);
 
 router.get('/taxa/:taxonid', handlers.taxonbyid);
 router.get('/taxa/', handlers.taxonquery);
-
-/**
-* @swagger
-* definitions:
-*   occurrence:
-*     properties:
-*       sampleid:
-*         type: integer
-*         format: int32
-*       taxon:
-*         type: object
-*         properties:
-*           taxonid:
-*             type: integer
-*             format: int32
-*           taxonname:
-*             type: string
-*       ages:
-*         type: object
-*         properties:
-*           age:
-*             type: integer
-*             format: int32
-*           ageolder:
-*             type: integer
-*             format: int32
-*           ageyounger:
-*             type: integer
-*             format: int32
-*       site:
-*         type: object
-*         properties:
-*           datasetid:
-*             type: integer
-*             format: int32
-*           siteid:
-*             type: integer
-*             format: int32
-*           sitename:
-*             type: string
-*           altitude:
-*             type: integer
-*             format: int32
-*           location:
-*           datasettype:
-*             type: string
-*           database:
-*             type: string
-*/
-
-/**
- * @swagger
- * /occurrence:
- *   get:
- *     summary: Occurrence information for a taxon and sample.
- *     description: Given a set of query parameters, return individual occurrence information for a particular sample.
- *     parameters:
- *       - name: taxonid
- *         description: Numeric ID for taxa.
- *         in: path
- *         required: false
- *         type: integer
- *       - name: taxonname
- *         description: Taxon name or partial name.
- *         in: query
- *         required: false
- *         type: string
- *       - name: datasetid
- *         description: Related dataset identifier.
- *         in: query
- *         required: false
- *         type: integer
- *       - name: siteid
- *         description: Related site identifier.
- *         in: query
- *         required: false
- *         type: integer
- *     produces:
- *       - application/json
- *     responses:
- *       200:
-*         description: A taxon or array of taxa.
-*         schema:
-*           type: array
-*           items:
-*             $ref: '#/definitions/occurrence'
-*/
-
-router.get('/occurrence/', handlers.occurrencequery);
-router.get('/taxa/:taxonid/occurrence/', handlers.occurrencebytaxon);
 
 module.exports = router;
