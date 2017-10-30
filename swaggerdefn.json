@@ -14,7 +14,9 @@
     "name": "MIT",
     "url": "https://opensource.org/licenses/MIT"
   },
-  "host": "http://localhost:3000",
+  "host": "localhost",
+  "scheme": "http",
+  "port": 3000,
   "basePath": "/",
   "url": "http://localhost:3000/swagger.json"
 }
