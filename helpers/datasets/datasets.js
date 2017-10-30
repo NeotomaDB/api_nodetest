@@ -11,8 +11,9 @@ function sql(file) {
     return new pgp.QueryFile(fullPath, {minify: true});
 }
 
+const datasetquerysql   = sql('./datasetquery.sql');
 const datasetbyidsql = sql('./datasetbyid.sql');
-const datasetbysite = sql('./datasetbysite.sql');
+const datasetbysite  = sql('./datasetbysite.sql');
 
 function datasetbyid(req, res, next) {
   console.log(req.params.datasetid);
@@ -43,7 +44,6 @@ function datasetbyid(req, res, next) {
       next(err);
     });
 }
-
 
 function datasetbysiteid(req, res, next) {
   console.log(req.params.siteid);
@@ -77,17 +77,40 @@ function datasetbysiteid(req, res, next) {
 
 
 function datasetquery(req, res, next) {
-  
-  var datasetid = req.params.datasetid;
 
-  // Get the query string:
-  var query = 'SELECT * FROM ndb.datasets as dts WHERE ';
+  // Get the input parameters:
+  var outobj = {'siteid':String(req.query.siteid).split(',').map(function(item) {
+                            return parseInt(item, 10);
+                          }),
+                'piid':String(req.query.piid).split(',').map(function(item) {
+                            return parseInt(item, 10);
+                          }),
+                'datasettype':String(req.query.sitename),
+                     'altmin':parseInt(String(req.query.altmin)),
+                     'altmax':parseInt(String(req.query.altmax)),
+                        'loc':String(req.query.loc),
+                       'gpid':parseInt(req.query.gpid),
+                   'ageyoung':parseInt(req.query.ageyoung),
+                     'ageold':parseInt(req.query.ageold),
+                      'ageof':parseInt(req.query.ageold)
+               };
 
-  if (!!datasetid) {
-    query = query + 'dts.datasetid = '  + datasetid;
+  if (typeof req.query.sitename === 'undefined') { outobj.sitename = null }
+  if (typeof req.query.altmin === 'undefined')   {   outobj.altmin = null }
+  if (typeof req.query.altmax === 'undefined')   {   outobj.altmax = null }
+  if (typeof req.query.loc === 'undefined')      {      outobj.loc = null }
+  if (typeof req.query.gpid === 'undefined')     {     outobj.gpid = null }
+
+  if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
+    res.status(500)
+      .json({
+        status: 'failure',
+        message: 'The altmin is greater than altmax.  Please fix this!'
+      });
+
   }
 
-  db.any(query)
+  db.any(datasetquerysql, outobj)
     .then(function (data) {
       res.status(200)
         .json({
@@ -97,9 +120,8 @@ function datasetquery(req, res, next) {
         });
     })
     .catch(function (err) {
-      next(err);
+        return next(err);
     });
-
 }
 
 module.exports.datasetbyid = datasetbyid;

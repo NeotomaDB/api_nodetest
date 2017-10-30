@@ -11,9 +11,14 @@ SELECT json_build_object(       'siteid', sts.siteid,
        json_agg(
               json_build_object(  'datasetid', dts.datasetid,
                                 'datasettype', dst.datasettype,
-                                'datasetnotes', dts.notes,
-                                'database', cstdb.databasename,
-                                        'doi', doi.doi)) AS dataset FROM
+                               'datasetnotes', dts.notes,
+                                   'database', cstdb.databasename,
+                                        'doi', doi.doi,
+                                  'datasetpi', json_build_object('contactid', cnt.contactid, 
+                                                          'contactname', cnt.contactname,
+                                                          'familyname', cnt.familyname,
+                                                          'firstname', cnt.givennames,
+                                                          'initials', cnt.leadinginitials))) AS dataset FROM
 ndb.datasets AS dts LEFT OUTER JOIN
 ndb.collectionunits AS clu ON clu.collectionunitid = dts.collectionunitid LEFT OUTER JOIN
 ndb.sites AS sts ON sts.siteid = clu.siteid  LEFT OUTER JOIN
