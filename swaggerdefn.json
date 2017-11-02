@@ -1,0 +1,9 @@
+ {
+  "info": {
+    "title": "Neotoma API",
+    "version": "2.0.0",
+    "description": "API Documentation for the Neotoma Paleoecological Database"
+  },
+  "basePath": "/",
+  "url": "http://api-dev.neotomadb.org/swagger.json"
+}
