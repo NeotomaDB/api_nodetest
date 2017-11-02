@@ -15,6 +15,8 @@ function sql(file) {
 // Create a QueryFile globally, once per file:
 const contactbyid = sql('./contactbyid.sql');
 const contactquery = sql('./contactquery.sql');
+const contactbydsid = sql('./contactbydsid.sql');
+const contactbystid = sql('./contactbysiteid.sql');
  
 
 function contacts(req, res, next) {
@@ -105,5 +107,68 @@ function contactsbyid(req, res, next) {
     }) 
 }
 
+function contactsbydataid(req, res, next) {
+
+  if (!!req.params.datasetid) {
+    var datasetid = String(req.params.datasetid).split(',').map(function(item) {
+      return parseInt(item, 10);
+    });
+
+  } else {
+    res.status(500)
+        .json({
+          status: 'failure',
+          data: null,
+          message: 'Must pass either queries or an integer sequence.'
+        });
+  }
+
+  db.any(contactbydsid, [datasetid])
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+        return next(err);
+    }) 
+}
+
+function contactsbysiteid(req, res, next) {
+
+  if (!!req.params.siteid) {
+    var siteid = String(req.params.siteid).split(',').map(function(item) {
+      return parseInt(item, 10);
+    });
+
+  } else {
+    res.status(500)
+        .json({
+          status: 'failure',
+          data: null,
+          message: 'Must pass either queries or an integer sequence.'
+        });
+  }
+
+  db.any(contactbystid, [siteid])
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+        return next(err);
+    }) 
+}
+
+
 module.exports.contactquery = contacts;
 module.exports.contactsbyid = contactsbyid;
+module.exports.contactsbydataid = contactsbydataid;
+module.exports.contactsbysiteid = contactsbysiteid;

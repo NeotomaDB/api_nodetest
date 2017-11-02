@@ -181,6 +181,8 @@ router.get('/chronology/:id', handlers.chronology);
 */
 router.get('/contacts/', handlers.contactquery);
 router.get('/contacts/:contactid', handlers.contactsbyid);
+router.get('/datasets/:datasetid/contacts', handlers.contactsbydataid);
+router.get('/sites/:siteid/contacts', handlers.contactsbysiteid);
 
 /**
 * @swagger

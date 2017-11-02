@@ -1,13 +1,13 @@
 SELECT 
-  cnt.contactid,
-  cnt.contactname,
-  cnt.familyname, 
-  cnt.givennames,
-  cst.contactstatus,
-  cnt.url,
-  cnt.address,
-  cnt.recdatecreated,
-  cnt.recdatemodified
+  cnt.contactid AS contactid,
+  cnt.contactname AS fullName,
+  cnt.familyname AS lastName, 
+  cnt.givennames AS firstName,
+  cst.contactstatus AS contactStatus,
+  cnt.url AS url,
+  cnt.address AS address,
+  cnt.recdatecreated AS created,
+  cnt.recdatemodified AS modified
 FROM
   ndb.contacts AS cnt INNER JOIN
   ndb.contactstatuses AS cst ON cnt.contactstatusid = cst.contactstatusid

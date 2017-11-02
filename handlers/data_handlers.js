@@ -85,8 +85,14 @@ module.exports = {
     var contact = require('../helpers/contacts/contacts.js');
     contact.contactsbyid(req, res, next); 
   },
-
-
+  contactsbydataid: function (req, res, next) { 
+    var contact = require('../helpers/contacts/contacts.js');
+    contact.contactsbydataid(req, res, next); 
+  },
+  contactsbysiteid: function (req, res, next) { 
+    var contact = require('../helpers/contacts/contacts.js');
+    contact.contactsbysiteid(req, res, next); 
+  }
 };
 
 function download(req, res, next) {
