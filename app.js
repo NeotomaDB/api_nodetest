@@ -48,9 +48,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/v2/apps', apps);
-app.use('/v2/data', data);
-app.use('/v2/dbtables', dbtables);
+app.use('/v1.5/apps', apps);
+app.use('/v1.5/data', data);
+app.use('/v1.5/dbtables', dbtables);
 
 app.get('/swagger.json', function(req, res) {
   res.setHeader('Content-Type', 'application/json');

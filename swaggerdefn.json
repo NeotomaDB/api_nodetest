@@ -7,6 +7,6 @@
   "host": "localhost",
   "scheme": "http",
   "port": 3000,
-  "basePath": "/",
+  "basePath": "/v1.5/apps/",
   "url": "http://localhost:3000/swagger.json"
 }
