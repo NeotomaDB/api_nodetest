@@ -4,9 +4,9 @@
     "version": "2.0.0",
     "description": "API Documentation for the Neotoma Paleoecological Database"
   },
-  "host": "localhost",
+  "host": "api-dev.neotomadb.org",
   "scheme": "http",
   "port": 3000,
   "basePath": "/v1.5/apps/",
-  "url": "http://localhost:3000/swagger.json"
+  "url": "http://api-dev.neotomadb.org/swagger.json"
 }
