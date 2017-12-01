@@ -1,11 +1,11 @@
 /*
-
-data.js
-By: Simon Goring
-Last Updated: October 10, 2017
-Updated by: Michael Stryker
-
- */
+* 
+* data.js
+* By: Simon Goring
+* Last Updated: December 1, 2017
+* Updated by: Michael Stryker
+*
+*/
 
 var express = require('express');
 var router = express.Router();
@@ -65,24 +65,21 @@ router.get('/', function(req, res, next) {
 *         description: Unique contact identifier within the Neotoma Database
 *         in: path
 *         required: false
-*         schema:
-*           type: integer
-*           format: int64
-*           minimum: 1
+*         type: integer
+*         format: int64
+*         minimum: 1
 *         example: 123
 *       - name: lastname
 *         description: Last name of the researcher (may use wildcards)
 *         in: query
 *         required: false
-*         schema:
-*         	type: string
+*         type: string
 *         example: Grimm
 *       - name: contactname
 *         description: Full name of the the researcher (may use wildcards)
 *         in: query
 *         required: false
-*         schema:
-*           type: string
+*         type: string
 *         example: \*Goring\*
 *       - name: status
 *         in: query
@@ -90,6 +87,21 @@ router.get('/', function(req, res, next) {
 *         required: false
 *         type: string
 *         enum: ["active","deceased", "defunct", "extant", "inactive", "retired", "unknown"]
+*       - name: limit
+*         description: The maximum number of records to be returned, default is 25.
+*         type: integer
+*         format: int32
+*         default: 25
+*         minimum: 1
+*         in: query
+*         required: false
+*       - name: offset
+*         description: The offset for returned records.  Default is 0.
+*         in: query
+*         required: false
+*         type: integer
+*         format: int32
+*         default: 0
 *     produces:
 *       - application/json
 *     responses:
@@ -110,9 +122,59 @@ router.get('/sites/:siteid/contacts', handlers.contactsbysiteid);
 * definitions:
 *   dataset:
 *     properties:
-*       Datasets:
-*         type: string
-*       
+*       site:
+*         type: object
+*         properties:
+*           siteid:
+*             type: integer
+*             format: int32
+*           sitename:
+*             type: string
+*           sitedescription:
+*             type: string
+*           sitenotes:
+*             type: string
+*           geography:
+*             type: string
+*             format: geoJSON
+*           altitude:
+*             type: integer
+*           collectionunitid:
+*             type: integer
+*           collectionunit:
+*             type: string
+*           handle:
+*             type: string
+*           unittype:
+*             type: string
+*       dataset:
+*         type: object
+*         properties:
+*           datasetid:
+*             type: integer
+*           datasettype:
+*             type: string
+*           datasetnotes:
+*             type: string
+*           database:
+*             type: string
+*           doi:
+*             type: string
+*             format: doi
+*           datasetpi:
+*             type: object
+*             properties:
+*               contactid:
+*                 type: integer
+*               contactname:
+*                 type: string
+*               familyname:
+*                 type: string
+*               firstname:
+*                 type: string
+*               initials:
+*                 type: string
+*
 */
 
 /**
@@ -127,74 +189,65 @@ router.get('/sites/:siteid/contacts', handlers.contactsbysiteid);
  *         in: path
  *         required: false
  *         example: 1001
- *         schema:
- *           type: integer
- *           format: int32
- *           minimum: 1
+ *         type: integer
+ *         format: int32
+ *         minimum: 1
  *       - name: siteid
  *         description: Related site identifier.
  *         in: query
  *         required: false
- *         schema:
- *           type: integer
- *           format: int64
- *           minimum: 1
+ *         type: integer
+ *         format: int64
+ *         minimum: 1
  *         example: 666
  *       - name: piid
  *         description: Numeric identifier for the dataset principal investigator
  *         in: query
  *         required: false
- *         schema:
- *           type: integer
- *           format: int64
- *           minimum: 1
+ *         type: integer
+ *         format: int64
+ *         minimum: 1
  *         example: 12
  *       - name: altmin
  *         description: Minimum altitude of the dataset site location (in meters)
  *         in: query
  *         required: false
- *         schema:
- *           type: integer
- *           format: int64
+ *         type: integer
+ *         format: int64
  *         example: 1000 
  *       - name: altmax
  *         in: query
  *         description: Maximum altitude of the dataset site location (in meters)
  *         required: false
- *         schema:
- *           type: integer
- *           format: int64
+ *         type: integer
+ *         format: int64
  *         example: 1143
  *       - name: loc
  *         in: query
  *         description: The geographic region of interest for the site, as a GeoJSON string.
  *         required: false
- *         schema:
- *           type: string
- *           format: geoJSON
+ *         type: string
+ *         format: geoJSON
  *       - name: ageyoung
  *         in: query
  *         description: Youngest age that intercepts with the dataset (in calibrated years before present, with 0 at 1950CE)
  *         required: false
- *         schema:
- *           type: integer
- *           format: int64
+ *         type: integer
+ *         format: int64
  *         example: -53
  *       - name: ageold
  *         in: query
  *         description: Oldest age that intercepts with the dataset (in calibrated years before present, with 0 at 1950CE)
  *         required: false
- *         schema:
- *           type: integer
- *           format: int64
+ *         type: integer
+ *         format: int64
  *         example: 11430
  *       - name: ageof
  *         in: query
  *         description: Dataset age ranges must contain this age (in calibrated years before present, with 0 at 1950CE)
  *         required: false
- *         schema:
- *           type: integer
- *           format: int64
+ *         type: integer
+ *         format: int64
  *         example: 6700
  *     produces:
  *       - application/json
