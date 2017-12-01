@@ -17,93 +17,6 @@ router.get('/', function(req, res, next) {
 });
 
 /**
-
-* @swagger
-* definitions:
-*   chronology:
-*     properties:
-*       ChronologyID:
-*         type: integer
-*         format: int64
-*       controls:
-*         type: object
-*         properties:
-*           ChronControlID:
-*             type: integer
-*             format: int64
-*           Age:
-*             type: number
-*             format: float
-*           AgeYounger:
-*             type: number
-*             format: float
-*           AgeOlder:
-*             type: number
-*             format: float
-*           ControlType:
-*             type: string
-*           Depth:
-*             type: number
-*             format: float
-*           Thickness:
-*             type: number
-*             format: float
-*       Default:
-*         type: boolean
-*       ChronologyName:
-*         type: string
-*       AgeType:
-*         type: string
-*       AgeModel:
-*         type: integer
-*         format: int64
-*       AgeYounger:
-*         type: number
-*         format: float
-*       AgeOlder:
-*         type: number
-*         format: float
-*       Notes:
-*         type: string
-*       DatePrepared:
-*         type: string
-*         format: date
-*       Datasets:
-*         type: object
-*         properties:
-*           DatasetID:
-*             type: integer
-*             format: int64
-*           DatasetType:
-*             type: string 
-*/
-
-/**
-* @swagger
-* /chronology:
-*   get:
-*     summary: Chronology metadata for a dataset.
-*     description: Returns the chronology and chronological controls used for a dataset age model.
-*     parameters:
-*       - name: chronid
-*         description: Unique chronology identifier.
-*         in: path
-*         required: true
-*         type: string
-*     produces:
-*       - application/json
-*     responses:
-*       200:
-*        description: Chronology
-*        schema:
-*          type: object
-*          items:
-*            $ref: '#/definitions/chronology'
-*/
-router.get('/chronology', handlers.chronology);
-router.get('/chronology/:id', handlers.chronology);
-
-/**
 * @swagger
 * definitions:
 *   contact:
@@ -114,21 +27,22 @@ router.get('/chronology/:id', handlers.chronology);
 *         example: 123
 *       contactname:
 *         type: string
-*         example: Simon J Goring
+*         example: "Simon J Goring"
 *       lastname:
 *         type: string
-*         example: Goring
+*         example: "Goring"
 *       firstname:
 *         type: string
-*         example: Simon
+*         example: "Simon"
 *       status:
 *         type: string
-*         example: Active
+*         example: "Active"
 *       address:
 *         type: string
-*         example: 550 N Park St, Madison WI, USA
+*         example: "550 N Park St, Madison WI, USA"
 *       url:
 *         type: string
+*         format: url
 *         example: http://goring.org
 *       recdatecreated: 
 *         type: string
@@ -148,34 +62,41 @@ router.get('/chronology/:id', handlers.chronology);
 *     description: Returns researcher contact information associated with a record.
 *     parameters:
 *       - name: contactid
-*         description: Unique contact identifier.
+*         description: Unique contact identifier within the Neotoma Database
 *         in: path
 *         required: false
-*         type: integer
-*         format: int64
+*         schema:
+*           type: integer
+*           format: int64
+*           minimum: 1
+*         example: 123
 *       - name: lastname
-*         description: Last name of the researcher
+*         description: Last name of the researcher (may use wildcards)
 *         in: query
 *         required: false
-*         type: string
+*         schema:
+*         	type: string
+*         example: Grimm
 *       - name: contactname
 *         description: Full name of the the researcher (may use wildcards)
 *         in: query
 *         required: false
-*         type: string
+*         schema:
+*           type: string
 *         example: \*Goring\*
 *       - name: status
 *         in: query
 *         description: Current employment status
+*         required: false
 *         type: string
 *         enum: ["active","deceased", "defunct", "extant", "inactive", "retired", "unknown"]
 *     produces:
 *       - application/json
 *     responses:
-*       200:
-*        description: Contact
+*       '200':
+*        description: contact
 *        schema:
-*          type: object
+*          type: array
 *          items:
 *            $ref: '#/definitions/contact'
 */
@@ -205,13 +126,76 @@ router.get('/sites/:siteid/contacts', handlers.contactsbysiteid);
  *         description: Numeric ID for dataset.
  *         in: path
  *         required: false
- *         type: integer
- *         format: int32
+ *         example: 1001
+ *         schema:
+ *           type: integer
+ *           format: int32
+ *           minimum: 1
  *       - name: siteid
  *         description: Related site identifier.
  *         in: query
  *         required: false
- *     	   type: integer
+ *         schema:
+ *           type: integer
+ *           format: int64
+ *           minimum: 1
+ *         example: 666
+ *       - name: piid
+ *         description: Numeric identifier for the dataset principal investigator
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           format: int64
+ *           minimum: 1
+ *         example: 12
+ *       - name: altmin
+ *         description: Minimum altitude of the dataset site location (in meters)
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           format: int64
+ *         example: 1000 
+ *       - name: altmax
+ *         in: query
+ *         description: Maximum altitude of the dataset site location (in meters)
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           format: int64
+ *         example: 1143
+ *       - name: loc
+ *         in: query
+ *         description: The geographic region of interest for the site, as a GeoJSON string.
+ *         required: false
+ *         schema:
+ *           type: string
+ *           format: geoJSON
+ *       - name: ageyoung
+ *         in: query
+ *         description: Youngest age that intercepts with the dataset (in calibrated years before present, with 0 at 1950CE)
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           format: int64
+ *         example: -53
+ *       - name: ageold
+ *         in: query
+ *         description: Oldest age that intercepts with the dataset (in calibrated years before present, with 0 at 1950CE)
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           format: int64
+ *         example: 11430
+ *       - name: ageof
+ *         in: query
+ *         description: Dataset age ranges must contain this age (in calibrated years before present, with 0 at 1950CE)
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           format: int64
+ *         example: 6700
  *     produces:
  *       - application/json
  *     responses:
@@ -499,8 +483,11 @@ router.get('/sites/:siteid/geopoliticalunits', handlers.geopolbysite);
 *         format: int64
 *       - name: limit
 *         description: The maximum number of records to be returned, default is 25.
-*         type: integer
-*         format: int32
+*         schema:
+*           type: integer
+*           format: int32
+*           default: 25
+*           minimum: 1
 *         in: query
 *         required: false
 *       - name: offset
@@ -509,6 +496,7 @@ router.get('/sites/:siteid/geopoliticalunits', handlers.geopolbysite);
 *         required: false
 *         type: integer
 *         format: int32
+*         default: 0
 *     produces:
 *       - application/json
 *     responses:
@@ -835,5 +823,101 @@ router.get('/geopoliticalunits/:gpid/sites', handlers.sitesbygeopol);
 
 router.get('/taxa/:taxonid', handlers.taxonbyid);
 router.get('/taxa/', handlers.taxonquery);
+
+
+/***********************************************************
+*
+*  INCOMPLETE
+*
+************************************************************/
+
+/**
+
+* @swagger
+* definitions:
+*   chronology:
+*     properties:
+*       ChronologyID:
+*         type: integer
+*         format: int64
+*       controls:
+*         type: object
+*         properties:
+*           ChronControlID:
+*             type: integer
+*             format: int64
+*           Age:
+*             type: number
+*             format: float
+*           AgeYounger:
+*             type: number
+*             format: float
+*           AgeOlder:
+*             type: number
+*             format: float
+*           ControlType:
+*             type: string
+*           Depth:
+*             type: number
+*             format: float
+*           Thickness:
+*             type: number
+*             format: float
+*       Default:
+*         type: boolean
+*       ChronologyName:
+*         type: string
+*       AgeType:
+*         type: string
+*       AgeModel:
+*         type: integer
+*         format: int64
+*       AgeYounger:
+*         type: number
+*         format: float
+*       AgeOlder:
+*         type: number
+*         format: float
+*       Notes:
+*         type: string
+*       DatePrepared:
+*         type: string
+*         format: date
+*       Datasets:
+*         type: object
+*         properties:
+*           DatasetID:
+*             type: integer
+*             format: int64
+*           DatasetType:
+*             type: string 
+*/
+
+/**
+* @swagger
+* /chronology:
+*   get:
+*     summary: Chronology metadata for a dataset.
+*     description: Returns the chronology and chronological controls used for a dataset age model.
+*     parameters:
+*       - name: chronid
+*         description: Unique chronology identifier.
+*         in: path
+*         required: true
+*         type: string
+*     produces:
+*       - application/json
+*     responses:
+*       200:
+*        description: Chronology
+*        schema:
+*          type: object
+*          items:
+*            $ref: '#/definitions/chronology'
+*/
+
+router.get('/chronology', handlers.chronology);
+router.get('/chronology/:id', handlers.chronology);
+
 
 module.exports = router;
