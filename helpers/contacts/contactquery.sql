@@ -1,4 +1,4 @@
-SELECT 
+SELECT
   cnt.contactid AS contactid,
   cnt.contactname AS fullName,
   cnt.familyname AS lastName, 
@@ -11,7 +11,7 @@ SELECT
 FROM
   ndb.contacts AS cnt INNER JOIN
   ndb.contactstatuses AS cst ON cnt.contactstatusid = cst.contactstatusid
-WHERE 
+WHERE
   (${lastname} IS NULL OR cnt.familyname LIKE ${lastname})
   AND (${contactname} IS NULL OR cnt.contactname LIKE ${contactname})
   AND (${status} IS NULL OR LOWER(cst.contactstatus) LIKE LOWER(${status}))

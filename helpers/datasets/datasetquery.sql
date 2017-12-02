@@ -24,17 +24,17 @@ SELECT
                         )) 
   AS dataset 
 FROM
-  ndb.datasets AS dts LEFT OUTER JOIN
-  ndb.collectionunits AS clu ON clu.collectionunitid = dts.collectionunitid LEFT OUTER JOIN
-  ndb.sites AS sts ON sts.siteid = clu.siteid  LEFT OUTER JOIN
-  ndb.datasettypes AS dst ON dst.datasettypeid = dts.datasettypeid LEFT OUTER JOIN
-  ndb.datasetdoi AS doi ON dts.datasetid = doi.datasetid LEFT OUTER JOIN
-  ndb.collectiontypes as cts ON clu.colltypeid = cts.colltypeid LEFT OUTER JOIN
+          ndb.datasets AS dts LEFT OUTER JOIN
+   ndb.collectionunits AS clu ON clu.collectionunitid = dts.collectionunitid LEFT OUTER JOIN
+             ndb.sites AS sts ON sts.siteid = clu.siteid  LEFT OUTER JOIN
+      ndb.datasettypes AS dst ON dst.datasettypeid = dts.datasettypeid LEFT OUTER JOIN
+        ndb.datasetdoi AS doi ON dts.datasetid = doi.datasetid LEFT OUTER JOIN
+   ndb.collectiontypes AS cts ON clu.colltypeid = cts.colltypeid LEFT OUTER JOIN
   ndb.datasetdatabases AS dsdb ON dsdb.datasetid = dts.datasetid LEFT OUTER JOIN
-  ndb.datasetpis AS dspi ON dspi.datasetid = dts.datasetid LEFT OUTER JOIN
-  ndb.contacts AS cnt ON cnt.contactid = dspi.contactid LEFT OUTER JOIN
+        ndb.datasetpis AS dspi ON dspi.datasetid = dts.datasetid LEFT OUTER JOIN
+          ndb.contacts AS cnt ON cnt.contactid = dspi.contactid LEFT OUTER JOIN
   ndb.constituentdatabases AS cstdb ON dsdb.databaseid = cstdb.databaseid  LEFT OUTER JOIN
-  ndb.dsageranges AS agerange ON dts.datasetid = agerange.datasetid
+       ndb.dsageranges AS agerange ON dts.datasetid = agerange.datasetid
 WHERE
        (${siteid} IS NULL OR      sts.siteid IN (${siteid:csv})   AND
   (${datasettype} IS NULL OR dst.datasettype LIKE ${datasettype}) AND

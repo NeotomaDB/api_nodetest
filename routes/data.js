@@ -890,60 +890,53 @@ router.get('/taxa/', handlers.taxonquery);
 * definitions:
 *   chronology:
 *     properties:
-*       ChronologyID:
-*         type: integer
-*         format: int64
-*       controls:
+*       chronology:
 *         type: object
 *         properties:
-*           ChronControlID:
+*           chronologyid:
 *             type: integer
-*             format: int64
-*           Age:
-*             type: number
-*             format: float
-*           AgeYounger:
-*             type: number
-*             format: float
-*           AgeOlder:
-*             type: number
-*             format: float
-*           ControlType:
+*           agetype:
 *             type: string
-*           Depth:
-*             type: number
-*             format: float
-*           Thickness:
-*             type: number
-*             format: float
-*       Default:
-*         type: boolean
-*       ChronologyName:
-*         type: string
-*       AgeType:
-*         type: string
-*       AgeModel:
-*         type: integer
-*         format: int64
-*       AgeYounger:
-*         type: number
-*         format: float
-*       AgeOlder:
-*         type: number
-*         format: float
-*       Notes:
-*         type: string
-*       DatePrepared:
-*         type: string
-*         format: date
-*       Datasets:
+*           default:
+*             type: integer
+*           chronologyName:
+*             type: string
+*           datePrepared:
+*             type: string
+*             format: dateTime
+*             example: 2013-09-30T21:02:51.000Z
+*           modelType:
+*             type: string
+*           ages:
+*             type: object
+*             properties:
+*               younger: 
+*                 type: integer
+*               older:
+*                 type: integer
+*       dataset:
 *         type: object
 *         properties:
-*           DatasetID:
+*           datasetid:
 *             type: integer
-*             format: int64
-*           DatasetType:
-*             type: string 
+*           datasettype:
+*             type: string
+*           chroncontrolid:
+*             type: integer
+*           depth:
+*             type: numeric
+*           thickness:
+*             type: numeric
+*           age:
+*             type: numeric
+*           ageyounger:
+*             type: numeric
+*           ageolder:
+*             type: numeric
+*           controltype:
+*             type: string
+*               
+*             
 */
 
 /**
@@ -969,8 +962,6 @@ router.get('/taxa/', handlers.taxonquery);
 *            $ref: '#/definitions/chronology'
 */
 
-router.get('/chronology', handlers.chronology);
-router.get('/chronology/:id', handlers.chronology);
-
+router.get('/chronology/:chronologyid', handlers.chronologybyid);
 
 module.exports = router;

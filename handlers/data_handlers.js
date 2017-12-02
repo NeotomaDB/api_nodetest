@@ -92,6 +92,10 @@ module.exports = {
   contactsbysiteid: function (req, res, next) { 
     var contact = require('../helpers/contacts/contacts.js');
     contact.contactsbysiteid(req, res, next); 
+  },
+  chronologybyid: function (req, res, next) {
+    var chronology = require('../helpers/chronology/chronology.js');
+    chronology.chronologybyid(req, res, next);
   }
 };
 

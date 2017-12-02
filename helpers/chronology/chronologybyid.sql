@@ -1,30 +1,38 @@
-SELECT     NDB.Chronologies.ChronologyID, NDB.AgeTypes.AgeType, NDB.Chronologies.IsDefault, NDB.Chronologies.ChronologyName, NDB.Chronologies.DatePrepared, 
-                      NDB.Chronologies.AgeModel, NDB.Chronologies.AgeBoundYounger, NDB.Chronologies.AgeBoundOlder,NDB.Chronologies.Notes, NDB.ChronControls.ChronControlID, NDB.ChronControls.Depth AS 'controlDepth', 
-                      NDB.ChronControls.Thickness AS 'controlThickness', NDB.ChronControls.Age as 'controlAge', NDB.ChronControls.AgeLimitYounger AS 'controlAgeYounger', 
-                      NDB.ChronControls.AgeLimitOlder AS 'controlAgeOlder', NDB.ChronControlTypes.ChronControlType
-FROM         NDB.Chronologies INNER JOIN
-                      NDB.AgeTypes ON NDB.Chronologies.AgeTypeID = NDB.AgeTypes.AgeTypeID LEFT JOIN
-                      NDB.ChronControls ON NDB.Chronologies.ChronologyID = NDB.ChronControls.ChronologyID LEFT JOIN
-                      NDB.ChronControlTypes ON NDB.ChronControls.ChronControlTypeID = NDB.ChronControlTypes.ChronControlTypeID
+SELECT 
+  json_build_object(   'chronologyid', chrs.chronologyid,
+                            'agetype', aty.agetype,
+                            'default', chrs.isdefault,
+                     'chronologyName', chrs.chronologyname,
+                       'datePrepared', chrs.dateprepared,
+                          'modelType', chrs.agemodel,
+                               'ages', json_build_object('younger', chrs.ageboundyounger,
+                                                           'older', chrs.ageboundolder),
+                              'notes', chrs.notes,
+                         'preparedby', json_build_object('contactid', cnt.contactid, 
+                                                       'contactname', cnt.contactname,
+                                                        'familyname', cnt.familyname,
+                                                         'firstname', cnt.givennames,
+                                                          'initials', cnt.leadinginitials)) AS chronology,
+  json_agg(
+    json_build_object('datasetid', dts.datasetid,
+                      'datasettype', dty.datasettype,
+                      'chroncontrolid', chctrl.chroncontrolid,
+                      'depth', chctrl.depth,
+                      'thickness', chctrl.thickness,
+                      'age', chctrl.age,
+                      'ageyounger', chctrl.agelimityounger,
+                      'ageolder', chctrl.agelimitolder,
+                      'controltype', chty.chroncontroltype)) AS datasets
 
-
-	WHERE	NDB.Chronologies.ChronologyID = @chronID
-
-	-- return datasets too
-	SELECT     NDB.Datasets.DatasetID, NDB.DatasetTypes.DatasetType
-
-FROM         NDB.Chronologies INNER JOIN
-
-                      NDB.CollectionUnits ON NDB.Chronologies.CollectionUnitID = NDB.CollectionUnits.CollectionUnitID INNER JOIN
-
-                      NDB.Datasets ON NDB.CollectionUnits.CollectionUnitID = NDB.Datasets.CollectionUnitID INNER JOIN
-
-                      NDB.DatasetTypes ON NDB.Datasets.DatasetTypeID = NDB.DatasetTypes.DatasetTypeID INNER JOIN
-
-                      NDB.SampleAges ON NDB.Chronologies.ChronologyID = NDB.SampleAges.ChronologyID INNER JOIN
-
-                      NDB.Samples ON NDB.SampleAges.SampleID = NDB.Samples.SampleID AND NDB.Datasets.DatasetID = NDB.Samples.DatasetID
-
-WHERE     (NDB.SampleAges.ChronologyID = @chronID)
-
-GROUP BY NDB.Datasets.DatasetID, NDB.DatasetTypes.DatasetType
+FROM                   ndb.chronologies AS chrs
+  LEFT OUTER JOIN     ndb.chroncontrols AS chctrl ON chrs.chronologyid = chctrl.chronologyid
+  LEFT OUTER JOIN ndb.chroncontroltypes AS chty   ON chctrl.chroncontroltypeid = chty.chroncontroltypeid
+  LEFT OUTER JOIN           ndb.dslinks AS dsl    ON chrs.collectionunitid = dsl.collectionunitid
+  LEFT OUTER JOIN          ndb.agetypes AS aty    ON chrs.agetypeid = aty.agetypeid
+  LEFT OUTER JOIN          ndb.datasets AS dts    ON dsl.datasetid = dts.datasetid
+  LEFT OUTER JOIN      ndb.datasettypes AS dty    ON dts.datasettypeid = dty.datasettypeid 
+  LEFT OUTER JOIN        ndb.sampleages AS smpage ON chrs.chronologyid = smpage.chronologyid 
+  LEFT OUTER JOIN           ndb.samples AS smp    ON smpage.sampleid = smp.sampleid AND dts.datasetid = smp.datasetid
+  LEFT OUTER JOIN          ndb.contacts AS cnt    ON cnt.contactid = chrs.contactid
+WHERE    chrs.chronologyid = ($1:csv)
+GROUP BY chrs.chronologyid, aty.agetype, cnt.contactid
