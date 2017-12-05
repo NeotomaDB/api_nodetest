@@ -1,4 +1,4 @@
-SELECT 
+SELECT
   json_build_object(   'chronologyid', chrs.chronologyid,
                             'agetype', aty.agetype,
                             'default', chrs.isdefault,
@@ -26,16 +26,14 @@ SELECT
                                                                 'ageolder', chctrl.agelimitolder,
                                                              'controltype', chty.chroncontroltype)
                                                          )))) AS chronology
-
 FROM                   ndb.chronologies AS chrs
   LEFT OUTER JOIN     ndb.chroncontrols AS chctrl ON chrs.chronologyid = chctrl.chronologyid
   LEFT OUTER JOIN ndb.chroncontroltypes AS chty   ON chctrl.chroncontroltypeid = chty.chroncontroltypeid
   LEFT OUTER JOIN           ndb.dslinks AS dsl    ON chrs.collectionunitid = dsl.collectionunitid
   LEFT OUTER JOIN          ndb.agetypes AS aty    ON chrs.agetypeid = aty.agetypeid
   LEFT OUTER JOIN          ndb.datasets AS dts    ON dsl.datasetid = dts.datasetid
-  LEFT OUTER JOIN      ndb.datasettypes AS dty    ON dts.datasettypeid = dty.datasettypeid 
-  LEFT OUTER JOIN        ndb.sampleages AS smpage ON chrs.chronologyid = smpage.chronologyid 
-  LEFT OUTER JOIN           ndb.samples AS smp    ON smpage.sampleid = smp.sampleid AND dts.datasetid = smp.datasetid
+  LEFT OUTER JOIN      ndb.datasettypes AS dty    ON dts.datasettypeid = dty.datasettypeid
   LEFT OUTER JOIN          ndb.contacts AS cnt    ON cnt.contactid = chrs.contactid
-WHERE    chrs.chronologyid IN ($1:csv)
+
+WHERE    dsl.siteid IN ($1:csv)
 GROUP BY chrs.chronologyid, aty.agetype, cnt.contactid

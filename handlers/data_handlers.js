@@ -96,7 +96,16 @@ module.exports = {
   chronologybyid: function (req, res, next) {
     var chronology = require('../helpers/chronology/chronology.js');
     chronology.chronologybyid(req, res, next);
+  },
+  chronologybydsid: function (req, res, next) {
+    var chronology = require('../helpers/chronology/chronology.js');
+    chronology.chronologybydsid(req, res, next);
+  },
+  chronologybystid: function (req, res, next) {
+    var chronology = require('../helpers/chronology/chronology.js');
+    chronology.chronologybystid(req, res, next);
   }
+
 };
 
 function download(req, res, next) {

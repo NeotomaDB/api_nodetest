@@ -963,5 +963,7 @@ router.get('/taxa/', handlers.taxonquery);
 */
 
 router.get('/chronology/:chronologyid', handlers.chronologybyid);
+router.get('/datasets/:datasetid/chronology', handlers.chronologybydsid);
+router.get('/sites/:siteid/chronology', handlers.chronologybystid);
 
 module.exports = router;
