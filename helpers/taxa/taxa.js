@@ -41,6 +41,7 @@ function sql(file) {
 // Create a QueryFile globally, once per file:
 const taxonquerylower  = sql('./taxonquerylower.sql');
 const taxonquerystatic = sql('./taxonquerystatic.sql');
+const taxonbyds = sql('./taxonquerydsid.sql');
 
 // Actual functions:
 // 
@@ -75,6 +76,39 @@ function taxonbyid(req, res, next) {
         return next(err);
     });
 }
+
+function taxonbydsid(req, res, next) {
+
+
+  if (!!req.params.datasetid) {
+    var datasetid = String(req.params.datasetid).split(',').map(function(item) {
+      return parseInt(item, 10);
+    });
+  } else {
+    
+    res.status(500)
+        .json({
+          status: 'failure',
+          data: null,
+          message: 'Must pass either queries or an integer sequence.'
+        });
+  }
+
+  db.any(taxonbyds, [datasetid])
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+        return next(err);
+    });
+}
+
+
 
 function gettaxonquery(req, res, next) {
 

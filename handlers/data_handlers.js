@@ -43,6 +43,10 @@ module.exports = {
     var taxon = require('../helpers/taxa/taxa.js');
     taxon.taxonbyid(req, res, next);
   },
+  taxonbydsid: function (req, res, next) { 
+    var taxon = require('../helpers/taxa/taxa.js');
+    taxon.taxonbydsid(req, res, next);
+  },
   taxonquery: function (req, res, next) { 
     var taxon = require('../helpers/taxa/taxa.js');
     taxon.gettaxonquery(req, res, next);
