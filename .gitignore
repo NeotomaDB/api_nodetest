@@ -1,6 +1,8 @@
+public/api-docs/index.html
 
 # Created by https://www.gitignore.io/api/node
 
+swaggerdefn.json
 db_connect.json
 
 ##pm2 nodejs user directory
