@@ -21,9 +21,3 @@ SELECT
 	LEFT JOIN ndb.constituentdatabases AS cdb ON dd.databaseid = cdb.databaseid) ON ds.datasetid = dd.datasetid
 WHERE 
 	var.taxonid IN ($1:csv)
-OFFSET (CASE WHEN ${offset} IS NULL THEN 0
-            ELSE ${offset}
-       END)
-LIMIT (CASE WHEN ${limit} IS NULL THEN 25
-            ELSE ${limit}
-       END)

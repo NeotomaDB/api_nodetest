@@ -15,10 +15,4 @@ SELECT DISTINCT tx.taxonid,
   LEFT OUTER JOIN ndb.taxa AS tx on var.taxonid = tx.taxonid
   LEFT OUTER JOIN ndb.ecolgroups AS ecg ON ecg.taxonid = tx.taxonid
   LEFT OUTER JOIN ndb.publications AS pub ON pub.publicationid = tx.publicationid
-  WHERE ds.datasetid IN ($1:csv)
-  OFFSET (CASE WHEN ${offset} IS NULL THEN 0
-              ELSE ${offset}
-         END)
-  LIMIT (CASE WHEN ${limit} IS NULL THEN 25
-              ELSE ${limit}
-         END);
+  WHERE ds.datasetid IN ($1:csv);
