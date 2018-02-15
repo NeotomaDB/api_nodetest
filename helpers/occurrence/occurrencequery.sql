@@ -25,7 +25,7 @@ SELECT
 	ndb.samples AS samples
 	LEFT JOIN            ndb.data AS data    ON samples.sampleid = data.sampleid
 	LEFT JOIN       ndb.variables AS var     ON data.variableid = var.variableid
-	LEFT JOIN   ndb.variableunits AS varu    ON var.variableid  = 
+	LEFT JOIN   ndb.variableunits AS varu    ON var.variableunitsid  = varu.variableunitsid
 	LEFT JOIN  ndb.samplekeywords AS sampkey ON samples.sampleid = sampkey.sampleid
 	LEFT JOIN        ndb.datasets AS ds      ON samples.datasetid = ds.datasetid 
 	LEFT JOIN ndb.collectionunits AS cu      ON ds.collectionunitid = cu.collectionunitid

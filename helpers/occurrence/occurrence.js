@@ -16,7 +16,6 @@ const occurrencequerysql = sql('./occurrencequery.sql');
 const occurrencetaxonquerysql = sql('./occurrencebytaxon.sql');
 const occurrencebyidsql = sql('./occurrencebyid.sql');
 
-
 function occurrencebyid(req, res, next) {
 
   if (!!req.params.occurrenceid) {

@@ -21,7 +21,7 @@ describe('Get occurrence data any number of ways:', function(){
 		.expect(200, done);
 	});
 	it('Get occurrence by taxon:', function(done) {
-		api.get('v2/data/sites/?altmax=5000&altmin=3000')
+		api.get('v2/data/taxa/12/occurrence')
 		.set('Accept', 'application/json')
 		.expect(function(res){
 				return Object.keys(res.body['data'][0]).length > 0;
