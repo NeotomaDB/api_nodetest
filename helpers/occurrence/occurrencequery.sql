@@ -36,7 +36,8 @@ SELECT
 	LEFT JOIN (ndb.datasetdatabases AS dd
 	           LEFT JOIN ndb.constituentdatabases AS cdb ON dd.databaseid = cdb.databaseid
 	          ) ON ds.datasetid = dd.datasetid
-WHERE 
+WHERE
+	tx.taxonname IS NOT NULL AND
 	(${taxonname} IS NULL OR tx.taxonname LIKE ${taxonname}) AND
 	(${taxonid} IS NULL OR var.taxonid IN (${taxonid:csv})) AND
 	(${siteid} IS NULL OR sts.siteid IN (${siteid:csv})) AND
