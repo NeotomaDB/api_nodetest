@@ -186,3 +186,4 @@ function gettaxonquery(req, res, next) {
 
 module.exports.taxonbyid = taxonbyid;
 module.exports.gettaxonquery = gettaxonquery;
+module.exports.taxonbydsid = taxonbydsid;
