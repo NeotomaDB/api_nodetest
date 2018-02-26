@@ -47,9 +47,15 @@ WHERE
 	(${altmax} IS NULL OR sts.altitude > ${altmax}) AND
 	(${loc} IS NULL OR st_contains(ST_GeomFromText(${loc}), sts.geom)) AND
 	sts.siteid IN (SELECT siteid FROM sitid) AND
-	(${age} IS NULL OR ages.ageolder > ${age} AND ages.ageyounger < ${age}) AND
-	(${ageold} IS NULL OR ages.ageolder > ${ageold}) AND
-	(${ageyoung} IS NULL OR ages.ageyounger > ${ageyoung})
+	(${ageyoung} IS NULL OR 
+		CASE WHEN ages.ageyounger IS NOT NULL 
+		     THEN (ages.ageyounger > ${ageyoung})
+		     ELSE (ages.age > ${ageyoung}) END) AND
+	(${ageold} IS NULL OR 
+		CASE WHEN ages.ageolder IS NOT NULL 
+		     THEN (ages.ageolder < ${ageold})
+		     ELSE (ages.age < ${ageold}) END)
+
 OFFSET (CASE WHEN ${offset} IS NULL THEN 0
             ELSE ${offset}
        END)

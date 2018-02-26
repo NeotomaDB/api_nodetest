@@ -1,4 +1,4 @@
-// Sites query:
+// Occurrences query:
 
 const path = require('path');
 
@@ -76,9 +76,8 @@ function occurrencequery(req, res, next) {
                                   return parseInt(item, 10);
                                 }),
                     'loc':String(req.query.loc),
-                    'age':req.query.age,
-                    'ageold':req.query.ageold,
-                    'ageyoung':req.query.ageyoung,
+                    'ageold':parseInt(String(req.query.ageold)),
+                    'ageyoung':parseInt(String(req.query.ageyoung)),
                     'offset':req.query.offset,
                     'limit':req.query.limit
                };
@@ -103,6 +102,17 @@ function occurrencequery(req, res, next) {
       });
 
   }
+
+  if (outobj.ageyoung > outobj.ageold & !!outobj.ageyoung & !!outobj.ageold) {
+    res.status(500)
+      .json({
+        status: 'failure',
+        message: 'ageyoung is greater than ageold.  Please fix this!'
+      });
+
+  }
+
+
 
   if(novalues == true) {
     if(!!req.accepts('json') & !req.accepts('html')) {
