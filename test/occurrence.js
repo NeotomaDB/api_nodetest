@@ -20,6 +20,7 @@ describe('Get occurrence data any number of ways:', function(){
 			})
 		.expect(200, done);
 	});
+
 	it('Get occurrence by taxon:', function(done) {
 		api.get('v2/data/taxa/12/occurrence')
 		.set('Accept', 'application/json')
@@ -28,21 +29,22 @@ describe('Get occurrence data any number of ways:', function(){
 			})
 		.expect(200, done);
 	});
-	it('Break sites by flipping altitudes:', function(done) {
-		api.get('v2/data/sites/?altmax=3000&altmin=5000')
+
+	it('Break occurrences by flipping altitudes:', function(done) {
+		api.get('v2/data/occurrence/?altmax=3000&altmin=5000')
 		.set('Accept', 'application/json')
 		.expect(500, done);
 	});
-	it('Break sites by passing invalid siteid:', function(done) {
-		api.get('v2/data/sites/abcd')
+	it('Break occurrences by flipping ages:', function(done) {
+		api.get('v2/data/occurrence/?ageyoung=5000&ageold=3000')
 		.set('Accept', 'application/json')
 		.expect(500, done);
 	});
-	it('Get site by geopolitical units returns gp and site data:', function(done) {
-		api.get('v2/data/geopoliticalunits/765/sites')
+	it('Get occurrences using taxon and age bounds:', function(done) {
+		api.get('v2/data/occurrence/?ageyoung=2000&ageold=3000&taxonname=Pinus')
 		.set('Accept', 'application/json')
 		.expect(function(res){
-				return Object.keys(res.body['data'][0]).length === 2;
+				return Object.keys(res.body['data'][0]).length > 0;
 			})
 		.expect(200, done);
 	});
