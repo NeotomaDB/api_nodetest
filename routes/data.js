@@ -676,7 +676,7 @@ router.get('/pollen/:id', handlers.pollen);
 /**
 * @swagger
 * definitions:
-*   publication:
+*   publications:
 *     properties:
 *       PublicationID:
 *         type: integer
@@ -692,7 +692,7 @@ router.get('/pollen/:id', handlers.pollen);
 
 /**
  * @swagger
- * /publication:
+ * /publications:
  *   get:
  *     summary: Returns information about Neotoma publications
  *     description: Returns information about Neotoma publications
