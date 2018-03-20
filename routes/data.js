@@ -723,7 +723,7 @@ router.get('/pollen/:id', handlers.pollen);
  *         schema:
  *           type: array
  *           items:
- *             $ref: '#/definitions/publication'
+ *             $ref: '#/definitions/publications'
 */
 
 // router.get('/publications/', handlers.publicationquery);
