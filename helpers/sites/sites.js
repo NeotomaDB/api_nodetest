@@ -66,12 +66,11 @@ function sitesquery(req, res, next) {
   if (typeof req.query.gpid === 'undefined')     {     outobj.gpid = null }
 
   if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
-    res.status(500)
+    return res.status(500)
       .json({
         status: 'failure',
         message: 'The altmin is greater than altmax.  Please fix this!'
-      });
-
+      }); 
   }
 
   db.any(siteQuery, outobj)
