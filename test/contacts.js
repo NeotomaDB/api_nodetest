@@ -66,24 +66,16 @@ describe('Get contact data:', function(){
 		api.get('v2/data/datasets/12,13/contacts')
 		.set('Accept', 'application/json')
 		.end(function(err, res){
-			assert.equal(res.body.data.length, 2);
+			assert.equal(Object.keys(res.body.data).length, 2);
 			done();
 		});
 	});
 
-	it('All contacts from sites should be returned.', function(done) {
-		api.get('v2/data/sites/1001,2341/contacts')
-		.set('Accept', 'application/json')
-		.end(function(err, res){
-			assert.equal(Object.keys(res.body.data[0]['contact'][0])[0], 'contactid');
-			done();
-		});
-	});
 	it('The length of returned contacts should be equivalent to the number of sites.', function(done) {
 		api.get('v2/data/datasets/102,1435,1,27/contacts')
 		.set('Accept', 'application/json')
 		.end(function(err, res){
-			assert.equal(res.body.data.length, 4);
+			assert.equal(Object.keys(res.body.data).length, 4);
 			done();
 		});
 	});

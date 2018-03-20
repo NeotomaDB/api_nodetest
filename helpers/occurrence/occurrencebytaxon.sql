@@ -1,11 +1,17 @@
 SELECT
-	  data.dataid AS occurrence,
-	  samples.sampleid AS sample,
 	  json_build_object('taxonid', tx.taxonid, 'taxonname', tx.taxonname) AS taxon,
-	  json_build_object('age', ages.age,  'ageolder', ages.ageolder, 'ageyounger', ages.ageyounger) AS ages,
-	  json_build_object('datasetid', ds.datasetid, 'siteid', sts.siteid, 'sitename', sts.sitename, 
-	                    'altitude', sts.altitude, 'location', ST_AsGeoJSON(sts.geog,5,2), 
-	                    'datasettype', dt.datasettype, 'database', cdb.databasename) AS site  
+	  json_agg(json_build_object('occurrence', data.dataid,
+	  		       'sample', samples.sampleid,
+	                  'age', json_build_object('age', ages.age,
+	                  	                  'ageolder', ages.ageolder, 
+	                  	                'ageyounger', ages.ageyounger),
+	           'site', json_build_object('datasetid', ds.datasetid, 
+	           	                            'siteid', sts.siteid,
+	           	                          'sitename', sts.sitename, 
+	                                      'altitude', sts.altitude,
+	                                      'location', ST_AsGeoJSON(sts.geog,5,2),
+	                                   'datasettype', dt.datasettype,
+	                                      'database', cdb.databasename))) AS occurrences
 	FROM
 	ndb.samples AS samples
 	LEFT JOIN ndb.data AS data ON samples.sampleid = data.sampleid
@@ -21,3 +27,4 @@ SELECT
 	LEFT JOIN ndb.constituentdatabases AS cdb ON dd.databaseid = cdb.databaseid) ON ds.datasetid = dd.datasetid
 WHERE 
 	var.taxonid IN ($1:csv)
+GROUP BY tx.taxonid;

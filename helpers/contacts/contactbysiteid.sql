@@ -1,8 +1,8 @@
 SELECT 
   json_agg(json_build_object('contactid', cnt.contactid,
-			                  'fullName', cnt.contactname,
-		                      'lastName', cnt.familyname, 
-			                 'firstName', cnt.givennames,
+			                        'fullName', cnt.contactname,
+		                          'lastName', cnt.familyname, 
+			                       'firstName', cnt.givennames,
                                    'url', cnt.url,
                                'address', cnt.address)) AS contact,
   dslinks.siteid as siteid

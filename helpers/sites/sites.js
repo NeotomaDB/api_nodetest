@@ -17,6 +17,7 @@ function sql(file) {
 const sitebydsid = sql('./sitebydsid.sql');
   const sitebyid = sql('./sitebyid.sql');
 const sitebygpid = sql('./sitebygpid.sql');
+const sitebyctid = sql('./sitebyctid.sql');
  
 function sitesbyid(req, res, next) {
 
@@ -47,7 +48,6 @@ function sitesbyid(req, res, next) {
         return next(err);
     }) 
 }
-
 
 function sitesquery(req, res, next) {
 
@@ -148,8 +148,38 @@ function sitesbygeopol(req, res, next) {
     });
 }
 
+function sitesbycontact(req, res, next) {
+
+  if (!!req.params.contactid) {
+    var contactid = String(req.params.contactid).split(',').map(function(item) {
+      return parseInt(item, 10);
+    });
+
+  } else {
+    res.status(500)
+        .json({
+          status: 'failure',
+          data: null,
+          message: 'Must pass either queries or an integer sequence.'
+        });
+  }
+
+  db.any(sitebyctid, [contactid])
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+        return next(err);
+    });
+}
 
 module.exports.sitesbyid = sitesbyid;
 module.exports.sitesquery = sitesquery;
 module.exports.sitesbydataset = sitesbydataset;
 module.exports.sitesbygeopol = sitesbygeopol;
+module.exports.sitesbycontact = sitesbycontact;
