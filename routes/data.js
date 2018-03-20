@@ -1,9 +1,7 @@
 /*
 * 
 * data.js
-* By: Simon Goring
-* Last Updated: December 1, 2017
-* Updated by: Michael Stryker
+* By: Simon Goring, Michael Stryker
 *
 */
 
@@ -174,12 +172,11 @@ router.get('/sites/:siteid/contacts', handlers.contactsbysiteid);
 *                 type: string
 *               initials:
 *                 type: string
-*
 */
 
 /**
  * @swagger
- * /dataset:
+ * /datasets:
  *   get:
  *     summary: Dataset information.
  *     description: Returns information about Neotoma dataset
@@ -729,10 +726,10 @@ router.get('/pollen/:id', handlers.pollen);
  *             $ref: '#/definitions/publication'
 */
 
-router.get('/publications/', handlers.publicationquery);
+// router.get('/publications/', handlers.publicationquery);
 router.get('/publications/:pubid', handlers.publicationid);
-router.get('/sites/:siteid/publications', handlers.publicationbysite);
-router.get('/dataset/:datasetid/publications', handlers.publicationbydataset);
+// router.get('/sites/:siteid/publications', handlers.publicationbysite);
+router.get('/datasets/:datasetid/publications', handlers.publicationbydataset);
 
 /**
 * @swagger
@@ -810,7 +807,7 @@ router.get('/sites/:siteid', handlers.sitesbyid); // Takes integers, including c
 router.get('/datasets/:datasetid/sites', handlers.sitesbydataset); // Takes a dataset ID.
 //router.get('/publications/:pubid/site', handlers.sitesbypublication);
 router.get('/geopoliticalunits/:gpid/sites', handlers.sitesbygeopol);
-//router.get('/contacts/:contactid/site', handlers.sitesbycontacts);
+router.get('/contacts/:contactid/sites', handlers.sitesbycontact);
 
 /**
 * @swagger

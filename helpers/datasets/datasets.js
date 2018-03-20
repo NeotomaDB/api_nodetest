@@ -92,7 +92,11 @@ function datasetquery(req, res, next) {
                        'gpid':parseInt(req.query.gpid),
                    'ageyoung':parseInt(req.query.ageyoung),
                      'ageold':parseInt(req.query.ageold),
-                      'ageof':parseInt(req.query.ageold)
+                      'ageof':parseInt(req.query.ageold),
+                  'datasetid':String(req.query.datasetid).split(',')
+                               .map(function(item) {
+                                 return parseInt(item, 10);
+                               })
                };
 
   if (typeof req.query.sitename === 'undefined') { outobj.sitename = null }
@@ -100,6 +104,8 @@ function datasetquery(req, res, next) {
   if (typeof req.query.altmax === 'undefined')   {   outobj.altmax = null }
   if (typeof req.query.loc === 'undefined')      {      outobj.loc = null }
   if (typeof req.query.gpid === 'undefined')     {     outobj.gpid = null }
+
+  console.log(outobj);
 
   if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
     res.status(500)
@@ -109,6 +115,16 @@ function datasetquery(req, res, next) {
       });
 
   }
+
+  console.log(typeof outobj);
+
+  for(var i in outobj) {
+    if(isNaN(outobj[i])){
+      outobj[i] = null;
+    }
+  };
+
+  console.log(outobj);
 
   db.any(datasetquerysql, outobj)
     .then(function (data) {

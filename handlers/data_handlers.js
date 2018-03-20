@@ -1,4 +1,3 @@
-const bib   = require('../helpers/bib_format');
 //get global database object
 var db = require('../database/pgp_db');
 var pgp = db.$config.pgp;
@@ -6,7 +5,6 @@ var pgp = db.$config.pgp;
 // Defining the query functions:
 module.exports = {
   chronology:chronology,
-  publicationbydataset:publicationbydataset,
   dbtables: function (req, res, next) { 
     var dbtable = require('../helpers/dbtables/dbtables.js');
     dbtable.dbtables(req, res, next); 
@@ -36,9 +34,16 @@ module.exports = {
     var occurrences = require('../helpers/occurrence/occurrence.js')
     occurrences.occurrencebytaxon(req, res, next);
   },
-  publicationid:publicationid,
-  publicationquery:publicationquery,
-  publicationbysite:publicationbysite,
+// RETURNING PUBLICATIONS
+  publicationid:  function (req, res, next) { 
+    var publn = require('../helpers/publications/publications.js');
+    publn.publicationid(req, res, next);
+  },
+  publicationbydataset:  function (req, res, next) { 
+    var publn = require('../helpers/publications/publications.js');
+    publn.publicationbydataset(req, res, next);
+  },
+// RETURNING TAXA
   taxonbyid: function (req, res, next) { 
     var taxon = require('../helpers/taxa/taxa.js');
     taxon.taxonbyid(req, res, next);
@@ -71,6 +76,10 @@ module.exports = {
   sitesbydataset:function (req, res, next) { 
     var sites = require('../helpers/sites/sites.js');
     sites.sitesbydataset(req, res, next); 
+  },
+  sitesbycontact:function (req, res, next) { 
+    var sites = require('../helpers/sites/sites.js');
+    sites.sitesbycontact(req, res, next);
   },
 // RETURNING DATASETS
   datasetbyid: function (req, res, next) { 
@@ -141,75 +150,3 @@ function chronology(req, res, next) {
 }
 
 
-function publicationid(req, res, next) {
-  
-  if (!!req.params.pubid) {
-    var pubid = parseInt(req.params.pubid);
-  } else {
-    var pubid = null;
-  }
-  
-  var query = 'select * from ndb.publications AS pubs where pubs.publicationid = ' + pubid;
-  
-
-
-  output = db.any(query)
-    .then(function (data) {
-      bib_output = bib.formatpublbib(data);
-
-      res.status(200)
-        .json({
-          status: 'success',
-          data: bib_output,
-          message: 'Retrieved all tables'
-        });    })
-    .catch(function (err) {
-      return next(err);
-    });
-};
-
-function publicationquery(req, res, next) {
-  
-};
-
-function publicationbysite(req, res, next) {
-
-};
-
-function publicationbydataset(req, res, next) {
-
-  /*
-  Get publications by associated dataset IDs:
-  */
-
-  if (!!req.params.datasetid) {
-  
-    var datasetid = String(req.params.datasetid).split(',').map(function(item) {
-      return parseInt(item, 10);
-    });
-
-    query = 'WITH dpub AS '+
-            '(SELECT * FROM ndb.datasetpublications as dp ' +
-            'WHERE ($1 IS NULL OR dp.datasetid IN ($1:csv))) ' +
-            'SELECT * FROM ndb.publications AS pub INNER JOIN ' +
-            'ndb.publicationauthors AS pa ON pub.publicationid = pa.publicationid INNER JOIN ' +
-            'ndb.contacts as ca ON ca.contactid = pa.contactid ' +
-            'WHERE pub.publicationid IN (SELECT publicationid FROM dpub)'
-
-  }
-  
-  output = db.any(query, [datasetid])
-    .then(function (data) {
-      bib_output = bib.formatpublbib(data);
-
-      res.status(200)
-        .json({
-          status: 'success',
-          data: bib_output,
-          message: 'Retrieved all tables'
-        });
-    })
-    .catch(function (err) {
-      next(err);
-    });
-}

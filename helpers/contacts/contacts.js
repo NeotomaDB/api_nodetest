@@ -17,7 +17,6 @@ const contactbyid = sql('./contactbyid.sql');
 const contactquery = sql('./contactquery.sql');
 const contactbydsid = sql('./contactbydsid.sql');
 const contactbystid = sql('./contactbysiteid.sql');
- 
 
 function contacts(req, res, next) {
 
@@ -31,8 +30,8 @@ function contacts(req, res, next) {
                 'contactname':req.query.contactname,
                      'status':req.query.status,
                   'contactid':contactid,
-                  'limit':req.query.limit,
-                  'offset':req.query.offset
+                      'limit':req.query.limit,
+                     'offset':req.query.offset
                };
 
   var novalues = Object.keys(outobj).every(function(x) { 
@@ -52,13 +51,13 @@ if(novalues == true) {
 
           if(data.length == 0) {
             // We're returning the structure, but nothing inside it:
-            returner = [{"contactid": null,
+            returner = [{  "contactid": null,
                          "contactname": null,
-                         "familyname": null,
-                         "givennames": null,
-                         "status": null,
-                         "url": null,
-                         "address": null}]
+                          "familyname": null,
+                          "givennames": null,
+                              "status": null,
+                                 "url": null,
+                             "address": null}]
           } else {
             returner = data;
           }
