@@ -12,7 +12,8 @@ function sql(file) {
 }
 
 const datasetbyidsql = sql('./datasetbyid.sql');
-const datasetbysite = sql('./datasetbysite.sql');
+//const datasetbysite = sql('./datasetbysite.sql');
+const datasetsbysitesql = sql('./datasetbysite.sql');
 
 function datasetbyid(req, res, next) {
   console.log(req.params.datasetid);
@@ -45,23 +46,24 @@ function datasetbyid(req, res, next) {
 }
 
 
-function datasetbysiteid(req, res, next) {
-  console.log(req.params.siteid);
+function datasetsbysiteid(req, res, next) {
+  console.log("called datasetsbysiteid");
+  console.log("req.params.siteid: "+req.params.siteid);
+  console.log("req.query.siteid: "+req.query.siteid);
   
-  if (!!req.params.siteid) {
-    var siteid = String(req.params.siteid).split(',').map(function(item) {
-      return parseInt(item, 10);
-    });
-  } else {
+  //check if valid integer siteid
+  var siteid = +req.query.siteid;
+
+  if (isNaN(siteid)) {
     res.status(500)
         .json({
           status: 'failure',
           data: null,
-          message: 'Must pass an integer sequence.'
+          message: 'Must pass an integer siteid value.'
         });
   }
 
-  db.any(datasetbysite, [siteid])
+  db.any(datasetsbysitesql, [siteid])
     .then(function (data) {
       res.status(200)
         .json({
@@ -103,5 +105,5 @@ function datasetquery(req, res, next) {
 }
 
 module.exports.datasetbyid = datasetbyid;
-module.exports.datasetbysiteid = datasetbysiteid;
+module.exports.datasetsbysiteid = datasetsbysiteid;
 module.exports.datasetquery = datasetquery;
