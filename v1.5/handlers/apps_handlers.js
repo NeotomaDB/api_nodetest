@@ -1,7 +1,7 @@
 const bib   = require('../helpers/bib_format');
 
 //get global database object
-var db = require('../database/pgp_db');
+var db = require('../../database/pgp_db');
 var pgp = db.$config.pgp;
 
 
@@ -63,65 +63,50 @@ function taxaindatasets(req, res, next){
   
   db.query('select ap.gettaxaindatasets()')
     .then(function(data){
-      //process text records
-      //var jsonData = JSON.parse(data[0]);
-      console.log(JSON.stringify(data[0]));
-      console.log(data[0].gettaxaindatasets);
-      test = [data[0]];
+      //data are records of (taxonid, taxonname, taxagroupid, datasettypeid)
+      //example record: {"gettaxaindatasets":"(27739,albite,CHM,28)"}
+      //desired output:  [...,{"TaxonName":"Acalypha-type","TaxonID":27017,"TaxaGroupID":"VPL","DatasetTypeIDs":[3,4,7,23]},...]
+    
+      var rawTaxa = data;
+      var datasettypesByTaxon = [];
+      var currentTaxonID = -1;
+      var dtbytxnObj = {};
 
-      var arrMs = test.map(function(elem){
-        var strLen = elem.gettaxaindatasets.length;
-        //console.log("string length: "+strLen);
-        var d = elem;
-        //console.log(d);
-        var str = d.gettaxaindatasets.slice(1,strLen-1); 
-        var a = str.split(","); 
-        var obj = {}; 
-        obj.TaxonName = a[1];
-        obj.TaxonID = +a[0];
-        obj.TaxaGroupID = a[2];
-        //obj.DatasetTypeID = +a[3];
-        obj.DatasetTypesIDs = [+a[3]]; 
-        console.log(typeof obj.DatasetTypesIDs);
-        console.log("length of obj.DatasetTypesIDs "+obj.DatasetTypesIDs);
-        console.log(obj.TaxonName +":"+obj.TaxonID +":"+obj.TaxaGroupID +":"+obj.DatasetTypesIDs[0])
-        return obj; 
-      });
-      
-      console.log("result array length: " + arrMs.length);
-
-      //var arrMs = arrM.slice(0,4);
-
-      var aggF = arrMs.map(function(d,i){
-
-        var tmpIDset = arrMs.filter(function(e){
-            return e.TaxonID == 28461//d.TaxonID;
-        });
-
-        var tmpArr = [];
-
-        console.log("filtered entry: "+tmpIDset.length);
-
-        var tmpAgg = tmpIDset.reduce(function(j,k, l, tmpArr){
-            //console.log(j);
-            console.log("j arr len"+j.DatasetTypeIDs.length + "k arr len"+k.DatasetTypesIDs.length);
-            return j.DatasetTypesIDs.concat(k.DatasetTypesIDs);
-        });
-
-        var aggObj = d;//d.DatasetTypesIDs;
-        aggObj.DatasetTypesIDs = tmpAgg;//tmpAgg.DatasetTypesIDs;
+      rawTaxa.forEach(function(d,i){
+        var itemContent = d.gettaxaindatasets.slice(1, d.gettaxaindatasets.length - 1);
+        var arrContent = itemContent.split(",");
         
-          return aggObj;
+        if (currentTaxonID == arrContent[0] ){
+          //found additional records for taxonid, add datasettype to array
+          dtbytxnObj.DatasetTypesIDs.push(+arrContent[3]);
+        } else {
+          //if dtbytxnObj not empty object, add to results before creating new instance for next taxon
+          if (dtbytxnObj.hasOwnProperty("TaxonID")){
+            datasettypesByTaxon.push(dtbytxnObj);
+          }
+          currentTaxonID = arrContent[0];
+          //new taxonid, create new return object and add datasettype to array
+          dtbytxnObj = {};
+          dtbytxnObj.TaxonID = +arrContent[0];
+          dtbytxnObj.TaxonName = arrContent[1];
+          dtbytxnObj.TaxaGroupID = arrContent[2];
+          dtbytxnObj.DatasetTypesIDs = [];
+          dtbytxnObj.DatasetTypesIDs.push(+arrContent[3])
+        }
+
       });
 
-      console.log("affF.length is "+aggF.length);
+      //add last taxon object to results
+      if (dtbytxnObj.hasOwnProperty("TaxonID")){
+        datasettypesByTaxon.push(dtbytxnObj);
+      }
 
-
+     
        res.status(200)
         .type('application/json')
         .jsonp({
           status: 'success',
-          data: JSON.stringify(aggF),
+          data: datasettypesByTaxon,
           message: 'Retrieved all taxa in datasets'
         })
 

@@ -1,16 +1,12 @@
 const bib   = require('../helpers/bib_format');
 //get global database object
-var db = require('../database/pgp_db');
+var db = require('../../database/pgp_db');
 var pgp = db.$config.pgp;
 
 // Defining the query functions:
 module.exports = {
   chronology:chronology,
   publicationbydataset:publicationbydataset,
-  dbtables: function (req, res, next) { 
-    var dbtable = require('../helpers/dbtables/dbtables.js');
-    dbtable.dbtables(req, res, next); 
-  },
   download:download,
   geopoliticalunits: function (req, res, next) { 
     var geopol = require('../helpers/geopoliticalunits/geopoliticalunits.js');
@@ -69,10 +65,19 @@ module.exports = {
     sites.sitesbydataset(req, res, next); 
   },
 // RETURNING DATASETS
-  dataset: function (req, res, next) { 
-    var dataset = require('../helpers/datasets/datasets.js');
-    dataset.datasetbyid(req, res, next); 
+  datasets: function (req, res, next) { 
+    console.log("datasets handler");
+    var datasets = require('../helpers/datasets/datasets.js');
+    //messy need for which or if conditional to check for which
+    //query parameters have been passed
+    if(req.query.hasOwnProperty('siteid')){
+      console.log("req.query.siteid: "+req.query.siteid);
+      datasets.datasetsbysiteid(req,res,next);
+    } else{
+       datasets.datasetbyid(req, res, next); 
+    }
   },
+
   datasetquery: function (req, res, next) { 
     var dataset = require('../helpers/datasets/datasets.js');
     dataset.datasetquery(req, res, next); 

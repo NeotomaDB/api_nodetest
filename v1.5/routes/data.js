@@ -105,7 +105,7 @@ router.get('/', function(req, res, next) {
 
 /**
 * @swagger
-* /chronology:
+* /v1.5/data/chronology:
 *   get:
 *     summary: Chronology metadata for a dataset.
 *     description: Returns the chronology and chronological controls used for a dataset age model.
@@ -167,7 +167,7 @@ router.get('/chronology/:id', handlers.chronology);
 
 /**
 * @swagger
-* /contacts:
+* /v1.5/data/contacts:
 *   get:
 *     summary: Contact information for Neotoma contributors.
 *     description: Returns researcher contact information associated with a record.
@@ -203,7 +203,7 @@ router.get('/contacts/:contactid', handlers.contactsbyid);
 
 /**
  * @swagger
- * /dataset:
+ * /v1.5/data/datasets:
  *   get:
  *     summary: Dataset information.
  *     description: Returns information about Neotoma dataset
@@ -230,43 +230,11 @@ router.get('/contacts/:contactid', handlers.contactsbyid);
 *             $ref: '#/definitions/dataset'
 */
 
-router.get('/dataset/', handlers.dataset);
-router.get('/dataset/:id', handlers.dataset);
+//router.get('/dataset/', handlers.dataset);
+//router.get('/dataset/:id', handlers.dataset);
+router.get('/datasets/', handlers.datasets);
 router.get('/datasets/:datasetid/publications', handlers.publicationbydataset);
 
-/**
-* @swagger
-* definitions:
-*   dbtables:
-*     properties:
-*       type: object
-*/
-
-/**
-* @swagger
-* /dbtables:
-*   get:
-*     summary: Returns the named Neotoma Database table.
-*     description: Returns the named Neotoma Database table.
-*     parameters:
-*       - name: table
-*         description: Table name.
-*         in: path
-*         required: true
-*         type: string
-*     produces:
-*       - application/json
-*     responses:
-*       200:
-*        description: Returned table.
-*        schema:
-*          type: array
-*          items:
-*            $ref: '#/definitions/dbtables'
-*/
-
-router.get('/dbtables/', handlers.dbtables);
-router.get('/dbtables/:table', handlers.dbtables);
 
 /**
 * @swagger
@@ -278,7 +246,7 @@ router.get('/dbtables/:table', handlers.dbtables);
 
 /**
 * @swagger
-* /download:
+* /v1.5/data/download:
 *   get:
 *     summary: Returns the named Neotoma Database table.
 *     description: Returns the named Neotoma Database table.
@@ -337,7 +305,7 @@ router.get('/download/:datasetid', handlers.download);
 
 /**
 * @swagger
-* /geopoliticalunits:
+* /v1.5/data/geopoliticalunits:
 *   get:
 *     summary: Returns information about geopolitical units.
 *     parameters:
@@ -436,7 +404,7 @@ router.get('/sites/:siteid/geopoliticalunits', handlers.geopolbysite);
 
 /**
 * @swagger
-* /occurrence:
+* /v1.5/data/occurrence:
 *   get:
 *     summary: Individual occurrence records for Neotoma records.
 *     description: Returns occurrence information for a particular taxon, geographic region or temporal slice.
@@ -496,7 +464,7 @@ router.get('/taxa/:taxonid/occurrence', handlers.occurrencebytaxon);
 
 /**
  * @swagger
- * /pollen:
+ * /v1.5/data/pollen:
  *   get:
  *     summary: Pollen data from Neotoma.
  *     description: Returns information about pollen.
@@ -592,7 +560,7 @@ router.get('/pollen/:id', handlers.pollen);
 
 /**
  * @swagger
- * /publication:
+ * /v1.5/data/publication:
  *   get:
  *     summary: Returns information about Neotoma publications
  *     description: Returns information about Neotoma publications
@@ -671,7 +639,7 @@ router.get('/dataset/:datasetid/publications', handlers.publicationbydataset);
 
 /**
  * @swagger
- * /sites:
+ * /v1.5/data/sites:
  *   get:
  *     summary: Site information.
  *     description: Returns information about Neotoma publications
@@ -735,7 +703,7 @@ router.get('/geopoliticalunits/:gpid/sites', handlers.sitesbygeopol);
 
 /**
  * @swagger
- * /taxa:
+ * /v1.5/data/taxa:
  *   get:
  *     summary: Taxonomic information.
  *     description: Returns information about a taxon and (if requested) related taxa.
@@ -825,7 +793,7 @@ router.get('/taxa/', handlers.taxonquery);
 
 /**
  * @swagger
- * /occurrence:
+ * /v1.5/data/occurrence:
  *   get:
  *     summary: Occurrence information for a taxon and sample.
  *     description: Given a set of query parameters, return individual occurrence information for a particular sample.

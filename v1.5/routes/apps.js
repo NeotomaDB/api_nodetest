@@ -23,7 +23,7 @@ router.get('/', function(req, res, next) {
 
 /**
 * @swagger
-*  /collectionTypes:
+*  /v1.5/apps/collectionTypes:
 *    get:
 *      produces:
 *        - application/json
@@ -58,7 +58,7 @@ router.get('/', function(req, res, next) {
 router.get('/collectionTypes', handlers.collectiontypes);
 /**
 * @swagger
-*  /DatasetTypes:
+*  /v1.5/apps/DatasetTypes:
 *    get:
 *      produces:
 *        - application/json
@@ -94,7 +94,7 @@ router.get('/TaxaInDatasets', handlers.taxaindatasets);
 
 /**
 * @swagger
-*  /TaxaInDatasets:
+*  /v1.5/apps/TaxaInDatasets:
 *    get:
 *      produces:
 *        - application/json
