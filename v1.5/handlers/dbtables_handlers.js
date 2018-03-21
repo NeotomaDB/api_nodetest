@@ -1,6 +1,6 @@
 const bib   = require('../helpers/bib_format');
 //get global database object
-var db = require('../database/pgp_db');
+var db = require('../../database/pgp_db');
 var pgp = db.$config.pgp;
 
 
@@ -10,8 +10,13 @@ var pgp = db.$config.pgp;
 // RETURNING DATASETTYPES
 //  dataset: function (req, res, next) { 
 //    var dataset = require('./helpers/datasets.js');
-//    dataset.datasetbyid(req, res, next); 
-  relativeagescales: relativeagescales
+//    dataset.datasetbyid(req, res, next);
+  dbtables: function (req, res, next) { 
+    var dbtable = require('../helpers/dbtables/dbtables.js');
+    dbtable.dbtables(req, res, next); 
+  }
+//  , 
+//  relativeagescales: relativeagescales
 };
 
 
@@ -20,7 +25,7 @@ var pgp = db.$config.pgp;
 
 /* All the Endpoint functions */
 
-
+/*
 
 function relativeagescales(req, res, next) {
   // Get the query string:
@@ -42,6 +47,6 @@ function relativeagescales(req, res, next) {
 
 
 }
-
+*/
 
 
