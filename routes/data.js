@@ -728,7 +728,7 @@ router.get('/pollen/:id', handlers.pollen);
 
 // router.get('/publications/', handlers.publicationquery);
 router.get('/publications/:pubid', handlers.publicationid);
-// router.get('/sites/:siteid/publications', handlers.publicationbysite);
+router.get('/sites/:siteid/publications', handlers.publicationbysite);
 router.get('/datasets/:datasetid/publications', handlers.publicationbydataset);
 
 /**

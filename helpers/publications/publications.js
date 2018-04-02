@@ -14,7 +14,8 @@ function sql(file) {
 }
 
 // Create a QueryFile globally, once per file:
-const pubbydsid = sql('./pubdsid.sql');
+const pubbydsid = sql('./pubdsidquery.sql');
+const pubbystid = sql('./pubstidquery.sql');
 
 function publicationid(req, res, next) {
   
@@ -47,6 +48,28 @@ function publicationquery(req, res, next) {
 };
 
 function publicationbysite(req, res, next) {
+  if (!!req.params.siteid) {
+  
+    var siteid = String(req.params.siteid).split(',').map(function(item) {
+      return parseInt(item, 10);
+    });
+
+  }
+  
+  db.any(pubbystid, [siteid])
+    .then(function (data) {
+      bib_output = bib.formatpublbib(data);
+
+      res.status(200)
+        .json({
+          status: 'success',
+          data: bib_output,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+      next(err);
+    });
 
 };
 
@@ -82,4 +105,5 @@ function publicationbydataset(req, res, next) {
 }
 
 module.exports.publicationbydataset = publicationbydataset;
+module.exports.publicationbysite = publicationbysite;
 module.exports.publicationid = publicationid;

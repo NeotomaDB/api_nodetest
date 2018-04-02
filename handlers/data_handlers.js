@@ -43,6 +43,11 @@ module.exports = {
     var publn = require('../helpers/publications/publications.js');
     publn.publicationbydataset(req, res, next);
   },
+  publicationbysite:  function (req, res, next) { 
+    var publn = require('../helpers/publications/publications.js');
+    publn.publicationbysite(req, res, next);
+  },
+
 // RETURNING TAXA
   taxonbyid: function (req, res, next) { 
     var taxon = require('../helpers/taxa/taxa.js');
