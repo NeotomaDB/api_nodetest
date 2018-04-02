@@ -10,13 +10,13 @@ const querystring = require('querystring');
 
 // Locations of files:
 
-//default route
+// default route
 var index = require('./routes/index');
-//data API routes
+// data API routes
 var data = require('./routes/data');
-//apps API routes
+// apps API routes
 var apps = require('./routes/apps');
-//dbtables API routes
+// dbtables API routes
 var dbtables = require('./routes/dbtables');
 
 var app = express();
@@ -29,7 +29,7 @@ var options = {
   // import swaggerDefinitions
   swaggerDefinition: swaggerDefinitionJson,
   // path to the API docs
-  apis: ['./routes/*.js'],
+  apis: ['./routes/*.js']
 };
 
 // initialize swagger-jsdoc
@@ -40,7 +40,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -52,13 +52,13 @@ app.use('/v2/apps', apps);
 app.use('/v2/data', data);
 app.use('/v2/dbtables', dbtables);
 
-app.get('/swagger.json', function(req, res) {
+app.get('/swagger.json', function (req, res) {
   res.setHeader('Content-Type', 'application/json');
   res.send(swaggerSpec);
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -68,8 +68,8 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.all('*', function(req, res) {
-  res.redirect("/api-docs");
+app.all('*', function (req, res) {
+  res.redirect('/api-docs');
 });
 
 module.exports = app;
