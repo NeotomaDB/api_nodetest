@@ -73,4 +73,10 @@ typings/
 api_project.sublime-project
 api_project.sublime-workspace
 
+# R files that might pop up
 .Rhistory
+.RData
+
+#local swaggerdef to account for host & port differences
+local_swaggerdefn.json
+
