@@ -12,11 +12,11 @@
   },
   "license": {
     "name": "MIT",
-    "url": "https://opensource.org/licenses/MIT"
+    "url": "https://opensource.org/licenses/MIT",
   },
-  "host": "localhost",
+  "host": "localhost:3000",
   "scheme": "http",
   "port": 3000,
   "basePath": "/",
-  "url": "http://localhost:3000/swagger.json"
+  "url": "/swagger.json"
 }
