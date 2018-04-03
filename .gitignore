@@ -4,6 +4,7 @@ public/api-docs/index.html
 
 swaggerdefn.json
 db_connect.json
+db_connect_remote.json
 
 ##pm2 nodejs user directory
 /nodejs
@@ -72,5 +73,4 @@ typings/
 api_project.sublime-project
 api_project.sublime-workspace
 
-db_connect_remote.json
 .Rhistory
