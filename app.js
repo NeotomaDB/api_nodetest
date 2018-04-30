@@ -22,15 +22,13 @@ var swaggerDefinitionJson = require('./swaggerdefn.json');
  middleware prior to the versioned routing.
 */
 
-var apiVersion // = "v1.5";
-apiVersion = 'v' + swaggerDefinitionJson.info.version;
 
 // options for the swagger docs
 var options = {
   // import swaggerDefinitions
   swaggerDefinition: swaggerDefinitionJson,
   // path to the API docs
-  apis: ['./' + apiVersion + '/routes/*.js', './v2.0/routes/*.js']
+  apis: ['./v1.5/routes/*.js', './v2.0/routes/*.js']
 };
 
 // initialize swagger-jsdoc
@@ -39,13 +37,13 @@ var swaggerSpec = swaggerJSDoc(options);
 // Locations of files:
 
 // default route
-var v15index = require('./' + apiVersion + '/routes/index');
+var v15index = require('./v1.5/routes/index');
 // data API routes
-var v15data = require('./' + apiVersion + '/routes/data');
+var v15data = require('./v1.5/routes/data');
 // apps API routes
-var v15apps = require('./' + apiVersion + '/routes/apps');
+var v15apps = require('./v1.5/routes/apps');
 // dbtables API routes
-var v15dbtables = require('./' + apiVersion + '/routes/dbtables');
+var v15dbtables = require('./v1.5/routes/dbtables');
 
 // v2 routes
 var v2index = require('./v2.0/routes/index');
@@ -78,9 +76,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // use the v1.5 endpoints:
 app.use('/', v15index);
-app.use('/' + apiVersion + '/apps', v15apps);
-app.use('/' + apiVersion + '/data', v15data);
-app.use('/' + apiVersion + '/dbtables', v15dbtables);
+app.use('/v1.5/apps', v15apps);
+app.use('/v1.5/data', v15data);
+app.use('/v1.5/dbtables', v15dbtables);
 
 // Use the v2 endpoints:
 app.use('/v2.0/', v2index);
