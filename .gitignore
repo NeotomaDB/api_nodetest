@@ -2,7 +2,8 @@ public/api-docs/index.html
 
 # Created by https://www.gitignore.io/api/node
 
-swaggerdefn.json
+swaggerdefn_local.json
+swaggerdefn_remote.json
 db_connect.json
 db_connect_remote.json
 
