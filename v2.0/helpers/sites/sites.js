@@ -2,12 +2,12 @@
 
 const path = require('path');
 
-//get global database object
-var db = require('../../database/pgp_db');
+// get global database object
+var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
 // Helper for linking to external query files:
-function sql(file) {
+function sql (file) {
     const fullPath = path.join(__dirname, file);
     return new pgp.QueryFile(fullPath, {minify: true});
 }
@@ -18,14 +18,13 @@ const sitebydsid = sql('./sitebydsid.sql');
   const sitebyid = sql('./sitebyid.sql');
 const sitebygpid = sql('./sitebygpid.sql');
 const sitebyctid = sql('./sitebyctid.sql');
- 
-function sitesbyid(req, res, next) {
+
+function sitesbyid (req, res, next) {
 
   if (!!req.params.siteid) {
     var siteid = String(req.params.siteid).split(',').map(function(item) {
       return parseInt(item, 10);
     });
-
   } else {
     res.status(500)
         .json({
@@ -83,7 +82,7 @@ function sitesquery(req, res, next) {
         });
     })
     .catch(function (err) {
-        return next(err);
+      return next(err);
     });
 }
 
@@ -93,14 +92,13 @@ function sitesbydataset(req, res, next) {
     var datasetid = String(req.params.datasetid).split(',').map(function(item) {
       return parseInt(item, 10);
     });
-
   } else {
     res.status(500)
-        .json({
-          status: 'failure',
-          data: null,
-          message: 'Must pass either queries or an integer sequence.'
-        });
+      .json({
+        status: 'failure',
+        data: null,
+        message: 'Must pass either queries or an integer sequence.'
+      });
   }
 
   db.any(sitebydsid, [datasetid])
