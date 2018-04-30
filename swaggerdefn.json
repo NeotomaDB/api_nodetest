@@ -1,7 +1,7 @@
 {
   "info": {
     "title": "Neotoma API",
-    "version": "2.0.0",
+    "version": "2.0",
     "description": "API Documentation for the Neotoma Paleoecological Database",
     "termsOfService": "no"
   },
@@ -12,7 +12,7 @@
   },
   "license": {
     "name": "MIT",
-    "url": "https://opensource.org/licenses/MIT",
+    "url": "https://opensource.org/licenses/MIT"
   },
   "host": "localhost:3000",
   "scheme": "http",
