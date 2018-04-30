@@ -2,26 +2,24 @@
 
 const path = require('path');
 
-//get global database object
-var db = require('../../database/pgp_db');
+// get global database object
+var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
-const bib   = require('./../bib_format');
-
 // Helper for linking to external query files:
-function sql(file) {
-    const fullPath = path.join(__dirname, file);
-    return new pgp.QueryFile(fullPath, {minify: true});
+function sql (file) {
+  const fullPath = path.join(__dirname, file);
+  return new pgp.QueryFile(fullPath, {minify: true});
 }
 
 // Create a QueryFile globally, once per file:
 const gpuQuery = sql('./gpuQuery.sql');
 const gpuid = sql('./gpubyid.sql');
 
-function geopoliticalbyid(req, res, next) {
+function geopoliticalbyid (req, res, next) {
 
   if (!!req.params.gpid) {
-    var gpid = String(req.params.gpid).split(',').map(function(item) {
+    var gpid = String(req.params.gpid).split(',').map(function (item) {
       return parseInt(item, 10);
     });
   } else {
@@ -29,7 +27,7 @@ function geopoliticalbyid(req, res, next) {
       .json({
         status: 'success',
         data: returner
-    });
+      });
   };
 
   console.log(gpid);
@@ -37,9 +35,9 @@ function geopoliticalbyid(req, res, next) {
   db.any(gpuid, [gpid])
     .then(function (data) {
 
-      if(data.length == 0) {
+      if (data.length === 0) {
         // We're returning the structure, but nothing inside it:
-        returner = [{"geopoliticalid": null,
+        var returner = [{"geopoliticalid": null,
                      "highergeopoliticalid": null,
                      "rank": null,
                      "geopoliticalunit": null,
@@ -49,7 +47,7 @@ function geopoliticalbyid(req, res, next) {
                      "recdatecreated": null,
                      "recdatemodified": null}]
       } else {
-        returner = data.sort(function(obj1, obj2) {
+        var returner = data.sort(function (obj1, obj2) {
           return obj1.Rank - obj2.Rank;
         });
       }
@@ -83,13 +81,12 @@ function geopoliticalunits(req, res, next) {
                   'offset':req.query.offset
                };
 
-  if(Object.keys(outobj).every(function(x) { return typeof outobj[x]==='undefined';}) === false){
+  if (Object.keys(outobj).every(function (x) { return typeof outobj[x] === 'undefined'; }) === false) {
     db.any(gpuQuery, outobj)
       .then(function (data) {
-
-        if(data.length == 0) {
+        if (data.length === 0) {
           // We're returning the structure, but nothing inside it:
-          returner = [{"geopoliticalid": null,
+          var returner = [{"geopoliticalid": null,
                        "highergeopoliticalid": null,
                        "rank": null,
                        "geopoliticalunit": null,
@@ -99,11 +96,11 @@ function geopoliticalunits(req, res, next) {
                        "recdatecreated": null,
                        "recdatemodified": null}]
         } else {
-          returner = data.sort(function(obj1, obj2) {
+          var returner = data.sort(function (obj1, obj2) {
             return obj1.Rank - obj2.Rank;
           });
         }
-        
+
         res.status(200)
           .json({
             status: 'success',
@@ -113,11 +110,10 @@ function geopoliticalunits(req, res, next) {
       .catch(function (err) {
         return next(err);
       });
-    } else {
-      res.redirect('/api-docs');
-    }
+  } else {
+    res.redirect('/api-docs');
+  }
 }
-
 
 // function geopolbysite(req, res, next) {
 
@@ -126,7 +122,6 @@ function geopoliticalunits(req, res, next) {
 //   */
 
 //   if (!!req.params.siteid) {
-  
 //     var siteid = String(req.params.siteid).split(',').map(function(item) {
 //       return parseInt(item, 10);
 //     });
