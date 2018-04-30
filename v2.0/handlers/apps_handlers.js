@@ -1,12 +1,10 @@
-const bib   = require('../helpers/bib_format');
+// const bib = require('../helpers/bib_format');
 
-//get global database object
-var db = require('../database/pgp_db');
+// get global database object
+var db = require('../../database/pgp_db');
 var pgp = db.$config.pgp;
 
-
-
-  module.exports = {
+module.exports = {
   datasettypes: datasettypes,
   collectiontypes: collectiontypes,
   taxaindatasets: taxaindatasets,
@@ -17,14 +15,12 @@ var pgp = db.$config.pgp;
   depositionalenvironments: depositionalenvironments
 };
 
-
-
 // Defining the query functions:
 
 /* All the Endpoint functions */
-function collectiontypes(req, res, next){
+function collectiontypes (req, res, next) {
   db.query('select ap.getcollectiontypes()')
-    .then(function(data){
+    .then(function (data) {
       res.status(200)
         .type('application/json')
         .jsonp({
@@ -33,17 +29,16 @@ function collectiontypes(req, res, next){
           message: 'Retrieved all collectiontypes'
         })
     })
-    .catch(function(err){
+    .catch(function (err) {
       return next(err);
     })
 }
 
-
-function datasettypes(req, res, next) {
+function datasettypes (req, res, next) {
   // Get the query string:
   var query = {};
 
-   db.query('select ap.getdatasettypes();')
+  db.query('select ap.getdatasettypes();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -56,24 +51,21 @@ function datasettypes(req, res, next) {
       return next(err);
     });
 
-
 }
 
-function taxaindatasets(req, res, next){
-  
+function taxaindatasets (req, res, next) {
+
   db.query('select ap.gettaxaindatasets()')
-    .then(function(data){
-      //process text records
-      //var jsonData = JSON.parse(data[0]);
+    .then(function (data) {
+      // process text records
+      // var jsonData = JSON.parse(data[0]);
       console.log(JSON.stringify(data[0]));
       console.log(data[0].gettaxaindatasets);
-      test = [data[0]];
+      var test = [data[0]];
 
-      var arrMs = test.map(function(elem){
+      var arrMs = test.map(function (elem) {
         var strLen = elem.gettaxaindatasets.length;
-        //console.log("string length: "+strLen);
         var d = elem;
-        //console.log(d);
         var str = d.gettaxaindatasets.slice(1,strLen-1); 
         var a = str.split(","); 
         var obj = {}; 
