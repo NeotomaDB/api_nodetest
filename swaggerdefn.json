@@ -6,7 +6,7 @@
     "termsOfService": "no"
   },
   "contact": {
-  	"name": "Simon J Goring",
+    "name": "Simon J Goring",
     "email": "goring@wisc.edu",
     "url": "http://goring.org"
   },
@@ -14,9 +14,8 @@
     "name": "MIT",
     "url": "https://opensource.org/licenses/MIT"
   },
-  "host": "localhost:3000",
+  "host": "api-dev.neotomadb.org",
   "scheme": "http",
-  "port": 3000,
   "basePath": "/",
   "url": "/swagger.json"
 }
