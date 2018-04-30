@@ -4,12 +4,12 @@
 // endpoints.
 
 var empty = {
-  "query":{   'taxonid':null,
-                   'name':null,
-              'ecolgroup':null,
-                  'lower':null
+  "query": {   'taxonid': null,
+                   'name': null,
+              'ecolgroup': null,
+                  'lower': null
             },
-  "response":{
+  "response": {
               "taxonid": null,
             "taxoncode": null,
             "taxonname": null,
@@ -26,16 +26,15 @@ var empty = {
 // Sites query:
 
 const path = require('path');
-const bib   = require('./../bib_format');
 
-//get global database object
-var db = require('../../database/pgp_db');
+// get global database object
+var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
 // Helper for linking to external query files:
-function sql(file) {
-    const fullPath = path.join(__dirname, file);
-    return new pgp.QueryFile(fullPath, {minify: true});
+function sql (file) {
+  const fullPath = path.join(__dirname, file);
+  return new pgp.QueryFile(fullPath, {minify: true});
 }
 
 // Create a QueryFile globally, once per file:
@@ -44,23 +43,21 @@ const taxonquerystatic = sql('./taxonquerystatic.sql');
 const taxonbyds = sql('./taxonquerydsid.sql');
 
 // Actual functions:
-// 
-function taxonbyid(req, res, next) {
-  
+
+function taxonbyid (req, res, next) {
   var taxonid = String(req.params.taxonid).split(',').map(function(item) {
     return parseInt(item, 10);
   });
 
   if (!!taxonid) {
-    query = 'SELECT * FROM ndb.taxa WHERE taxa.taxonid IN ($1:csv)';
+    var query = 'SELECT * FROM ndb.taxa WHERE taxa.taxonid IN ($1:csv)';
   } else {
-
-      res.status(500)
-        .json({
-          status: 'failure',
-          data: empty,
-          message: 'Must pass either queries or an integer sequence.'
-        });
+    res.status(500)
+      .json({
+        status: 'failure',
+        data: empty,
+        message: 'Must pass either queries or an integer sequence.'
+      });
   }
 
   db.any(query, [taxonid])
@@ -73,25 +70,22 @@ function taxonbyid(req, res, next) {
         });
     })
     .catch(function (err) {
-        return next(err);
+      return next(err);
     });
 }
 
-function taxonbydsid(req, res, next) {
-
-
+function taxonbydsid (req, res, next) {
   if (!!req.params.datasetid) {
     var datasetid = String(req.params.datasetid).split(',').map(function(item) {
       return parseInt(item, 10);
     });
   } else {
-    
     res.status(500)
-        .json({
-          status: 'failure',
-          data: null,
-          message: 'Must pass either queries or an integer sequence.'
-        });
+      .json({
+        status: 'failure',
+        data: null,
+        message: 'Must pass either queries or an integer sequence.'
+      });
   }
 
   db.any(taxonbyds, [datasetid])
@@ -104,13 +98,11 @@ function taxonbydsid(req, res, next) {
         });
     })
     .catch(function (err) {
-        return next(err);
+      return next(err);
     });
 }
 
-
-
-function gettaxonquery(req, res, next) {
+function gettaxonquery (req, res, next) {
 
   if (!!req.query.taxonid) {
     var taxonid = String(req.query.taxonid).split(',').map(function(item) {
@@ -120,40 +112,38 @@ function gettaxonquery(req, res, next) {
     var taxonid = null;
   }
 
-  var outobj = {'taxonid':taxonid,
-              'taxonname':req.query.taxonname,
-                 'status':req.query.status,
-              'taxagroup':req.query.taxagroup,   
-              'ecolgroup':req.query.ecolgroup,
-                  'lower':req.query.lower,
-                  'limit':req.query.limit,
-                  'offset':req.query.offset
+  var outobj = {'taxonid': taxonid,
+              'taxonname': req.query.taxonname,
+                 'status': req.query.status,
+              'taxagroup': req.query.taxagroup,
+              'ecolgroup': req.query.ecolgroup,
+                  'lower': req.query.lower,
+                  'limit': req.query.limit,
+                  'offset': req.query.offset
                };
 
   if (typeof outobj.taxonid === 'undefined') {
     outobj.taxonid = null;
   };
 
-  if(!(typeof outobj.taxonname === 'undefined')) {
-    outobj.taxonname = outobj.taxonname.replace(/\*/g, "\%");
+  if (!(typeof outobj.taxonname === 'undefined')) {
+    outobj.taxonname = outobj.taxonname.replace(/\*/g, '%');
   }
 
-  var novalues = Object.keys(outobj).every(function(x) { 
-    return typeof outobj[x]==='undefined' || !outobj[x];
+  var novalues = Object.keys(outobj).every(function (x) {
+    return typeof outobj[x] ==='undefined' || !outobj[x];
   });
 
-  if(novalues == true) {
-    if(!!req.accepts('json') & !req.accepts('html')) {
+  if (novalues === true) {
+    if (!!req.accepts('json') & !req.accepts('html')) {
       res.redirect('/swagger.json');
     } else {
       res.redirect('/api-docs');
     };
   } else {
-
-    if(outobj.lower === 'true') {
+    if (outobj.lower === 'true') {
       db.any(taxonquerylower, outobj)
         .then(function (data) {
-
           res.status(200)
             .json({
               status: 'success',
@@ -162,7 +152,7 @@ function gettaxonquery(req, res, next) {
             });
         })
         .catch(function (err) {
-            return next(err);
+          return next(err);
         });
     };
 
@@ -178,7 +168,7 @@ function gettaxonquery(req, res, next) {
             });
         })
         .catch(function (err) {
-            return next(err);
+          return next(err);
         });
     };
   };
