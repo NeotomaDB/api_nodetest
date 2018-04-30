@@ -1,5 +1,5 @@
 //get global database object
-var db = require('../database/pgp_db');
+var db = require('../../database/pgp_db');
 var pgp = db.$config.pgp;
 
 // Defining the query functions:

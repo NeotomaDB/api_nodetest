@@ -20,7 +20,9 @@ SELECT
                                                        'contactname', cnt.contactname,
                                                         'familyname', cnt.familyname,
                                                          'firstname', cnt.givennames,
-                                                          'initials', cnt.leadinginitials)
+                                                          'initials', cnt.leadinginitials),
+                         'agerange', json_build_object('ageyoung', agerange.younger,
+                                                         'ageold', agerange.older)
                         )) 
   AS dataset 
 FROM
@@ -34,7 +36,8 @@ FROM
         ndb.datasetpis AS dspi ON dspi.datasetid = dts.datasetid LEFT OUTER JOIN
           ndb.contacts AS cnt ON cnt.contactid = dspi.contactid LEFT OUTER JOIN
   ndb.constituentdatabases AS cstdb ON dsdb.databaseid = cstdb.databaseid  LEFT OUTER JOIN
-       ndb.dsageranges AS agerange ON dts.datasetid = agerange.datasetid
+ndb.dsageranges AS agerange ON dts.datasetid = agerange.datasetid LEFT OUTER JOIN
+ndb.agetypes AS agetypes ON agetypes.agetypeid = agerange.agetypeid
 WHERE
        (${siteid} IS NULL OR      sts.siteid IN (${siteid:csv}))  AND
   (${datasettype} IS NULL OR dst.datasettype LIKE ${datasettype}) AND
