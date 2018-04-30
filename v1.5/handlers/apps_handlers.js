@@ -23,7 +23,7 @@ var pgp = db.$config.pgp;
 
 /* All the Endpoint functions */
 function collectiontypes(req, res, next){
-  db.query('select ap.getcollectiontypes()')
+  db.query('select * from ap.getcollectiontypes()')
     .then(function(data){
       res.status(200)
         .type('application/json')
@@ -43,7 +43,7 @@ function datasettypes(req, res, next) {
   // Get the query string:
   var query = {};
 
-   db.query('select ap.getdatasettypes();')
+   db.query('select * from ap.getdatasettypes();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -61,7 +61,7 @@ function datasettypes(req, res, next) {
 
 function taxaindatasets(req, res, next){
   
-  db.query('select ap.gettaxaindatasets()')
+  db.query('select * from ap.gettaxaindatasets()')
     .then(function(data){
       //data are records of (taxonid, taxonname, taxagroupid, datasettypeid)
       //example record: {"gettaxaindatasets":"(27739,albite,CHM,28)"}
@@ -73,28 +73,23 @@ function taxaindatasets(req, res, next){
       var dtbytxnObj = {};
 
       rawTaxa.forEach(function(d,i){
-        var itemContent = d.gettaxaindatasets.slice(1, d.gettaxaindatasets.length - 1);
-        var arrContent = itemContent.split(",");
-        
-        if (currentTaxonID == arrContent[0] ){
+        if ( currentTaxonID == d.taxonid ){
           //found additional records for taxonid, add datasettype to array
-          dtbytxnObj.DatasetTypesIDs.push(+arrContent[3]);
+          dtbytxnObj.DatasetTypesIDs.push(+d.datasettypeid);
         } else {
           //if dtbytxnObj not empty object, add to results before creating new instance for next taxon
-          if (dtbytxnObj.hasOwnProperty("TaxonID")){
+          if ( dtbytxnObj.hasOwnProperty("TaxonID") ){
             datasettypesByTaxon.push(dtbytxnObj);
           }
-          currentTaxonID = arrContent[0];
-          //new taxonid, create new return object and add datasettype to array
+          currentTaxonID = d.taxonid;
           dtbytxnObj = {};
-          dtbytxnObj.TaxonID = +arrContent[0];
-          dtbytxnObj.TaxonName = arrContent[1];
-          dtbytxnObj.TaxaGroupID = arrContent[2];
+          dtbytxnObj.TaxonID = +d.taxonid;
+          dtbytxnObj.TaxonName = d.taxonname;
+          dtbytxnObj.TaxaGroupID = +d.taxagroupid;
           dtbytxnObj.DatasetTypesIDs = [];
-          dtbytxnObj.DatasetTypesIDs.push(+arrContent[3])
+          dtbytxnObj.DatasetTypesIDs.push(+d.datasettypeid)
         }
-
-      });
+      })      
 
       //add last taxon object to results
       if (dtbytxnObj.hasOwnProperty("TaxonID")){
@@ -120,7 +115,7 @@ function taxagrouptypes(req, res, next) {
   // Get the query string:
   var query = {};
 
-   db.query('select ap.gettaxagrouptypes();')
+   db.query('select * from ap.gettaxagrouptypes();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -140,7 +135,7 @@ function keywords(req, res, next) {
   // Get the query string:
   var query = {};
 
-   db.query('select ap.getkeywords();')
+   db.query('select * from ap.getkeywords();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -160,7 +155,7 @@ function authorpis(req, res, next) {
   // Get the query string:
   var query = {};
 
-   db.query('select ap.getpeople();')
+   db.query('select * from ap.getpeople();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -186,7 +181,7 @@ function taphonomysystems(req, res, next) {
         message: 'No datasetTypeId provided.'
       })
   } else {
-    db.query('select ap.gettaphonomicsystems('+datasetTypeId+');')
+    db.query('select * from ap.gettaphonomicsystems('+datasetTypeId+');')
       .then(function (data) {
         res.status(200)
           .jsonp({
@@ -206,7 +201,7 @@ function depositionalenvironments(req, res, next) {
   // Get the query string:
   var query = {};
 
-   db.query('select ap.getdeptenvtypesroot();')
+   db.query('select * from ap.getdeptenvtypesroot();')
     .then(function (data) {
       res.status(200)
         .jsonp({
