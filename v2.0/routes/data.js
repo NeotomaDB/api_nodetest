@@ -1,6 +1,6 @@
 /*
-* 
-* data.js
+*
+* v2.0/routes/data.js
 * By: Simon Goring, Michael Stryker
 *
 */
@@ -10,7 +10,7 @@ var router = express.Router();
 
 var handlers = require('../handlers/data_handlers');
 
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
   res.redirect('/api-docs');
 });
 
@@ -42,7 +42,7 @@ router.get('/', function(req, res, next) {
 *         type: string
 *         format: url
 *         example: http://goring.org
-*       recdatecreated: 
+*       recdatecreated:
 *         type: string
 *         format: dateTime
 *         example: 2013-09-30T21:02:51.000Z
@@ -54,7 +54,7 @@ router.get('/', function(req, res, next) {
 
 /**
 * @swagger
-* /contacts:
+* v2.0/data/contacts:
 *   get:
 *     summary: Contact information for Neotoma contributors.
 *     description: Returns researcher contact information associated with a record.
@@ -211,7 +211,7 @@ router.get('/sites/:siteid/contacts', handlers.contactsbysiteid);
  *         required: false
  *         type: integer
  *         format: int64
- *         example: 1000 
+ *         example: 1000
  *       - name: altmax
  *         in: query
  *         description: Maximum altitude of the dataset site location (in meters)
@@ -271,7 +271,7 @@ router.get('/datasets/:datasetid/publications', handlers.publicationbydataset);
 
 /**
 * @swagger
-* /dbtables:
+* /v2.0/data/dbtables:
 *   get:
 *     summary: Returns the named Neotoma Database table.
 *     description: Returns the named Neotoma Database table.
@@ -305,7 +305,7 @@ router.get('/dbtables/:table', handlers.dbtables);
 
 /**
 * @swagger
-* /download:
+* /v2.0/data/download:
 *   get:
 *     summary: Returns the named Neotoma Database table.
 *     description: Returns the named Neotoma Database table.
@@ -352,7 +352,7 @@ router.get('/download/:datasetid', handlers.download);
 *       geopoliticalname:
 *         type: string
 *         example: province
-*       recdatecreated: 
+*       recdatecreated:
 *         type: string
 *         format: dateTime
 *         example: 2013-09-30T21:02:51.000Z
@@ -364,7 +364,7 @@ router.get('/download/:datasetid', handlers.download);
 
 /**
 * @swagger
-* /geopoliticalunits:
+* /v2.0/data/geopoliticalunits:
 *   get:
 *     summary: Returns information about geopolitical units.
 *     parameters:
@@ -392,7 +392,7 @@ router.get('/download/:datasetid', handlers.download);
 *         in: query
 *         description: Should all lower ranked units below the target unit be returned?
 *         required: false
-*         type: boolean  
+*         type: boolean
 *     produces:
 *       - application/json
 *     responses:
@@ -462,7 +462,7 @@ router.get('/sites/:siteid/geopoliticalunits', handlers.geopolbysite);
 
 /**
 * @swagger
-* /occurrence:
+* /v2.0/data/occurrence:
 *   get:
 *     summary: Individual occurrence records for Neotoma records.
 *     description: Returns occurrence information for a particular taxon, geographic region or temporal slice.
@@ -573,7 +573,7 @@ router.get('/taxa/:taxonid/occurrence', handlers.occurrencebytaxon);
 *         type: array
 *         items:
 *           type: string
-*       TaxonCode: 
+*       TaxonCode:
 *         type: string
 *       Author:
 *         type: string
@@ -672,7 +672,6 @@ router.get('/taxa/:taxonid/occurrence', handlers.occurrencebytaxon);
 router.get('/pollen/', handlers.pollen);
 router.get('/pollen/:id', handlers.pollen);
 
-
 /**
 * @swagger
 * definitions:
@@ -713,8 +712,8 @@ router.get('/pollen/:id', handlers.pollen);
  *         description: Related site identifier.
  *         in: query
  *         required: false
- *     	   type: integer
- *     	   format: int32
+ *         type: integer
+ *         format: int32
  *     produces:
  *       - application/json
  *     responses:
@@ -790,7 +789,7 @@ router.get('/datasets/:datasetid/publications', handlers.publicationbydataset);
  *         description: Related site identifier.
  *         in: query
  *         required: false
- *     	   type: integer
+ *         type: integer
  *     produces:
  *       - application/json
  *     responses:
@@ -805,7 +804,7 @@ router.get('/datasets/:datasetid/publications', handlers.publicationbydataset);
 router.get('/sites/', handlers.sitesquery); // Goes to the queries.
 router.get('/sites/:siteid', handlers.sitesbyid); // Takes integers, including comma separated
 router.get('/datasets/:datasetid/sites', handlers.sitesbydataset); // Takes a dataset ID.
-//router.get('/publications/:pubid/site', handlers.sitesbypublication);
+// router.get('/publications/:pubid/site', handlers.sitesbypublication);
 router.get('/geopoliticalunits/:gpid/sites', handlers.sitesbygeopol);
 router.get('/contacts/:contactid/sites', handlers.sitesbycontact);
 
@@ -859,7 +858,7 @@ router.get('/contacts/:contactid/sites', handlers.sitesbycontact);
  *         description: Related site identifier.
  *         in: query
  *         required: false
- *     	   type: integer
+ *         type: integer
  *     produces:
  *       - application/json
  *     responses:
@@ -874,7 +873,6 @@ router.get('/contacts/:contactid/sites', handlers.sitesbycontact);
 router.get('/taxa/:taxonid', handlers.taxonbyid);
 router.get('/taxa/', handlers.taxonquery);
 router.get('/datasets/:datasetid/taxa/', handlers.taxonbydsid);
-
 
 /***********************************************************
 *
@@ -933,13 +931,13 @@ router.get('/datasets/:datasetid/taxa/', handlers.taxonbydsid);
 *             type: numeric
 *           controltype:
 *             type: string
-*               
-*             
+*
+*
 */
 
 /**
 * @swagger
-* /chronology:
+* /v2.0/data/chronology:
 *   get:
 *     summary: Chronology metadata for a dataset.
 *     description: Returns the chronology and chronological controls used for a dataset age model.
