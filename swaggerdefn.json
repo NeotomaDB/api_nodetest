@@ -1,12 +1,21 @@
 {
   "info": {
     "title": "Neotoma API",
-    "version": "1.5",
-    "description": "API Documentation for the Neotoma Paleoecological Database"
+    "version": "2.0",
+    "description": "API Documentation for the Neotoma Paleoecological Database",
+    "termsOfService": "no"
   },
-  "host": "localhost:3000",
+  "contact": {
+    "name": "Simon J Goring",
+    "email": "goring@wisc.edu",
+    "url": "http://goring.org"
+  },
+  "license": {
+    "name": "MIT",
+    "url": "https://opensource.org/licenses/MIT"
+  },
+  "host": "api-dev.neotomadb.org",
   "scheme": "http",
-  "port": 3000,
   "basePath": "/",
   "url": "/swagger.json"
 }
