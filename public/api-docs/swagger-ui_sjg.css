@@ -11,7 +11,7 @@
 
 .swagger-ui body {
     margin: 0;
-    background: #d6d2ca
+    background: #ff0000
 }
 
 .swagger-ui .wrapper {
@@ -1300,7 +1300,7 @@
 
 .swagger-ui .topbar {
     padding: 8px 30px;
-    background-color: #a9a295
+    background-color: #ff0000
 }
 
 .swagger-ui .topbar .topbar-wrapper {
@@ -1358,7 +1358,7 @@
     padding: 4px 40px;
     border: none;
     border-radius: 0 4px 4px 0;
-    background: #547f00;
+    background: #ff0000;
     font-family: Titillium Web, sans-serif;
     color: #fff
 }
