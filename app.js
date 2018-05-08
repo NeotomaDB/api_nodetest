@@ -1,8 +1,8 @@
-     var express = require('express');
-        var path = require('path');
-      var logger = require('morgan');
+var express = require('express');
+var path = require('path');
+var logger = require('morgan');
 var cookieParser = require('cookie-parser');
-  var bodyParser = require('body-parser');
+var bodyParser = require('body-parser');
 var swaggerJSDoc = require('swagger-jsdoc');
 
 var app = express();
@@ -21,7 +21,6 @@ var swaggerDefinitionJson = require('./swaggerdefn.json');
  number can be stripped from the route definition and identified by some
  middleware prior to the versioned routing.
 */
-
 
 // options for the swagger docs
 var options = {
@@ -70,9 +69,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// optionally, refactor route paths here to strip version string and
-// identify version from header; still requires version directory paths in 
-// hierarch of <version>/handlers; <version>/routes; <version>/helpers; 
+// optionally, re-factor route paths here to strip version string and
+// identify version from header; still requires version directory paths in
+// hierarchy of <version>/handlers; <version>/routes; <version>/helpers;
 
 // use the v1.5 endpoints:
 app.use('/', v15index);
