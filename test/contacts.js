@@ -26,6 +26,15 @@ describe('Get contact data:', function () {
       });
 	});
 
+    it('The example in the swagger should return an object:', function(done) {
+    api.get('v2.0/data/contacts?contactname=Grimm%&status=active&limit=25')
+      .set('Accept', 'application/json')
+      .end(function (err, res) {
+        assert.equal(res.body.data.result[0]['lastname'], 'Grimm')
+        done();
+      });
+	});
+
     it('Contact queries should be case insensitive:', function(done) {
 		api.get('v2.0/data/contacts/?status=Retired')
 		.set('Accept', 'application/json')

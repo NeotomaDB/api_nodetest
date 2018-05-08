@@ -45,7 +45,7 @@ function contacts (req, res, next) {
       res.redirect('/api-docs');
     };
   } else {
-    if (Object.keys(outobj).every(function (x) { return typeof outobj[x] ==='undefined'; }) === false) {
+    if (Object.keys(outobj).every(function (x) { return typeof outobj[x] === 'undefined'; }) === false) {
       db.any(contactquery, outobj)
         .then(function (data) {
           if (data.length === 0) {
@@ -58,7 +58,7 @@ function contacts (req, res, next) {
                                  "url": null,
                              "address": null}]
           } else {
-            var returner = data;
+            returner = data;
           }
 
           res.status(200)
