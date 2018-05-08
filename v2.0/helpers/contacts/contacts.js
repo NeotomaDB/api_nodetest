@@ -19,20 +19,19 @@ const contactbydsid = sql('./contactbydsid.sql');
 const contactbystid = sql('./contactbysiteid.sql');
 
 function contacts (req, res, next) {
-
   if (!!req.query.contactid) {
     var contactid = String(req.query.contactid).split(',').map(function(item) {
       return parseInt(item, 10);
     });
   };
 
-  var outobj = {   'lastname': req.query.lastname,
-                'contactname': req.query.contactname,
-                     'status': req.query.status,
-                  'contactid': contactid,
-                      'limit': req.query.limit,
-                     'offset': req.query.offset
-               };
+  var outobj = {'lastname': req.query.lastname,
+    'contactname': req.query.contactname,
+    'status': req.query.status,
+    'contactid': contactid,
+    'limit': req.query.limit,
+    'offset': req.query.offset
+  };
 
   var novalues = Object.keys(outobj).every(function (x) {
     return typeof outobj[x] === 'undefined' || !outobj[x];
@@ -50,13 +49,13 @@ function contacts (req, res, next) {
         .then(function (data) {
           if (data.length === 0) {
             // We're returning the structure, but nothing inside it:
-            var returner = [{  "contactid": null,
-                         "contactname": null,
-                          "familyname": null,
-                          "givennames": null,
-                              "status": null,
-                                 "url": null,
-                             "address": null}]
+            var returner = [{'contactid': null,
+              'contactname': null,
+              'familyname': null,
+              'givennames': null,
+              'status': null,
+              'url': null,
+              'address': null}]
           } else {
             returner = data;
           }
@@ -137,11 +136,11 @@ function contactsbysiteid (req, res, next) {
     });
   } else {
     res.status(500)
-        .json({
-          status: 'failure',
-          data: null,
-          message: 'Must pass either queries or an integer sequence.'
-        });
+      .json({
+        status: 'failure',
+        data: null,
+        message: 'Must pass either queries or an integer sequence.'
+      });
   }
 
   db.any(contactbystid, [siteid])
@@ -154,7 +153,7 @@ function contactsbysiteid (req, res, next) {
         });
     })
     .catch(function (err) {
-        return next(err);
+      return next(err);
     })
 }
 
