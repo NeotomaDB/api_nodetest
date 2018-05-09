@@ -8,7 +8,6 @@ exports.formatpublbib = function (pubobject) {
     switch (pubtype) {
       case 1:
         // Journal Articles:
-        console.log('okay');
 
         pubout[i] = { 'publicationid': pubobject[i]['publicationid'],
                       'title': pubobject[i]['articletitle'],
@@ -22,8 +21,6 @@ exports.formatpublbib = function (pubobject) {
                     };
         break;
       case 2:
-        // Book chapter
-        console.log('okay2');
 
         pubout[i] = { 'publicationid': pubobject[i]['publicationid'],
                       'title': pubobject[i]['articletitle'],
