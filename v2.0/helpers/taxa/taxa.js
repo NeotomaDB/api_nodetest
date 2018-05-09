@@ -4,25 +4,25 @@
 // endpoints.
 
 var empty = {
-  "query": {   'taxonid': null,
-                   'name': null,
-              'ecolgroup': null,
-                  'lower': null
-            },
-  "response": {
-              "taxonid": null,
-            "taxoncode": null,
-            "taxonname": null,
-               "author": null,
-                "valid": null,
-        "highertaxonid": null,
-              "extinct": null,
-          "taxagroupid": null,
-        "publicationid": null,
-          "validatorid": null,
-         "validatedate": null,
-                "notes": null
-    }};
+  'query': {'taxonid': null,
+    'name': null,
+    'ecolgroup': null,
+    'lower': null
+  },
+  'response': {
+    'taxonid': null,
+    'taxoncode': null,
+    'taxonname': null,
+    'author': null,
+    'valid': null,
+    'highertaxonid': null,
+    'extinct': null,
+    'taxagroupid': null,
+    'publicationid': null,
+    'validatorid': null,
+    'validatedate': null,
+    'notes': null
+  }};
 // Sites query:
 
 const path = require('path');
@@ -38,18 +38,20 @@ function sql (file) {
 }
 
 // Create a QueryFile globally, once per file:
-const taxonquerylower  = sql('./taxonquerylower.sql');
+const taxonquerylower = sql('./taxonquerylower.sql');
 const taxonquerystatic = sql('./taxonquerystatic.sql');
 const taxonbyds = sql('./taxonquerydsid.sql');
 
 // Actual functions:
 
 function taxonbyid (req, res, next) {
-  var taxonid = String(req.params.taxonid).split(',').map(function(item) {
+  var taxonid = String(req.params.taxonid).split(',').map(function (item) {
     return parseInt(item, 10);
   });
 
-  if (!!taxonid) {
+  var goodid = !!taxonid
+
+  if (goodid) {
     var query = 'SELECT * FROM ndb.taxa WHERE taxa.taxonid IN ($1:csv)';
   } else {
     res.status(500)
@@ -75,8 +77,9 @@ function taxonbyid (req, res, next) {
 }
 
 function taxonbydsid (req, res, next) {
-  if (!!req.params.datasetid) {
-    var datasetid = String(req.params.datasetid).split(',').map(function(item) {
+  var goodds = !!req.params.datasetid;
+  if (goodds) {
+    var datasetid = String(req.params.datasetid).split(',').map(function (item) {
       return parseInt(item, 10);
     });
   } else {
@@ -103,24 +106,24 @@ function taxonbydsid (req, res, next) {
 }
 
 function gettaxonquery (req, res, next) {
-
-  if (!!req.query.taxonid) {
-    var taxonid = String(req.query.taxonid).split(',').map(function(item) {
+  var goodtx = !!req.query.taxonid
+  if (goodtx) {
+    var taxonid = String(req.query.taxonid).split(',').map(function (item) {
       return parseInt(item, 10);
     });
   } else {
-    var taxonid = null;
+    taxonid = null;
   }
 
   var outobj = {'taxonid': taxonid,
-              'taxonname': req.query.taxonname,
-                 'status': req.query.status,
-              'taxagroup': req.query.taxagroup,
-              'ecolgroup': req.query.ecolgroup,
-                  'lower': req.query.lower,
-                  'limit': req.query.limit,
-                  'offset': req.query.offset
-               };
+    'taxonname': req.query.taxonname,
+    'status': req.query.status,
+    'taxagroup': req.query.taxagroup,
+    'ecolgroup': req.query.ecolgroup,
+    'lower': req.query.lower,
+    'limit': req.query.limit,
+    'offset': req.query.offset
+  };
 
   if (typeof outobj.taxonid === 'undefined') {
     outobj.taxonid = null;
@@ -131,7 +134,7 @@ function gettaxonquery (req, res, next) {
   }
 
   var novalues = Object.keys(outobj).every(function (x) {
-    return typeof outobj[x] ==='undefined' || !outobj[x];
+    return typeof outobj[x] === 'undefined' || !outobj[x];
   });
 
   if (novalues === true) {
@@ -156,10 +159,9 @@ function gettaxonquery (req, res, next) {
         });
     };
 
-    if(typeof outobj.lower === 'undefined') {
+    if (typeof outobj.lower === 'undefined') {
       db.any(taxonquerystatic, outobj)
         .then(function (data) {
-
           res.status(200)
             .json({
               status: 'success',
