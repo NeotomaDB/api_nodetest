@@ -14,11 +14,9 @@ const datasetquerysql = sql('./datasetquery.sql');
 const datasetbyidsql = sql('./datasetbyid.sql');
 const datasetbysite = sql('./datasetbysite.sql');
 
-function datasetbyid(req, res, next) {
-  console.log(req.params.datasetid);
-
+function datasetbyid (req, res, next) {
   if (!!req.params.datasetid) {
-    var datasetid = String(req.params.datasetid).split(',').map(function(item) {
+    var datasetid = String(req.params.datasetid).split(',').map(function (item) {
       return parseInt(item, 10);
     });
   } else {
@@ -44,11 +42,9 @@ function datasetbyid(req, res, next) {
     });
 }
 
-function datasetbysiteid(req, res, next) {
-  console.log(req.params.siteid);
-
+function datasetbysiteid (req, res, next) {
   if (!!req.params.siteid) {
-    var siteid = String(req.params.siteid).split(',').map(function(item) {
+    var siteid = String(req.params.siteid).split(',').map(function (item) {
       return parseInt(item, 10);
     });
   } else {
@@ -77,7 +73,7 @@ function datasetbysiteid(req, res, next) {
 function datasetquery (req, res, next) {
 
   // Get the input parameters:
-  var outobj = {'siteid':String(req.query.siteid).split(',').map(function(item) {
+  var outobj = {'siteid': String(req.query.siteid).split(',').map(function(item) {
                             return parseInt(item, 10);
                           }),
                 'piid':String(req.query.piid).split(',').map(function(item) {
@@ -103,8 +99,6 @@ function datasetquery (req, res, next) {
   if (typeof req.query.loc === 'undefined')      {      outobj.loc = null }
   if (typeof req.query.gpid === 'undefined')     {     outobj.gpid = null }
 
-  console.log(outobj);
-
   if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
     res.status(500)
       .json({
@@ -113,15 +107,11 @@ function datasetquery (req, res, next) {
       });
   }
 
-  console.log(typeof outobj);
-
   for (var i in outobj) {
     if (isNaN(outobj[i])) {
       outobj[i] = null;
     }
   };
-
-  console.log(outobj);
 
   db.any(datasetquerysql, outobj)
     .then(function (data) {
