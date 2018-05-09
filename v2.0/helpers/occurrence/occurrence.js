@@ -96,6 +96,7 @@ function occurrencequery (req, res, next) {
         status: 'failure',
         message: 'The altmin is greater than altmax.  Please fix this!'
       });
+    return;
   }
 
   if (outobj.ageyoung > outobj.ageold & !!outobj.ageyoung & !!outobj.ageold) {
@@ -104,6 +105,7 @@ function occurrencequery (req, res, next) {
         status: 'failure',
         message: 'ageyoung is greater than ageold.  Please fix this!'
       });
+    return;
   }
 
   if (novalues === true) {
