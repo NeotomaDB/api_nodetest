@@ -54,7 +54,7 @@ router.get('/', function (req, res, next) {
 
 /**
 * @swagger
-* v2.0/data/contacts:
+* /v2.0/data/contacts:
 *   get:
 *     summary: Contact information for Neotoma contributors.
 *     description: Returns researcher contact information associated with a record.
@@ -66,7 +66,7 @@ router.get('/', function (req, res, next) {
 *         type: integer
 *         format: int64
 *         minimum: 1
-*         example: 123
+*         example: 44
 *       - name: lastname
 *         description: Last name of the researcher (may use wildcards)
 *         in: query
@@ -78,13 +78,14 @@ router.get('/', function (req, res, next) {
 *         in: query
 *         required: false
 *         type: string
-*         example: \*Goring\*
+*         example: \%Eric Christo\%
 *       - name: status
 *         in: query
 *         description: Current employment status
 *         required: false
 *         type: string
 *         enum: ["active","deceased", "defunct", "extant", "inactive", "retired", "unknown"]
+*         example: active
 *       - name: limit
 *         description: The maximum number of records to be returned, default is 25.
 *         type: integer
@@ -558,7 +559,7 @@ router.get('/sites/:siteid/geopoliticalunits', handlers.geopolbysite);
 *            $ref: '#/definitions/occurrence'
 */
 
-router.get('/occurrence/', handlers.occurrencequery);
+router.get('/occurrence', handlers.occurrencequery);
 router.get('/occurrence/:occurrenceid', handlers.occurrencebyid);
 router.get('/taxa/:taxonid/occurrence', handlers.occurrencebytaxon);
 
@@ -718,14 +719,14 @@ router.get('/pollen/:id', handlers.pollen);
  *       - application/json
  *     responses:
  *       200:
- *         description: An array of geopolitical units.
+ *         description: A list of publications.
  *         schema:
  *           type: array
  *           items:
  *             $ref: '#/definitions/publications'
 */
 
-// router.get('/publications/', handlers.publicationquery);
+router.get('/publications', handlers.publicationquery);
 router.get('/publications/:pubid', handlers.publicationid);
 router.get('/sites/:siteid/publications', handlers.publicationbysite);
 router.get('/datasets/:datasetid/publications', handlers.publicationbydataset);
