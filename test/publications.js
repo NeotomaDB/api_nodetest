@@ -15,10 +15,34 @@ describe('Get publication data any number of ways:', function () {
     api.get('v2.0/data/publications/12')
       .set('Accept', 'application/json')
       .expect(function (res) {
-        return Object.keys(res.body['data'][0]).length > 0;
+        return Object.keys(res.body.data[0]).length > 0;
       })
+      .expect(200, done);
+  });
+
+  it('Get publication by querying author:', function (done) {
+    api.get('v2.0/data/publications/?familyname=Grimm')
+      .set('Accept', 'application/json')
       .expect(function (res) {
-        return res.body['data'][0]['publicationid'] === 12;
+        return res.body.data.result.length > 0;
+      })
+      .expect(200, done);
+  });
+
+  it('Get publication by site id:', function (done) {
+    api.get('v2.0/data/sites/12/publications')
+      .set('Accept', 'application/json')
+      .expect(function (res) {
+        return res.body.data.length > 0;
+      })
+      .expect(200, done);
+  });
+
+    it('Get publication by site id:', function (done) {
+    api.get('v2.0/data/sites/12,13,14,15/publications')
+      .set('Accept', 'application/json')
+      .expect(function (res) {
+        return res.body.data.length > 0;
       })
       .expect(200, done);
   });

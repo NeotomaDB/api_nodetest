@@ -30,11 +30,8 @@ function geopoliticalbyid (req, res, next) {
       });
   };
 
-  console.log(gpid);
-
   db.any(gpuid, [gpid])
     .then(function (data) {
-
       if (data.length === 0) {
         // We're returning the structure, but nothing inside it:
         var returner = [{"geopoliticalid": null,
