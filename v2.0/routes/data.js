@@ -72,7 +72,7 @@ router.get('/', function (req, res, next) {
 *         in: query
 *         required: false
 *         type: string
-*         example: Grimm
+*         example: "Grimm"
 *       - name: contactname
 *         description: Full name of the the researcher (may use wildcards)
 *         in: query
@@ -177,7 +177,7 @@ router.get('/sites/:siteid/contacts', handlers.contactsbysiteid);
 
 /**
  * @swagger
- * /datasets:
+ * /v2.0/data/datasets:
  *   get:
  *     summary: Dataset information.
  *     description: Returns information about Neotoma dataset
@@ -596,7 +596,7 @@ router.get('/taxa/:taxonid/occurrence', handlers.occurrencebytaxon);
 
 /**
  * @swagger
- * /pollen:
+ * /v2.0/data/pollen:
  *   get:
  *     summary: Pollen data from Neotoma.
  *     description: Returns information about pollen.
@@ -662,11 +662,11 @@ router.get('/taxa/:taxonid/occurrence', handlers.occurrencebytaxon);
  *       - application/json
  *     responses:
  *       200:
-*         description: A pollen response..
-*         schema:
-*           type: array
-*           items:
-*             $ref: '#/definitions/pollen'
+ *         description: A pollen response..
+ *         schema:
+ *           type: array
+ *           items:
+ *             $ref: '#/definitions/pollen'
 */
 
 router.get('/pollen/', handlers.pollen);
@@ -691,7 +691,7 @@ router.get('/pollen/:id', handlers.pollen);
 
 /**
  * @swagger
- * /publications:
+ * /v2.0/data/publications:
  *   get:
  *     summary: Returns information about Neotoma publications
  *     description: Returns information about Neotoma publications
@@ -770,7 +770,7 @@ router.get('/datasets/:datasetid/publications', handlers.publicationbydataset);
 
 /**
  * @swagger
- * /sites:
+ * /v2.0/data/sites:
  *   get:
  *     summary: Site information.
  *     description: Returns information about Neotoma publications
@@ -834,7 +834,7 @@ router.get('/contacts/:contactid/sites', handlers.sitesbycontact);
 
 /**
  * @swagger
- * /taxa:
+ * /v2.0/data/taxa:
  *   get:
  *     summary: Taxonomic information.
  *     description: Returns information about a taxon and (if requested) related taxa.
@@ -874,12 +874,6 @@ router.get('/taxa/:taxonid', handlers.taxonbyid);
 router.get('/taxa/', handlers.taxonquery);
 router.get('/datasets/:datasetid/taxa/', handlers.taxonbydsid);
 
-/***********************************************************
-*
-*  INCOMPLETE
-*
-************************************************************/
-
 /**
 
 * @swagger
@@ -906,7 +900,7 @@ router.get('/datasets/:datasetid/taxa/', handlers.taxonbydsid);
 *           ages:
 *             type: object
 *             properties:
-*               younger: 
+*               younger:
 *                 type: integer
 *               older:
 *                 type: integer
@@ -931,8 +925,6 @@ router.get('/datasets/:datasetid/taxa/', handlers.taxonbydsid);
 *             type: numeric
 *           controltype:
 *             type: string
-*
-*
 */
 
 /**
