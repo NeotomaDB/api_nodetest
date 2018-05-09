@@ -1,14 +1,11 @@
 
-exports.formatpublbib = function(pubobject) {
-  
-  pubout = [];
+exports.formatpublbib = function (pubobject) {
+  var pubout = [];
 
-  for(i = 0; i < pubobject.length; i++) {
+  for (var i = 0; i < pubobject.length; i++) {
+    var pubtype = +pubobject[i]['pubtypeid'];
 
-    pubtype = +pubobject[i]['pubtypeid'];
-
-    switch(pubtype){
-
+    switch (pubtype) {
       case 1:
         // Journal Articles:
         console.log('okay');
@@ -27,7 +24,7 @@ exports.formatpublbib = function(pubobject) {
       case 2:
         // Book chapter
         console.log('okay2');
-        
+
         pubout[i] = { 'publicationid': pubobject[i]['publicationid'],
                       'title': pubobject[i]['articletitle'],
                       'year' : pubobject[i]['year'],
@@ -220,10 +217,7 @@ exports.formatpublbib = function(pubobject) {
                       'doi'       : pubobject[i]['doi']
                     };
         break;
-
-
     };
   };
-  
   return pubout;
 };

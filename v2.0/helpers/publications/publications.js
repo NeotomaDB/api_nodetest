@@ -16,8 +16,9 @@ function sql (file) {
 // Create a QueryFile globally, once per file:
 const pubbydsid = sql('./pubdsidquery.sql');
 const pubbystid = sql('./pubstidquery.sql');
+const pubquery = sql('./pubquery.sql');
 
-function publicationid(req, res, next) {
+function publicationid (req, res, next) {
   var pubid = null;
 
   if (!!req.params.pubid) {
@@ -43,25 +44,68 @@ function publicationid(req, res, next) {
 };
 
 function publicationquery (req, res, next) {
-  
+  var outobj = {'pubid': req.query.pubid,
+    'datasetid': req.query.datasetid,
+    'siteid': req.query.siteid,
+    'familyname': req.query.familyname,
+    'pubtype': req.query.pubtype,
+    'year': req.query.year,
+    'search': req.query.search,
+    'limit': req.query.limit,
+    'offset': req.query.offset
+  };
+
+  var novalues = Object.keys(outobj).every(function (x) {
+    return typeof outobj[x] === 'undefined' || !outobj[x];
+  });
+
+  if (novalues === true) {
+    if (!!req.accepts('json') & !req.accepts('html')) {
+      res.redirect('/swagger.json');
+    } else {
+      res.redirect('/api-docs');
+    };
+  } else {
+    db.any(pubquery, outobj)
+      .then(function (data) {
+        var returner = bib.formatpublbib(data);
+
+        res.status(200)
+          .json({
+            status: 'success',
+            data: {query: outobj, result: returner}
+          });
+      })
+      .catch(function (err) {
+        return next(err);
+      });
+  };
 };
 
 function publicationbysite (req, res, next) {
   if (!!req.params.siteid) {
-    var siteid = String(req.params.siteid).split(',').map(function(item) {
+    var siteid = String(req.params.siteid).split(',').map(function (item) {
       return parseInt(item, 10);
     });
+  } else {
+    res.redirect('/api-docs')
   }
 
   db.any(pubbystid, [siteid])
     .then(function (data) {
       var bibOutput = bib.formatpublbib(data);
 
+      var returner = [];
+
+      for (var i = 0; i < data.length; i++) {
+        returner[i] = {siteid: data[i].siteid, publication: bibOutput[0]};
+      }
+
       res.status(200)
         .json({
           status: 'success',
-          data: bibOutput,
-          message: 'Retrieved all tables'
+          data: returner,
+          message: 'Retrieved all records.'
         });
     })
     .catch(function (err) {
@@ -83,7 +127,7 @@ function publicationbydataset (req, res, next) {
 
   db.any(pubbydsid, [datasetid])
     .then(function (data) {
-      bibOutput = bib.formatpublbib(data);
+      var bibOutput = bib.formatpublbib(data);
 
       res.status(200)
         .json({
@@ -100,3 +144,4 @@ function publicationbydataset (req, res, next) {
 module.exports.publicationbydataset = publicationbydataset;
 module.exports.publicationbysite = publicationbysite;
 module.exports.publicationid = publicationid;
+module.exports.publicationquery = publicationquery;
