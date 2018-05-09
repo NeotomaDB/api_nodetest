@@ -405,7 +405,6 @@ router.get('/download/:datasetid', handlers.download);
 *             $ref: '#/definitions/geopolitical'
 */
 
-
 router.get('/geopoliticalunits', handlers.geopoliticalunits);
 router.get('/geopoliticalunits/:gpid', handlers.geopoliticalbyid);
 router.get('/sites/:siteid/geopoliticalunits', handlers.geopolbysite);
