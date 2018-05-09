@@ -519,13 +519,13 @@ router.get('/sites/:siteid/geopoliticalunits', handlers.geopolbysite);
 *         in: query
 *         required: false
 *         type: integer
-*       - name: ageyounger
+*       - name: ageyoung
 *         description: The most recent age for occurrences within a query.
 *         in: query
 *         required: false
 *         type: integer
 *         format: int64
-*       - name: ageolder
+*       - name: ageold
 *         description: The oldest age for occurrences to be returned by the query.
 *         in: query
 *         required: false
