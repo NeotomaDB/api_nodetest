@@ -1,5 +1,8 @@
 // Occurrences query:
 
+var Terraformer = require('terraformer');
+
+var WKT = require('terraformer-wkt-parser');
 const path = require('path');
 
 // get global database object
@@ -17,8 +20,10 @@ const occurrencetaxonquerysql = sql('./occurrencebytaxon.sql');
 const occurrencebyidsql = sql('./occurrencebyid.sql');
 
 function occurrencebyid (req, res, next) {
-  if (!!req.params.occurrenceid) {
-    var occurrenceid = String(req.params.occurrenceid).split(',').map(function(item) {
+  var occid = !!req.params.occurrenceid
+
+  if (occid) {
+    var occurrenceid = String(req.params.occurrenceid).split(',').map(function (item) {
       return parseInt(item, 10);
     });
   } else {
@@ -47,37 +52,36 @@ function occurrencebyid (req, res, next) {
 function occurrencequery (req, res, next) {
 // Get the input parameters:
   var outobj = {'sitename': String(req.query.sitename),
-                  'altmin': parseInt(String(req.query.altmin)),
-                  'altmax': parseInt(String(req.query.altmax)),
-                     'loc': String(req.query.loc),
-                    'gpid': String(req.query.gpid)
-                              .split(',')
-                              .map(function (item) {
-                                return parseInt(item, 10);
-                              }),
-                    'taxonid': String(req.query.taxonid)
-                                 .split(',')
-                                 .map(function (item) {
-                                   return parseInt(item, 10);
-                                 }),
-                    'taxonname': String(req.query.taxonname),
-                    'siteid': String(req.query.siteid)
-                                .split(',')
-                                .map(function (item) {
-                                  return parseInt(item, 10);
-                                }),
-                    'datasettype': String(req.query.datasettype),
-                    'piid': String(req.query.piid)
-                                .split(',')
-                                .map(function(item) {
-                                  return parseInt(item, 10);
-                                }),
-                    'loc': String(req.query.loc),
-                    'ageold': parseInt(String(req.query.ageold)),
-                    'ageyoung': parseInt(String(req.query.ageyoung)),
-                    'offset': req.query.offset,
-                    'limit': req.query.limit
-               };
+    'altmin': parseInt(String(req.query.altmin)),
+    'altmax': parseInt(String(req.query.altmax)),
+    'loc': String(req.query.loc),
+    'gpid': String(req.query.gpid)
+      .split(',')
+      .map(function (item) {
+        return parseInt(item, 10);
+      }),
+    'taxonid': String(req.query.taxonid)
+      .split(',')
+      .map(function (item) {
+        return parseInt(item, 10);
+      }),
+    'taxonname': String(req.query.taxonname),
+    'siteid': String(req.query.siteid)
+      .split(',')
+      .map(function (item) {
+        return parseInt(item, 10);
+      }),
+    'datasettype': String(req.query.datasettype),
+    'piid': String(req.query.piid)
+      .split(',')
+      .map(function (item) {
+        return parseInt(item, 10);
+      }),
+    'ageold': parseInt(String(req.query.ageold)),
+    'ageyoung': parseInt(String(req.query.ageyoung)),
+    'offset': req.query.offset,
+    'limit': req.query.limit
+  };
 
   // Clear variables to set to null for pg-promise:
   for (var key in outobj) {
@@ -106,6 +110,19 @@ function occurrencequery (req, res, next) {
         message: 'ageyoung is greater than ageold.  Please fix this!'
       });
     return;
+  }
+
+  var goodloc = !!outobj.loc
+
+  if (goodloc) {
+    try {
+      var newloc = JSON.parse(outobj.loc)
+      newloc = WKT.convert(JSON.parse(outobj.loc));
+    } catch (err) {
+      newloc = outobj.loc;
+    }
+
+    outobj.loc = newloc;
   }
 
   if (novalues === true) {
