@@ -1,10 +1,3 @@
-WITH sitid AS 
-	(SELECT * 
-		FROM ndb.sitegeopolitical AS sgp
-		WHERE
-		(${gpid} IS NULL OR sgp.geopoliticalid IN (${gpid:csv}))
-	)
-
 SELECT
 	  samples.sampleid AS sampleid,
 	  json_build_object(    'taxonid', tx.taxonid, 
@@ -46,7 +39,6 @@ WHERE
  	(${altmin} IS NULL OR sts.altitude > ${altmin}) AND
 	(${altmax} IS NULL OR sts.altitude > ${altmax}) AND
 	(${loc} IS NULL OR st_contains(ST_GeomFromText(${loc}), sts.geom)) AND
-	sts.siteid IN (SELECT siteid FROM sitid) AND
 	(${ageyoung} IS NULL OR 
 		CASE WHEN ages.ageyounger IS NOT NULL 
 		     THEN (ages.ageyounger > ${ageyoung})
