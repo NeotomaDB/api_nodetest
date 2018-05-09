@@ -18,7 +18,9 @@
     "nyc": "^11.7.2",
     "pg-promise": "^5.7.1",
     "serve-favicon": "^2.5.0",
-    "swagger-jsdoc": "^1.9.7"
+    "swagger-jsdoc": "^1.9.7",
+    "terraformer": "^1.0.8",
+    "terraformer-wkt-parser": "^1.1.2"
   },
   "devDependencies": {
     "chai": "^3.5.0",
