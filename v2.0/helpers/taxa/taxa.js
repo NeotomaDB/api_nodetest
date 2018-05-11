@@ -50,7 +50,7 @@ function taxonbyid (req, res, next) {
   });
 
   if (!!taxonid) {
-    var query = 'SELECT * FROM ndb.taxa WHERE taxa.taxonid IN ($1:csv)';
+    var query = 'SELECT * FROM ndb.taxa WHERE taxa.taxonid = ANY ($1)';
   } else {
     res.status(500)
       .json({
@@ -103,24 +103,23 @@ function taxonbydsid (req, res, next) {
 }
 
 function gettaxonquery (req, res, next) {
-
   if (!!req.query.taxonid) {
-    var taxonid = String(req.query.taxonid).split(',').map(function(item) {
+    var taxonid = String(req.query.taxonid).split(',').map(function (item) {
       return parseInt(item, 10);
     });
   } else {
-    var taxonid = null;
+    taxonid = null;
   }
 
   var outobj = {'taxonid': taxonid,
-              'taxonname': req.query.taxonname,
-                 'status': req.query.status,
-              'taxagroup': req.query.taxagroup,
-              'ecolgroup': req.query.ecolgroup,
-                  'lower': req.query.lower,
-                  'limit': req.query.limit,
-                  'offset': req.query.offset
-               };
+    'taxonname': req.query.taxonname,
+    'status': req.query.status,
+    'taxagroup': req.query.taxagroup,
+    'ecolgroup': req.query.ecolgroup,
+    'lower': req.query.lower,
+    'limit': req.query.limit,
+    'offset': req.query.offset
+  };
 
   if (typeof outobj.taxonid === 'undefined') {
     outobj.taxonid = null;
@@ -131,7 +130,7 @@ function gettaxonquery (req, res, next) {
   }
 
   var novalues = Object.keys(outobj).every(function (x) {
-    return typeof outobj[x] ==='undefined' || !outobj[x];
+    return typeof outobj[x] === 'undefined' || !outobj[x];
   });
 
   if (novalues === true) {
@@ -156,10 +155,9 @@ function gettaxonquery (req, res, next) {
         });
     };
 
-    if(typeof outobj.lower === 'undefined') {
+    if (typeof outobj.lower === 'undefined') {
       db.any(taxonquerystatic, outobj)
         .then(function (data) {
-
           res.status(200)
             .json({
               status: 'success',
