@@ -150,7 +150,6 @@ function occurrencequery (req, res, next) {
           return next(err);
         });
     } else {
-      console.log(outobj.siteid);
       db.any(occurrencequerysql, outobj)
         .then(function (data) {
           res.status(200)

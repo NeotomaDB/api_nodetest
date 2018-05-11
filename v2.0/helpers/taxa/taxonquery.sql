@@ -2,7 +2,7 @@ WITH RECURSIVE lowertaxa AS (SELECT
               txa.taxonid, 
               txa.highertaxonid
          FROM ndb.taxa AS txa
-        WHERE txa.taxonid IN (${taxonid:csv})
+        WHERE txa.taxonid = ANY (${taxonid})
         UNION ALL
        SELECT m.taxonid, m.highertaxonid
          FROM ndb.taxa AS m
