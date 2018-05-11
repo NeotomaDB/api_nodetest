@@ -20,6 +20,16 @@ describe('Get datasets any number of ways:', function () {
       })
       .expect(200, done);
   });
+
+  it('Get dataset by comma separated ids & return same ids:', function (done) {
+    api.get('v2.0/data/datasets/?siteid=12,13,14')
+      .set('Accept', 'application/json')
+      .expect(function (res) {
+        return Object.keys(res.body['data']).length > 0;
+      })
+      .expect(200, done);
+  });
+
   it('Returns all key elements of the object:', function (done) {
     api.get('v2.0/data/datasets/12')
       .set('Accept', 'application/json')

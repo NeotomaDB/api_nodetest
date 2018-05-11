@@ -17,7 +17,7 @@ SELECT DISTINCT taxa.taxonid,
   LEFT OUTER JOIN 
   ndb.variables AS var ON var.taxonid = taxa.taxonid
   WHERE
-  (${taxonid} IS NULL OR taxa.taxonid IN (${taxonid:csv}))
+  (${taxonid} IS NULL OR taxa.taxonid = ANY (${taxonid}))
   AND (${taxonname} IS NULL OR LOWER(taxa.taxonname) LIKE LOWER(${taxonname}))
   AND (${status} IS NULL OR taxa.extinct = ${status})
   AND (${taxagroup} IS NULL OR taxa.taxagroupid = ${taxagroup})

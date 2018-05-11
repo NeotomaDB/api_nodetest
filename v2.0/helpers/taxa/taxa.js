@@ -51,7 +51,7 @@ function taxonbyid (req, res, next) {
   var goodid = !!taxonid
 
   if (goodid) {
-    var query = 'SELECT * FROM ndb.taxa WHERE taxa.taxonid IN ($1:csv)';
+    var query = 'SELECT * FROM ndb.taxa WHERE taxa.taxonid = ANY ($1)';
   } else {
     res.status(500)
       .json({

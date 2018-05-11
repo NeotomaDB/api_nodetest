@@ -32,5 +32,5 @@ ndb.datasetdatabases AS dsdb ON dsdb.datasetid = dts.datasetid LEFT OUTER JOIN
 ndb.dsageranges AS agerange ON dts.datasetid = agerange.datasetid LEFT OUTER JOIN
 ndb.agetypes AS agetypes ON agetypes.agetypeid = agerange.agetypeid LEFT OUTER JOIN
 ndb.constituentdatabases AS cstdb ON dsdb.databaseid = cstdb.databaseid WHERE
-sts.siteid IN ($1:csv)
+sts.siteid = ANY ($1)
 GROUP BY sts.siteid, clu.collectionunitid, cts.colltype;
