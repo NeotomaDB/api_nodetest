@@ -16,6 +16,7 @@ function sql (file) {
 }
 
 const occurrencequerysql = sql('./occurrencequery.sql');
+const occurrencerecursquerysql = sql('./occurrence_recurs_query.sql');
 const occurrencetaxonquerysql = sql('./occurrencebytaxon.sql');
 const occurrencebyidsql = sql('./occurrencebyid.sql');
 
@@ -66,6 +67,7 @@ function occurrencequery (req, res, next) {
         return parseInt(item, 10);
       }),
     'taxonname': String(req.query.taxonname),
+    'lower': req.query.lower,
     'siteid': String(req.query.siteid)
       .split(',')
       .map(function (item) {
@@ -132,18 +134,36 @@ function occurrencequery (req, res, next) {
       res.redirect('/api-docs');
     };
   } else {
-    db.any(occurrencequerysql, outobj)
-      .then(function (data) {
-        res.status(200)
-          .json({
-            status: 'success',
-            data: data,
-            message: 'Retrieved all tables'
-          });
-      })
-      .catch(function (err) {
-        return next(err);
-      });
+    var goodlower = !!outobj.lower;
+    var goodtaxa = !!outobj.taxonname || !!outobj.taxonid;
+    if (goodtaxa & goodlower & outobj.lower === 'true') {
+      db.any(occurrencerecursquerysql, outobj)
+        .then(function (data) {
+          res.status(200)
+            .json({
+              status: 'success',
+              data: data,
+              message: 'Retrieved all tables'
+            });
+        })
+        .catch(function (err) {
+          return next(err);
+        });
+    } else {
+      console.log(outobj.siteid);
+      db.any(occurrencequerysql, outobj)
+        .then(function (data) {
+          res.status(200)
+            .json({
+              status: 'success',
+              data: data,
+              message: 'Retrieved all tables'
+            });
+        })
+        .catch(function (err) {
+          return next(err);
+        });
+    }
   };
 };
 
