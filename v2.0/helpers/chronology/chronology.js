@@ -2,14 +2,14 @@
 
 const path = require('path');
 
-//get global database object
+// get global database object
 var db = require('../../database/pgp_db');
 var pgp = db.$config.pgp;
 
 // Helper for linking to external query files:
 function sql(file) {
-    const fullPath = path.join(__dirname, file);
-    return new pgp.QueryFile(fullPath, {minify: true});
+  const fullPath = path.join(__dirname, file);
+  return new pgp.QueryFile(fullPath, {minify: true});
 }
 
 const chronologybyidsql = sql('./chronologybyid.sql');
@@ -143,7 +143,6 @@ function chronologybystid(req, res, next) {
         return next(err);
     }) 
 }
-
 
 module.exports.chronologybyid = chronologybyid;
 module.exports.chronologybydsid = chronologybydsid;
