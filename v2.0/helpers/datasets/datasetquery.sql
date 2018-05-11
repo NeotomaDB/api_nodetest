@@ -39,15 +39,15 @@ FROM
 ndb.dsageranges AS agerange ON dts.datasetid = agerange.datasetid LEFT OUTER JOIN
 ndb.agetypes AS agetypes ON agetypes.agetypeid = agerange.agetypeid
 WHERE
-       (${siteid} IS NULL OR      sts.siteid IN (${siteid:csv}))  AND
+       (${siteid} IS NULL OR      sts.siteid = ANY (${siteid}))   AND
   (${datasettype} IS NULL OR dst.datasettype LIKE ${datasettype}) AND
-         (${piid} IS NULL OR   cnt.contactid IN (${piid:csv}))    AND
+         (${piid} IS NULL OR   cnt.contactid = ANY (${piid}))     AND
        (${altmin} IS NULL OR    sts.altitude > ${altmin})         AND
        (${altmax} IS NULL OR    sts.altitude > ${altmax})         AND
           (${loc} IS NULL OR ST_Contains(ST_GeomFromText(${loc}), sts.geom)) AND
      (${ageyoung} IS NULL OR     ${ageyoung} > agerange.younger)  AND
        (${ageold} IS NULL OR       ${ageold} < agerange.older)    AND
         (${ageof} IS NULL OR        ${ageof} BETWEEN agerange.younger AND agerange.older) AND
-        (${datasetid}) IS NULL OR dts.datasetid IN (${datasetid:csv})
+        (${datasetid}) IS NULL OR dts.datasetid = ANY (${datasetid})
 
 GROUP BY sts.siteid, clu.collectionunitid, cts.colltype;

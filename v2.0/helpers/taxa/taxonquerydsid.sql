@@ -15,4 +15,4 @@ SELECT DISTINCT tx.taxonid,
   LEFT OUTER JOIN ndb.taxa AS tx on var.taxonid = tx.taxonid
   LEFT OUTER JOIN ndb.ecolgroups AS ecg ON ecg.taxonid = tx.taxonid
   LEFT OUTER JOIN ndb.publications AS pub ON pub.publicationid = tx.publicationid
-  WHERE ds.datasetid IN ($1:csv);
+  WHERE ds.datasetid = ANY ($1);
