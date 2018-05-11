@@ -1,17 +1,17 @@
 // Returns the data tables:
 
-//get global database object
-var db = require('../../database/pgp_db');
+// get global database object
+var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
 // Defining the query function:
 
-function dbtables(req, res, next) {
+function dbtables (req, res, next) {
 
-  if (!!req.query.table) {
-    var query = 'SELECT * FROM ndb.' + req.query.table + ';'
+  if (!!req.params.table) {
+    var query = 'SELECT * FROM ndb.' + req.params.table + ';'
   } else {
-    var query = "SELECT tablename FROM pg_tables WHERE schemaname='ndb';";
+    query = "SELECT tablename FROM pg_tables WHERE schemaname='ndb';";
   }
 
   db.any(query)
