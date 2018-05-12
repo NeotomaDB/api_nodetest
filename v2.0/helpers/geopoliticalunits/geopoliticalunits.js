@@ -17,16 +17,17 @@ const gpuQuery = sql('./gpuQuery.sql');
 const gpuid = sql('./gpubyid.sql');
 
 function geopoliticalbyid (req, res, next) {
+  var gpIdUsed = !!req.params.gpid;
 
-  if (!!req.params.gpid) {
+  if (gpIdUsed) {
     var gpid = String(req.params.gpid).split(',').map(function (item) {
       return parseInt(item, 10);
     });
   } else {
-    res.status(200)
+    res.status(500)
       .json({
-        status: 'success',
-        data: returner
+        status: 'failure',
+        message: 'Must provide a valid integer GeoPolitical Unit value for the endpoint.'
       });
   };
 
@@ -34,17 +35,17 @@ function geopoliticalbyid (req, res, next) {
     .then(function (data) {
       if (data.length === 0) {
         // We're returning the structure, but nothing inside it:
-        var returner = [{"geopoliticalid": null,
-                     "highergeopoliticalid": null,
-                     "rank": null,
-                     "geopoliticalunit": null,
-                     "geopoliticalname": null,
-                     "higher": null,
-                     "lower": null,
-                     "recdatecreated": null,
-                     "recdatemodified": null}]
+        var returner = [{'geopoliticalid': null,
+          'highergeopoliticalid': null,
+          'rank': null,
+          'geopoliticalunit': null,
+          'geopoliticalname': null,
+          'higher': null,
+          'lower': null,
+          'recdatecreated': null,
+          'recdatemodified': null}]
       } else {
-        var returner = data.sort(function (obj1, obj2) {
+        returner = data.sort(function (obj1, obj2) {
           return obj1.Rank - obj2.Rank;
         });
       }
@@ -57,43 +58,41 @@ function geopoliticalbyid (req, res, next) {
     .catch(function (err) {
       return next(err);
     });
-
 }
 
-function geopoliticalunits(req, res, next) {
-
+function geopoliticalunits (req, res, next) {
   /*
   Geopolitical units work this way:
     Can pass a string or identifier to figure out names & IDs.
-      - Not really sure why this is important. . . 
+      - Not really sure why this is important. . .
     Should be able to pass in site IDs, or dataset IDs to then figure out
       where the records are, with regards to political units.
-  */ 
-  
-  var outobj = {   'gpid':req.query.gpid,
-                 'gpname':req.query.gpname,
-                   'rank':req.query.rank,
-                  'lower':req.query.lower,
-                  'limit':req.query.limit,
-                  'offset':req.query.offset
-               };
+  */
+
+  var outobj = {'gpid': req.query.gpid,
+    'gpname': req.query.gpname,
+    'rank': req.query.rank,
+    'lower': req.query.lower,
+    'limit': req.query.limit,
+    'offset': req.query.offset
+  };
 
   if (Object.keys(outobj).every(function (x) { return typeof outobj[x] === 'undefined'; }) === false) {
     db.any(gpuQuery, outobj)
       .then(function (data) {
         if (data.length === 0) {
           // We're returning the structure, but nothing inside it:
-          var returner = [{"geopoliticalid": null,
-                       "highergeopoliticalid": null,
-                       "rank": null,
-                       "geopoliticalunit": null,
-                       "geopoliticalname": null,
-                       "higher": null,
-                       "lower": null,
-                       "recdatecreated": null,
-                       "recdatemodified": null}]
+          var returner = [{'geopoliticalid': null,
+            'highergeopoliticalid': null,
+            'rank': null,
+            'geopoliticalunit': null,
+            'geopoliticalname': null,
+            'higher': null,
+            'lower': null,
+            'recdatecreated': null,
+            'recdatemodified': null}]
         } else {
-          var returner = data.sort(function (obj1, obj2) {
+          returner = data.sort(function (obj1, obj2) {
             return obj1.Rank - obj2.Rank;
           });
         }

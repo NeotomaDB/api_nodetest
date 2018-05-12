@@ -166,20 +166,19 @@ function occurrencequery (req, res, next) {
   };
 };
 
-function occurrencebytaxon(req, res, next) {
-
-  if (!!req.params.taxonid) {
-    var taxonlist = String(req.params.taxonid).split(',').map(function(item) {
+function occurrencebytaxon (req, res, next) {
+  var taxonIdUsed = !!req.params.taxonid;
+  if (taxonIdUsed) {
+    var taxonlist = String(req.params.taxonid).split(',').map(function (item) {
       return parseInt(item, 10);
     });
-
   } else {
     res.status(500)
-        .json({
-          status: 'failure',
-          data: null,
-          message: 'Must pass either queries or an integer sequence.'
-        });
+      .json({
+        status: 'failure',
+        data: null,
+        message: 'Must pass either queries or an integer sequence.'
+      });
   }
 
   db.any(occurrencetaxonquerysql, [taxonlist])
