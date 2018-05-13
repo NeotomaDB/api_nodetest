@@ -21,10 +21,13 @@ describe('Get datasets any number of ways:', function () {
       .expect(200, done);
   });
 
+  // This takes 11 seconds, why?!
+  this.timeout(15000);
   it('Get dataset by comma separated ids & return same ids:', function (done) {
     api.get('v2.0/data/datasets/?siteid=12,13,14')
       .set('Accept', 'application/json')
       .expect(function (res) {
+        console.log(res.body['data'].length);
         return Object.keys(res.body['data']).length > 0;
       })
       .expect(200, done);
@@ -41,7 +44,7 @@ describe('Get datasets any number of ways:', function () {
 
   this.timeout(50000);
   it('Works with age validation:', function (done) {
-    api.get('v2.0/data/datasets/?ageyoung=1200&ageold=4000&altmax=3')
+    api.get('v2.0/data/datasets/?ageyoung=1200&ageold=1500&altmax=3')
       .set('Accept', 'application/json')
       .expect(function (res) {
         var test = true;
@@ -49,7 +52,7 @@ describe('Get datasets any number of ways:', function () {
         for (var i = 0; i < res.body['data'].length; i++) {
           test = test &
             res.body['data'][i]['dataset'][0]['agerange']['ageyoung'] < 1200 &
-            res.body['data'][i]['dataset'][0]['agerange']['ageold'] > 4000;
+            res.body['data'][i]['dataset'][0]['agerange']['ageold'] > 1500;
 
           if (test === false) { return test; }
         }

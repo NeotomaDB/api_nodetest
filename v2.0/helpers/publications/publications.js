@@ -19,10 +19,10 @@ const pubbystid = sql('./pubstidquery.sql');
 const pubquery = sql('./pubquery.sql');
 
 function publicationid (req, res, next) {
-  var pubid = null;
+  var pubIdUsed = !!req.params.pubid;
 
-  if (!!req.params.pubid) {
-    pubid = parseInt(req.params.pubid);
+  if (pubIdUsed) {
+    var pubid = parseInt(req.params.pubid);
   }
 
   var query = 'select * from ndb.publications AS pubs where pubs.publicationid = ' + pubid;
@@ -83,7 +83,9 @@ function publicationquery (req, res, next) {
 };
 
 function publicationbysite (req, res, next) {
-  if (!!req.params.siteid) {
+  var siteIdUsed = !!req.params.siteid;
+
+  if (siteIdUsed) {
     var siteid = String(req.params.siteid).split(',').map(function (item) {
       return parseInt(item, 10);
     });
@@ -114,13 +116,13 @@ function publicationbysite (req, res, next) {
 };
 
 function publicationbydataset (req, res, next) {
-
   /*
   Get publications by associated dataset IDs:
   */
+  var dsIdUsed = !!req.params.datasetid;
 
-  if (!!req.params.datasetid) {
-    var datasetid = String(req.params.datasetid).split(',').map(function(item) {
+  if (dsIdUsed) {
+    var datasetid = String(req.params.datasetid).split(',').map(function (item) {
       return parseInt(item, 10);
     });
   }

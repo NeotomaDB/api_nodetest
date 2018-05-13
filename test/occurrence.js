@@ -73,7 +73,6 @@ describe('Get occurrence data any number of ways:', function () {
       .expect(200, done);
   });
 
-
   it('Get occurrences returns lower taxa:', function (done) {
     api.get('v2.0/data/occurrence/?taxonname=Myrica&lower=true&limit=200')
       .set('Accept', 'application/json')
@@ -85,6 +84,21 @@ describe('Get occurrence data any number of ways:', function () {
         };
         var uniqueTaxa = Array.from(new Set(taxaids)).sort();
         return uniqueTaxa.length > 1;
+      })
+      .expect(200, done);
+  });
+
+  it('Get occurrences with mammals and lower taxa works:', function (done) {
+    api.get('v2.0/data/occurrence/?taxonname=Homo&lower=true&limit=25')
+      .set('Accept', 'application/json')
+      .expect(function (res) {
+        var allTaxa = res.body['data'];
+        var taxaids = [];
+        for (var i = 0; i < allTaxa.length; i++) {
+          taxaids.push(allTaxa[i]['sample']['taxonname']);
+        };
+        var uniqueTaxa = Array.from(new Set(taxaids)).sort();
+        return uniqueTaxa.length > 1 & allTaxa.length > 0;
       })
       .expect(200, done);
   });
