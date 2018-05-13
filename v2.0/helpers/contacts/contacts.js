@@ -5,6 +5,7 @@ const path = require('path');
 // get global database object
 var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
+var validate = require('../validateOut').validateOut;
 
 // Create a QueryFile globally, once per file:
 const contactbyid = sql('./contactbyid.sql');
@@ -41,6 +42,8 @@ function contacts (req, res, next) {
     'limit': req.query.limit,
     'offset': req.query.offset
   };
+
+  outobj = validate(outobj);
 
   var novalues = Object.keys(outobj).every(function (x) {
     return typeof outobj[x] === 'undefined' || !outobj[x];
