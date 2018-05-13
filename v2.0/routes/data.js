@@ -25,19 +25,19 @@ router.get('/', function (req, res, next) {
 *         example: 123
 *       contactname:
 *         type: string
-*         example: "Simon J Goring"
+*         example: 'Simon J Goring'
 *       lastname:
 *         type: string
-*         example: "Goring"
+*         example: 'Goring'
 *       firstname:
 *         type: string
-*         example: "Simon"
+*         example: 'Simon'
 *       status:
 *         type: string
-*         example: "Active"
+*         example: 'Active'
 *       address:
 *         type: string
-*         example: "550 N Park St, Madison WI, USA"
+*         example: '550 N Park St, Madison WI, USA'
 *       url:
 *         type: string
 *         format: url
@@ -67,24 +67,24 @@ router.get('/', function (req, res, next) {
 *         format: int64
 *         minimum: 1
 *         example: 44
-*       - name: lastname
-*         description: Last name of the researcher (may use wildcards)
-*         in: query
-*         required: false
-*         type: string
-*         example: "Grimm"
 *       - name: contactname
 *         description: Full name of the the researcher (may use wildcards)
 *         in: query
 *         required: false
 *         type: string
-*         example: \%Eric Christo\%
+*         example: Grimm
+*       - name: lastname
+*         description: Last name of the researcher (may use wildcards)
+*         in: query
+*         required: false
+*         type: string
+*         example: Grimm
 *       - name: status
 *         in: query
 *         description: Current employment status
 *         required: false
 *         type: string
-*         enum: ["active","deceased", "defunct", "extant", "inactive", "retired", "unknown"]
+*         enum: ['active','deceased', 'defunct', 'extant', 'inactive', 'retired', 'unknown']
 *         example: active
 *       - name: limit
 *         description: The maximum number of records to be returned, default is 25.
@@ -115,6 +115,7 @@ router.get('/contacts/', handlers.contactquery);
 router.get('/contacts/:contactid', handlers.contactsbyid);
 router.get('/datasets/:datasetid/contacts', handlers.contactsbydataid);
 router.get('/sites/:siteid/contacts', handlers.contactsbysiteid);
+// router.get('/publications/:pubid/contacts', handlers.contactsbypubid);
 
 /**
 * @swagger
@@ -183,7 +184,7 @@ router.get('/sites/:siteid/contacts', handlers.contactsbysiteid);
  *     description: Returns information about Neotoma dataset
  *     parameters:
  *       - name: datasetid
- *         description: Numeric ID for dataset.
+ *         description: Integer dataset ID, either alone or in a comma separated list.
  *         in: path
  *         required: false
  *         example: 1001
@@ -191,7 +192,7 @@ router.get('/sites/:siteid/contacts', handlers.contactsbysiteid);
  *         format: int32
  *         minimum: 1
  *       - name: siteid
- *         description: Related site identifier.
+ *         description: Integer site ID, either alone or in a comma separated list.
  *         in: query
  *         required: false
  *         type: integer
@@ -199,13 +200,18 @@ router.get('/sites/:siteid/contacts', handlers.contactsbysiteid);
  *         minimum: 1
  *         example: 666
  *       - name: piid
- *         description: Numeric identifier for the dataset principal investigator
+ *         description: Integer contact ID for the lead investigator. Can be obtained using the 'contacts' endpoint.
  *         in: query
  *         required: false
  *         type: integer
  *         format: int64
  *         minimum: 1
  *         example: 12
+ *       - name: datasettype
+ *         description: Neotoma contains data for a number of dataset types (see /dbtables/datasettypes.  This returns a subset of data types.
+ *         in: query
+ *         required: false
+ *         type: string
  *       - name: altmin
  *         description: Minimum altitude of the dataset site location (in meters)
  *         in: query
@@ -222,7 +228,7 @@ router.get('/sites/:siteid/contacts', handlers.contactsbysiteid);
  *         example: 1143
  *       - name: loc
  *         in: query
- *         description: The geographic region of interest for the site, as a GeoJSON string.
+ *         description: The geographic region of interest for the site, as a GeoJSON string or valid Well Known Text (WKT).  Assumed projection of EPSG:4376 unless otherwise defined.
  *         required: false
  *         type: string
  *         format: geoJSON
@@ -260,7 +266,8 @@ router.get('/sites/:siteid/contacts', handlers.contactsbysiteid);
 
 router.get('/datasets/', handlers.datasetquery);
 router.get('/datasets/:datasetid', handlers.datasetbyid);
-router.get('/datasets/:datasetid/publications', handlers.publicationbydataset);
+// router.get('/publications/:pubid/datasets', handlers.datasetsbypub);
+// router.get('/contacts/:contactid/datasets', handlers.datasetsbycontact);
 
 /**
 * @swagger

@@ -5,12 +5,7 @@ const path = require('path');
 // get global database object
 var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
-
-// Helper for linking to external query files:
-function sql (file) {
-  const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath, {minify: true});
-}
+var validate = require('../validateOut').validateOut;
 
 // Create a QueryFile globally, once per file:
 const contactbyid = sql('./contactbyid.sql');
@@ -18,20 +13,37 @@ const contactquery = sql('./contactquery.sql');
 const contactbydsid = sql('./contactbydsid.sql');
 const contactbystid = sql('./contactbysiteid.sql');
 
+var emptyReturn = [{'contactid': null,
+  'fullName': null,
+  'lastName': null,
+  'firstNames': null,
+  'contactStatus': null,
+  'url': null,
+  'address': null}]
+
+// Helper for linking to external query files:
+function sql (file) {
+  const fullPath = path.join(__dirname, file);
+  return new pgp.QueryFile(fullPath, {minify: true});
+}
+
 function contacts (req, res, next) {
-  if (!!req.query.contactid) {
-    var contactid = String(req.query.contactid).split(',').map(function(item) {
+  var contactIdUsed = !!req.query.contactid;
+  if (contactIdUsed) {
+    var contactid = String(req.query.contactid).split(',').map(function (item) {
       return parseInt(item, 10);
     });
   };
 
-  var outobj = {'lastname': req.query.lastname,
+  var outobj = {'contactid': contactid,
     'contactname': req.query.contactname,
+    'lastname': req.query.lastname,
     'status': req.query.status,
-    'contactid': contactid,
     'limit': req.query.limit,
     'offset': req.query.offset
   };
+
+  outobj = validate(outobj);
 
   var novalues = Object.keys(outobj).every(function (x) {
     return typeof outobj[x] === 'undefined' || !outobj[x];
@@ -49,16 +61,10 @@ function contacts (req, res, next) {
         .then(function (data) {
           if (data.length === 0) {
             // We're returning the structure, but nothing inside it:
-            var returner = [{'contactid': null,
-              'contactname': null,
-              'familyname': null,
-              'givennames': null,
-              'status': null,
-              'url': null,
-              'address': null}]
+            var returner = emptyReturn;
           } else {
             returner = data;
-          }
+          };
 
           res.status(200)
             .json({
@@ -74,8 +80,10 @@ function contacts (req, res, next) {
 }
 
 function contactsbyid (req, res, next) {
-  if (!!req.params.contactid) {
-    var contactid = String(req.params.contactid).split(',').map(function(item) {
+  var contactUsed = !!req.params.contactid
+
+  if (contactUsed) {
+    var contactid = String(req.params.contactid).split(',').map(function (item) {
       return parseInt(item, 10);
     });
   } else {
@@ -89,10 +97,17 @@ function contactsbyid (req, res, next) {
 
   db.any(contactbyid, [contactid])
     .then(function (data) {
+      if (data.length === 0) {
+        // We're returning the structure, but nothing inside it:
+        var returner = emptyReturn;
+      } else {
+        returner = data;
+      };
+
       res.status(200)
         .json({
           status: 'success',
-          data: data,
+          data: returner,
           message: 'Retrieved all tables'
         });
     })
@@ -102,8 +117,10 @@ function contactsbyid (req, res, next) {
 }
 
 function contactsbydataid (req, res, next) {
-  if (!!req.params.datasetid) {
-    var datasetid = String(req.params.datasetid).split(',').map(function(item) {
+  var datasetIdUsed = !!req.params.datasetid
+
+  if (datasetIdUsed) {
+    var datasetid = String(req.params.datasetid).split(',').map(function (item) {
       return parseInt(item, 10);
     });
   } else {
@@ -117,10 +134,17 @@ function contactsbydataid (req, res, next) {
 
   db.any(contactbydsid, [datasetid])
     .then(function (data) {
+      if (data.length === 0) {
+        // We're returning the structure, but nothing inside it:
+        var returner = emptyReturn;
+      } else {
+        returner = data;
+      };
+
       res.status(200)
         .json({
           status: 'success',
-          data: data,
+          data: returner,
           message: 'Retrieved all tables'
         });
     })
@@ -130,8 +154,9 @@ function contactsbydataid (req, res, next) {
 }
 
 function contactsbysiteid (req, res, next) {
-  if (!!req.params.siteid) {
-    var siteid = String(req.params.siteid).split(',').map(function(item) {
+  var siteIdUsed = !!req.params.siteid;
+  if (siteIdUsed) {
+    var siteid = String(req.params.siteid).split(',').map(function (item) {
       return parseInt(item, 10);
     });
   } else {
@@ -145,10 +170,17 @@ function contactsbysiteid (req, res, next) {
 
   db.any(contactbystid, [siteid])
     .then(function (data) {
+      if (data.length === 0) {
+        // We're returning the structure, but nothing inside it:
+        var returner = emptyReturn;
+      } else {
+        returner = data;
+      };
+
       res.status(200)
         .json({
           status: 'success',
-          data: data,
+          data: returner,
           message: 'Retrieved all tables'
         });
     })

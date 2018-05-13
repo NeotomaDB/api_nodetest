@@ -11,7 +11,7 @@ var router = express.Router();
 
 var handlers = require('../handlers/dbtables_handlers');
 
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
   res.send('NeotomaDB dbtables API: please provide a valid request');
 });
 

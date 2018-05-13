@@ -4,6 +4,7 @@ var Terraformer = require('terraformer');
 
 var WKT = require('terraformer-wkt-parser');
 const path = require('path');
+var validate = require('../validateOut').validateOut
 
 // get global database object
 var db = require('../../../database/pgp_db');
@@ -85,16 +86,7 @@ function occurrencequery (req, res, next) {
     'limit': req.query.limit
   };
 
-  // Clear variables to set to null for pg-promise:
-  for (var key in outobj) {
-    if (!Object.keys(req.query).includes(key)) {
-      outobj[key] = null;
-    }
-  };
-
-  var novalues = Object.keys(outobj).every(function (x) {
-    return typeof outobj[x] === 'undefined' || !outobj[x];
-  });
+  outobj = validate(outobj);
 
   if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
     res.status(500)
@@ -126,6 +118,10 @@ function occurrencequery (req, res, next) {
 
     outobj.loc = newloc;
   }
+
+  var novalues = Object.keys(outobj).every(function (x) {
+    return typeof outobj[x] === 'undefined' || !outobj[x];
+  });
 
   if (novalues === true) {
     if (!!req.accepts('json') & !req.accepts('html')) {
@@ -166,20 +162,19 @@ function occurrencequery (req, res, next) {
   };
 };
 
-function occurrencebytaxon(req, res, next) {
-
-  if (!!req.params.taxonid) {
-    var taxonlist = String(req.params.taxonid).split(',').map(function(item) {
+function occurrencebytaxon (req, res, next) {
+  var taxonIdUsed = !!req.params.taxonid;
+  if (taxonIdUsed) {
+    var taxonlist = String(req.params.taxonid).split(',').map(function (item) {
       return parseInt(item, 10);
     });
-
   } else {
     res.status(500)
-        .json({
-          status: 'failure',
-          data: null,
-          message: 'Must pass either queries or an integer sequence.'
-        });
+      .json({
+        status: 'failure',
+        data: null,
+        message: 'Must pass either queries or an integer sequence.'
+      });
   }
 
   db.any(occurrencetaxonquerysql, [taxonlist])

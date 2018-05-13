@@ -7,8 +7,9 @@ var pgp = db.$config.pgp;
 // Defining the query function:
 
 function dbtables (req, res, next) {
+  var tableparam = !!req.params.table;
 
-  if (!!req.params.table) {
+  if (tableparam) {
     var query = 'SELECT * FROM ndb.' + req.params.table + ';'
   } else {
     query = "SELECT tablename FROM pg_tables WHERE schemaname='ndb';";
