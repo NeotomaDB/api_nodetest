@@ -16,18 +16,18 @@ SELECT
 	                       'database', cdb.databasename) AS site
 	FROM
 	ndb.samples AS samples
-	INNER JOIN            ndb.data AS data    ON samples.sampleid = data.sampleid
-	INNER JOIN       ndb.variables AS var     ON data.variableid = var.variableid
-	INNER JOIN   ndb.variableunits AS varu    ON var.variableunitsid  = varu.variableunitsid
-	INNER JOIN  ndb.samplekeywords AS sampkey ON samples.sampleid = sampkey.sampleid
-	INNER JOIN         ndb.dslinks AS links   ON samples.datasetid = links.datasetid
-	INNER JOIN        ndb.datasets AS ds      ON samples.datasetid = ds.datasetid 
-	INNER JOIN           ndb.sites AS sts     ON links.siteid = sts.siteid
-	INNER JOIN      ndb.sampleages AS ages    ON ages.sampleid = samples.sampleid
-	INNER JOIN ndb.taxa            AS tx      ON var.taxonid = tx.taxonid
-	INNER JOIN    ndb.datasettypes AS dt      ON ds.datasettypeid = dt.datasettypeid
-	INNER JOIN (ndb.datasetdatabases AS dd
-	           INNER JOIN ndb.constituentdatabases AS cdb ON dd.databaseid = cdb.databaseid
+	LEFT OUTER JOIN            ndb.data AS data    ON samples.sampleid = data.sampleid
+	LEFT OUTER JOIN       ndb.variables AS var     ON data.variableid = var.variableid
+	LEFT OUTER JOIN   ndb.variableunits AS varu    ON var.variableunitsid  = varu.variableunitsid
+	LEFT OUTER JOIN  ndb.samplekeywords AS sampkey ON samples.sampleid = sampkey.sampleid
+	LEFT OUTER JOIN         ndb.dslinks AS links   ON samples.datasetid = links.datasetid
+	LEFT OUTER JOIN        ndb.datasets AS ds      ON samples.datasetid = ds.datasetid 
+	LEFT OUTER JOIN           ndb.sites AS sts     ON links.siteid = sts.siteid
+	LEFT OUTER JOIN      ndb.sampleages AS ages    ON ages.sampleid = samples.sampleid
+	LEFT OUTER JOIN ndb.taxa            AS tx      ON var.taxonid = tx.taxonid
+	LEFT OUTER JOIN    ndb.datasettypes AS dt      ON ds.datasettypeid = dt.datasettypeid
+	LEFT OUTER JOIN (ndb.datasetdatabases AS dd
+	           LEFT OUTER JOIN ndb.constituentdatabases AS cdb ON dd.databaseid = cdb.databaseid
 	          ) ON ds.datasetid = dd.datasetid
 WHERE
 	tx.taxonname IS NOT NULL AND
