@@ -18,7 +18,7 @@ describe('Get contact data:', function () {
   });
 
   it('The default limit of 25 should be reached for contact data:', function(done) {
-    api.get('v2.0/data/contacts/?status=retired')
+    api.get('v2.0/data/contacts/?contactstatus=retired')
       .set('Accept', 'application/json')
       .end(function (err, res) {
         assert.equal(Object.keys(res.body.data.result).length, 25);
@@ -27,16 +27,16 @@ describe('Get contact data:', function () {
 	});
 
     it('The example in the swagger should return an object:', function(done) {
-    api.get('v2.0/data/contacts?contactname=Grimm%&status=active&limit=25')
+    api.get('v2.0/data/contacts?familyname=Grimm&contactstatus=active&limit=25')
       .set('Accept', 'application/json')
       .end(function (err, res) {
-        assert.equal(res.body.data.result[0]['lastname'], 'Grimm')
+        assert.equal(res.body.data.result[0]['familyname'], 'Grimm')
         done();
       });
 	});
 
     it('Contact queries should be case insensitive:', function(done) {
-		api.get('v2.0/data/contacts/?status=Retired')
+		api.get('v2.0/data/contacts/?contactstatus=Retired')
 		.set('Accept', 'application/json')
 		.end(function(err, res){
 			assert.equal(Object.keys(res.body.data.result).length, 25);
