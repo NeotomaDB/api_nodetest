@@ -6,6 +6,7 @@ const bib = require('../bib_format');
 //  get global database object
 var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
+var validate = require('../validateOut').validateOut
 
 // Helper for linking to external query files:
 function sql (file) {
@@ -44,16 +45,33 @@ function publicationid (req, res, next) {
 };
 
 function publicationquery (req, res, next) {
-  var outobj = {'pubid': req.query.pubid,
-    'datasetid': req.query.datasetid,
-    'siteid': req.query.siteid,
-    'familyname': req.query.familyname,
-    'pubtype': req.query.pubtype,
-    'year': req.query.year,
-    'search': req.query.search,
-    'limit': req.query.limit,
-    'offset': req.query.offset
+  var outobj = {
+    'pubid': String(req.query.pubid)
+      .split(',')
+      .map(function (item) {
+        return parseInt(item, 10);
+      }),
+    'datasetid': String(req.query.datasetid)
+      .split(',')
+      .map(function (item) {
+        return parseInt(item, 10);
+      }),
+    'siteid': String(req.query.siteid)
+      .split(',')
+      .map(function (item) {
+        return parseInt(item, 10);
+      }),
+    'familyname': String(req.query.familyname),
+    'pubtype': String(req.query.pubtype),
+    'year': parseInt(req.query.year),
+    'search': String(req.query.search),
+    'limit': parseInt(req.query.limit),
+    'offset': parseInt(req.query.offset)
   };
+  console.log(outobj)
+  outobj = validate(outobj);
+
+
 
   var novalues = Object.keys(outobj).every(function (x) {
     return typeof outobj[x] === 'undefined' || !outobj[x];

@@ -14,10 +14,10 @@ const contactbydsid = sql('./contactbydsid.sql');
 const contactbystid = sql('./contactbysiteid.sql');
 
 var emptyReturn = [{'contactid': null,
-  'fullName': null,
-  'lastName': null,
-  'firstNames': null,
-  'contactStatus': null,
+  'contactname': null,
+  'familyname': null,
+  'givennames': null,
+  'contactstatus': null,
   'url': null,
   'address': null}]
 
@@ -35,10 +35,11 @@ function contacts (req, res, next) {
     });
   };
 
-  var outobj = {'contactid': contactid,
+  var outobj = {
+    'contactid': contactid,
     'contactname': req.query.contactname,
-    'lastname': req.query.lastname,
-    'status': req.query.status,
+    'familyname': req.query.familyname,
+    'contactstatus': req.query.contactstatus,
     'limit': req.query.limit,
     'offset': req.query.offset
   };

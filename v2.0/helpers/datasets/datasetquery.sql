@@ -43,7 +43,7 @@ FROM
 (${datasettype} IS NULL OR dst.datasettype LIKE ${datasettype}) AND
          (${piid} IS NULL OR   cnt.contactid = ANY (${piid}))     AND
        (${altmin} IS NULL OR    sts.altitude > ${altmin})         AND
-       (${altmax} IS NULL OR    sts.altitude > ${altmax})         AND
+       (${altmax} IS NULL OR    sts.altitude < ${altmax})         AND
           (${loc} IS NULL OR ST_Contains(ST_GeomFromText(${loc}), sts.geom)) AND
      (${ageyoung} IS NULL OR     ${ageyoung} > agerange.younger)  AND
        (${ageold} IS NULL OR       ${ageold} < agerange.older)    AND

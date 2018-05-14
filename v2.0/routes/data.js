@@ -26,13 +26,13 @@ router.get('/', function (req, res, next) {
 *       contactname:
 *         type: string
 *         example: 'Simon J Goring'
-*       lastname:
+*       familyname:
 *         type: string
 *         example: 'Goring'
 *       firstname:
 *         type: string
 *         example: 'Simon'
-*       status:
+*       contactstatus:
 *         type: string
 *         example: 'Active'
 *       address:
@@ -42,14 +42,6 @@ router.get('/', function (req, res, next) {
 *         type: string
 *         format: url
 *         example: http://goring.org
-*       recdatecreated:
-*         type: string
-*         format: dateTime
-*         example: 2013-09-30T21:02:51.000Z
-*       recdatemodified:
-*         type: string
-*         format: dateTime
-*         example: 2013-09-30T21:02:51.000Z
 */
 
 /**
@@ -60,26 +52,24 @@ router.get('/', function (req, res, next) {
 *     description: Returns researcher contact information associated with a record.
 *     parameters:
 *       - name: contactid
-*         description: Unique contact identifier within the Neotoma Database
+*         description: Unique contact identifier within the Neotoma Database, alone or comma separated.
 *         in: path
 *         required: false
 *         type: integer
 *         format: int64
 *         minimum: 1
 *         example: 44
+*       - name: familyname
+*         description: Full name of the the researcher (may use the % wildcard)
+*         in: query
+*         required: false
+*         type: string
 *       - name: contactname
-*         description: Full name of the the researcher (may use wildcards)
+*         description: Last name of the researcher (may use the % wildcard)
 *         in: query
 *         required: false
 *         type: string
-*         example: Grimm
-*       - name: lastname
-*         description: Last name of the researcher (may use wildcards)
-*         in: query
-*         required: false
-*         type: string
-*         example: Grimm
-*       - name: status
+*       - name: contactstatus
 *         in: query
 *         description: Current employment status
 *         required: false
@@ -95,7 +85,7 @@ router.get('/', function (req, res, next) {
 *         in: query
 *         required: false
 *       - name: offset
-*         description: The offset for returned records.  Default is 0.
+*         description: The offset for returned records when a limit is present.  Default is 0.
 *         in: query
 *         required: false
 *         type: integer
@@ -187,7 +177,7 @@ router.get('/sites/:siteid/contacts', handlers.contactsbysiteid);
  *         description: Integer dataset ID, either alone or in a comma separated list.
  *         in: path
  *         required: false
- *         example: 1001
+ *         example: 684
  *         type: integer
  *         format: int32
  *         minimum: 1
@@ -206,26 +196,27 @@ router.get('/sites/:siteid/contacts', handlers.contactsbysiteid);
  *         type: integer
  *         format: int64
  *         minimum: 1
- *         example: 12
+ *         example: 67
  *       - name: datasettype
  *         description: Neotoma contains data for a number of dataset types (see /dbtables/datasettypes.  This returns a subset of data types.
  *         in: query
  *         required: false
  *         type: string
+ *         example: pollen
  *       - name: altmin
  *         description: Minimum altitude of the dataset site location (in meters)
  *         in: query
  *         required: false
  *         type: integer
  *         format: int64
- *         example: 1000
+ *         example: 200
  *       - name: altmax
  *         in: query
  *         description: Maximum altitude of the dataset site location (in meters)
  *         required: false
  *         type: integer
  *         format: int64
- *         example: 1143
+ *         example: 300
  *       - name: loc
  *         in: query
  *         description: The geographic region of interest for the site, as a GeoJSON string or valid Well Known Text (WKT).  Assumed projection of EPSG:4376 unless otherwise defined.
@@ -238,7 +229,7 @@ router.get('/sites/:siteid/contacts', handlers.contactsbysiteid);
  *         required: false
  *         type: integer
  *         format: int64
- *         example: -53
+ *         example: -60
  *       - name: ageold
  *         in: query
  *         description: Oldest age that intercepts with the dataset (in calibrated years before present, with 0 at 1950CE)
@@ -282,7 +273,7 @@ router.get('/datasets/:datasetid', handlers.datasetbyid);
 * /v2.0/data/dbtables:
 *   get:
 *     summary: Returns the named Neotoma Database table.
-*     description: Returns the named Neotoma Database table.
+*     description: Returns the named Neotoma Database table.  An empty query will return a list of tables.
 *     parameters:
 *       - name: table
 *         description: Table name.
@@ -315,7 +306,7 @@ router.get('/dbtables/:table', handlers.dbtables);
 * @swagger
 * /v2.0/data/download:
 *   get:
-*     summary: Returns the named Neotoma Database table.
+*     summary: Returns the named Neotoma Database table. Currently not operational, use "occurrences" instead.
 *     description: Returns the named Neotoma Database table.
 *     parameters:
 *       - name: datasetid
@@ -400,6 +391,7 @@ router.get('/download/:datasetid', handlers.download);
 *         in: query
 *         description: Should all lower ranked units below the target unit be returned?
 *         required: false
+*         default: false
 *         type: boolean
 *     produces:
 *       - application/json

@@ -11,7 +11,8 @@ WITH RECURSIVE lowertaxa AS (SELECT
          FROM ndb.taxa AS m
          JOIN lowertaxa ON lowertaxa.taxonid = m.highertaxonid)
 SELECT
-	  samples.sampleid AS sampleid,
+	  data.dataid AS occid,
+	  samples.sampleid AS sample,
 	  json_build_object(    'taxonid', lowertaxa.taxonid, 
 	  	                  'taxonname', lowertaxa.taxonname,
 	  	                      'value', data.value,
@@ -42,6 +43,7 @@ SELECT
 	           LEFT OUTER JOIN ndb.constituentdatabases AS cdb ON dd.databaseid = cdb.databaseid
 	          ) ON ds.datasetid = dd.datasetid
 WHERE
+    (${occid} IS NULL OR data.dataid = ANY (${occid})) AND
 	(${siteid} IS NULL OR links.siteid = ANY (${siteid})) AND
 	(${sitename} IS NULL OR sts.sitename LIKE ${sitename}) AND
  	(${datasettype} IS NULL OR dt.datasettype LIKE ${datasettype}) AND

@@ -1,18 +1,19 @@
 SELECT
   cnt.contactid AS contactid,
-  cnt.contactname AS fullName,
-  cnt.familyname AS lastName, 
-  cnt.givennames AS firstName,
-  cst.contactstatus AS contactStatus,
+  cnt.contactname AS contactname,
+  cnt.familyname AS familyname,
+  cnt.givennames AS givennames,
+  cst.contactstatus AS contactstatus,
   cnt.url AS url,
   cnt.address AS address
 FROM
   ndb.contacts AS cnt INNER JOIN
   ndb.contactstatuses AS cst ON cnt.contactstatusid = cst.contactstatusid
 WHERE
-  (${lastname} IS NULL OR LOWER(cnt.familyname) LIKE LOWER(${lastname}))
+  (${contactid} IS NULL OR cnt.contactid = ANY (${contactid}))
+  AND (${familyname} IS NULL OR LOWER(cnt.familyname) LIKE LOWER(${familyname}))
   AND (${contactname} IS NULL OR LOWER(cnt.contactname) LIKE LOWER(${contactname}))
-  AND (${status} IS NULL OR LOWER(cst.contactstatus) LIKE LOWER(${status}))
+  AND (${contactstatus} IS NULL OR LOWER(cst.contactstatus) LIKE LOWER(${contactstatus}))
 OFFSET (CASE WHEN ${offset} IS NULL THEN 0
             ELSE ${offset}
        END)
