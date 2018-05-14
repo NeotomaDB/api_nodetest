@@ -1,5 +1,5 @@
 SELECT
-	  samples.sampleid AS sampleid,
+	  data.dataid AS occid,
 	  json_build_object(    'taxonid', tx.taxonid, 
 	  	                  'taxonname', tx.taxonname,
 	  	                      'value', data.value,
@@ -31,6 +31,7 @@ SELECT
 	          ) ON ds.datasetid = dd.datasetid
 WHERE
 	tx.taxonname IS NOT NULL AND
+	(${occid} IS NULL OR data.dataid = ANY (${occid})) AND
 	(${taxonname} IS NULL OR tx.taxonname LIKE ${taxonname}) AND
 	(${taxonid} IS NULL OR var.taxonid = ANY (${taxonid})) AND
 	(${siteid} IS NULL OR links.siteid = ANY (${siteid})) AND

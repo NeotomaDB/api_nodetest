@@ -53,7 +53,13 @@ function occurrencebyid (req, res, next) {
 
 function occurrencequery (req, res, next) {
 // Get the input parameters:
-  var outobj = {'sitename': String(req.query.sitename),
+  var outobj = {
+    'occid': String(req.query.occid)
+      .split(',')
+      .map(function (item) {
+        return parseInt(item, 10);
+      }),
+    'sitename': String(req.query.sitename),
     'altmin': parseInt(String(req.query.altmin)),
     'altmax': parseInt(String(req.query.altmax)),
     'loc': String(req.query.loc),
@@ -118,6 +124,8 @@ function occurrencequery (req, res, next) {
 
     outobj.loc = newloc;
   }
+
+  console.log(outobj);
 
   var novalues = Object.keys(outobj).every(function (x) {
     return typeof outobj[x] === 'undefined' || !outobj[x];
