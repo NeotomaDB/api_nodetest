@@ -21,4 +21,5 @@ WHERE
   (${sitename} IS NULL OR sts.sitename LIKE ${sitename})
   AND (${altmin} IS NULL OR sts.altitude >= ${altmin})
   AND (${altmax} IS NULL OR sts.altitude <= ${altmax})
+  AND (${loc}    IS NULL OR st_contains(ST_SetSRID(ST_GeomFromText(${loc}), 4326), sts.geom))
   AND sts.siteid IN (SELECT siteid FROM sitid)
