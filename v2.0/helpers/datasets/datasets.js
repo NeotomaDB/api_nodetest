@@ -5,6 +5,9 @@ var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 var validate = require('../validateOut').validateOut
 
+var Terraformer = require('terraformer');
+var WKT = require('terraformer-wkt-parser');
+
 // Set the empty response from the endpoint.  This is for the dataset type.
 var emptyReturn = [
   {'site': {
@@ -175,11 +178,19 @@ function datasetquery (req, res, next) {
       });
   }
 
-  /* for (i in outobj) {
-    if (isNaN(outobj[i])) {
-      outobj[i] = null;
+  var goodloc = !!outobj.loc
+  console.log(goodloc);
+
+  if (goodloc) {
+    try {
+      var newloc = JSON.parse(outobj.loc)
+      newloc = WKT.convert(JSON.parse(outobj.loc));
+    } catch (err) {
+      console.log(err);
+      newloc = outobj.loc;
     }
-  }; */
+    outobj.loc = newloc;
+  }
 
   db.any(datasetquerysql, outobj)
     .then(function (data) {

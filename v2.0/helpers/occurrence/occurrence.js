@@ -119,13 +119,11 @@ function occurrencequery (req, res, next) {
       var newloc = JSON.parse(outobj.loc)
       newloc = WKT.convert(JSON.parse(outobj.loc));
     } catch (err) {
+      console.log(err);
       newloc = outobj.loc;
     }
-
     outobj.loc = newloc;
   }
-
-  console.log(outobj);
 
   var novalues = Object.keys(outobj).every(function (x) {
     return typeof outobj[x] === 'undefined' || !outobj[x];
