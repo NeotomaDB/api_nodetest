@@ -32,7 +32,7 @@ SELECT
 WHERE
 	   tx.taxonname IS NOT NULL AND
 	      (${occid} IS NULL OR data.dataid    = ANY (${occid}))      AND
-	  (${taxonname} IS NULL OR tx.taxonname   LIKE   ${taxonname})   AND
+	  (${taxonname} IS NULL OR LOWER(tx.taxonname)   LIKE  ANY(${taxonname}))   AND
 	    (${taxonid} IS NULL OR var.taxonid    = ANY (${taxonid}))    AND
 	     (${siteid} IS NULL OR links.siteid   = ANY (${siteid}))     AND
 	   (${sitename} IS NULL OR sts.sitename   LIKE   ${sitename})    AND

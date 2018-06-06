@@ -4,8 +4,9 @@ WITH RECURSIVE lowertaxa AS (SELECT
               txa.taxonname
          FROM ndb.taxa AS txa
         WHERE
-          (${taxonname} IS NULL OR txa.taxonname LIKE ${taxonname}) AND
-          (${taxonid} IS NULL OR txa.taxonid = ANY (${taxonid}))
+          (${taxonname} IS NULL OR LOWER(txa.taxonname) LIKE ANY (${taxonname}))
+          AND (${taxonid} IS NULL 
+          OR txa.taxonid = ANY (${taxonid}))
         UNION ALL
        SELECT m.taxonid, m.highertaxonid, m.taxonname
          FROM ndb.taxa AS m
