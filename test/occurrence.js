@@ -46,7 +46,7 @@ describe('Get occurrence data any number of ways:', function () {
       .set('Accept', 'application/json')
       .expect(500, done);
   });
-  
+
   it('Break occurrences by flipping ages:', function (done) {
     api.get('v2.0/data/occurrence/?ageyoung=5000&ageold=3000')
       .set('Accept', 'application/json')

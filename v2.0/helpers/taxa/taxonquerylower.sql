@@ -3,7 +3,7 @@ WITH RECURSIVE lowertaxa AS (SELECT
               txa.highertaxonid
          FROM ndb.taxa AS txa
         WHERE 
-          (${taxonname} IS NULL OR txa.taxonname LIKE ${taxonname}) AND
+          (${taxonname} IS NULL OR txa.taxonname LIKE ANY(${taxonname})) AND
           (${taxonid} IS NULL OR txa.taxonid = ANY (${taxonid}))
         UNION ALL
        SELECT m.taxonid, m.highertaxonid
@@ -30,4 +30,4 @@ SELECT txa.taxonid,
   ndb.publications AS pub ON pub.publicationid = txa.publicationid
   WHERE
   (${status} IS NULL OR txa.extinct = ${status})
-  AND (${taxagroup} IS NULL OR txa.taxagroupid = ${taxagroup});
+  AND (${taxagroup} IS NULL OR txa.taxagroupid LIKE ANY(${taxagroup}));

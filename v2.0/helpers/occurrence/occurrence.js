@@ -52,7 +52,13 @@ function occurrencebyid (req, res, next) {
 }
 
 function occurrencequery (req, res, next) {
-// Get the input parameters:
+  // The broader query:
+
+  if (!!req.query.taxonname) {
+    var name = String(req.query.taxonname).toLowerCase().split(',')
+  };
+
+  // Get the input parameters:
   var outobj = {
     'occid': String(req.query.occid)
       .split(',')
@@ -73,7 +79,7 @@ function occurrencequery (req, res, next) {
       .map(function (item) {
         return parseInt(item, 10);
       }),
-    'taxonname': String(req.query.taxonname),
+    'taxonname': name,
     'lower': req.query.lower,
     'siteid': String(req.query.siteid)
       .split(',')
@@ -92,7 +98,19 @@ function occurrencequery (req, res, next) {
     'limit': req.query.limit
   };
 
+  console.log(outobj.taxonname);
+
   outobj = validate(outobj);
+
+  if (!(typeof outobj.taxonname === 'undefined') & !outobj.taxonname === null) {
+    console.log(outobj.taxonname);
+    outobj.taxonname = outobj.taxonname.map(function (x) {
+      var gbg = x.replace(/\*/g, '%');
+      return x.replace(/\*/g, '%')
+    });
+  }
+
+  console.log(outobj.taxonname);
 
   if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
     res.status(500)
