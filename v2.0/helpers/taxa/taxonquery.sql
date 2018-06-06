@@ -24,10 +24,15 @@ SELECT txa.taxonid,
   LEFT OUTER JOIN
   ndb.ecolgroups AS ecg ON ecg.taxonid = taxa.taxonid
   LEFT OUTER JOIN
+  ndb.ecolgrouptypes AS ecgt ON ecgt.ecolgroupid = ecg.ecolgroupid
+  LEFT OUTER JOIN
+  ndb.taxagrouptypes AS tgt ON tgt.taxagroupid = txa.taxagroupid
+  LEFT OUTER JOIN
   ndb.taxa AS txa ON txa.taxonid = taxa.taxonid
   LEFT OUTER JOIN
   ndb.publications AS pub ON pub.publicationid = txa.publicationid
   WHERE
   (${taxonname} IS NULL OR txa.taxonname LIKE ${taxonname})
   AND (${status} IS NULL OR txa.extinct = ${status})
-  AND (${taxagroup} IS NULL OR txa.taxagroupid = ${taxagroup});
+  AND (${taxagroup} IS NULL OR tgt.taxagroup = ANY(${taxagroup}))
+  AND (${ecolgroup} IS NULL OR ecgt.ecolgroup = ANY(${ecolgroup}));

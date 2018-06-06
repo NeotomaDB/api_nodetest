@@ -1,30 +1,5 @@
 // Taxa query:
 
-// This returns an empty object in the case of error.  I might propagate this to other
-// endpoints.
-
-var empty = {
-  'query': {'taxonid': null,
-    'name': null,
-    'ecolgroup': null,
-    'lower': null
-  },
-  'response': {
-    'taxonid': null,
-    'taxoncode': null,
-    'taxonname': null,
-    'author': null,
-    'valid': null,
-    'highertaxonid': null,
-    'extinct': null,
-    'taxagroupid': null,
-    'publicationid': null,
-    'validatorid': null,
-    'validatedate': null,
-    'notes': null
-  }};
-// Sites query:
-
 const path = require('path');
 
 // get global database object
@@ -56,7 +31,7 @@ function taxonbyid (req, res, next) {
     res.status(500)
       .json({
         status: 'failure',
-        data: empty,
+        data: [],
         message: 'Must pass either queries or an integer sequence.'
       });
   }
@@ -114,22 +89,35 @@ function gettaxonquery (req, res, next) {
     taxonid = null;
   }
 
+  if (!!req.query.taxonname) { 
+    var name = String(req.query.taxonname).toLowerCase().split(',')
+  };
+  if (!!req.query.taxagroup) { 
+    var taxagroup = String(req.query.taxagroup).toLowerCase().split(',')
+  };
+  if (!!req.query.ecolgroup) { 
+    var ecolgroup = String(req.query.ecolgroup).toLowerCase().split(',')
+  };
+
   var outobj = {'taxonid': taxonid,
-    'taxonname': req.query.taxonname,
+    'taxonname': name,
     'status': req.query.status,
-    'taxagroup': req.query.taxagroup,
-    'ecolgroup': req.query.ecolgroup,
+    'taxagroup': taxagroup,
+    'ecolgroup': ecolgroup,
     'lower': req.query.lower,
     'limit': req.query.limit,
     'offset': req.query.offset
-  };
+  }
 
   if (typeof outobj.taxonid === 'undefined') {
     outobj.taxonid = null;
   };
 
   if (!(typeof outobj.taxonname === 'undefined')) {
-    outobj.taxonname = outobj.taxonname.replace(/\*/g, '%');
+    outobj.taxonname = outobj.taxonname.map(function (x) {
+      var gbg = x.replace(/\*/g, '%');
+      return x.replace(/\*/g, '%')
+    });
   }
 
   var novalues = Object.keys(outobj).every(function (x) {
