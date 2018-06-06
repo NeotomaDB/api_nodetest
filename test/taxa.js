@@ -46,7 +46,6 @@ describe('Get taxon data:', function () {
     api.get('v2.0/data/taxa/?taxonname=abie*')
       .set('Accept', 'application/json')
       .end(function (err, res) {
-        console.log(re)
         assert.equal(res.body.data[0]['taxonid'], 1);
         done();
       });
