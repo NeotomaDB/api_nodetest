@@ -3,7 +3,7 @@ WITH RECURSIVE lowertaxa AS (SELECT
               txa.highertaxonid
          FROM ndb.taxa AS txa
         WHERE 
-          (${taxonname} IS NULL OR txa.taxonname LIKE ANY(${taxonname})) AND
+          (${taxonname} IS NULL OR LOWER(txa.taxonname) LIKE ANY(${taxonname})) AND
           (${taxonid} IS NULL OR txa.taxonid = ANY (${taxonid}))
         UNION ALL
        SELECT m.taxonid, m.highertaxonid

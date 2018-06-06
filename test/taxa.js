@@ -42,6 +42,16 @@ describe('Get taxon data:', function () {
       });
   });
 
+  it('Hierarchical taxon queries should accept comma separated lists:', function (done) {
+    api.get('v2.0/data/taxa/?taxonname=abies,picea&lower=true')
+      .set('Accept', 'application/json')
+      .end(function (err, res) {
+        assert.equal(res.body.data[0]['taxonid'], 1);
+        done();
+      });
+  });
+
+
   it('Taxon queries should accept `*` as a wildcard:', function (done) {
     api.get('v2.0/data/taxa/?taxonname=abie*')
       .set('Accept', 'application/json')
