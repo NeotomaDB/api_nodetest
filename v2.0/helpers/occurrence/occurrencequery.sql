@@ -27,30 +27,30 @@ SELECT
 	LEFT OUTER JOIN ndb.taxa            AS tx      ON var.taxonid = tx.taxonid
 	LEFT OUTER JOIN    ndb.datasettypes AS dt      ON ds.datasettypeid = dt.datasettypeid
 	LEFT OUTER JOIN (ndb.datasetdatabases AS dd
-	           LEFT OUTER JOIN ndb.constituentdatabases AS cdb ON dd.databaseid = cdb.databaseid
+	LEFT OUTER JOIN ndb.constituentdatabases AS cdb ON dd.databaseid = cdb.databaseid
 	          ) ON ds.datasetid = dd.datasetid
 WHERE
-	tx.taxonname IS NOT NULL AND
-	(${occid} IS NULL OR data.dataid = ANY (${occid})) AND
-	(${taxonname} IS NULL OR tx.taxonname LIKE ${taxonname}) AND
-	(${taxonid} IS NULL OR var.taxonid = ANY (${taxonid})) AND
-	(${siteid} IS NULL OR links.siteid = ANY (${siteid})) AND
-	(${sitename} IS NULL OR sts.sitename LIKE ${sitename}) AND
- 	(${datasettype} IS NULL OR dt.datasettype LIKE ${datasettype}) AND
- 	(${altmin} IS NULL OR sts.altitude > ${altmin}) AND
-	(${altmax} IS NULL OR sts.altitude > ${altmax}) AND
-	(${loc} IS NULL OR st_contains(ST_SetSRID(ST_GeomFromText(${loc}), 4326), sts.geom)) AND
-	(${ageyoung} IS NULL OR 
+	   tx.taxonname IS NOT NULL AND
+	      (${occid} IS NULL OR data.dataid    = ANY (${occid}))      AND
+	  (${taxonname} IS NULL OR tx.taxonname   LIKE   ${taxonname})   AND
+	    (${taxonid} IS NULL OR var.taxonid    = ANY (${taxonid}))    AND
+	     (${siteid} IS NULL OR links.siteid   = ANY (${siteid}))     AND
+	   (${sitename} IS NULL OR sts.sitename   LIKE   ${sitename})    AND
+ 	(${datasettype} IS NULL OR dt.datasettype LIKE   ${datasettype}) AND
+ 	     (${altmin} IS NULL OR sts.altitude   >      ${altmin})      AND
+	     (${altmax} IS NULL OR sts.altitude   >      ${altmax})      AND
+	        (${loc} IS NULL OR st_contains(ST_SetSRID(ST_GeomFromText(${loc}), 4326), sts.geom)) AND
+	   (${ageyoung} IS NULL OR 
 		CASE WHEN ages.ageyounger IS NOT NULL 
 		     THEN (ages.ageyounger > ${ageyoung})
 		     ELSE (ages.age > ${ageyoung}) END) AND
-	(${ageold} IS NULL OR 
+	  (${ageold} IS NULL OR 
 		CASE WHEN ages.ageolder IS NOT NULL 
 		     THEN (ages.ageolder < ${ageold})
 		     ELSE (ages.age < ${ageold}) END)
 OFFSET (CASE WHEN ${offset} IS NULL THEN 0
-            ELSE ${offset}
-       END)
+             ELSE ${offset}
+        END)
 LIMIT (CASE WHEN ${limit} IS NULL THEN 25
             ELSE ${limit}
        END);

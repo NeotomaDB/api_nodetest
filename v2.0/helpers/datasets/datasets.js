@@ -8,33 +8,6 @@ var validate = require('../validateOut').validateOut
 var Terraformer = require('terraformer');
 var WKT = require('terraformer-wkt-parser');
 
-// Set the empty response from the endpoint.  This is for the dataset type.
-var emptyReturn = [
-  {'site': {
-    'siteid': null,
-    'sitename': null,
-    'sitedescription': null,
-    'sitenotes': null,
-    'geography': null,
-    'altitude': null,
-    'collectionunitid': null,
-    'collectionunit': null,
-    'handle': null,
-    'unittype': null},
-  'datasets': [{'datasetid': null,
-    'datasettype': null,
-    'datasetnotes': null,
-    'database': null,
-    'doi': null,
-    'datasetpi': [{'contactid': null,
-      'contactname': null,
-      'familyname': null,
-      'firstname': null,
-      'initials': null}],
-    'agerange': {'ageyoung': null,
-      'ageold': null}
-  }]
-  }];
 
 const datasetquerysql = sql('./datasetquery.sql');
 const datasetbyidsql = sql('./datasetbyid.sql');
@@ -68,7 +41,7 @@ function datasetbyid (req, res, next) {
     .then(function (data) {
       if (data.length === 0) {
         // We're returning the structure, but nothing inside it:
-        var returner = emptyReturn;
+        var returner = [];
       } else {
         returner = data;
       };
@@ -104,7 +77,7 @@ function datasetbysiteid (req, res, next) {
     .then(function (data) {
       if (data.length === 0) {
         // We're returning the structure, but nothing inside it:
-        var returner = emptyReturn;
+        var returner = [];
       } else {
         returner = data;
       };
@@ -140,27 +113,6 @@ function datasetquery (req, res, next) {
   };
 
   outobj = validate(outobj);
-/*
-  var keyLength = Object.keys(outobj).length - 1;
-
-  for (var i = keyLength; i > -1; i--) {
-    // Check for undefined values
-    if (typeof outobj[Object.keys(outobj)[i]] === 'undefined' |
-        outobj[Object.keys(outobj)[i]] === 'undefined') {
-      outobj[Object.keys(outobj)[i]] = null;
-    }
-    // Check for stand-alone null values.
-    if (typeof outobj[Object.keys(outobj)[i]] === 'number' & isNaN(outobj[Object.keys(outobj)[i]])) {
-      outobj[Object.keys(outobj)[i]] = null;
-    }
-
-    // Check to see if the array is just an array of NaN:
-    if (Array.isArray(outobj[Object.keys(outobj)[i]])) {
-      if (outobj[Object.keys(outobj)[i]][0] !== outobj[Object.keys(outobj)[i]][0]) {
-        outobj[Object.keys(outobj)[i]] = null;
-      }
-    }
-  } */
 
   if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
     res.status(500)
@@ -197,7 +149,7 @@ function datasetquery (req, res, next) {
       console.log(data);
       if (data.length === 0) {
         // We're returning the structure, but nothing inside it:
-        var returner = emptyReturn;
+        var returner = [];
       } else {
         returner = data;
       };
