@@ -26,7 +26,7 @@ function sitesbyid (req, res, next) {
   var goodstid = !!req.params.siteid;
 
   if (goodstid) {
-    var siteid = String(req.params.siteid).split(',').map(function(item) {
+    var siteid = String(req.params.siteid).split(',').map(function (item) {
       return parseInt(item, 10);
     });
   } else {
@@ -62,11 +62,15 @@ function sitesquery (req, res, next) {
     'gpid': parseInt(req.query.gpid)
   };
 
-  if (typeof req.query.sitename === 'undefined') { outobj.sitename = null }
-  if (typeof req.query.altmin === 'undefined')   {   outobj.altmin = null }
-  if (typeof req.query.altmax === 'undefined')   {   outobj.altmax = null }
-  if (typeof req.query.loc === 'undefined')      {      outobj.loc = null }
-  if (typeof req.query.gpid === 'undefined')     {     outobj.gpid = null }
+  if (typeof req.query.sitename === 'undefined') {
+    outobj.sitename = null
+  }
+  if (typeof req.query.altmin === 'undefined') {
+    outobj.altmin = null
+  }
+  if (typeof req.query.altmax === 'undefined')   { outobj.altmax = null }
+  if (typeof req.query.loc === 'undefined')      { outobj.loc = null }
+  if (typeof req.query.gpid === 'undefined')     { outobj.gpid = null }
 
   if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
     return res.status(500)

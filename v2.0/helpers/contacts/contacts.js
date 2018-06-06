@@ -13,14 +13,6 @@ const contactquery = sql('./contactquery.sql');
 const contactbydsid = sql('./contactbydsid.sql');
 const contactbystid = sql('./contactbysiteid.sql');
 
-var emptyReturn = [{'contactid': null,
-  'contactname': null,
-  'familyname': null,
-  'givennames': null,
-  'contactstatus': null,
-  'url': null,
-  'address': null}]
-
 // Helper for linking to external query files:
 function sql (file) {
   const fullPath = path.join(__dirname, file);
@@ -62,7 +54,7 @@ function contacts (req, res, next) {
         .then(function (data) {
           if (data.length === 0) {
             // We're returning the structure, but nothing inside it:
-            var returner = emptyReturn;
+            var returner = [];
           } else {
             returner = data;
           };
@@ -100,7 +92,7 @@ function contactsbyid (req, res, next) {
     .then(function (data) {
       if (data.length === 0) {
         // We're returning the structure, but nothing inside it:
-        var returner = emptyReturn;
+        var returner = [];
       } else {
         returner = data;
       };
@@ -137,7 +129,7 @@ function contactsbydataid (req, res, next) {
     .then(function (data) {
       if (data.length === 0) {
         // We're returning the structure, but nothing inside it:
-        var returner = emptyReturn;
+        var returner = [];
       } else {
         returner = data;
       };
@@ -173,7 +165,7 @@ function contactsbysiteid (req, res, next) {
     .then(function (data) {
       if (data.length === 0) {
         // We're returning the structure, but nothing inside it:
-        var returner = emptyReturn;
+        var returner = [];
       } else {
         returner = data;
       };

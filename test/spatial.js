@@ -82,4 +82,15 @@ describe('Get Neotoma data with WKT extents:', function () {
       })
       .expect(200, done);
   });
+  it('Get dataset data using a simple WKT:', function (done) {
+    api.get('v2.0/data/datasets?loc=POLYGON((139.8%20-33.7,%20150.1%20-33.7,%20150.1%20-39.1,%20139.8%20-39.1,%20139.8%20-33.7))')
+      .set('Accept', 'application/json')
+      .expect(function (res) {
+        return Object.keys(res.body['data'][0]).length > 0;
+      })
+      .expect(function (res) {
+        return res.body['data'][0]['occurrence'] === 12;
+      })
+      .expect(200, done);
+  });
 });
