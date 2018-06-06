@@ -78,16 +78,19 @@ describe('Get occurrence data any number of ways:', function () {
   });
 
   it('Get occurrences with comma separated taxa:', function (done) {
-    api.get('v2.0/data/occurrence/?taxonid=12,13,14,15&limit=200')
+    api.get('v2.0/data/occurrence/?taxonname=Picea,Abies&limit=25')
       .set('Accept', 'application/json')
       .expect(function (res) {
-        var allSite = res.body['data'];
-        var siteids = [];
-        for (var i = 0; i < allSite.length; i++) {
-          siteids.push(allSite[i]['site']['siteid']);
-        };
-        var uniqueSites = Array.from(new Set(siteids)).sort(function (a, b) { return a - b; });
-        return (uniqueSites === [12, 13, 14, 15]);
+        return (res.body.data.length > 0);
+      })
+      .expect(200, done);
+  });
+
+  it('Get hierarchical occurrences with comma separated taxa:', function (done) {
+    api.get('v2.0/data/occurrence/?taxonname=Picea,Abies&limit=25&lower=true')
+      .set('Accept', 'application/json')
+      .expect(function (res) {
+        return (res.body.data.length > 0);
       })
       .expect(200, done);
   });
