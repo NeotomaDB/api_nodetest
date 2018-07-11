@@ -29,6 +29,15 @@ describe('Get publication data any number of ways:', function () {
       .expect(200, done);
   });
 
+  it('Get publications using pubs with missing links:', function (done) {
+    api.get('v2.0/data/publications/?pubid=12,14,1412')
+      .set('Accept', 'application/json')
+      .expect(function (res) {
+        return res.body.data.result.length > 0;
+      })
+      .expect(200, done);
+  });
+
   it('Get publication by site id:', function (done) {
     api.get('v2.0/data/sites/12/publications')
       .set('Accept', 'application/json')
