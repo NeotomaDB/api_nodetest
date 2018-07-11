@@ -1,4 +1,4 @@
-// Sites query:
+// Contacts query:
 
 const path = require('path');
 

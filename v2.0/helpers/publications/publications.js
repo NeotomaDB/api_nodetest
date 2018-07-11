@@ -68,10 +68,8 @@ function publicationquery (req, res, next) {
     'limit': parseInt(req.query.limit),
     'offset': parseInt(req.query.offset)
   };
-  console.log(outobj)
+
   outobj = validate(outobj);
-
-
 
   var novalues = Object.keys(outobj).every(function (x) {
     return typeof outobj[x] === 'undefined' || !outobj[x];
