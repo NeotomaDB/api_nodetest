@@ -27,7 +27,6 @@ describe('Get datasets any number of ways:', function () {
     api.get('v2.0/data/datasets/?siteid=12,13,14')
       .set('Accept', 'application/json')
       .expect(function (res) {
-        console.log(res.body['data'].length);
         return Object.keys(res.body['data']).length > 0;
       })
       .expect(200, done);
@@ -38,6 +37,16 @@ describe('Get datasets any number of ways:', function () {
       .set('Accept', 'application/json')
       .expect(function (res) {
         return Object.keys(res.body['data']).includes('site', 'dataset');
+      })
+      .expect(200, done);
+  });
+
+  this.timeout(50000);
+  it('Limits work:', function (done) {
+    api.get('v2.0/data/datasets/?altmax=3&limit=10')
+      .set('Accept', 'application/json')
+      .expect(function (res) {
+        return Object.keys(res.body['data']).length == 10;
       })
       .expect(200, done);
   });

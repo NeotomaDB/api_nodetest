@@ -1,3 +1,7 @@
 {
-  "ext": "sql js json"
+  "ext": "sql js json",
+  "ignore": [
+    ".git",
+    "node_modules/**/node_modules"
+  ]
 }

@@ -15,7 +15,16 @@ describe('Get publication data any number of ways:', function () {
     api.get('v2.0/data/publications/12')
       .set('Accept', 'application/json')
       .expect(function (res) {
-        return Object.keys(res.body.data[0]).length > 0;
+        return res.body.data[0].publicationid == 12;
+      })
+      .expect(200, done);
+  });
+
+  it('Get publication by comma sepatarated ids:', function (done) {
+    api.get('v2.0/data/publications/12,13')
+      .set('Accept', 'application/json')
+      .expect(function (res) {
+        return res.body.data[0].map(x => x.publicationid) == [12,13];
       })
       .expect(200, done);
   });
