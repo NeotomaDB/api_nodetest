@@ -50,4 +50,10 @@ FROM
         (${ageof} IS NULL OR        ${ageof} BETWEEN agerange.younger AND agerange.older) AND
         ((${datasetid}) IS NULL OR dts.datasetid = ANY (${datasetid}))
 
-GROUP BY sts.siteid, clu.collectionunitid, cts.colltype;
+GROUP BY sts.siteid, clu.collectionunitid, cts.colltype
+OFFSET (CASE WHEN ${offset} IS NULL THEN 0
+             ELSE ${offset}
+        END)
+LIMIT (CASE WHEN ${limit} IS NULL THEN 25
+            ELSE ${limit}
+       END);

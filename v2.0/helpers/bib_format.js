@@ -1,217 +1,236 @@
 
 exports.formatpublbib = function (pubobject) {
   var pubout = [];
-
   for (var i = 0; i < pubobject.length; i++) {
-    var pubtype = +pubobject[i]['pubtypeid'];
+
+    var publication = pubobject[i].publication
+
+    var pubtype = +publication.pubtypeid;
+
+    console.log(publication)
+
+    var authors = publication.author.sort(function(a,b) {return a.order - b.order});
 
     switch (pubtype) {
       case 1:
         // Journal Articles:
 
-        pubout[i] = { 'publicationid': pubobject[i]['publicationid'],
-                      'title': pubobject[i]['articletitle'],
-                      'year' : pubobject[i]['year'],
-                      'journal' : pubobject[i]['journal'],
-                      'volume'  : pubobject[i]['volume'],
-                      'issue'   : pubobject[i]['issue'],
-                      'pages'   : pubobject[i]['pages'],
-                      'citation': pubobject[i]['citation'],
-                      'doi'       : pubobject[i]['doi']
+        pubout[i] = { 'publicationid': publication.publicationid,
+                      'title': publication.articletitle,
+                      'year' : publication.year,
+                      'journal' : publication.journal,
+                      'volume'  : publication.volume,
+                      'issue'   : publication.issue,
+                      'pages'   : publication.pages,
+                      'citation': publication.citation,
+                      'doi'     : publication.doi,
+                      'authors' : authors
                     };
         break;
       case 2:
 
-        pubout[i] = { 'publicationid': pubobject[i]['publicationid'],
-                      'title': pubobject[i]['articletitle'],
-                      'year' : pubobject[i]['year'],
-                      'booktitle' : pubobject[i]['booktitle'],
-                      'volume'  : pubobject[i]['volume'],
-                      'series'  : pubobject[i]['seriestitle'],
-                      'issue'   : pubobject[i]['issue'],
-                      'pages'   : pubobject[i]['pages'],
-                      'citation': pubobject[i]['citation'],
-                      'chapter' : pubobject[i]['chapter'],
-                      'note' : pubobject[i]['note'],
-                      'publisher' : pubobject[i]['publisher'],
-                      'edition'   : pubobject[i]['edition'],
-                      'city'      : pubobject[i]['city'],
-                      'country'   : pubobject[i]['country'],
-                      'doi'       : pubobject[i]['doi']
-                    }; 
+        pubout[i] = { 'publicationid': publication.publicationid,
+                      'title': publication.articletitle,
+                      'year' : publication.year,
+                      'booktitle' : publication.booktitle,
+                      'volume'  : publication.volume,
+                      'series'  : publication.seriestitle,
+                      'issue'   : publication.issue,
+                      'pages'   : publication.pages,
+                      'citation': publication.citation,
+                      'chapter' : publication.chapter,
+                      'note' : publication.note,
+                      'publisher' : publication.publisher,
+                      'edition'   : publication.edition,
+                      'city'      : publication.city,
+                      'country'   : publication.country,
+                      'doi'       : publication.doi,
+                      'authors' : authors
+                    };
         break;
 
       case 3:
         // "Authored Book"
-        pubout[i] = { 'publicationid': pubobject[i]['publicationid'],
-                      'year' : pubobject[i]['year'],
-                      'booktitle' : pubobject[i]['booktitle'],
-                      'volume'  : pubobject[i]['volume'],
-                      'series'  : pubobject[i]['seriestitle'],
-                      'citation': pubobject[i]['citation'],
-                      'chapter' : pubobject[i]['chapter'],
-                      'note' : pubobject[i]['note'],
-                      'publisher' : pubobject[i]['publisher'],
-                      'edition'   : pubobject[i]['edition'],
-                      'city'      : pubobject[i]['city'],
-                      'country'   : pubobject[i]['country'],
-                      'doi'       : pubobject[i]['doi']
+        pubout[i] = { 'publicationid': publication.publicationid,
+                      'year' : publication.year,
+                      'booktitle' : publication.booktitle,
+                      'volume'  : publication.volume,
+                      'series'  : publication.seriestitle,
+                      'citation': publication.citation,
+                      'chapter' : publication.chapter,
+                      'note' : publication.note,
+                      'publisher' : publication.publisher,
+                      'edition'   : publication.edition,
+                      'city'      : publication.city,
+                      'country'   : publication.country,
+                      'doi'       : publication.doi,
+                      'authors' : authors
               };
-        
+
         break;
 
       case 4:
         // "Edited Book"
-        pubout[i] = { 'publicationid': pubobject[i]['publicationid'],
-                      'year' : pubobject[i]['year'],
-                      'booktitle' : pubobject[i]['booktitle'],
-                      'volume'  : pubobject[i]['volume'],
-                      'series'  : pubobject[i]['seriestitle'],
-                      'citation': pubobject[i]['citation'],
-                      'chapter' : pubobject[i]['chapter'],
-                      'note' : pubobject[i]['note'],
-                      'publisher' : pubobject[i]['publisher'],
-                      'edition'   : pubobject[i]['edition'],
-                      'city'      : pubobject[i]['city'],
-                      'country'   : pubobject[i]['country'],
-                      'doi'       : pubobject[i]['doi']
+        pubout[i] = { 'publicationid': publication.publicationid,
+                      'year' : publication.year,
+                      'booktitle' : publication.booktitle,
+                      'volume'  : publication.volume,
+                      'series'  : publication.seriestitle,
+                      'citation': publication.citation,
+                      'chapter' : publication.chapter,
+                      'note' : publication.note,
+                      'publisher' : publication.publisher,
+                      'edition'   : publication.edition,
+                      'city'      : publication.city,
+                      'country'   : publication.country,
+                      'doi'       : publication.doi,
+                      'authors' : authors
               };
 
         break;
 
       case 5:
         // "Master's Thesis"
-        pubout[i] = { 'publicationid': pubobject[i]['publicationid'],
-                'title': pubobject[i]['articletitle'],
-                'year' : pubobject[i]['year'],
-                'booktitle' : pubobject[i]['booktitle'],
-                'volume'  : pubobject[i]['volume'],
-                'issue'   : pubobject[i]['issue'],
-                'pages'   : pubobject[i]['pages'],
-                'citation': pubobject[i]['citation'],
-                'state'   : pubobject[i]['state'],
-                'country'   : pubobject[i]['country'],
-                'city'   : pubobject[i]['city'],
-                'school' : pubobject[i]['publisher'],
-                'note' : pubobject[i]['note']
+        pubout[i] = { 'publicationid': publication.publicationid,
+                'title': publication.articletitle,
+                'year' : publication.year,
+                'booktitle' : publication.booktitle,
+                'volume'  : publication.volume,
+                'issue'   : publication.issue,
+                'pages'   : publication.pages,
+                'citation': publication.citation,
+                'state'   : publication.state,
+                'country'   : publication.country,
+                'city'   : publication.city,
+                'school' : publication.publisher,
+                'note' : publication.note,
+                'authors' : authors
               };
 
         break;
 
       case 6:
         // "Doctoral Dissertation"
-        pubout[i] = { 'publicationid': pubobject[i]['publicationid'],
-                'title': pubobject[i]['articletitle'],
-                'year' : pubobject[i]['year'],
-                'booktitle' : pubobject[i]['booktitle'],
-                'volume'  : pubobject[i]['volume'],
-                'issue'   : pubobject[i]['issue'],
-                'pages'   : pubobject[i]['pages'],
-                'citation': pubobject[i]['citation'],
-                'state'   : pubobject[i]['state'],
-                'country'   : pubobject[i]['country'],
-                'city'   : pubobject[i]['city'],
-                'school' : pubobject[i]['publisher'],
-                'note' : pubobject[i]['note']
+        pubout[i] = { 'publicationid': publication.publicationid,
+                'title': publication.articletitle,
+                'year' : publication.year,
+                'booktitle' : publication.booktitle,
+                'volume'  : publication.volume,
+                'issue'   : publication.issue,
+                'pages'   : publication.pages,
+                'citation': publication.citation,
+                'state'   : publication.state,
+                'country'   : publication.country,
+                'city'   : publication.city,
+                'school' : publication.publisher,
+                'note' : publication.note,
+                'authors' : authors
               };
 
         break;
 
       case 7:
         // "Authored Report"
-        pubout[i] = { 'publicationid': pubobject[i]['publicationid'],
-                'title': pubobject[i]['articletitle'],
-                'year' : pubobject[i]['year'],
-                'booktitle' : pubobject[i]['booktitle'],
-                'volume'  : pubobject[i]['volume'],
-                'issue'   : pubobject[i]['issue'],
-                'pages'   : pubobject[i]['pages'],
-                'citation': pubobject[i]['citation'],
+        pubout[i] = { 'publicationid': publication.publicationid,
+                'title': publication.articletitle,
+                'year' : publication.year,
+                'booktitle' : publication.booktitle,
+                'volume'  : publication.volume,
+                'issue'   : publication.issue,
+                'pages'   : publication.pages,
+                'citation': publication.citation,
+                'authors' : authors
               };
 
         break;
 
       case 8:
         // "Edited Report"
-        pubout[i] = { 'publicationid': pubobject[i]['publicationid'],
-                'title': pubobject[i]['articletitle'],
-                'year' : pubobject[i]['year'],
-                'booktitle' : pubobject[i]['booktitle'],
-                'volume'  : pubobject[i]['volume'],
-                'issue'   : pubobject[i]['issue'],
-                'pages'   : pubobject[i]['pages'],
-                'citation': pubobject[i]['citation'],
+        pubout[i] = { 'publicationid': publication.publicationid,
+                'title': publication.articletitle,
+                'year' : publication.year,
+                'booktitle' : publication.booktitle,
+                'volume'  : publication.volume,
+                'issue'   : publication.issue,
+                'pages'   : publication.pages,
+                'citation': publication.citation,
+                'authors' : authors
               };
 
         break;
 
       case 9:
         // "Other Authored"
-        pubout[i] = { 'publicationid': pubobject[i]['publicationid'],
-                'title': pubobject[i]['articletitle'],
-                'year' : pubobject[i]['year'],
-                'booktitle' : pubobject[i]['booktitle'],
-                'volume'  : pubobject[i]['volume'],
-                'issue'   : pubobject[i]['issue'],
-                'pages'   : pubobject[i]['pages'],
-                'citation': pubobject[i]['citation'],
+        pubout[i] = { 'publicationid': publication.publicationid,
+                'title': publication.articletitle,
+                'year' : publication.year,
+                'booktitle' : publication.booktitle,
+                'volume'  : publication.volume,
+                'issue'   : publication.issue,
+                'pages'   : publication.pages,
+                'citation': publication.citation,
+                'authors' : authors
               };
 
         break;
 
-      case 10: 
+      case 10:
         // "Other Edited"
-        pubout[i] = { 'publicationid': pubobject[i]['publicationid'],
-                'title': pubobject[i]['articletitle'],
-                'year' : pubobject[i]['year'],
-                'booktitle' : pubobject[i]['booktitle'],
-                'volume'  : pubobject[i]['volume'],
-                'issue'   : pubobject[i]['issue'],
-                'pages'   : pubobject[i]['pages'],
-                'citation': pubobject[i]['citation'],
+        pubout[i] = { 'publicationid': publication.publicationid,
+                'title': publication.articletitle,
+                'year' : publication.year,
+                'booktitle' : publication.booktitle,
+                'volume'  : publication.volume,
+                'issue'   : publication.issue,
+                'pages'   : publication.pages,
+                'citation': publication.citation,
+                'authors' : authors
               };
 
         break;
 
-      case 11: 
+      case 11:
         // "Website"
-        pubout[i] = { 'publicationid': pubobject[i]['publicationid'],
-                'title': pubobject[i]['articletitle'],
-                'year' : pubobject[i]['year'],
-                'booktitle' : pubobject[i]['booktitle'],
-                'volume'  : pubobject[i]['volume'],
-                'issue'   : pubobject[i]['issue'],
-                'pages'   : pubobject[i]['pages'],
-                'citation': pubobject[i]['citation'],
+        pubout[i] = { 'publicationid': publication.publicationid,
+                'title': publication.articletitle,
+                'year' : publication.year,
+                'booktitle' : publication.booktitle,
+                'volume'  : publication.volume,
+                'issue'   : publication.issue,
+                'pages'   : publication.pages,
+                'citation': publication.citation,
+                'authors' : authors
               };
 
         break;
 
       case 12:
         // "Undergraduate thesis"
-        pubout[i] = { 'publicationid': pubobject[i]['publicationid'],
-                'title': pubobject[i]['articletitle'],
-                'year' : pubobject[i]['year'],
-                'booktitle' : pubobject[i]['booktitle'],
-                'volume'  : pubobject[i]['volume'],
-                'issue'   : pubobject[i]['issue'],
-                'pages'   : pubobject[i]['pages'],
-                'citation': pubobject[i]['citation'],
+        pubout[i] = { 'publicationid': publication.publicationid,
+                'title': publication.articletitle,
+                'year' : publication.year,
+                'booktitle' : publication.booktitle,
+                'volume'  : publication.volume,
+                'issue'   : publication.issue,
+                'pages'   : publication.pages,
+                'citation': publication.citation,
+                'authors' : authors
               };
 
         break;
 
       case 0:
         // Legacy
-        pubout[i] = { 'publicationid': pubobject[i]['publicationid'],
-                      'title': pubobject[i]['articletitle'],
-                      'year' : pubobject[i]['year'],
-                      'journal' : pubobject[i]['journal'],
-                      'volume'  : pubobject[i]['volume'],
-                      'issue'   : pubobject[i]['issue'],
-                      'pages'   : pubobject[i]['pages'],
-                      'citation': pubobject[i]['citation'],
-                      'doi'       : pubobject[i]['doi']
+        pubout[i] = { 'publicationid': publication.publicationid,
+                      'title': publication.articletitle,
+                      'year' : publication.year,
+                      'journal' : publication.journal,
+                      'volume'  : publication.volume,
+                      'issue'   : publication.issue,
+                      'pages'   : publication.pages,
+                      'citation': publication.citation,
+                      'doi'       : publication.doi,
+                      'authors' : authors
                     };
         break;
     };

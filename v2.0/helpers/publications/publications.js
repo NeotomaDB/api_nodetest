@@ -18,17 +18,20 @@ function sql (file) {
 const pubbydsid = sql('./pubdsidquery.sql');
 const pubbystid = sql('./pubstidquery.sql');
 const pubquery = sql('./pubquery.sql');
+const rawpub  = sql('./raw_pubid.sql');
 
 function publicationid (req, res, next) {
   var pubIdUsed = !!req.params.pubid;
 
   if (pubIdUsed) {
-    var pubid = parseInt(req.params.pubid);
+    var pubid = {pubid: String(req.params.pubid)
+      .split(',')
+      .map(function (item) {
+        return parseInt(item, 10);
+      })};
   }
 
-  var query = 'select * from ndb.publications AS pubs where pubs.publicationid = ' + pubid;
-
-  db.any(query)
+  db.any(rawpub, pubid)
     .then(function (data) {
       var bibOutput = bib.formatpublbib(data);
 
