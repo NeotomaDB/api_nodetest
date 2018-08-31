@@ -33,7 +33,6 @@ describe('Get publication data any number of ways:', function () {
     api.get('v2.0/data/publications/?familyname=Grimm')
       .set('Accept', 'application/json')
       .expect(function (res) {
-        console.log(res.body.data)
         return res.body.data.result.length > 0;
       })
       .expect(200, done);
