@@ -14,7 +14,8 @@ exports.formatpublbib = function (pubobject) {
       case 1:
         // Journal Articles:
 
-        pubout[i] = { 'publicationid': publication.publicationid,
+        pubout[i] = { 'publicationtype': publication.pubtype,
+                      'publicationid': publication.publicationid,
                       'title': publication.articletitle,
                       'year' : publication.year,
                       'journal' : publication.journal,
@@ -28,7 +29,8 @@ exports.formatpublbib = function (pubobject) {
         break;
       case 2:
 
-        pubout[i] = { 'publicationid': publication.publicationid,
+        pubout[i] = { 'publicationtype': publication.pubtype,
+                      'publicationid': publication.publicationid,
                       'title': publication.articletitle,
                       'year' : publication.year,
                       'booktitle' : publication.booktitle,
@@ -50,7 +52,8 @@ exports.formatpublbib = function (pubobject) {
 
       case 3:
         // "Authored Book"
-        pubout[i] = { 'publicationid': publication.publicationid,
+        pubout[i] = { 'publicationtype': publication.pubtype,
+                      'publicationid': publication.publicationid,
                       'year' : publication.year,
                       'booktitle' : publication.booktitle,
                       'volume'  : publication.volume,
@@ -70,7 +73,8 @@ exports.formatpublbib = function (pubobject) {
 
       case 4:
         // "Edited Book"
-        pubout[i] = { 'publicationid': publication.publicationid,
+        pubout[i] = { 'publicationtype': publication.pubtype,
+                      'publicationid': publication.publicationid,
                       'year' : publication.year,
                       'booktitle' : publication.booktitle,
                       'volume'  : publication.volume,
@@ -90,7 +94,8 @@ exports.formatpublbib = function (pubobject) {
 
       case 5:
         // "Master's Thesis"
-        pubout[i] = { 'publicationid': publication.publicationid,
+        pubout[i] = { 'publicationtype': publication.pubtype,
+                'publicationid': publication.publicationid,
                 'title': publication.articletitle,
                 'year' : publication.year,
                 'booktitle' : publication.booktitle,
@@ -110,7 +115,8 @@ exports.formatpublbib = function (pubobject) {
 
       case 6:
         // "Doctoral Dissertation"
-        pubout[i] = { 'publicationid': publication.publicationid,
+        pubout[i] = { 'publicationtype': publication.pubtype,
+                'publicationid': publication.publicationid,
                 'title': publication.articletitle,
                 'year' : publication.year,
                 'booktitle' : publication.booktitle,
@@ -130,7 +136,9 @@ exports.formatpublbib = function (pubobject) {
 
       case 7:
         // "Authored Report"
-        pubout[i] = { 'publicationid': publication.publicationid,
+        pubout[i] = {
+                'publicationtype': publication.pubtype,
+                'publicationid': publication.publicationid,
                 'title': publication.articletitle,
                 'year' : publication.year,
                 'booktitle' : publication.booktitle,
@@ -145,7 +153,9 @@ exports.formatpublbib = function (pubobject) {
 
       case 8:
         // "Edited Report"
-        pubout[i] = { 'publicationid': publication.publicationid,
+        pubout[i] = {
+                'publicationtype': publication.pubtype,
+                'publicationid': publication.publicationid,
                 'title': publication.articletitle,
                 'year' : publication.year,
                 'booktitle' : publication.booktitle,
@@ -160,7 +170,8 @@ exports.formatpublbib = function (pubobject) {
 
       case 9:
         // "Other Authored"
-        pubout[i] = { 'publicationid': publication.publicationid,
+        pubout[i] = { 'publicationtype': publication.pubtype,
+                'publicationid': publication.publicationid,
                 'title': publication.articletitle,
                 'year' : publication.year,
                 'booktitle' : publication.booktitle,
@@ -175,7 +186,9 @@ exports.formatpublbib = function (pubobject) {
 
       case 10:
         // "Other Edited"
-        pubout[i] = { 'publicationid': publication.publicationid,
+        pubout[i] = {
+                'publicationtype': publication.pubtype,
+                'publicationid': publication.publicationid,
                 'title': publication.articletitle,
                 'year' : publication.year,
                 'booktitle' : publication.booktitle,
@@ -190,7 +203,9 @@ exports.formatpublbib = function (pubobject) {
 
       case 11:
         // "Website"
-        pubout[i] = { 'publicationid': publication.publicationid,
+        pubout[i] = {
+                'publicationtype': publication.pubtype,
+                'publicationid': publication.publicationid,
                 'title': publication.articletitle,
                 'year' : publication.year,
                 'booktitle' : publication.booktitle,
@@ -205,7 +220,9 @@ exports.formatpublbib = function (pubobject) {
 
       case 12:
         // "Undergraduate thesis"
-        pubout[i] = { 'publicationid': publication.publicationid,
+        pubout[i] = {
+                'publicationtype': publication.pubtype,
+                'publicationid': publication.publicationid,
                 'title': publication.articletitle,
                 'year' : publication.year,
                 'booktitle' : publication.booktitle,
@@ -220,7 +237,8 @@ exports.formatpublbib = function (pubobject) {
 
       case 0:
         // Legacy
-        pubout[i] = { 'publicationid': publication.publicationid,
+        pubout[i] = { 'publicationtype': publication.pubtype,
+                      'publicationid': publication.publicationid,
                       'title': publication.articletitle,
                       'year' : publication.year,
                       'journal' : publication.journal,
