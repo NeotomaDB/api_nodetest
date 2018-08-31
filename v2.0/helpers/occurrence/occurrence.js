@@ -58,7 +58,9 @@ function occurrencequery (req, res, next) {
   if (!!req.query.taxonname) {
     // Split up the name into the accepts and the drops.
     var name = parseTaxa(req.query.taxonname)
-  };
+  } else {
+    var name = {taxa: null, drop: null};
+  }
 
   // Get the input parameters:
   var outobj = {

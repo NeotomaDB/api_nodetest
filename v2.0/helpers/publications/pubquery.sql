@@ -20,8 +20,7 @@ json_build_object('publicationid', pub.publicationid,
               'author', json_agg(json_build_object('familyname', ca.familyname,
                                                    'givennames', ca.givennames,
                                                    'order', pa.authororder)),
-              'datasets', COALESCE(json_agg(datasetid) FILTER (WHERE datasetid IS NOT NULL), '[]'))
-
+              'datasets', COALESCE(json_agg(datasetid) FILTER (WHERE datasetid IS NOT NULL), '[]')) AS publication
 FROM
   ndb.publications AS pub
 INNER JOIN

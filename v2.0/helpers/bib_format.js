@@ -1,13 +1,12 @@
 
 exports.formatpublbib = function (pubobject) {
+
   var pubout = [];
   for (var i = 0; i < pubobject.length; i++) {
 
     var publication = pubobject[i].publication
 
     var pubtype = +publication.pubtypeid;
-
-    console.log(publication)
 
     var authors = publication.author.sort(function(a,b) {return a.order - b.order});
 
@@ -234,6 +233,13 @@ exports.formatpublbib = function (pubobject) {
                     };
         break;
     };
+    if(!!publication.datasets) {
+      pubout[i].datasets = publication.datasets;
+    };
+    if(!!publication.sites) {
+      pubout[i].sites = publication.sites;
+    };
+
   };
   return pubout;
 };
