@@ -24,7 +24,7 @@ describe('Get publication data any number of ways:', function () {
     api.get('v2.0/data/publications/12,13')
       .set('Accept', 'application/json')
       .expect(function (res) {
-        return res.body.data[0].map(x => x.publicationid) == [12,13];
+        return res.body.data.map(x => x.publicationid) == [12,13];
       })
       .expect(200, done);
   });
@@ -33,6 +33,7 @@ describe('Get publication data any number of ways:', function () {
     api.get('v2.0/data/publications/?familyname=Grimm')
       .set('Accept', 'application/json')
       .expect(function (res) {
+        console.log(res.body.data)
         return res.body.data.result.length > 0;
       })
       .expect(200, done);
