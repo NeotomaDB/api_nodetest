@@ -11,9 +11,7 @@ exports.parseTaxa = function(taxonString) {
   for (var i = 0; i < name.length; i++) {
     if (name[i].length > 1) {
       includes.push(name[i][0])
-      name[i]
-        .slice(1,)
-        .map(x => drop.push(x))
+      name[i].slice(1).map(x => drop.push(x))
     } else {
       includes.push(name[i][0])
     }
