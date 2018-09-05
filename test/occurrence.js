@@ -32,6 +32,15 @@ describe('Get occurrence data any number of ways:', function () {
       .expect(200, done)
   })
 
+  it('Failing Canis test works:', function (done) {
+    api.get('v2.0/data/occurrence?taxonname=Canis&lower=true&limit=999999')
+      .set('Accept', 'application/json')
+      .expect(function (res) {
+        return Object.keys(res.body['data'][0]).length > 0;
+      })
+      .expect(200, done);
+  });
+
   it('Get occurrence by taxon:', function (done) {
     api.get('v2.0/data/taxa/12/occurrence')
       .set('Accept', 'application/json')
