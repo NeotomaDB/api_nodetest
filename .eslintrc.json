@@ -1,0 +1,2 @@
+{"extends": ["strongloop", "eslint-config-google"]
+}
