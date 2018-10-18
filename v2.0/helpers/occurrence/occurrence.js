@@ -5,6 +5,7 @@ var Terraformer = require('terraformer');
 var WKT = require('terraformer-wkt-parser');
 const path = require('path');
 var validate = require('../validateOut').validateOut
+var parseTaxa = require('../parsetaxa.js').parseTaxa
 
 // get global database object
 var db = require('../../../database/pgp_db');
@@ -55,8 +56,11 @@ function occurrencequery (req, res, next) {
   // The broader query:
 
   if (!!req.query.taxonname) {
-    var name = String(req.query.taxonname).toLowerCase().split(',')
-  };
+    // Split up the name into the accepts and the drops.
+    var name = parseTaxa(req.query.taxonname)
+  } else {
+    var name = {taxa: null, drop: null};
+  }
 
   // Get the input parameters:
   var outobj = {
@@ -79,7 +83,8 @@ function occurrencequery (req, res, next) {
       .map(function (item) {
         return parseInt(item, 10);
       }),
-    'taxonname': name,
+    'taxonname': name['taxa'],
+    'taxondrop': name['drop'],
     'lower': req.query.lower,
     'siteid': String(req.query.siteid)
       .split(',')
@@ -98,19 +103,15 @@ function occurrencequery (req, res, next) {
     'limit': req.query.limit
   };
 
-  console.log(outobj.taxonname);
-
   outobj = validate(outobj);
 
   if (!(typeof outobj.taxonname === 'undefined') & !outobj.taxonname === null) {
-    console.log(outobj.taxonname);
+    // Adding in or replacing any stars in the name to allow wildcards.
     outobj.taxonname = outobj.taxonname.map(function (x) {
       var gbg = x.replace(/\*/g, '%');
       return x.replace(/\*/g, '%')
     });
   }
-
-  console.log(outobj.taxonname);
 
   if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
     res.status(500)
@@ -159,6 +160,7 @@ function occurrencequery (req, res, next) {
     if (goodtaxa & goodlower & outobj.lower === 'true') {
       db.any(occurrencerecursquerysql, outobj)
         .then(function (data) {
+
           res.status(200)
             .json({
               status: 'success',

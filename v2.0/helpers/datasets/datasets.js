@@ -109,7 +109,9 @@ function datasetquery (req, res, next) {
     'gpid': parseInt(req.query.gpid),
     'ageyoung': parseInt(req.query.ageyoung),
     'ageold': parseInt(req.query.ageold),
-    'ageof': parseInt(req.query.ageold)
+    'ageof': parseInt(req.query.ageold),
+    'limit': parseInt(req.query.limit),
+    'offset':parseInt(req.query.offset)
   };
 
   outobj = validate(outobj);
