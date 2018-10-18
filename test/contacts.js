@@ -1,6 +1,6 @@
 var assert = require('assert');
-var should = require('chai').should();
-var expect = require('chai').expect;
+var describe = require('mocha').describe
+var it = require('mocha').it
 var supertest = require('supertest');
 var api = supertest('http://localhost:3000/');
 
@@ -17,7 +17,7 @@ describe('Get contact data:', function () {
       .expect(302, done);
   });
 
-  it('The default limit of 25 should be reached for contact data:', function(done) {
+  it('The default limit of 25 should be reached for contact data:', function (done) {
     api.get('v2.0/data/contacts/?contactstatus=retired')
       .set('Accept', 'application/json')
       .end(function (err, res) {
@@ -26,7 +26,7 @@ describe('Get contact data:', function () {
       });
 	});
 
-    it('The example in the swagger should return an object:', function(done) {
+    it('The example in the swagger should return an object:', function (done) {
     api.get('v2.0/data/contacts?familyname=Grimm&contactstatus=active&limit=25')
       .set('Accept', 'application/json')
       .end(function (err, res) {
@@ -53,7 +53,7 @@ describe('Get contact data:', function () {
 			done();
 		});
 	});
-	
+
 	it('A single contact (12) should be returned.', function(done) {
 		api.get('v2.0/data/contacts/12')
 		.set('Accept', 'application/json')
@@ -81,13 +81,12 @@ describe('Get contact data:', function () {
 		});
 	});
 
-	it('The length of returned contacts should be equivalent to the number of sites.', function(done) {
-		api.get('v2.0/data/datasets/102,1435,1,27/contacts')
-		.set('Accept', 'application/json')
-		.end(function (err, res) {
-			assert.equal(Object.keys(res.body.data).length, 4);
-			done();
-		});
-	});
-
+  it('The length of returned contacts should be equivalent to the number of sites.', function(done) {
+    api.get('v2.0/data/datasets/102,1435,1,27/contacts')
+      .set('Accept', 'application/json')
+      .end(function (err, res) {
+        assert.equal(Object.keys(res.body.data).length, 4);
+        done();
+      });
+  });
 });
