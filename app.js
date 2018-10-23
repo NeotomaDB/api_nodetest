@@ -1,4 +1,5 @@
 var express = require('express');
+var cors = require('cors');
 var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -6,6 +7,8 @@ var bodyParser = require('body-parser');
 var swaggerJSDoc = require('swagger-jsdoc');
 
 var app = express();
+
+app.use(cors());
 
 // swagger definition
 var swaggerDefinitionJson = require('./swaggerdefn.json');
@@ -99,12 +102,6 @@ app.use(function (err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
-});
-
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
 });
 
 app.all('*', function (req, res) {
