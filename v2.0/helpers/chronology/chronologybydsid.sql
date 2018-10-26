@@ -30,7 +30,7 @@ SELECT
   gc.infinite,
   gc.delta13c,
   atyg.agetype AS geochronagetype,
-  gc.notes,
+  gc.notes as gcnotes,
   gc.materialdated
 FROM                   ndb.chronologies AS chrs
   LEFT OUTER JOIN     ndb.chroncontrols AS chctrl ON chrs.chronologyid = chctrl.chronologyid

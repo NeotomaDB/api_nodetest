@@ -139,7 +139,7 @@ function chronologybydsid (req, res, next) {
                     'infinite': x['infinite'],
                     'delta13c': x['delta13c'],
                     'agetype': x['geochronagetype'],
-                    'notes': x['notes'],
+                    'notes': x['gcnotes'],
                     'materialdated': x['geochronagetype']
                   }
                 }
