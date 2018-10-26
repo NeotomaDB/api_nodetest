@@ -4,9 +4,9 @@ var pgp = db.$config.pgp;
 
 module.exports = {
 // RETURNING DATASETTYPES
-//  dataset: function (req, res, next) { 
+//  dataset: function (req, res, next) {
 //    var dataset = require('./helpers/datasets.js');
-//    dataset.datasetbyid(req, res, next); 
+//    dataset.datasetbyid(req, res, next);
   relativeagescales: relativeagescales
 };
 
@@ -15,10 +15,6 @@ module.exports = {
 /* All the Endpoint functions */
 
 function relativeagescales (req, res, next) {
-  // Get the query string:
-  var query = {};
-
-  // db.any('select ap.getdatasettypes();')
   db.query('select ndb.getrelativeagescales();')
     .then(function (data) {
       res.status(200)
