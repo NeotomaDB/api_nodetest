@@ -56,12 +56,35 @@ describe('Get publication data any number of ways:', function () {
       .expect(200, done);
   });
 
-    it('Get publication by site id:', function (done) {
+  it('Get publication by site id finds pubs for all sites:', function (done) {
     api.get('v2.0/data/sites/12,13,14,15/publications')
       .set('Accept', 'application/json')
       .expect(function (res) {
-        return res.body.data.length > 0;
+
+        const flatten = list => list.reduce(
+          (a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []
+        );
+        var sites = [12, 13, 14, 15]
+        var siteids = flatten(res.body.data.map(x => x.siteid))
+
+        return sites.every(x => siteids.includes(x));
       })
       .expect(200, done);
   });
+  it('Get publication by dataset id finds pubs for all datasets:', function (done) {
+    api.get('v2.0/data/datasets/12,13,2201,6000/publications')
+      .set('Accept', 'application/json')
+      .expect(function (res) {
+
+        const flatten = list => list.reduce(
+          (a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []
+        );
+        var datasets = [12, 6000, 13, 2201]
+        var datasetids = flatten(res.body.data.map(x => x.datasetid))
+
+        return datasets.every(x => datasetids.includes(x));
+      })
+      .expect(200, done);
+  });
+
 });

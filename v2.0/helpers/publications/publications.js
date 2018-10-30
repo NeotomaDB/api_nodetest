@@ -11,24 +11,27 @@ var validate = require('../validateOut').validateOut
 // Helper for linking to external query files:
 function sql (file) {
   const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath, {minify: true});
+  return new pgp.QueryFile(fullPath, { minify: true });
 }
 
 // Create a QueryFile globally, once per file:
 const pubbydsid = sql('./pubdsidquery.sql');
 const pubbystid = sql('./pubstidquery.sql');
 const pubquery = sql('./pubquery.sql');
-const rawpub  = sql('./raw_pubid.sql');
+const rawpub = sql('./raw_pubid.sql');
+
+/* By publication ID directly: .../v2.0/data/publications/1001 */
 
 function publicationid (req, res, next) {
   var pubIdUsed = !!req.params.pubid;
 
   if (pubIdUsed) {
-    var pubid = {pubid: String(req.params.pubid)
-      .split(',')
-      .map(function (item) {
-        return parseInt(item, 10);
-      })};
+    var pubid = {
+      pubid: String(req.params.pubid)
+        .split(',')
+        .map(function (item) {
+          return parseInt(item, 10);
+        }) };
   }
 
   db.any(rawpub, pubid)
@@ -46,6 +49,8 @@ function publicationid (req, res, next) {
       return next(err);
     });
 };
+
+/* To query by publication: */
 
 function publicationquery (req, res, next) {
   var outobj = {
@@ -92,7 +97,7 @@ function publicationquery (req, res, next) {
         res.status(200)
           .json({
             status: 'success',
-            data: {query: outobj, result: returner}
+            data: { query: outobj, result: returner }
           });
       })
       .catch(function (err) {
@@ -100,6 +105,8 @@ function publicationquery (req, res, next) {
       });
   };
 };
+
+/* To get publications by site: /v2.0/data/sites/1001/publications */
 
 function publicationbysite (req, res, next) {
   var siteIdUsed = !!req.params.siteid;
@@ -116,10 +123,24 @@ function publicationbysite (req, res, next) {
     .then(function (data) {
       var bibOutput = bib.formatpublbib(data);
 
+      /* This is a sequence I use to aggregate the publications by site */
       var returner = [];
+      var uniquepubs = bibOutput.map(x => x.publicationid).filter((x, i, a) => a.indexOf(x) === i)
 
-      for (var i = 0; i < data.length; i++) {
-        returner[i] = {siteid: data[i].siteid, publication: bibOutput[0]};
+      for (var i = 0; i < uniquepubs.length; i++) {
+        returner[i] = { 'publicationid': uniquepubs[i] }
+      }
+
+      for (i = 0; i < bibOutput.length; i++) {
+        var returnid = returner.map(x => x.publicationid).indexOf(bibOutput[i].publicationid)
+
+        if (!('title' in returner[returnid])) {
+          /* Using `title` as a placeholder for any record that hasn't been added. */
+          returner[returnid] = bibOutput[i]
+          returner[returnid].siteid = [returner[returnid].siteid]
+        } else {
+          returner[returnid]['siteid'].push(bibOutput[i].siteid);
+        }
       }
 
       res.status(200)
@@ -133,6 +154,8 @@ function publicationbysite (req, res, next) {
       next(err);
     });
 };
+
+/* To get publications by dataset: /v2.0/data/datasets/1001/publications */
 
 function publicationbydataset (req, res, next) {
   /*
@@ -149,6 +172,26 @@ function publicationbydataset (req, res, next) {
   db.any(pubbydsid, [datasetid])
     .then(function (data) {
       var bibOutput = bib.formatpublbib(data);
+
+      /* This is a sequence I use to aggregate the publications by site */
+      var returner = [];
+      var uniquepubs = bibOutput.map(x => x.publicationid).filter((x, i, a) => a.indexOf(x) === i)
+
+      for (var i = 0; i < uniquepubs.length; i++) {
+        returner[i] = { 'publicationid': uniquepubs[i] }
+      }
+
+      for (i = 0; i < bibOutput.length; i++) {
+        var returnid = returner.map(x => x.publicationid).indexOf(bibOutput[i].publicationid)
+
+        if (!('title' in returner[returnid])) {
+          /* Using `title` as a placeholder for any record that hasn't been added. */
+          returner[returnid] = bibOutput[i]
+          returner[returnid].datasetid = [returner[returnid].datasetid]
+        } else {
+          returner[returnid]['datasetid'].push(bibOutput[i].datasetid);
+        }
+      }
 
       res.status(200)
         .json({

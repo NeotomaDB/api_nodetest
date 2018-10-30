@@ -5,7 +5,8 @@ WITH stpub AS
   	ndb.dslinks AS sts
   	ON sts.datasetid = dp.datasetid
     WHERE ($1 IS NULL OR sts.siteid IN ($1:csv)))
-SELECT json_build_object('publicationid', pub.publicationid,
+SELECT DISTINCT jsonb_build_object('siteid', stpub.siteid,
+              'publicationid', pub.publicationid,
               'pubtypeid', pub.pubtypeid,
               'pubtype', pt.pubtype,
               'articletitle', pub.articletitle,
@@ -25,8 +26,7 @@ SELECT json_build_object('publicationid', pub.publicationid,
               'doi'       , pub.doi,
               'author', json_agg(json_build_object('familyname', ca.familyname,
                                                    'givennames', ca.givennames,
-                                                   'order', pa.authororder)),
-              'sites', COALESCE(json_agg(stpub.siteid), '[]')) AS publication
+                                                   'order', pa.authororder))) AS publication
 FROM
   ndb.publications AS pub
 INNER JOIN
@@ -36,5 +36,4 @@ INNER JOIN
 INNER JOIN stpub ON pub.publicationid = stpub.publicationid
 INNER JOIN
 	     ndb.publicationtypes AS pt  ON     pub.pubtypeid = pt.pubtypeid
-WHERE pub.publicationid IN (SELECT publicationid FROM stpub)
-GROUP BY pub.publicationid, pt.pubtype, ca.contactid
+GROUP BY pub.publicationid, pt.pubtype, stpub.siteid
