@@ -21,7 +21,7 @@ SELECT json_build_object(       'siteid', sts.siteid,
                                                                   'initials', cnt.leadinginitials),
                                   'agerange', json_build_object('ageyoung', agerange.younger,
                                                                   'ageold', agerange.older,
-                                                                   'units', agetypes.agetype)))) AS dataset
+                                                                   'units', agetypes.agetype))) AS dataset
 FROM
                             ndb.datasets AS dts
 LEFT OUTER JOIN      ndb.collectionunits AS clu      ON clu.collectionunitid = dts.collectionunitid
@@ -29,6 +29,8 @@ LEFT OUTER JOIN                ndb.sites AS sts      ON sts.siteid = clu.siteid
 LEFT OUTER JOIN         ndb.datasettypes AS dst      ON dst.datasettypeid = dts.datasettypeid
 LEFT OUTER JOIN           ndb.datasetdoi AS doi      ON dts.datasetid = doi.datasetid
 LEFT OUTER JOIN      ndb.collectiontypes AS cts      ON clu.colltypeid = cts.colltypeid
+LEFT OUTER JOIN           ndb.datasetpis AS dspi     ON dspi.datasetid = dts.datasetid
+LEFT OUTER JOIN             ndb.contacts AS cnt      ON cnt.contactid = dspi.contactid
 LEFT OUTER JOIN     ndb.datasetdatabases AS dsdb     ON dsdb.datasetid = dts.datasetid
 LEFT OUTER JOIN          ndb.dsageranges AS agerange ON dts.datasetid = agerange.datasetid
 LEFT OUTER JOIN             ndb.agetypes AS agetypes ON agetypes.agetypeid = agerange.agetypeid

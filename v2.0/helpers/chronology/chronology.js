@@ -7,6 +7,15 @@ const path = require('path');
 var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
+/* A function to remove null elements. */
+
+const removeEmpty = function (obj) {
+  Object.keys(obj).forEach(key => {
+    if (obj[key] && typeof obj[key] === 'object') removeEmpty(obj[key]);
+    else if (obj[key] == null) delete obj[key];
+  });
+};
+
 // Helper for linking to external query files:
 function sql (file) {
   const fullPath = path.join(__dirname, file);
@@ -18,7 +27,7 @@ const chronologybydsidsql = sql('./chronologybydsid.sql');
 const chronologybystidsql = sql('./chronologybystid.sql');
 
 function chronologybyid (req, res, next) {
-  if (!!req.params.chronologyid) {
+  if (!(req.params.chronologyid == null)) {
     var chronologyid = String(req.params.chronologyid).split(',').map(function (item) {
       return parseInt(item, 10);
     });
@@ -53,7 +62,7 @@ function chronologybyid (req, res, next) {
       res.status(200)
         .json({
           status: 'success',
-          data: data,
+          data: removeEmpty(data),
           message: 'Retrieved all tables'
         });
     })
@@ -64,7 +73,7 @@ function chronologybyid (req, res, next) {
 
 function chronologybydsid (req, res, next) {
 
-  if (!!req.params.datasetid) {
+  if (!(req.params.datasetid == null)) {
     var datasetid = String(req.params.datasetid).split(',').map(function (item) {
       return parseInt(item, 10);
     });

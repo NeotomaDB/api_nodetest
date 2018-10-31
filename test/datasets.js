@@ -20,6 +20,18 @@ describe('Get datasets any number of ways:', function () {
       })
       .expect(200, done);
   });
+  it('Get dataset from siteid gives us siteids back and datasets:', function (done) {
+    api.get('v2.0/data/sites/123/datasets')
+      .set('Accept', 'application/json')
+      .expect(function (res) {
+        return res.body['data'][0].site.siteid === 123;
+      })
+      .expect(function (res) {
+        return res.body['data'][0].dataset.length > 0;
+      })
+      .expect(200, done);
+  });
+
 
   // This takes 11 seconds, why?!
   this.timeout(15000);
