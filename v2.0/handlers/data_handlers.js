@@ -100,6 +100,10 @@ module.exports = {
     var dataset = require('../helpers/datasets/datasets.js');
     dataset.datasetquery(req, res, next);
   },
+  datasetsbysite: function (req, res, next) {
+    var dataset = require('../helpers/datasets/datasets.js');
+    dataset.datasetbysiteid(req, res, next);
+  },
   contactquery: function (req, res, next) {
     var contact = require('../helpers/contacts/contacts.js');
     contact.contactquery(req, res, next);
