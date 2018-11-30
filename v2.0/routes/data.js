@@ -327,8 +327,8 @@ router.get('/dbtables/:table', handlers.dbtables);
 *            $ref: '#/definitions/download'
 */
 
-router.get('/download/', handlers.download);
-router.get('/download/:datasetid', handlers.download);
+router.get('/download/', handlers.downloadbyid);
+router.get('/download/:datasetid', handlers.downloadbyid);
 
 /**
 * @swagger
