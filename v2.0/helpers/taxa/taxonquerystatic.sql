@@ -4,8 +4,8 @@ SELECT DISTINCT taxa.taxonid,
        ecg.ecolgroupid AS ecolgroup,
        taxa.taxagroupid AS taxagroup,
        taxa.highertaxonid,
-       CASE WHEN taxa.extinct = 0 THEN 'extant'
-            WHEN taxa.extinct = 1 THEN 'extinct'
+       CASE WHEN taxa.extinct = false THEN 'extant'
+            WHEN taxa.extinct = true THEN 'extinct'
        END AS status,
        taxa.publicationid AS publicationid,
        pub.citation AS publication
@@ -17,7 +17,7 @@ SELECT DISTINCT taxa.taxonid,
   ndb.publications AS pub ON pub.publicationid = taxa.publicationid
   LEFT OUTER JOIN
   ndb.taxagrouptypes AS tgt ON tgt.taxagroupid = taxa.taxagroupid
-  LEFT OUTER JOIN 
+  LEFT OUTER JOIN
   ndb.variables AS var ON var.taxonid = taxa.taxonid
   WHERE
   (${taxonid} IS NULL OR taxa.taxonid = ANY (${taxonid}))
