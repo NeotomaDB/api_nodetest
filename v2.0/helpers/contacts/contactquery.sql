@@ -5,6 +5,7 @@ SELECT
   cnt.givennames AS givennames,
   cst.contactstatus AS contactstatus,
   cnt.url AS url,
+  cnt.email AS email,
   cnt.address AS address
 FROM
   ndb.contacts AS cnt INNER JOIN

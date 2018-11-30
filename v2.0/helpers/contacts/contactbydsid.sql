@@ -1,9 +1,10 @@
-SELECT 
+SELECT
   json_agg(json_build_object('contactid', cnt.contactid,
 			                  'fullName', cnt.contactname,
-		                      'lastName', cnt.familyname, 
+		                      'lastName', cnt.familyname,
 			                 'firstName', cnt.givennames,
                                    'url', cnt.url,
+                                   'email', cnt.email,
                                'address', cnt.address)) AS contact,
   dspi.datasetid as datasetid
 FROM
