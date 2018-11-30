@@ -51,7 +51,7 @@ WHERE
  	(${datasettype} IS NULL OR dt.datasettype LIKE ${datasettype}) AND
  	     (${altmin} IS NULL OR sts.altitude > ${altmin})           AND
 	     (${altmax} IS NULL OR sts.altitude > ${altmax})           AND
-	        (${loc} IS NULL OR st_contains(ST_SetSRID(ST_GeomFromText(${loc}), 4326), sts.geom)) AND
+	        (${loc} IS NULL OR ST_Intersects(ST_GeogFromText(${loc}), sts.geog)) AND
 	   (${ageyoung} IS NULL OR
 		CASE WHEN  ages.ageyounger IS NOT NULL
 		     THEN (ages.ageyounger > ${ageyoung})

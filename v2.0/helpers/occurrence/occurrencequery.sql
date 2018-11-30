@@ -1,18 +1,18 @@
 SELECT
 	  data.dataid AS occid,
-	  json_build_object(    'taxonid', tx.taxonid, 
+	  json_build_object(    'taxonid', tx.taxonid,
 	  	                  'taxonname', tx.taxonname,
 	  	                      'value', data.value,
 	  	                'sampleunits', varu.variableunits) AS sample,
 	  json_build_object(        'age', ages.age,
-	  	                   'ageolder', ages.ageolder, 
+	  	                   'ageolder', ages.ageolder,
 	  	                 'ageyounger', ages.ageyounger) AS age,
-	  json_build_object(  'datasetid', ds.datasetid, 
-	  	                     'siteid', sts.siteid, 
-	  	                   'sitename', sts.sitename, 
-	                       'altitude', sts.altitude, 
-	                       'location', ST_AsGeoJSON(sts.geog,5,2), 
-	                    'datasettype', dt.datasettype, 
+	  json_build_object(  'datasetid', ds.datasetid,
+	  	                     'siteid', sts.siteid,
+	  	                   'sitename', sts.sitename,
+	                       'altitude', sts.altitude,
+	                       'location', ST_AsGeoJSON(sts.geog,5,2),
+	                    'datasettype', dt.datasettype,
 	                       'database', cdb.databasename) AS site
 	FROM
 	ndb.samples AS samples
@@ -21,7 +21,7 @@ SELECT
 	LEFT OUTER JOIN   ndb.variableunits AS varu    ON var.variableunitsid  = varu.variableunitsid
 	LEFT OUTER JOIN  ndb.samplekeywords AS sampkey ON samples.sampleid = sampkey.sampleid
 	LEFT OUTER JOIN         ndb.dslinks AS links   ON samples.datasetid = links.datasetid
-	LEFT OUTER JOIN        ndb.datasets AS ds      ON samples.datasetid = ds.datasetid 
+	LEFT OUTER JOIN        ndb.datasets AS ds      ON samples.datasetid = ds.datasetid
 	LEFT OUTER JOIN           ndb.sites AS sts     ON links.siteid = sts.siteid
 	LEFT OUTER JOIN      ndb.sampleages AS ages    ON ages.sampleid = samples.sampleid
 	LEFT OUTER JOIN ndb.taxa            AS tx      ON var.taxonid = tx.taxonid
@@ -39,13 +39,13 @@ WHERE
  	(${datasettype} IS NULL OR dt.datasettype LIKE   ${datasettype}) AND
  	     (${altmin} IS NULL OR sts.altitude   >      ${altmin})      AND
 	     (${altmax} IS NULL OR sts.altitude   >      ${altmax})      AND
-	        (${loc} IS NULL OR st_contains(ST_SetSRID(ST_GeomFromText(${loc}), 4326), sts.geom)) AND
-	   (${ageyoung} IS NULL OR 
-		CASE WHEN ages.ageyounger IS NOT NULL 
+	        (${loc} IS NULL OR ST_Intersects(ST_GeogFromText(${loc}), sts.geog)) AND
+	   (${ageyoung} IS NULL OR
+		CASE WHEN ages.ageyounger IS NOT NULL
 		     THEN (ages.ageyounger > ${ageyoung})
 		     ELSE (ages.age > ${ageyoung}) END) AND
-	  (${ageold} IS NULL OR 
-		CASE WHEN ages.ageolder IS NOT NULL 
+	  (${ageold} IS NULL OR
+		CASE WHEN ages.ageolder IS NOT NULL
 		     THEN (ages.ageolder < ${ageold})
 		     ELSE (ages.age < ${ageold}) END)
 OFFSET (CASE WHEN ${offset} IS NULL THEN 0
