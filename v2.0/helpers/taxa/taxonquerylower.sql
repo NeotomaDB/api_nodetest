@@ -1,8 +1,8 @@
 WITH RECURSIVE lowertaxa AS (SELECT
-              txa.taxonid, 
+              txa.taxonid,
               txa.highertaxonid
          FROM ndb.taxa AS txa
-        WHERE 
+        WHERE
           (${taxonname} IS NULL OR LOWER(txa.taxonname) LIKE ANY(${taxonname})) AND
           (${taxonid} IS NULL OR txa.taxonid = ANY (${taxonid}))
         UNION ALL
@@ -15,8 +15,8 @@ SELECT txa.taxonid,
        txa.author AS author,
        ecg.ecolgroupid AS ecolgroup,
        txa.highertaxonid,
-       CASE WHEN txa.extinct = 0 THEN 'extant'
-            WHEN txa.extinct = 1 THEN 'extinct'
+       CASE WHEN txa.extinct = False THEN 'extant'
+            WHEN txa.extinct = True THEN 'extinct'
        END AS status,
        txa.publicationid AS publicationid,
        pub.citation AS publication

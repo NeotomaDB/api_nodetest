@@ -89,25 +89,27 @@ function gettaxonquery (req, res, next) {
     taxonid = null;
   }
 
-  if (!!req.query.taxonname) { 
+  if (!!req.query.taxonname) {
     var name = String(req.query.taxonname).toLowerCase().split(',')
   };
-  if (!!req.query.taxagroup) { 
+  if (!!req.query.taxagroup) {
     var taxagroup = String(req.query.taxagroup).toLowerCase().split(',')
   };
-  if (!!req.query.ecolgroup) { 
+  if (!!req.query.ecolgroup) {
     var ecolgroup = String(req.query.ecolgroup).toLowerCase().split(',')
   };
 
   var outobj = {'taxonid': taxonid,
     'taxonname': name,
-    'status': req.query.status,
+    'status': req.query.status === 1,
     'taxagroup': taxagroup,
     'ecolgroup': ecolgroup,
     'lower': req.query.lower,
     'limit': req.query.limit,
     'offset': req.query.offset
   }
+
+  console.log(outobj);
 
   if (typeof outobj.taxonid === 'undefined') {
     outobj.taxonid = null;
