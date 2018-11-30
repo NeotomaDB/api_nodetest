@@ -134,23 +134,12 @@ module.exports = {
     var chronology = require('../helpers/chronology/chronology.js');
     chronology.chronologybystid(req, res, next);
   },
-
-  // DOWNLOADS
-  download: download
+  downloadbyid: function (req, res, next) {
+    var download = require('../helpers/download/download.js');
+    download.downloadbyid(req, res, next);
+  }
 
 };
-
-function download (req, res, next) {
-  // Get the query string:
-  var query = {};
-
-  res.status(200)
-    .json({
-      status: 'success',
-      query: query,
-      message: 'Retrieved chronology'
-    })
-}
 
 function chronology (req, res, next) {
   // Get the query string:
