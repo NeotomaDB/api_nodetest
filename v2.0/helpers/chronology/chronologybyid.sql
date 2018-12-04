@@ -1,14 +1,14 @@
-SELECT 
+SELECT
   json_build_object(   'chronologyid', chrs.chronologyid,
                             'agetype', aty.agetype,
+                               'modelType', chrs.agemodel,
                             'default', chrs.isdefault,
                      'chronologyName', chrs.chronologyname,
                        'datePrepared', chrs.dateprepared,
-                          'modelType', chrs.agemodel,
                   'chronologyagespan', json_build_object('younger', chrs.ageboundyounger,
                                                            'older', chrs.ageboundolder),
                     'chronologynotes', chrs.notes,
-                         'preparedby', json_build_object('contactid', cnt.contactid, 
+                         'preparedby', json_build_object('contactid', cnt.contactid,
                                                        'contactname', cnt.contactname,
                                                         'familyname', cnt.familyname,
                                                          'firstname', cnt.givennames,
@@ -33,8 +33,8 @@ FROM                   ndb.chronologies AS chrs
   LEFT OUTER JOIN           ndb.dslinks AS dsl    ON chrs.collectionunitid = dsl.collectionunitid
   LEFT OUTER JOIN          ndb.agetypes AS aty    ON chrs.agetypeid = aty.agetypeid
   LEFT OUTER JOIN          ndb.datasets AS dts    ON dsl.datasetid = dts.datasetid
-  LEFT OUTER JOIN      ndb.datasettypes AS dty    ON dts.datasettypeid = dty.datasettypeid 
-  LEFT OUTER JOIN        ndb.sampleages AS smpage ON chrs.chronologyid = smpage.chronologyid 
+  LEFT OUTER JOIN      ndb.datasettypes AS dty    ON dts.datasettypeid = dty.datasettypeid
+  LEFT OUTER JOIN        ndb.sampleages AS smpage ON chrs.chronologyid = smpage.chronologyid
   LEFT OUTER JOIN           ndb.samples AS smp    ON smpage.sampleid = smp.sampleid AND dts.datasetid = smp.datasetid
   LEFT OUTER JOIN          ndb.contacts AS cnt    ON cnt.contactid = chrs.contactid
 WHERE    chrs.chronologyid IN ($1:csv)
