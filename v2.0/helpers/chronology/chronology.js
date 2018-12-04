@@ -118,10 +118,10 @@ function chronologybydsid (req, res, next) {
 
             dataSets[i]['chronologies'][j] = { 'chronologyid': chronset[0]['chronologyid'],
               agetype: chronset[0]['modelagetype'],
+              agemodel: chronset[0]['agemodel'],
               isdefault: chronset[0]['isdefault'],
               chronologyname: chronset[0]['chronologyname'],
               dateprepared: chronset[0]['dateprepared'],
-              modeltype: chronset[0]['modeltype'],
               chronologynotes: chronset[0]['chronologynotes'],
               chronologyagepan: { younger: chronset[0]['ageboundyounger'],
                 older: chronset[0]['ageboundolder'] },
@@ -171,18 +171,17 @@ function chronologybydsid (req, res, next) {
 }
 
 function chronologybystid (req, res, next) {
-
   if (!!req.params.siteid) {
-    var siteid = String(req.params.siteid).split(',').map(function(item) {
+    var siteid = String(req.params.siteid).split(',').map(function (item) {
       return parseInt(item, 10);
     });
   } else {
     res.status(500)
-        .json({
-          status: 'failure',
-          data: null,
-          message: 'Must pass either queries or an integer sequence.'
-        });
+      .json({
+        status: 'failure',
+        data: null,
+        message: 'Must pass either queries or an integer sequence.'
+    });
   };
 
   db.any(chronologybystidsql, [siteid])
