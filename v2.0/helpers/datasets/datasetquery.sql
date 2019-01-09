@@ -1,5 +1,4 @@
 SELECT
-
   json_build_object(       'siteid', sts.siteid,
                          'sitename', sts.sitename,
                   'sitedescription', sts.sitedescription,
