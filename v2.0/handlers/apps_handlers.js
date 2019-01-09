@@ -66,20 +66,20 @@ function taxaindatasets (req, res, next) {
       var arrMs = test.map(function (elem) {
         var strLen = elem.gettaxaindatasets.length;
         var d = elem;
-        var str = d.gettaxaindatasets.slice(1,strLen-1); 
-        var a = str.split(","); 
-        var obj = {}; 
+        var str = d.gettaxaindatasets.slice(1,strLen-1);
+        var a = str.split(",");
+        var obj = {};
         obj.TaxonName = a[1];
         obj.TaxonID = +a[0];
         obj.TaxaGroupID = a[2];
         //obj.DatasetTypeID = +a[3];
-        obj.DatasetTypesIDs = [+a[3]]; 
+        obj.DatasetTypesIDs = [+a[3]];
         console.log(typeof obj.DatasetTypesIDs);
         console.log("length of obj.DatasetTypesIDs "+obj.DatasetTypesIDs);
         console.log(obj.TaxonName +":"+obj.TaxonID +":"+obj.TaxaGroupID +":"+obj.DatasetTypesIDs[0])
-        return obj; 
+        return obj;
       });
-      
+
       console.log("result array length: " + arrMs.length);
 
       //var arrMs = arrM.slice(0,4);
@@ -102,7 +102,7 @@ function taxaindatasets (req, res, next) {
 
         var aggObj = d;//d.DatasetTypesIDs;
         aggObj.DatasetTypesIDs = tmpAgg;//tmpAgg.DatasetTypesIDs;
-        
+
           return aggObj;
       });
 
@@ -143,7 +143,7 @@ function taxagrouptypes(req, res, next) {
 
 }
 
-function keywords(req, res, next) {
+function keywords (req, res, next) {
   // Get the query string:
   var query = {};
 
@@ -163,11 +163,11 @@ function keywords(req, res, next) {
 
 }
 
-function authorpis(req, res, next) {
+function authorpis (req, res, next) {
   // Get the query string:
   var query = {};
 
-   db.query('select ap.getpeople();')
+   db.query ('select ap.getpeople();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -181,7 +181,7 @@ function authorpis(req, res, next) {
     });
   }
 
-function taphonomysystems(req, res, next) {
+function taphonomysystems (req, res, next) {
   // Get the query string:
   var datasetTypeId = req.query.datasetTypeId;
 
@@ -209,7 +209,7 @@ function taphonomysystems(req, res, next) {
 
 }
 
-function depositionalenvironments(req, res, next) {
+function depositionalenvironments (req, res, next) {
   // Get the query string:
   var query = {};
 

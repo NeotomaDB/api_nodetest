@@ -4,6 +4,10 @@
 
 // Defining the query functions:
 module.exports = {
+  frozen: function (req, res, next) {
+    var frozen = require('../helpers/frozendata/frozen.js');
+    frozen.frozenbyid(req, res, next);
+  },
   dbtables: function (req, res, next) {
     var dbtable = require('../helpers/dbtables/dbtables.js');
     dbtable.dbtables(req, res, next);

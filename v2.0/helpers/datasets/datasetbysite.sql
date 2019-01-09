@@ -14,6 +14,7 @@ SELECT json_build_object(       'siteid', sts.siteid,
                                'datasetnotes', dts.notes,
                                    'database', cstdb.databasename,
                                         'doi', doi.doi,
+                                        'submission', 
                                   'datasetpi', json_build_object('contactid', cnt.contactid,
                                                                'contactname', cnt.contactname,
                                                                 'familyname', cnt.familyname,
@@ -35,6 +36,7 @@ LEFT OUTER JOIN     ndb.datasetdatabases AS dsdb     ON dsdb.datasetid = dts.dat
 LEFT OUTER JOIN          ndb.dsageranges AS agerange ON dts.datasetid = agerange.datasetid
 LEFT OUTER JOIN             ndb.agetypes AS agetypes ON agetypes.agetypeid = agerange.agetypeid
 LEFT OUTER JOIN ndb.constituentdatabases AS cstdb    ON dsdb.databaseid = cstdb.databaseid
+JOIN             ndb.datasetsubmissions  AS dsm      ON dts.datasetid = dsm.datasetid
 WHERE
 sts.siteid = ANY ($1)
 GROUP BY sts.siteid, clu.collectionunitid, cts.colltype;

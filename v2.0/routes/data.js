@@ -259,6 +259,9 @@ router.get('/datasets/', handlers.datasetquery);
 router.get('/datasets/:datasetid', handlers.datasetbyid);
 router.get('/sites/:siteid/datasets', handlers.datasetsbysite); // Takes integers, including comma separated
 
+router.get('/frozen/:datasetid', handlers.frozen);
+
+
 // router.get('/publications/:pubid/datasets', handlers.datasetsbypub);
 // router.get('/contacts/:contactid/datasets', handlers.datasetsbycontact);
 
