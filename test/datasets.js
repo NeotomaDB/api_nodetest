@@ -9,6 +9,17 @@ var api = supertest('http://localhost:3000/');
 //
 
 describe('Get datasets any number of ways:', function () {
+  it('Asking for the datasets associated with Lake Tulane work:', function (done) {
+    api.get('v2.0/data/sites/2570/datasets')
+      .set('Accept', 'application/json')
+      .expect(function (res) {
+        return Object.keys(res.body['data'][0]).includes("site", "dataset");
+      })
+      .expect(function (res) {
+        return res.body['data'][0].site.siteid === 2570;
+      })
+      .expect(200, done);
+  });
   it('Get dataset by singular id & return same id:', function (done) {
     api.get('v2.0/data/datasets/12')
       .set('Accept', 'application/json')
