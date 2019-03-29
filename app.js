@@ -5,10 +5,18 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var swaggerJSDoc = require('swagger-jsdoc');
+var morgan = require('morgan');
+var fs = require('fs');
 
 var app = express();
 
 app.use(cors());
+
+// create a write stream (in append mode)
+var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+
+// setup the logger
+app.use(morgan(':date[iso]\t:remote-addr\t:method\t:url\t:status\t:res[content-length]\t:response-time[0]\t:user-agent', { stream: accessLogStream }))
 
 // swagger definition
 var swaggerDefinitionJson = require('./swaggerdefn.json');
