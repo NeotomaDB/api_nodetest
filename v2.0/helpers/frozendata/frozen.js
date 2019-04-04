@@ -6,7 +6,7 @@ var pgp = db.$config.pgp;
 function frozenbyid (req, res, next) {
   var datasetid = String(req.params.datasetid)
   console.log(datasetid)
-  db.any('SELECT record FROM doi.frozen WHERE datasetid = $1', [datasetid])
+  db.any('SELECT download FROM doi.frozen WHERE datasetid = $1', [datasetid])
     .then(function (data) {
       if (data.length === 0) {
         // We're returning the structure, but nothing inside it:
