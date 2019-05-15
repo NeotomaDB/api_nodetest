@@ -5,19 +5,18 @@ var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 var validate = require('../validateOut').validateOut
 
-var Terraformer = require('terraformer');
-var WKT = require('terraformer-wkt-parser');
-
-
-const datasetquerysql = sql('./datasetquery.sql');
-const datasetbyidsql = sql('./datasetbyid.sql');
-const datasetbysite = sql('./datasetbysite.sql');
-
 // Helper for linking to external query files:
 function sql (file) {
   const fullPath = path.join(__dirname, file);
   return new pgp.QueryFile(fullPath, {minify: true});
 }
+
+var Terraformer = require('terraformer');
+var WKT = require('terraformer-wkt-parser');
+
+const datasetquerysql = sql('./datasetquery.sql');
+const datasetbyidsql = sql('./datasetbyid.sql');
+const datasetbysite = sql('./datasetbysite.sql');
 
 function datasetbyid (req, res, next) {
   var dsIdUsed = !!req.params.datasetid;
