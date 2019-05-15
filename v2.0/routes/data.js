@@ -958,4 +958,7 @@ router.get('/chronology/:chronologyid', handlers.chronologybyid);
 router.get('/datasets/:datasetid/chronology', handlers.chronologybydsid);
 router.get('/sites/:siteid/chronology', handlers.chronologybystid);
 
+router.get('/summary/dstypemonth/', handlers.dstypemonth);
+router.get('/summary/dsdbmonth/', handlers.dsdbmonth);
+
 module.exports = router;

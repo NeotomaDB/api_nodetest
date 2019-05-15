@@ -141,7 +141,17 @@ module.exports = {
   downloadbyid: function (req, res, next) {
     var download = require('../helpers/download/download.js');
     download.downloadbyid(req, res, next);
-  }
+  },
+
+  // SUMMARIES
+  dstypemonth: function (req, res, next) {
+    var summaries = require('../helpers/summary/summary.js');
+    summaries.datasettypesbymonths(req, res, next);
+  },
+  dsdbmonth: function (req, res, next) {
+    var summaries = require('../helpers/summary/summary.js');
+    summaries.datasetdbsbymonths(req, res, next);
+  },
 
 };
 
