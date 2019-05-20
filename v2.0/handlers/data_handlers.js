@@ -152,7 +152,10 @@ module.exports = {
     var summaries = require('../helpers/summary/summary.js');
     summaries.datasetdbsbymonths(req, res, next);
   },
-
+  rawbymonth: function (req, res, next) {
+    var summaries = require('../helpers/summary/summary.js');
+    summaries.rawbymonth(req, res, next);
+  },
 };
 
 function chronology (req, res, next) {
