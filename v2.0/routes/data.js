@@ -960,5 +960,6 @@ router.get('/sites/:siteid/chronology', handlers.chronologybystid);
 
 router.get('/summary/dstypemonth/', handlers.dstypemonth);
 router.get('/summary/dsdbmonth/', handlers.dsdbmonth);
+router.get('/summary/rawbymonth/', handlers.rawbymonth);
 
 module.exports = router;
