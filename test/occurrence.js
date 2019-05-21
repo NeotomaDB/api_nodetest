@@ -12,7 +12,7 @@ describe('Get occurrence data any number of ways:', function () {
   this.timeout(15000);
 
   it('Get occurrence by singular id & return same id:', function (done) {
-    api.get('v2.0/data/occurrence/12')
+    api.get('v2.0/data/occurrences/12')
       .set('Accept', 'application/json')
       .expect(function (res) {
         return Object.keys(res.body['data'][0]).length > 0;
@@ -24,7 +24,7 @@ describe('Get occurrence data any number of ways:', function () {
   });
 
   it('Get the Flyover test call:', function (done) {
-    api.get('v2.0/data/occurrence?taxonname=rhinocerotidae,megacerops,moeritherium,ceratogaulus,gomphotherium,deinotherium,condylarthra,paraceratherium,mesonychia,pantodonta,hyaenodon,thylacosmilus,glyptodon,castoroides,toxodon,megatherium,arctodus,smilodon,mammuthus,mammut,coelodonta,megaloceras,gigantopithecus,phlegethontia,temnospondyli,lepospondyli,ichthyosauria,sauropterygia,mosasauroidea,pterosauromorpha,titanoboa,megalania,placodus,tanystropheidae,hyperodapedon,stagonolepis,scutosaurus,pareiasauria,archelon,stupendemys,protostega,placodermi,leedsichthys,onychodontiformes,acanthostega,ichthyostega,crassigyrinus,ornithosuchus,erpetosuchidae,protosuchus,dakosaurus,geosaurus,deinosuchus&lower=true&limit=999999&loc=POLYGON((-122.56 39.94,-115.21 41.96,-107.99 43.42,-100.51 44.41,-92.85 44.91,-83.49 44.84,-74.25 44.02,-70.19 43.38,-69.36 42.75,-69.02 41.76,-69.13 41.07,-69.5 40.47,-70.07 40.06,-70.75 39.9,-78.36 40.86,-85.79 41.33,-93.27 41.3,-100.68 40.78,-105.86 40.12,-111.42 39.12,-116.79 37.86,-122.28 36.29,-122.98 36.35,-123.61 36.67,-124.06 37.21,-124.27 37.88,-124.21 38.58,-123.89 39.2,-123.35 39.65,-122.56 39.94))')
+    api.get('v2.0/data/occurrences?taxonname=rhinocerotidae,megacerops,moeritherium,ceratogaulus,gomphotherium,deinotherium,condylarthra,paraceratherium,mesonychia,pantodonta,hyaenodon,thylacosmilus,glyptodon,castoroides,toxodon,megatherium,arctodus,smilodon,mammuthus,mammut,coelodonta,megaloceras,gigantopithecus,phlegethontia,temnospondyli,lepospondyli,ichthyosauria,sauropterygia,mosasauroidea,pterosauromorpha,titanoboa,megalania,placodus,tanystropheidae,hyperodapedon,stagonolepis,scutosaurus,pareiasauria,archelon,stupendemys,protostega,placodermi,leedsichthys,onychodontiformes,acanthostega,ichthyostega,crassigyrinus,ornithosuchus,erpetosuchidae,protosuchus,dakosaurus,geosaurus,deinosuchus&lower=true&limit=999999&loc=POLYGON((-122.56 39.94,-115.21 41.96,-107.99 43.42,-100.51 44.41,-92.85 44.91,-83.49 44.84,-74.25 44.02,-70.19 43.38,-69.36 42.75,-69.02 41.76,-69.13 41.07,-69.5 40.47,-70.07 40.06,-70.75 39.9,-78.36 40.86,-85.79 41.33,-93.27 41.3,-100.68 40.78,-105.86 40.12,-111.42 39.12,-116.79 37.86,-122.28 36.29,-122.98 36.35,-123.61 36.67,-124.06 37.21,-124.27 37.88,-124.21 38.58,-123.89 39.2,-123.35 39.65,-122.56 39.94))')
       .set('Accept', 'application/json')
       .expect(function (res) {
         return Object.keys(res.body['data'][0]).length > 0;
@@ -33,7 +33,7 @@ describe('Get occurrence data any number of ways:', function () {
   })
 
   it('Failing Canis test works:', function (done) {
-    api.get('v2.0/data/occurrence?taxonname=Canis&lower=true&limit=999999')
+    api.get('v2.0/data/occurrences?taxonname=Canis&lower=true&limit=999999')
       .set('Accept', 'application/json')
       .expect(function (res) {
         return Object.keys(res.body['data'][0]).length > 0;
@@ -42,7 +42,7 @@ describe('Get occurrence data any number of ways:', function () {
   });
 
   it('Get occurrence by taxon:', function (done) {
-    api.get('v2.0/data/taxa/12/occurrence')
+    api.get('v2.0/data/taxa/12/occurrences')
       .set('Accept', 'application/json')
       .expect(function (res) {
         return Object.keys(res.body['data'][0]).length > 0;
@@ -51,19 +51,19 @@ describe('Get occurrence data any number of ways:', function () {
   });
 
   it('Break occurrences by flipping altitudes:', function (done) {
-    api.get('v2.0/data/occurrence/?altmax=3000&altmin=5000')
+    api.get('v2.0/data/occurrences/?altmax=3000&altmin=5000')
       .set('Accept', 'application/json')
       .expect(500, done);
   });
 
   it('Break occurrences by flipping ages:', function (done) {
-    api.get('v2.0/data/occurrence/?ageyoung=5000&ageold=3000')
+    api.get('v2.0/data/occurrences/?ageyoung=5000&ageold=3000')
       .set('Accept', 'application/json')
       .expect(500, done);
   });
 
   it('Occurrences filter by age:', function (done) {
-    api.get('v2.0/data/occurrence/?ageyoung=3000&ageold=5000')
+    api.get('v2.0/data/occurrences/?ageyoung=3000&ageold=5000')
       .set('Accept', 'application/json')
       .expect(function (res) {
 
@@ -72,7 +72,7 @@ describe('Get occurrence data any number of ways:', function () {
   });
 
   it('Get occurrences with comma separated fields:', function (done) {
-    api.get('v2.0/data/occurrence/?siteid=12,13,14,15&taxonname=Betula&limit=200')
+    api.get('v2.0/data/occurrences/?siteid=12,13,14,15&taxonname=Betula&limit=200')
       .set('Accept', 'application/json')
       .expect(function (res) {
         var allSite = res.body['data'];
@@ -87,7 +87,7 @@ describe('Get occurrence data any number of ways:', function () {
   });
 
   it('Get occurrences with comma separated taxa:', function (done) {
-    api.get('v2.0/data/occurrence/?taxonname=Picea,Abies&limit=25')
+    api.get('v2.0/data/occurrences/?taxonname=Picea,Abies&limit=25')
       .set('Accept', 'application/json')
       .expect(function (res) {
         return (res.body.data.length > 0);
@@ -96,7 +96,7 @@ describe('Get occurrence data any number of ways:', function () {
   });
 
   it('Get hierarchical occurrences with comma separated taxa:', function (done) {
-    api.get('v2.0/data/occurrence/?taxonname=Picea,Abies&limit=25&lower=true')
+    api.get('v2.0/data/occurrences/?taxonname=Picea,Abies&limit=25&lower=true')
       .set('Accept', 'application/json')
       .expect(function (res) {
         return (res.body.data.length > 0);
@@ -105,7 +105,7 @@ describe('Get occurrence data any number of ways:', function () {
   });
 
   it('Get occurrences returns lower taxa:', function (done) {
-    api.get('v2.0/data/occurrence/?taxonname=Myrica&lower=true&limit=200')
+    api.get('v2.0/data/occurrences/?taxonname=Myrica&lower=true&limit=200')
       .set('Accept', 'application/json')
       .expect(function (res) {
         var allTaxa = res.body['data'];
@@ -120,7 +120,7 @@ describe('Get occurrence data any number of ways:', function () {
   });
 
   it('Get occurrences with mammals and lower taxa works:', function (done) {
-    api.get('v2.0/data/occurrence/?taxonname=Homo&lower=true&limit=25')
+    api.get('v2.0/data/occurrences/?taxonname=Homo&lower=true&limit=25')
       .set('Accept', 'application/json')
       .expect(function (res) {
         var allTaxa = res.body['data'];
@@ -135,7 +135,7 @@ describe('Get occurrence data any number of ways:', function () {
   });
 
   it('Get occurrences using taxon and age bounds:', function (done) {
-    api.get('v2.0/data/occurrence/?ageyoung=2000&ageold=3000&taxonname=Pinus')
+    api.get('v2.0/data/occurrences/?ageyoung=2000&ageold=3000&taxonname=Pinus')
       .set('Accept', 'application/json')
       .expect(function (res) {
         return Object.keys(res.body['data'][0]).length > 0;
