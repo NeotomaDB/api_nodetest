@@ -4,7 +4,10 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var swaggerJSDoc = require('swagger-jsdoc');
+// var swaggerJSDoc = require('swagger-jsdoc');
+const YAML = require('yamljs');
+var swaggerUi = require('swagger-ui-express'),
+  swaggerDocument = YAML.load('./swagger.yaml');
 var morgan = require('morgan');
 var fs = require('fs');
 
@@ -18,8 +21,14 @@ var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {
 // setup the logger
 app.use(morgan(':date[iso]\t:remote-addr\t:method\t:url\t:status\t:res[content-length]\t:response-time[0]\t:user-agent', { stream: accessLogStream }))
 
+var options = {
+  swaggerUrl: 'http://localhost:3000/api-docs'
+}
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 // swagger definition
-var swaggerDefinitionJson = require('./swaggerdefn.json');
+// var swaggerDefinitionJson = require('./swaggerdefn.json');
 
 /*
  It's not clear how to support multiple API versions in swagger UI.
@@ -33,6 +42,7 @@ var swaggerDefinitionJson = require('./swaggerdefn.json');
  middleware prior to the versioned routing.
 */
 
+/*
 // options for the swagger docs
 var options = {
   // import swaggerDefinitions
@@ -40,9 +50,10 @@ var options = {
   // path to the API docs
   apis: ['./v1.5/routes/*.js', './v2.0/routes/*.js']
 };
+*/
 
 // initialize swagger-jsdoc
-var swaggerSpec = swaggerJSDoc(options);
+//var swaggerSpec = swaggerJSDoc(options);
 
 // Locations of files:
 
