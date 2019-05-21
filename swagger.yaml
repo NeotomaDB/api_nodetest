@@ -1,0 +1,1520 @@
+openapi: 3.0.1
+servers:
+  - url: 'http://api-dev.neotomadb.org/'
+    description: Neotoma development server.
+  - url: 'http://api.neotomadb.org/'
+    description: Neotoma production server.
+info:
+  title: Neotoma API
+  version: "2.0-oas3"
+  description: API Documentation for the Neotoma Paleoecological Database
+  termsOfService: 'no'
+  contact:
+    name: Simon J Goring
+    email: goring@wisc.edu
+    url: 'http://goring.org'
+  license:
+    name: MIT
+    url: 'https://opensource.org/licenses/MIT'
+paths:
+  /v1.5/apps/collectionTypes:
+    get:
+      tags: ['sample types', 'collection types']
+      summary: Return the list of collection types.
+      responses:
+        '200':
+          description: Definition generated from Swagger Inspector
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schema/collectionTypes'
+  /v1.5/apps/DatasetTypes:
+    get:
+      tags: ['dataset types']
+      responses:
+        '200':
+          description: Definition generated from Swagger Inspector
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schema/datasetTypes'
+  /v1.5/apps/TaxaInDatasets:
+    get:
+      summary: List the taxa in datasets.
+      responses:
+        '200':
+          description: Definition generated from Swagger Inspector
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schema/taxaInDatasets'
+  /v1.5/data/chronology/{chronid}:
+    get:
+      tags: ['chronologies']
+      summary: Chronology metadata for a dataset.
+      description: >-
+        Returns the chronology and chronological controls used for a dataset age
+        model.
+      parameters:
+        - $ref: '#/components/parameters/chronidPath'
+      responses:
+        '200':
+          description: Chronology
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schema/chronology'
+  /v1.5/data/contacts/{contactid}:
+    get:
+      tags: ['Contact metadata']
+      summary: Contact information for Neotoma contributors.
+      description: Returns researcher contact information associated with a record.
+      parameters:
+        - name: contactid
+          description: Unique contact identifier.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Contact
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schema/contact'
+  /v1.5/data/datasets/{datasetid}:
+    get:
+      tags: ['Dataset Metadata']
+      summary: Dataset information.
+      description: Returns information about Neotoma dataset
+      parameters:
+        - $ref: '#/components/parameters/datasetidPath'
+      responses:
+        '200':
+          description: An array of datasets.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/dataset'
+  /v1.5/data/datasets:
+    get:
+      tags: ['Dataset Metadata']
+      summary: Dataset information.
+      description: Returns information about Neotoma dataset
+      parameters:
+        - $ref: '#/components/parameters/datasetidQuery'
+        - $ref: '#/components/parameters/siteidQuery'
+      responses:
+        '200':
+          description: An array of datasets.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/dataset'
+  /v1.5/data/download/{datasetid}:
+    get:
+      tags: ['data download']
+      summary: Returns the named Neotoma Database table.
+      description: Returns the named Neotoma Database table.
+      parameters:
+        - $ref: '#/components/parameters/datasetidPath'
+      responses:
+        '200':
+          description: Returned download object.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/download'
+  /v1.5/data/geopoliticalunits/{gpid}:
+    get:
+      tags: ['Political']
+      summary: Returns information about geopolitical units.
+      parameters:
+        - name: gpid
+          in: path
+          description: Numeric ID for the geopolitical unit.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: An array of geopolitical units.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/geopolitical'
+  /v1.5/data/geopoliticalunits/:
+    get:
+      tags: ['Political']
+      summary: Returns information about geopolitical units.
+      parameters:
+        - name: gpid
+          in: query
+          description: Numeric ID for the geopolitical unit.
+          required: false
+          schema:
+            type: integer
+        - name: gpname
+          in: query
+          description: Name of the geopolitical unit.
+          required: false
+          schema:
+            type: string
+        - name: rank
+          in: query
+          description: 'The unit rank.  Ranges from 1 (country) - 4 (e.g., parks).'
+          required: false
+          schema:
+            type: integer
+        - name: lower
+          in: query
+          description: Should all lower ranked units below the target unit be returned?
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: An array of geopolitical units.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/geopolitical'
+  /v1.5/data/occurrence/{taxonid}:
+    get:
+      tags: ['Occurrence']
+      summary: Occurrence information for a taxon and sample.
+      description: >-
+        Given a unique taxon identifier associated with a taxon in Neotoma, return individual occurrence information for a particular sample.
+      parameters:
+        - $ref: '#/components/parameters/taxonidPath'
+      responses:
+        '200':
+          description: A taxon or array of taxa.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/occurrence'
+  /v1.5/data/occurrence:
+    get:
+      tags: ['Occurrence']
+      summary: Occurrence information for a taxon and sample.
+      description: >-
+        Given a set of query parameters, return individual occurrence
+        information for a particular sample.
+      parameters:
+        - name: taxonname
+          description: Taxon name or partial name.
+          in: query
+          required: false
+          schema:
+            type: string
+        - $ref: '#/components/parameters/datasetidQuery'
+        - $ref: '#/components/parameters/siteidQuery'
+      responses:
+        '200':
+          description: A taxon or array of taxa.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/occurrence'
+  /v1.5/data/pollen/{taxonid}:
+    get:
+      summary: Pollen data from Neotoma.
+      description: Returns information about pollen.
+      parameters:
+        - $ref: '#/components/parameters/taxonidPath'
+      responses:
+        '200':
+          description: A pollen response.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/pollen'
+  /v1.5/data/pollen:
+    get:
+      summary: Pollen data from Neotoma.
+      description: Returns information about pollen.
+      parameters:
+        - name: taxonname
+          description: 'Name of the taxon, can include wildcards.'
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: nametype
+          description: Not sure.
+          in: query
+          required: false
+          schema:
+            type: string
+        - $ref: '#/components/parameters/taxonidQuery'
+        - name: ageyoung
+          description: 'Most recent age, in calendar years before present.'
+          in: query
+          required: false
+          schema:
+            type: number
+            format: float
+        - name: ageold
+          description: 'Oldest age, in calendar years before present.'
+          in: query
+          required: false
+          schema:
+            type: number
+            format: float
+        - name: agedocontain
+        - name: coords
+        - name: bbox
+        - name: wkt
+        - name: sitename
+          description: Name of site for pollen record.
+          in: query
+          required: false
+          schema:
+            type: string
+        - $ref: '#/components/parameters/siteidQuery'
+        - name: format
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/offsetParam'
+        - name: fields
+        - name: vocab
+        - name: occurrences
+      responses:
+        '200':
+          description: A pollen response.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/pollen'
+  /v1.5/data/publication/{pubid}:
+    get:
+      summary: Returns information about Neotoma publications
+      description: Returns information about Neotoma publications
+      parameters:
+        - name: pubid
+          description: Numeric ID for publications.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: An array of geopolitical units.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/publication'
+  /v1.5/data/publication:
+    get:
+      summary: Returns information about Neotoma publications
+      description: Returns information about Neotoma publications
+      parameters:
+        - $ref: '#/components/parameters/datasetidQuery'
+        - $ref: '#/components/parameters/siteidQuery'
+      responses:
+        '200':
+          description: An array of geopolitical units.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/publication'
+  /v1.5/data/sites/{siteid}:
+    get:
+      summary: Site information.
+      description: Returns information about Neotoma publications
+      parameters:
+        - $ref: '#/components/parameters/siteidPath'
+      responses:
+        '200':
+          description: An array of site elements.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/sites'
+  /v1.5/data/sites:
+    get:
+      summary: Site information.
+      description: Returns information about Neotoma publications
+      parameters:
+        - $ref: '#/components/parameters/datasetidQuery'
+        - $ref: '#/components/parameters/siteidQuery'
+      responses:
+        '200':
+          description: An array of geopolitical units.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/sites'
+  /v1.5/data/taxa:
+    get:
+      summary: Taxonomic information.
+      description: Returns information about a taxon and (if requested) related taxa.
+      parameters:
+        - $ref: '#/components/parameters/taxonidQuery'
+        - name: taxonname
+          description: Taxon name or partial name.
+          in: query
+          required: false
+          schema:
+            type: string
+        - $ref: '#/components/parameters/datasetidQuery'
+        - $ref: '#/components/parameters/siteidQuery'
+      responses:
+        '200':
+          description: A taxon or array of taxa.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/taxa'
+  /v1.5/dbtables/{table}:
+    get:
+      summary: Returns the named Neotoma Database table.
+      description: Returns the named Neotoma Database table.
+      parameters:
+        - name: table
+          description: Table name.
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returned table.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/dbtables'
+  /v2.0/apps/collectionTypes:
+    get:
+      parameters:
+        - name: callback
+          in: query
+          description: jsonp callback function
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Definition generated from Swagger Inspector
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schema/collectionTypes'
+  /v2.0/data/chronology/{chronid}:
+    get:
+      tags: ['chronologies']
+      summary: Chronology metadata for a dataset.
+      description: >-
+        Returns the chronology and chronological controls used for a dataset age
+        model.
+      parameters:
+        - $ref: '#/components/parameters/chronidPath'
+      responses:
+        '200':
+          description: Chronology
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schema/chronology'
+  /v2.0/data/contacts:
+    get:
+      tags: ['Contact metadata']
+      summary: Contact information for Neotoma contributors.
+      description: Returns researcher contact information associated with a record.
+      parameters:
+        - name: contactid
+          description: >-
+            Unique contact identifier within the Neotoma Database, alone or
+            comma separated.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          minimum: 1
+          example: 44
+        - name: familyname
+          description: Full name of the the researcher (may use the % wildcard)
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: contactname
+          description: Last name of the researcher (may use the % wildcard)
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: contactstatus
+          in: query
+          description: Current employment status
+          required: false
+          schema:
+            type: string
+            enum:
+              - active
+              - deceased
+              - defunct
+              - extant
+              - inactive
+              - retired
+              - unknown
+            example: active
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/offsetParam'
+      responses:
+        '200':
+          description: contact
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/contact'
+  /v2.0/data/datasets/{datasetid}/contacts:
+    get:
+      tags: ['Contact metadata']
+      summary: Contact information for Neotoma contributors.
+      description: Returns researcher contact information associated with a record.
+      parameters:
+        - $ref: '#/components/parameters/datasetidPath'
+      responses:
+        '200':
+          description: contact
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/contact'
+  /v2.0/data/sites/{siteid}/contacts:
+    get:
+      tags: ['Contact metadata']
+      summary: Contact information for Neotoma contributors.
+      description: Returns researcher contact information associated with a record.
+      parameters:
+        - $ref: '#/components/parameters/siteidPath'
+      responses:
+        '200':
+          description: contact
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/contact'
+  /v2.0/data/datasets:
+    get:
+      tags: ['Dataset metadata']
+      summary: Dataset information.
+      description: Returns information about Neotoma dataset
+      parameters:
+        - $ref: '#/components/parameters/siteidQuery'
+        - name: piid
+          description: >-
+            Integer contact ID for the lead investigator. Can be obtained using
+            the 'contacts' endpoint.
+          in: query
+          required: false
+          type: integer
+          format: int64
+          minimum: 1
+          example: 67
+        - name: datasettype
+          description: >-
+            Neotoma contains data for a number of dataset types (see
+            /dbtables/datasettypes.  This returns a subset of data types.
+          in: query
+          required: false
+          type: string
+          example: pollen
+        - name: altmin
+          description: Minimum altitude of the dataset site location (in meters)
+          in: query
+          required: false
+          type: integer
+          format: int64
+          example: 200
+        - name: altmax
+          in: query
+          description: Maximum altitude of the dataset site location (in meters)
+          required: false
+          type: integer
+          format: int64
+          example: 300
+        - name: loc
+          in: query
+          description: >-
+            The geographic region of interest for the site, as a GeoJSON string
+            or valid Well Known Text (WKT).  Assumed projection of EPSG:4376
+            unless otherwise defined.
+          required: false
+          type: string
+          format: geoJSON
+        - name: ageyoung
+          in: query
+          description: >-
+            Youngest age that intercepts with the dataset (in calibrated years
+            before present, with 0 at 1950CE)
+          required: false
+          type: integer
+          format: int64
+          example: -60
+        - name: ageold
+          in: query
+          description: >-
+            Oldest age that intercepts with the dataset (in calibrated years
+            before present, with 0 at 1950CE)
+          required: false
+          type: integer
+          format: int64
+          example: 11430
+        - name: ageof
+          in: query
+          description: >-
+            Dataset age ranges must contain this age (in calibrated years before
+            present, with 0 at 1950CE)
+          required: false
+          type: integer
+          format: int64
+          example: 6700
+      responses:
+        '200':
+          description: An array of datasets.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/dataset'
+  /v2.0/data/sites/{siteid}/datasets:
+    get:
+      tags: ['Dataset metadata']
+      summary: Dataset information.
+      description: Returns information about Neotoma dataset
+      parameters:
+        - $ref: '#/components/parameters/siteidPath'
+      responses:
+        '200':
+          description: An array of datasets.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/dataset'
+  /v2.0/data/datasets/{datasetid}:
+    get:
+      tags: ['Dataset metadata']
+      summary: Dataset information.
+      description: Returns information about Neotoma dataset
+      parameters:
+        - $ref: '#/components/parameters/datasetidPath'
+      responses:
+        '200':
+          description: An array of datasets.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/dataset'
+  /v2.0/data/dbtables/{table}:
+    get:
+      summary: Returns the full content of a named Neotoma Database table.
+      description: >-
+        Returns the named Neotoma Database table.  An empty query will return a
+        list of tables.
+      parameters:
+        - name: table
+          description: Table name.
+          in: path
+          required: true
+          format:
+            type: string
+      responses:
+        '200':
+          description: Returned table.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/dbtables'
+  /v2.0/data/download/{datasetid}:
+    get:
+      tags: ['data download']
+      summary: >-
+        Returns the named Neotoma Database table. Currently not operational, use
+        "occurrences" instead.
+      description: Returns the named Neotoma Database table.
+      parameters:
+        - $ref: '#/components/parameters/datasetidPath'
+      responses:
+        '200':
+          description: Returned download object.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/download'
+  /v2.0/data/sites/{siteid}/geopoliticalunits:
+    get:
+      summary: Returns information about geopolitical units.
+      parameters:
+        - $ref: '#/components/parameters/siteidPath'
+      responses:
+        '200':
+          description: An array of geopolitical units.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/geopolitical'
+  /v2.0/data/geopoliticalunits/{gpid}:
+    get:
+      summary: Returns information about geopolitical units.
+      parameters:
+        - name: gpid
+          in: path
+          description: Numeric ID for the geopolitical unit.
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+      responses:
+        '200':
+          description: An array of geopolitical units.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/geopolitical'
+  /v2.0/data/geopoliticalunits:
+    get:
+      summary: Returns information about geopolitical units.
+      parameters:
+        - name: gpid
+          in: query
+          description: Numeric ID for the geopolitical unit.
+          required: false
+          schema:
+            type: integer
+        - name: gpname
+          in: query
+          description: Name of the geopolitical unit.
+          required: false
+          schema:
+            type: string
+        - name: rank
+          in: query
+          description: 'The unit rank.  Ranges from 1 (country) - 4 (e.g., parks).'
+          required: false
+          schema:
+            type: integer
+        - name: lower
+          in: query
+          description: Should all lower ranked units below the target unit be returned?
+          required: false
+          default: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: An array of geopolitical units.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/geopolitical'
+  /v2.0/data/occurrences/{occid}:
+    get:
+      summary: Individual occurrence records for Neotoma records.
+      description: >-
+        Returns occurrence information for a particular taxon, geographic region
+        or temporal slice.
+      parameters:
+        - name: occid
+          description: Unique occurrence identifier.
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: occurrence
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schema/occurrence'
+  /v2.0/data/taxa/{taxonid}/occurrences:
+    get:
+      summary: Individual occurrence records for Neotoma records.
+      description: >-
+        Returns occurrence information for a particular taxon, geographic region
+        or temporal slice.
+      parameters:
+        - $ref: '#/components/parameters/taxonidPath'
+      responses:
+        '200':
+          description: occurrence
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schema/occurrence'
+  /v2.0/data/occurrences:
+    get:
+      summary: Individual occurrence records for Neotoma records.
+      description: >-
+        Returns occurrence information for a particular taxon, geographic region
+        or temporal slice.
+      parameters:
+        - name: taxonname
+          description: Name of the taxon for which occurrences are requested.
+          in: query
+          required: false
+          schema:
+            type: string
+        - $ref: '#/components/parameters/taxonidQuery'
+        - $ref: '#/components/parameters/siteidQuery'
+        - name: sitename
+          description: Site name for the record.
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: datasettype
+          description: >-
+            Neotoma contains data for a number of dataset types.  This returns a
+            subset of data types.
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: altmin
+          description: Lower altitude boundary for occurrence searches.
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: altmax
+          description: Upper altitude boundary for occurrence searches.
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: loc
+          description: geoJSON string for search boundaries.
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: age
+          description: A single age for a search
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: ageyoung
+          description: The most recent age for occurrences within a query.
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: ageold
+          description: The oldest age for occurrences to be returned by the query.
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/offsetParam'
+      responses:
+        '200':
+          description: occurrence
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schema/occurrence'
+  /v2.0/data/pollen/{taxonid}:
+    get:
+      summary: Pollen data from Neotoma.
+      description: Returns information about pollen.
+      parameters:
+        - $ref: '#/components/parameters/taxonidPath'
+      responses:
+        '200':
+          description: A pollen response..
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/pollen'
+  /v2.0/data/pollen:
+    get:
+      summary: Pollen data from Neotoma.
+      description: Returns information about pollen.
+      parameters:
+        - name: taxonname
+          description: 'Name of the taxon, can include wildcards.'
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: nametype
+          description: Not sure.
+          in: query
+          required: false
+          schema:
+            type: string
+        - $ref: '#/components/parameters/taxonidQuery'
+        - name: ageyoung
+          description: 'Most recent age, in calendar years before present.'
+          in: query
+          required: false
+          type: number
+          schema:
+            format: float
+        - name: ageold
+          description: 'Oldest age, in calendar years before present.'
+          in: query
+          required: false
+          schema:
+            type: number
+            format: float
+        - name: agedocontain
+        - name: coords
+        - name: bbox
+        - name: wkt
+        - name: sitename
+          description: Name of site for pollen record.
+          in: query
+          required: false
+          schema:
+            type: string
+        - $ref: '#/components/parameters/siteidQuery'
+        - name: format
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/offsetParam'
+        - name: fields
+        - name: vocab
+        - name: occurrences
+      responses:
+        '200':
+          description: A pollen response.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/pollen'
+  /v2.0/data/publications/{pubid}:
+    get:
+      summary: Returns information about Neotoma publications
+      description: Returns information about Neotoma publications
+      parameters:
+        - name: pubid
+          description: Numeric ID for publications.
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: A list of publications.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/publications'
+  /v2.0/data/publications:
+    get:
+      summary: Returns information about Neotoma publications
+      description: Returns information about Neotoma publications
+      parameters:
+        - $ref: '#/components/parameters/datasetidQuery'
+        - $ref: '#/components/parameters/siteidQuery'
+      responses:
+        '200':
+          description: A list of publications.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/publications'
+  /v2.0/data/sites/{siteid}:
+    get:
+      summary: Site information.
+      description: Returns information about Neotoma publications
+      parameters:
+        - $ref: '#/components/parameters/siteidPath'
+      responses:
+        '200':
+          description: An array of geopolitical units.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/sites'
+  /v2.0/data/sites:
+    get:
+      summary: Site information.
+      description: Returns information about Neotoma publications
+      parameters:
+        - $ref: '#/components/parameters/datasetidQuery'
+        - $ref: '#/components/parameters/siteidQuery'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: An array of geopolitical units.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/sites'
+  /v2.0/data/taxa/{taxonid}:
+    get:
+      summary: Taxonomic information.
+      description: Returns information about a taxon and (if requested) related taxa.
+      parameters:
+        - $ref: '#/components/parameters/taxonidPath'
+      responses:
+        '200':
+          description: A taxon or array of taxa.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/taxa'
+  /v2.0/data/taxa:
+    get:
+      summary: Taxonomic information.
+      description: Returns information about a taxon and (if requested) related taxa.
+      parameters:
+        - name: taxonname
+          description: Taxon name or partial name.
+          in: query
+          required: false
+          schema:
+            type: string
+        - $ref: '#/components/parameters/datasetidQuery'
+        - $ref: '#/components/parameters/siteidQuery'
+      responses:
+        '200':
+          description: A taxon or array of taxa.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schema/taxa'
+components:
+  parameters:
+    offsetParam:
+      name: offset
+      description: >-
+        The offset for returned records when a limit is present.  Default is
+        0.
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int32
+        default: 0
+        minimum: 0
+    limitParam:
+      name: limit
+      description: 'The maximum number of records to be returned, default is 25.'
+      schema:
+        type: integer
+        format: int32
+        default: 25
+        minimum: 1
+      in: query
+      required: false
+    siteidPath:
+      name: siteid
+      description: Valid Neotoma site identifier (integer), either singly or in a comma separated list.
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+    siteidQuery:
+      name: siteid
+      description: Valid Neotoma site identifier (integer), either singly or in a comma separated list.
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+    datasetidQuery:
+      name: datasetid
+      description: Valid Neotoma dataset identifier (integer), either singly or in a comma separated list.
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+    datasetidPath:
+      name: datasetid
+      description: Valid Neotoma dataset identifier (integer), either singly or in a comma separated list.
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+    taxonidPath:
+      name: taxonid
+      description: Unique taxonomic identifier (from the Neotoma taxon table).
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minumum: 0
+    taxonidQuery:
+      name: taxonid
+      description: Unique taxonomic identifier (from the Neotoma taxon table).
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+    chronidPath:
+      name: chronid
+      description: Unique chronology identifier.
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minimum: 0
+  schema:
+    collectionTypes:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              getcollectiontypes:
+                type: string
+    datasetTypes:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              getdatasettypes:
+                type: string
+    taxaInDatasets:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              TaxonName:
+                type: string
+              TaxonID:
+                type: integer
+              TaxonGroupID:
+                type: string
+              DatasetTypeIDs:
+                type: array
+                items:
+                  type: integer
+    chronology:
+      properties:
+        chronology:
+          type: object
+          properties:
+            chronologyid:
+              type: integer
+            agetype:
+              type: string
+            default:
+              type: integer
+            chronologyName:
+              type: string
+            datePrepared:
+              type: string
+              format: dateTime
+              example: '2013-09-30T21:02:51.000Z'
+            modelType:
+              type: string
+            ages:
+              type: object
+              properties:
+                younger:
+                  type: integer
+                older:
+                  type: integer
+        dataset:
+          type: object
+          properties:
+            datasetid:
+              type: integer
+            datasettype:
+              type: string
+            chroncontrolid:
+              type: integer
+            depth:
+              type: numeric
+            thickness:
+              type: numeric
+            age:
+              type: numeric
+            ageyounger:
+              type: numeric
+            ageolder:
+              type: numeric
+            controltype:
+              type: string
+    contact:
+      properties:
+        contactid:
+          type: integer
+          format: int64
+          example: 123
+        contactname:
+          type: string
+          example: Simon J Goring
+        familyname:
+          type: string
+          example: Goring
+        firstname:
+          type: string
+          example: Simon
+        contactstatus:
+          type: string
+          example: Active
+        address:
+          type: string
+          example: '550 N Park St, Madison WI, USA'
+        url:
+          type: string
+          format: url
+          example: 'http://goring.org'
+    dataset:
+      properties:
+        site:
+          type: object
+          properties:
+            siteid:
+              type: integer
+              format: int32
+            sitename:
+              type: string
+            sitedescription:
+              type: string
+            sitenotes:
+              type: string
+            geography:
+              type: string
+              format: geoJSON
+            altitude:
+              type: integer
+            collectionunitid:
+              type: integer
+            collectionunit:
+              type: string
+            handle:
+              type: string
+            unittype:
+              type: string
+        dataset:
+          type: object
+          properties:
+            datasetid:
+              type: integer
+            datasettype:
+              type: string
+            datasetnotes:
+              type: string
+            database:
+              type: string
+            doi:
+              type: string
+              format: doi
+            datasetpi:
+              type: object
+              properties:
+                contactid:
+                  type: integer
+                contactname:
+                  type: string
+                familyname:
+                  type: string
+                firstname:
+                  type: string
+                initials:
+                  type: string
+    download:
+      properties:
+        type: object
+    geopolitical:
+      properties:
+        geopoliticalid:
+          example: 757
+          type: integer
+          format: int32
+        highergeopoliticalid:
+          type: integer
+          format: int32
+          example: 756
+        rank:
+          type: integer
+          format: int32
+          example: 2
+        geopoliticalunit:
+          type: string
+          example: Alberta
+        geopoliticalname:
+          type: string
+          example: province
+        recdatecreated:
+          type: string
+          format: dateTime
+          example: '2013-09-30T21:02:51.000Z'
+        recdatemodified:
+          type: string
+          format: dateTime
+          example: '2013-09-30T21:02:51.000Z'
+    occurrence:
+      properties:
+        occurrence:
+          type: integer
+          format: int64
+        sample:
+          type: integer
+          format: int64
+        taxon:
+          type: object
+          properties:
+            taxonid:
+              type: integer
+              format: int64
+            taxonname:
+              type: string
+        ages:
+          type: object
+          properties:
+            age:
+              type: integer
+              format: int64
+            ageolder:
+              type: integer
+              format: int64
+            ageyounger:
+              type: integer
+              format: int64
+        site:
+          type: object
+          properties:
+            datasetid:
+              type: integer
+              format: int64
+            siteid:
+              type: integer
+              format: int64
+            sitename:
+              type: string
+              altitude: int32
+            location:
+              type: string
+            datasettype:
+              type: string
+            database:
+              type: string
+    pollen:
+      properties:
+        TaxonName:
+          type: string
+        EcolGroups:
+          type: array
+          items:
+            type: string
+        TaxonCode:
+          type: string
+        Author:
+          type: string
+        PublicationID:
+          type: integer
+          format: int32
+        TaxonID:
+          type: integer
+          format: int32
+        TaxaGroupID:
+          type: string
+        HigherTaxonID:
+          type: integer
+          format: int32
+        Extinct:
+          type: boolean
+        Notes:
+          type: string
+    publication:
+      properties:
+        PublicationID:
+          type: integer
+        Year:
+          type: string
+        PubType:
+          type: string
+        Authors:
+          type: array
+        Citation:
+          type: string
+    sites:
+      properties:
+        siteid:
+          type: integer
+          format: int64
+        sitename:
+          type: string
+        sitedescription:
+          type: string
+        geography:
+          type: string
+        altitude:
+          type: float
+        CollectionUnits:
+          type: object
+          properties:
+            collectionunit:
+              type: string
+            collectionunitid:
+              type: integer
+              format: int64
+            handle:
+              type: string
+            collectionunittype:
+              type: string
+            datasets:
+              type: object
+              properties:
+                datasettype:
+                  type: string
+                datasetid:
+                  type: integer
+                  format: int64
+    taxa:
+      properties:
+        taxonid:
+          type: integer
+          format: int32
+        taxonname:
+          type: string
+        author:
+          type: string
+        ecolgroup:
+          type: array
+        highertaxonid:
+          type: integer
+          format: int32
+        publicationid:
+          type: integer
+          format: int32
+        status:
+          type: boolean
+    dbtables:
+      properties:
+        type: object
+    publications:
+      properties:
+        PublicationID:
+          type: integer
+        Year:
+          type: string
+        PubType:
+          type: string
+        Authors:
+          type: array
+        Citation:
+          type: string
+tags: []
