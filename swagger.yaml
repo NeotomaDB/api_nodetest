@@ -9,6 +9,8 @@ info:
   version: "2.0-oas3"
   description: API Documentation for the Neotoma Paleoecological Database
   termsOfService: 'no'
+  externalDocs:
+    url: http://neotomadb.org
   contact:
     name: Simon J Goring
     email: goring@wisc.edu
@@ -1575,4 +1577,3 @@ components:
           type: array
         Citation:
           type: string
-          
