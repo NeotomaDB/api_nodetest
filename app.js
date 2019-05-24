@@ -4,7 +4,6 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-// var swaggerJSDoc = require('swagger-jsdoc');
 const YAML = require('yamljs');
 var swaggerUi = require('swagger-ui-express'),
   swaggerDocument = YAML.load('./swagger.yaml');
@@ -26,34 +25,6 @@ var options = {
 }
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
-// swagger definition
-// var swaggerDefinitionJson = require('./swaggerdefn.json');
-
-/*
- It's not clear how to support multiple API versions in swagger UI.
- You can document all endpoints for in this case both versions if
- the options apis is set for both and routes set for both.  To show
- just one, comment out these references as done here.
-
- Version in URL or HTTP header:
- Separate directory structure needed to support versioning.  The version
- number can be stripped from the route definition and identified by some
- middleware prior to the versioned routing.
-*/
-
-/*
-// options for the swagger docs
-var options = {
-  // import swaggerDefinitions
-  swaggerDefinition: swaggerDefinitionJson,
-  // path to the API docs
-  apis: ['./v1.5/routes/*.js', './v2.0/routes/*.js']
-};
-*/
-
-// initialize swagger-jsdoc
-//var swaggerSpec = swaggerJSDoc(options);
 
 // Locations of files:
 

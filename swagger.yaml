@@ -16,10 +16,43 @@ info:
   license:
     name: MIT
     url: 'https://opensource.org/licenses/MIT'
+tags:
+  - name: Database tables
+    description: Endpoints that access tables from Neotoma verbatim.
+    externalDocs:
+      url: http://open.neotomadb.org/schema/#Structure
+  - name: Chronology metadata
+    description: Information about chronological controls and the models used to add the temporal component to records.
+  - name: Contact metadata
+    description: Information about Neotoma data contributors, authors and data analysts.
+  - name: Dataset metadata
+    description: Information about site location and metadata specific to the individual dataset.
+  - name: Data download
+    description: Full dataset download, including all sample data for a particular dataset.
+  - name: Geopolitical metadata
+    description: Information about the geopolitical units in which a site is located.
+  - name: Occurrence metadata
+    description: A simplified data return, similar to the data download, but specific to a particular taxon, time or location.
+  - name: Pollen proportions
+    decription: For ease of use in online applications, pre-calculated pollen percentages for taxa, location or temporal bins.
+  - name: Publication metadata
+    description: Formatted publication data related to Neotoma records.
+  - name: Site metadata
+    description: All metadata associated with a particular site with fossil records.
+  - name: Taxonomic metadata
+    description: All available information about a particular taxon.
+  - name: v1.5
+    description: All API endpoints associated with v1.5 of the Neotoma API.
+    externalDocs:
+      url: http://github.com/NeotomaDB/api_nodetest
+  - name: v2.0
+    description: All API endpoints associated with v2.0 of the Neotoma API.
+    externalDocs:
+      url: http://github.com/NeotomaDB/api_nodetest
 paths:
   /v1.5/apps/collectionTypes:
     get:
-      tags: ['sample types', 'collection types']
+      tags: ['Database tables', 'v1.5']
       summary: Return the list of collection types.
       responses:
         '200':
@@ -30,7 +63,7 @@ paths:
                 $ref: '#/components/schema/collectionTypes'
   /v1.5/apps/DatasetTypes:
     get:
-      tags: ['dataset types']
+      tags: ['Database tables', 'v1.5']
       responses:
         '200':
           description: Definition generated from Swagger Inspector
@@ -40,6 +73,7 @@ paths:
                 $ref: '#/components/schema/datasetTypes'
   /v1.5/apps/TaxaInDatasets:
     get:
+      tags: ['v1.5']
       summary: List the taxa in datasets.
       responses:
         '200':
@@ -50,7 +84,7 @@ paths:
                 $ref: '#/components/schema/taxaInDatasets'
   /v1.5/data/chronology/{chronid}:
     get:
-      tags: ['chronologies']
+      tags: ['Chronology metadata', 'v1.5']
       summary: Chronology metadata for a dataset.
       description: >-
         Returns the chronology and chronological controls used for a dataset age
@@ -68,7 +102,7 @@ paths:
                   $ref: '#/components/schema/chronology'
   /v1.5/data/contacts/{contactid}:
     get:
-      tags: ['Contact metadata']
+      tags: ['Contact metadata', 'v1.5']
       summary: Contact information for Neotoma contributors.
       description: Returns researcher contact information associated with a record.
       parameters:
@@ -90,7 +124,7 @@ paths:
                   $ref: '#/components/schema/contact'
   /v1.5/data/datasets/{datasetid}:
     get:
-      tags: ['Dataset Metadata']
+      tags: ['Dataset metadata', 'v1.5']
       summary: Dataset information.
       description: Returns information about Neotoma dataset
       parameters:
@@ -106,7 +140,7 @@ paths:
                   $ref: '#/components/schema/dataset'
   /v1.5/data/datasets:
     get:
-      tags: ['Dataset Metadata']
+      tags: ['Dataset metadata', 'v1.5']
       summary: Dataset information.
       description: Returns information about Neotoma dataset
       parameters:
@@ -123,7 +157,7 @@ paths:
                   $ref: '#/components/schema/dataset'
   /v1.5/data/download/{datasetid}:
     get:
-      tags: ['data download']
+      tags: ['Data download', 'v1.5']
       summary: Returns the named Neotoma Database table.
       description: Returns the named Neotoma Database table.
       parameters:
@@ -139,7 +173,7 @@ paths:
                   $ref: '#/components/schema/download'
   /v1.5/data/geopoliticalunits/{gpid}:
     get:
-      tags: ['Political']
+      tags: ['Geopolitical metadata', 'v1.5']
       summary: Returns information about geopolitical units.
       parameters:
         - name: gpid
@@ -159,7 +193,7 @@ paths:
                   $ref: '#/components/schema/geopolitical'
   /v1.5/data/geopoliticalunits/:
     get:
-      tags: ['Political']
+      tags: ['Geopolitical metadata', 'v1.5']
       summary: Returns information about geopolitical units.
       parameters:
         - name: gpid
@@ -197,7 +231,7 @@ paths:
                   $ref: '#/components/schema/geopolitical'
   /v1.5/data/occurrence/{taxonid}:
     get:
-      tags: ['Occurrence']
+      tags: ['Occurrence metadata', 'v1.5']
       summary: Occurrence information for a taxon and sample.
       description: >-
         Given a unique taxon identifier associated with a taxon in Neotoma, return individual occurrence information for a particular sample.
@@ -214,7 +248,7 @@ paths:
                   $ref: '#/components/schema/occurrence'
   /v1.5/data/occurrence:
     get:
-      tags: ['Occurrence']
+      tags: ['Occurrence metadata', 'v1.5']
       summary: Occurrence information for a taxon and sample.
       description: >-
         Given a set of query parameters, return individual occurrence
@@ -239,6 +273,7 @@ paths:
                   $ref: '#/components/schema/occurrence'
   /v1.5/data/pollen/{taxonid}:
     get:
+      tags: ['Pollen proportions', 'v1.5']
       summary: Pollen data from Neotoma.
       description: Returns information about pollen.
       parameters:
@@ -254,6 +289,7 @@ paths:
                   $ref: '#/components/schema/pollen'
   /v1.5/data/pollen:
     get:
+      tags: ['Pollen proportions', 'v1.5']
       summary: Pollen data from Neotoma.
       description: Returns information about pollen.
       parameters:
@@ -312,6 +348,7 @@ paths:
                   $ref: '#/components/schema/pollen'
   /v1.5/data/publication/{pubid}:
     get:
+      tags: ['Publication metadata', 'v1.5']
       summary: Returns information about Neotoma publications
       description: Returns information about Neotoma publications
       parameters:
@@ -333,6 +370,7 @@ paths:
                   $ref: '#/components/schema/publication'
   /v1.5/data/publication:
     get:
+      tags: ['Publication metadata', 'v1.5']
       summary: Returns information about Neotoma publications
       description: Returns information about Neotoma publications
       parameters:
@@ -349,6 +387,7 @@ paths:
                   $ref: '#/components/schema/publication'
   /v1.5/data/sites/{siteid}:
     get:
+      tags: ['Site metadata', 'v1.5']
       summary: Site information.
       description: Returns information about Neotoma publications
       parameters:
@@ -364,6 +403,7 @@ paths:
                   $ref: '#/components/schema/sites'
   /v1.5/data/sites:
     get:
+      tags: ['Site metadata', 'v1.5']
       summary: Site information.
       description: Returns information about Neotoma publications
       parameters:
@@ -380,6 +420,7 @@ paths:
                   $ref: '#/components/schema/sites'
   /v1.5/data/taxa:
     get:
+      tags: ['Taxonomic metadata', 'v1.5']
       summary: Taxonomic information.
       description: Returns information about a taxon and (if requested) related taxa.
       parameters:
@@ -403,6 +444,7 @@ paths:
                   $ref: '#/components/schema/taxa'
   /v1.5/dbtables/{table}:
     get:
+      tags: ['Database tables', 'v1.5']
       summary: Returns the named Neotoma Database table.
       description: Returns the named Neotoma Database table.
       parameters:
@@ -423,6 +465,7 @@ paths:
                   $ref: '#/components/schema/dbtables'
   /v2.0/apps/collectionTypes:
     get:
+      tags: ['Database tables', 'v2.0']
       parameters:
         - name: callback
           in: query
@@ -439,7 +482,7 @@ paths:
                 $ref: '#/components/schema/collectionTypes'
   /v2.0/data/chronology/{chronid}:
     get:
-      tags: ['chronologies']
+      tags: ['Chronology metadata', 'v2.0']
       summary: Chronology metadata for a dataset.
       description: >-
         Returns the chronology and chronological controls used for a dataset age
@@ -457,7 +500,7 @@ paths:
                   $ref: '#/components/schema/chronology'
   /v2.0/data/contacts:
     get:
-      tags: ['Contact metadata']
+      tags: ['Contact metadata', 'v2.0']
       summary: Contact information for Neotoma contributors.
       description: Returns researcher contact information associated with a record.
       parameters:
@@ -512,7 +555,7 @@ paths:
                   $ref: '#/components/schema/contact'
   /v2.0/data/datasets/{datasetid}/contacts:
     get:
-      tags: ['Contact metadata']
+      tags: ['Contact metadata', 'v2.0']
       summary: Contact information for Neotoma contributors.
       description: Returns researcher contact information associated with a record.
       parameters:
@@ -528,7 +571,7 @@ paths:
                   $ref: '#/components/schema/contact'
   /v2.0/data/sites/{siteid}/contacts:
     get:
-      tags: ['Contact metadata']
+      tags: ['Contact metadata', 'v2.0']
       summary: Contact information for Neotoma contributors.
       description: Returns researcher contact information associated with a record.
       parameters:
@@ -544,7 +587,7 @@ paths:
                   $ref: '#/components/schema/contact'
   /v2.0/data/datasets:
     get:
-      tags: ['Dataset metadata']
+      tags: ['Dataset metadata', 'v2.0']
       summary: Dataset information.
       description: Returns information about Neotoma dataset
       parameters:
@@ -628,7 +671,7 @@ paths:
                   $ref: '#/components/schema/dataset'
   /v2.0/data/sites/{siteid}/datasets:
     get:
-      tags: ['Dataset metadata']
+      tags: ['Dataset metadata', 'v2.0']
       summary: Dataset information.
       description: Returns information about Neotoma dataset
       parameters:
@@ -644,7 +687,7 @@ paths:
                   $ref: '#/components/schema/dataset'
   /v2.0/data/datasets/{datasetid}:
     get:
-      tags: ['Dataset metadata']
+      tags: ['Dataset metadata', 'v2.0']
       summary: Dataset information.
       description: Returns information about Neotoma dataset
       parameters:
@@ -660,6 +703,7 @@ paths:
                   $ref: '#/components/schema/dataset'
   /v2.0/data/dbtables/{table}:
     get:
+      tags: ['Database tables', 'v2.0']
       summary: Returns the full content of a named Neotoma Database table.
       description: >-
         Returns the named Neotoma Database table.  An empty query will return a
@@ -682,7 +726,7 @@ paths:
                   $ref: '#/components/schema/dbtables'
   /v2.0/data/download/{datasetid}:
     get:
-      tags: ['data download']
+      tags: ['Data download', 'v2.0']
       summary: >-
         Returns the named Neotoma Database table. Currently not operational, use
         "occurrences" instead.
@@ -700,6 +744,7 @@ paths:
                   $ref: '#/components/schema/download'
   /v2.0/data/sites/{siteid}/geopoliticalunits:
     get:
+      tags: ['Geopolitical metadata', 'v2.0']
       summary: Returns information about geopolitical units.
       parameters:
         - $ref: '#/components/parameters/siteidPath'
@@ -714,6 +759,7 @@ paths:
                   $ref: '#/components/schema/geopolitical'
   /v2.0/data/geopoliticalunits/{gpid}:
     get:
+      tags: ['Geopolitical metadata', 'v2.0']
       summary: Returns information about geopolitical units.
       parameters:
         - name: gpid
@@ -735,6 +781,7 @@ paths:
                   $ref: '#/components/schema/geopolitical'
   /v2.0/data/geopoliticalunits:
     get:
+      tags: ['Geopolitical metadata', 'v2.0']
       summary: Returns information about geopolitical units.
       parameters:
         - name: gpid
@@ -773,6 +820,7 @@ paths:
                   $ref: '#/components/schema/geopolitical'
   /v2.0/data/occurrences/{occid}:
     get:
+      tags: ['Occurrence metadata', 'v2.0']
       summary: Individual occurrence records for Neotoma records.
       description: >-
         Returns occurrence information for a particular taxon, geographic region
@@ -795,6 +843,7 @@ paths:
                   $ref: '#/components/schema/occurrence'
   /v2.0/data/taxa/{taxonid}/occurrences:
     get:
+      tags: ['Occurrence metadata', 'v2.0']
       summary: Individual occurrence records for Neotoma records.
       description: >-
         Returns occurrence information for a particular taxon, geographic region
@@ -812,6 +861,7 @@ paths:
                   $ref: '#/components/schema/occurrence'
   /v2.0/data/occurrences:
     get:
+      tags: ['Occurrence metadata', 'v2.0']
       summary: Individual occurrence records for Neotoma records.
       description: >-
         Returns occurrence information for a particular taxon, geographic region
@@ -892,6 +942,7 @@ paths:
                   $ref: '#/components/schema/occurrence'
   /v2.0/data/pollen/{taxonid}:
     get:
+      tags: ['Pollen proportions', 'v2.0']
       summary: Pollen data from Neotoma.
       description: Returns information about pollen.
       parameters:
@@ -907,6 +958,7 @@ paths:
                   $ref: '#/components/schema/pollen'
   /v2.0/data/pollen:
     get:
+      tags: ['Pollen proportions', 'v2.0']
       summary: Pollen data from Neotoma.
       description: Returns information about pollen.
       parameters:
@@ -965,6 +1017,7 @@ paths:
                   $ref: '#/components/schema/pollen'
   /v2.0/data/publications/{pubid}:
     get:
+      tags: ['Publication metadata', 'v2.0']
       summary: Returns information about Neotoma publications
       description: Returns information about Neotoma publications
       parameters:
@@ -986,6 +1039,7 @@ paths:
                   $ref: '#/components/schema/publications'
   /v2.0/data/publications:
     get:
+      tags: ['Publication metadata', 'v2.0']
       summary: Returns information about Neotoma publications
       description: Returns information about Neotoma publications
       parameters:
@@ -1002,6 +1056,7 @@ paths:
                   $ref: '#/components/schema/publications'
   /v2.0/data/sites/{siteid}:
     get:
+      tags: ['Site metadata', 'v2.0']
       summary: Site information.
       description: Returns information about Neotoma publications
       parameters:
@@ -1017,6 +1072,7 @@ paths:
                   $ref: '#/components/schema/sites'
   /v2.0/data/sites:
     get:
+      tags: ['Site metadata', 'v2.0']
       summary: Site information.
       description: Returns information about Neotoma publications
       parameters:
@@ -1035,6 +1091,7 @@ paths:
                   $ref: '#/components/schema/sites'
   /v2.0/data/taxa/{taxonid}:
     get:
+      tags: ['Taxonomic metadata', 'v2.0']
       summary: Taxonomic information.
       description: Returns information about a taxon and (if requested) related taxa.
       parameters:
@@ -1050,6 +1107,7 @@ paths:
                   $ref: '#/components/schema/taxa'
   /v2.0/data/taxa:
     get:
+      tags: ['Taxonomic metadata', 'v2.0']
       summary: Taxonomic information.
       description: Returns information about a taxon and (if requested) related taxa.
       parameters:
@@ -1517,4 +1575,4 @@ components:
           type: array
         Citation:
           type: string
-tags: []
+          
