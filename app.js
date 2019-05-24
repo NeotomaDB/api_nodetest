@@ -21,10 +21,11 @@ var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {
 app.use(morgan(':date[iso]\t:remote-addr\t:method\t:url\t:status\t:res[content-length]\t:response-time[0]\t:user-agent', { stream: accessLogStream }))
 
 var options = {
-  swaggerUrl: 'http://localhost:3000/api-docs'
+  swaggerUrl: 'http://localhost:3000/api-docs',
+  customCssUrl: '/custom.css'
 }
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 
 // Locations of files:
 
@@ -77,11 +78,6 @@ app.use('/v2.0/', v2index);
 app.use('/v2.0/apps', v2apps);
 app.use('/v2.0/data', v2data);
 app.use('/v2.0/dbtables', v2dbtables);
-
-app.get('/swagger.json', function (req, res) {
-  res.setHeader('Content-Type', 'application/json');
-  res.send(swaggerSpec);
-});
 
 // error handler
 app.use(function (err, req, res, next) {
