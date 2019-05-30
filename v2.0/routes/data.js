@@ -26,14 +26,11 @@ router.get('/sites/:siteid/datasets', handlers.datasetsbysite); // Takes integer
 
 router.get('/frozen/:datasetid', handlers.frozen);
 
-
 // router.get('/publications/:pubid/datasets', handlers.datasetsbypub);
 // router.get('/contacts/:contactid/datasets', handlers.datasetsbycontact);
 
-
 router.get('/dbtables/', handlers.dbtables);
 router.get('/dbtables/:table', handlers.dbtables);
-
 
 router.get('/download/', handlers.downloadbyid);
 router.get('/download/:datasetid', handlers.downloadbyid);
@@ -47,6 +44,9 @@ router.get('/occurrences', handlers.occurrencequery);
 router.get('/occurrences/:occurrenceid', handlers.occurrencebyid);
 router.get('/taxa/:taxonid/occurrences', handlers.occurrencebytaxon);
 
+router.get('/occurrence', handlers.occurrencequery);
+router.get('/occurrence/:occurrenceid', handlers.occurrencebyid);
+router.get('/taxa/:taxonid/occurrence', handlers.occurrencebytaxon);
 
 router.get('/pollen/', handlers.pollen);
 router.get('/pollen/:id', handlers.pollen);

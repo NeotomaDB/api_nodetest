@@ -36,7 +36,7 @@ tags:
   - name: Occurrence metadata
     description: A simplified data return, similar to the data download, but specific to a particular taxon, time or location.
   - name: Pollen proportions
-    decription: For ease of use in online applications, pre-calculated pollen percentages for taxa, location or temporal bins.
+    description: For ease of use in online applications, pre-calculated pollen percentages for taxa, location or temporal bins.
   - name: Publication metadata
     description: Formatted publication data related to Neotoma records.
   - name: Site metadata
