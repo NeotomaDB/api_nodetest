@@ -38,7 +38,7 @@ describe('Get datasets any number of ways:', function () {
         return res.body['data'][0].site.siteid === 123;
       })
       .expect(function (res) {
-        return res.body['data'][0].dataset.length > 0;
+        return res.body['data'][0].site.datasets.length > 0;
       })
       .expect(200, done);
   });
@@ -80,11 +80,10 @@ describe('Get datasets any number of ways:', function () {
       .set('Accept', 'application/json')
       .expect(function (res) {
         var test = true;
-
         for (var i = 0; i < res.body['data'].length; i++) {
           test = test &
-            res.body['data'][i]['dataset'][0]['agerange']['ageyoung'] < 1200 &
-            res.body['data'][i]['dataset'][0]['agerange']['ageold'] > 1500;
+            res.body['data'][i]['sites']['datasets'][0]['agerange']['ageyoung'] < 1200 &
+            res.body['data'][i]['sites']['datasets'][0]['agerange']['ageold'] > 1500;
 
           if (test === false) { return test; }
         }
