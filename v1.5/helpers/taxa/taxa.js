@@ -1,8 +1,24 @@
 // Taxa query:
 
-// This returns an empty object in the case of error.  I might propagate this to other
-// endpoints.
+/* query inputs:
+taxonid, taxonname, status, taxagroup, ecolgroup, format
 
+    taxaids []integer optional,
+    taxagroup: varchar,
+    status: varchar //extinct, extant, or all  optional
+
+1. check if any parameters are invalid
+
+case: 
+  no taxaids, have ecolGroupid
+  have array taxaids, no ecolGroupid
+  have both
+2. search for taxa ids[] by taxonName, status, taxaGroup
+3. if ecolGroup pass, clear taxaids, and populate taxaids[] by ecolGroup
+4. 
+
+
+*/
 var empty = {
   "query":{   'taxonid':null,
                    'name':null,
@@ -14,22 +30,34 @@ var empty = {
             "taxoncode": null,
             "taxonname": null,
                "author": null,
-                "valid": null,
         "highertaxonid": null,
               "extinct": null,
           "taxagroupid": null,
         "publicationid": null,
-          "validatorid": null,
-         "validatedate": null,
-                "notes": null
+                "notes": null,
+           "ecolgroups": []
     }};
+/*example
+Author: "Cuvier, 1829"
+EcolGroups: ["SCOR"]
+Extinct: false
+HigherTaxonID: 8851
+Notes: null
+PublicationID: 3662
+TaxaGroupID: "FSH"
+TaxonCode: "Hmi"
+TaxonID: 8858
+TaxonName: "Hemitripterus"
+
+*/
+
 // Sites query:
 
 const path = require('path');
 const bib   = require('./../bib_format');
 
 //get global database object
-var db = require('../../database/pgp_db');
+var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
 // Helper for linking to external query files:
@@ -86,27 +114,27 @@ function gettaxonquery(req, res, next) {
     var taxonid = null;
   }
 
-  var outobj = {'taxonid':taxonid,
-              'taxonname':req.query.taxonname,
-                 'status':req.query.status,
-              'taxagroup':req.query.taxagroup,   
-              'ecolgroup':req.query.ecolgroup,
-                  'lower':req.query.lower,
-                  'limit':req.query.limit,
-                  'offset':req.query.offset
+  var paramobj = {'taxonid':taxonid,
+                'taxonname':req.query.taxonname,
+                   'status':req.query.status,
+                'taxagroup':req.query.taxagroup,   
+                'ecolgroup':req.query.ecolgroup
                };
 
-  if (typeof outobj.taxonid === 'undefined') {
-    outobj.taxonid = null;
+  if (typeof paramobj.taxonid === 'undefined') {
+    paramobj.taxonid = null;
   };
 
-  if(!(typeof outobj.taxonname === 'undefined')) {
-    outobj.taxonname = outobj.taxonname.replace(/\*/g, "\%");
+  if(!(typeof paramobj.taxonname === 'undefined')) {
+    paramobj.taxonname = paramobj.taxonname.replace(/\*/g, "\%");
   }
 
-  var novalues = Object.keys(outobj).every(function(x) { 
-    return typeof outobj[x]==='undefined' || !outobj[x];
+  var novalues = Object.keys(paramobj).every(function(x) { 
+    return typeof paramobj[x]==='undefined' || !paramobj[x];
   });
+
+
+  console.log("taxaquery params: "+ JSON.stringify(paramobj));
 
   if(novalues == true) {
     if(!!req.accepts('json') & !req.accepts('html')) {
@@ -114,40 +142,21 @@ function gettaxonquery(req, res, next) {
     } else {
       res.redirect('/api-docs');
     };
-  } else {
-
-    if(outobj.lower === 'true') {
-      db.any(taxonquerylower, outobj)
+  } else {   
+      db.any(taxonquerystatic, paramobj)      
         .then(function (data) {
-
-          res.status(200)
-            .json({
-              status: 'success',
-              data: data,
-              message: 'Retrieved all tables'
-            });
-        })
-        .catch(function (err) {
-            return next(err);
-        });
+             res.status(200)
+              .jsonp({
+                success: 1,
+                status: 'success',
+                data: data,
+                message: 'Retrieved all tables'
+              });
+          })
+          .catch(function (err) {
+              return next(err);
+          });
     };
-
-    if(typeof outobj.lower === 'undefined') {
-      db.any(taxonquerystatic, outobj)
-        .then(function (data) {
-
-          res.status(200)
-            .json({
-              status: 'success',
-              data: data,
-              message: 'Retrieved all tables'
-            });
-        })
-        .catch(function (err) {
-            return next(err);
-        });
-    };
-  };
 }
 
 module.exports.taxonbyid = taxonbyid;

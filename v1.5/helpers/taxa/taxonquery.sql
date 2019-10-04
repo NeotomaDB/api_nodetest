@@ -14,8 +14,8 @@ SELECT txa.taxonid,
        ecg.ecolgroupid AS ecolgroup,
        txa.highertaxonid,  lowertaxa AS taxa
 
-       CASE WHEN txa.extinct = 0 THEN 'extant'
-            WHEN txa.extinct = 1 THEN 'extinct'
+       CASE WHEN txa.extinct = false THEN 'extant'
+            WHEN txa.extinct = true THEN 'extinct'
        END AS status,
        txa.publicationid AS publicationid,
        pub.citation AS publication

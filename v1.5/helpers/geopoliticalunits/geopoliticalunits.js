@@ -3,7 +3,7 @@
 const path = require('path');
 
 //get global database object
-var db = require('../../database/pgp_db');
+var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
 const bib   = require('./../bib_format');
@@ -27,6 +27,7 @@ function geopoliticalbyid(req, res, next) {
   } else {
     res.status(200)
       .json({
+        success: 1,
         status: 'success',
         data: returner
     });
@@ -55,6 +56,7 @@ function geopoliticalbyid(req, res, next) {
       }
       res.status(200)
         .json({
+          success: 1,
           status: 'success',
           data: returner
         });
@@ -73,50 +75,30 @@ function geopoliticalunits(req, res, next) {
       - Not really sure why this is important. . . 
     Should be able to pass in site IDs, or dataset IDs to then figure out
       where the records are, with regards to political units.
-  */ 
+  */
+
+
+  var querySQL, gpID;
+  //no id passed, return top level geopoliticalunits
+  if(!req.params.hasOwnProperty("id")){
+    querySQL = "select geopoliticalid, geopoliticalname from da.geopoliticalunits where rank = 1";
+  } else {
+    querySQL = "select geopoliticalid, geopoliticalname from da.geopoliticalunits where highergeopoliticalid = $1";
+  }
   
-  var outobj = {   'gpid':req.query.gpid,
-                 'gpname':req.query.gpname,
-                   'rank':req.query.rank,
-                  'lower':req.query.lower,
-                  'limit':req.query.limit,
-                  'offset':req.query.offset
-               };
-
-  if(Object.keys(outobj).every(function(x) { return typeof outobj[x]==='undefined';}) === false){
-    db.any(gpuQuery, outobj)
+    db.any(querySQL, gpID)
       .then(function (data) {
-
-        if(data.length == 0) {
-          // We're returning the structure, but nothing inside it:
-          returner = [{"geopoliticalid": null,
-                       "highergeopoliticalid": null,
-                       "rank": null,
-                       "geopoliticalunit": null,
-                       "geopoliticalname": null,
-                       "higher": null,
-                       "lower": null,
-                       "recdatecreated": null,
-                       "recdatemodified": null}]
-        } else {
-          returner = data.sort(function(obj1, obj2) {
-            return obj1.Rank - obj2.Rank;
-          });
-        }
-        
         res.status(200)
-          .json({
+          .jsonp({
+            success: 1,
             status: 'success',
-            data: {query: outobj, result: returner}
+            data: data
           });
       })
       .catch(function (err) {
         return next(err);
       });
-    } else {
-      res.redirect('/api-docs');
-    }
-}
+  } 
 
 
 // function geopolbysite(req, res, next) {

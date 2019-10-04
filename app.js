@@ -90,8 +90,10 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
+/*
 app.all('*', function (req, res) {
   res.redirect('/api-docs');
 });
+*/
 
 module.exports = app;
