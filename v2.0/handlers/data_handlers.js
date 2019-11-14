@@ -95,6 +95,20 @@ module.exports = {
     sites.sitesbycontact(req, res, next);
   },
 
+  // RETURNING DATASETS FOR ELC
+  datasetbyid_elc: function (req, res, next) {
+    var dataset = require('../helpers/dataset_elc/datasets.js');
+    dataset.datasetbyid(req, res, next);
+  },
+  datasetquery_elc: function (req, res, next) {
+    var dataset = require('../helpers/dataset_elc/datasets.js');
+    dataset.datasetquery(req, res, next);
+  },
+  datasetsbysite_elc: function (req, res, next) {
+    var dataset = require('../helpers/dataset_elc/datasets.js');
+    dataset.datasetbysiteid(req, res, next);
+  },
+
   // RETURNING DATASETS
   datasetbyid: function (req, res, next) {
     var dataset = require('../helpers/datasets/datasets.js');
@@ -141,6 +155,12 @@ module.exports = {
   downloadbyid: function (req, res, next) {
     var download = require('../helpers/download/download.js');
     download.downloadbyid(req, res, next);
+  },
+
+  // DOIs
+  doibydsid: function (req, res, next) {
+    var dois = require('../helpers/doi/dois.js');
+    dois.doibydsid(req, res, next);
   },
 
   // SUMMARIES
