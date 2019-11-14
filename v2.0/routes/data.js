@@ -20,6 +20,10 @@ router.get('/datasets/:datasetid/contacts', handlers.contactsbydataid);
 router.get('/sites/:siteid/contacts', handlers.contactsbysiteid);
 // router.get('/publications/:pubid/contacts', handlers.contactsbypubid);
 
+router.get('/datasets_elc/', handlers.datasetquery_elc);
+router.get('/datasets_elc/:datasetid', handlers.datasetbyid_elc);
+router.get('/sites/:siteid/datasets_elc', handlers.datasetsbysite_elc); // Takes integers, including comma separated
+
 router.get('/datasets/', handlers.datasetquery);
 router.get('/datasets/:datasetid', handlers.datasetbyid);
 router.get('/sites/:siteid/datasets', handlers.datasetsbysite); // Takes integers, including comma separated
@@ -78,5 +82,8 @@ router.get('/sites/:siteid/chronology', handlers.chronologybystid);
 router.get('/summary/dstypemonth/', handlers.dstypemonth);
 router.get('/summary/dsdbmonth/', handlers.dsdbmonth);
 router.get('/summary/rawbymonth/', handlers.rawbymonth);
+
+router.get('/datasets/:datasetid/doi', handlers.doibydsid);
+
 
 module.exports = router;
