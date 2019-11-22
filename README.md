@@ -1,6 +1,6 @@
 # Neotoma API Implementation
 
-This repository is intended to act as the core repository for the Neotoma API version 2 and greater.  There are two main branches, `master` and `dev`.  Master is intended as the production branch, while `dev` is the main testing and development branch.  For documentation of the Neotoma Paleoecology Database see [this](http://neotoma-manual.readthedocs.io/en/latest/neotoma_introduction.html) and of the community see [this](https://www.neotomadb.org/).  Version 1 of the API is documented [here](http://api.neotomadb.org/doc/home).
+This repository is intended to act as the core repository for the Neotoma API version 1.5 and greater.  There are two main branches, `master` and `dev`.  Master is intended as the production branch, while `dev` is the main testing and development branch.  For documentation of the Neotoma Paleoecology Database see [this](http://neotoma-manual.readthedocs.io/en/latest/neotoma_introduction.html) and of the community see [this](https://www.neotomadb.org/).  Version 1 of the API is documented [here](http://api.neotomadb.org/doc/home).
 
 Currently [http://api-dev.neotomadb.org]() is the home for the API, and will resolve to a [Swagger](http://swagger.io) landing page with API documentation and search functionality.  The documentation is generated dynamically using [swagger-jsdoc](https://www.npmjs.com/package/swagger-jsdoc), as implemented in the `routes` files.  For an example, see [`routes/data.js`](https://github.com/NeotomaDB/api_nodetest/blob/dev/routes/data.js).
 
@@ -19,7 +19,13 @@ This codebase is generated using `node.js`, `express` and `pg-promise` to intera
 
 This code is currently in preliminary release.
 
-### Required Files
+### Required Files/Services
+
+#### Database Snapshot
+
+The code in this repository is run directly against the production database on the Neotoma servers at the Center for Ecological Informatics at Penn State.  It is possible to run this repository on a local server (on your own machine) or on a remote server (using cloud services or a university server) by installing Postgres and restoring one of the [Neotoma Database Snapshots]().  If you are planning to run the application in this way, please ensure that you have set appropriate security measures, and have these documented in the `db_connect.json` file, as described below.
+
+#### Connection File
 
 Along with the files in this repository a user will need a file called `db_connect.json`, to be located in the database directory.
 
@@ -63,9 +69,21 @@ $ mocha test
     ✓ Taxon queries should be case insensitive: (120ms)
 ```
 
-### To Edit
+### Adding or Editing an API Endpoint
 
-Feel free to make changes to the code.  In particular, if there are new endpoints required, or changes in the way data are returned or documentation is provided, please let us know, or contribute directly.  The code for running the queries is in `./queries.js`, the routing is in `./routes/index.js`.
+The current API reflects the needs of certain users who have directly communicated their needs to the development team.  Future users, or groups may wish to support services from Neotoma that are currently not implemented.  Adding a new service to the API should be done in a new fork of the repository, and includes the following steps:
+
+#### Create a `helpers` folder
+
+Your new service, for example `example`, will have its own folder in the `[helpers](https://github.com/NeotomaDB/api_nodetest/tree/master/v2.0/helpers)` folder.  This is to ensure that all the resources are kept well organized in one place.  In general that folder will contain a `js` file (`example.js`) and a SQL file, that will directly query the database (`example.sql`).
+
+If the query is very simple (a simple `SELECT * FROM xxx.xxxxx` query), it is possible to use only a `js` file, as in `[helpers/frozen/frozen.js](https://github.com/NeotomaDB/api_nodetest/blob/master/v2.0/helpers/frozendata/frozen.js#L9)`.
+
+The existing files and folders in the `helpers` directory can easily be used as a template for new API endpoints.  Feel free to make changes to the code.  In particular, if there are new endpoints required, or changes in the way data are returned or documentation is provided, please let us know, or contribute directly.
+
+Once the desired SQL query is written and the `js` file to access it from nod/express is implemented we then need to edit the file that handles requests to the `data` route.  We can find this file in `[v2.0/handlers/data_handlers.js](https://github.com/NeotomaDB/api_nodetest/blob/master/v2.0/handlers/data_handlers.js)`.  You are defining a function name here, that will be called by the router.
+
+The router is in `[routes/data.js](https://github.com/NeotomaDB/api_nodetest/blob/master/v2.0/routes/data.js)`. It lets us know what function and parameters are associated with each URL route.  For example, someone calling our API using: `http://api-dev.neotomadb.org/v2.0/data/sites/132/contacts` would be directed to the function defined in the `handler.js` file called `contactsbysiteid`, since our routing file includes the call: `[router.get('/sites/:siteid/contacts', handlers.contactsbysiteid);](https://github.com/NeotomaDB/api_nodetest/blob/master/v2.0/routes/data.js#L20)`.  We also know that within the `contactsbysiteid()` function (in `helpers/contacts`) there would be a parameter called `siteid`
 
 ## Funding
 
