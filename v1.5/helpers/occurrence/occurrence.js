@@ -26,6 +26,7 @@ function occurrencebyid(req, res, next) {
   } else {
     res.status(500)
         .json({
+          success: 0,
           status: 'failure',
           data: null,
           message: 'Must pass either queries or an integer sequence.'
@@ -36,6 +37,7 @@ function occurrencebyid(req, res, next) {
     .then(function (data) {
       res.status(200)
         .json({
+          success: 1,
           status: 'success',
           data: data,
           message: 'Retrieved all tables'
@@ -117,6 +119,7 @@ function occurrencequery(req, res, next) {
       .then(function (data) {
         res.status(200)
           .json({
+            success: 1,
             status: 'success',
             data: data,
             message: 'Retrieved all tables'
@@ -148,6 +151,7 @@ function occurrencebytaxon(req, res, next) {
     .then(function (data) {
       res.status(200)
         .json({
+          success: 1,
           status: 'success',
           data: data,
           message: 'Retrieved all tables'

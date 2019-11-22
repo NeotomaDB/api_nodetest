@@ -13,9 +13,10 @@ function pollen(req, res, next) {
 
   res.status(200)
     .json({
-      status: 'success',
-      query: query,
-      message: 'Retrieved pollen'
+		success: 1,
+		status: 'success',
+		query: query,
+		message: 'Retrieved pollen'
       })
 }
 

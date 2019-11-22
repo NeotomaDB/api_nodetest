@@ -1,7 +1,7 @@
 // Sites query:
 const path = require('path');
 //get global database object
-var db = require('../../database/pgp_db');
+var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 const bib   = require('./../bib_format');
 
@@ -13,18 +13,22 @@ function sql(file) {
 
 const datasetbyidsql = sql('./datasetbyid.sql');
 //const datasetbysite = sql('./datasetbysite.sql');
-const datasetsbysitesql = sql('./datasetbysite.sql');
+const datasetsbysitesql = sql('./datasetbysites.sql');
 
 function datasetbyid(req, res, next) {
   console.log(req.params.datasetid);
-  
+  var datasetid = req.query.datasetid;
+  //check if datasetid provided by query or URL slug
+  if (!!req.query.datasetid){
+    datasetid = req.query.datasetid;
+  }
+
   if (!!req.params.datasetid) {
-    var datasetid = String(req.params.datasetid).split(',').map(function(item) {
-      return parseInt(item, 10);
-    });
+    datasetid = req.params.datasetid;
   } else {
     res.status(500)
-        .json({
+        .jsonp({
+          success: 0,
           status: 'failure',
           data: null,
           message: 'Must pass either queries or an integer sequence.'
@@ -34,7 +38,50 @@ function datasetbyid(req, res, next) {
   db.any(datasetbyidsql, [datasetid])
     .then(function (data) {
       res.status(200)
-        .json({
+        .jsonp({
+          success: 1,
+          status: 'success',
+          data: data,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+      next(err);
+    });
+}
+
+function datasetbyids(req, res, next) {
+  //console.log(req.query.datasetids);
+  var baddtsid = false;
+  var datasetids = [];
+  datasetids = String(req.query.datasetids)
+                      .split(",")
+                      .map(function(item){
+                        if( NaN == parseInt(item)){
+                          baddtsid = true
+                          //bad datasetid
+                          return
+                        }
+                        return parseInt(item, 10)
+                      });
+
+  //check if datasetid is sequence is not valid
+  if (baddtsid) {
+    res.status(500)
+        .jsonp({
+          success: 0,
+          status: 'failure',
+          data: null,
+          message: 'Must pass valid datasetids as integer sequence.'
+        });
+  }
+
+  console.log("datasetids:"+ JSON.stringify(datasetids));
+  db.any(datasetbyidsql, [datasetids])
+    .then(function (data) {
+      res.status(200)
+        .jsonp({
+          success: 1,
           status: 'success',
           data: data,
           message: 'Retrieved all tables'
@@ -56,7 +103,8 @@ function datasetsbysiteid(req, res, next) {
 
   if (isNaN(siteid)) {
     res.status(500)
-        .json({
+        .type('application/json')
+        .jsonp({
           status: 'failure',
           data: null,
           message: 'Must pass an integer siteid value.'
@@ -66,7 +114,9 @@ function datasetsbysiteid(req, res, next) {
   db.any(datasetsbysitesql, [siteid])
     .then(function (data) {
       res.status(200)
-        .json({
+        .type('application/json')
+        .jsonp({
+          success: 1,
           status: 'success',
           data: data,
           message: 'Retrieved all tables'
@@ -92,7 +142,8 @@ function datasetquery(req, res, next) {
   db.any(query)
     .then(function (data) {
       res.status(200)
-        .json({
+        .jsonp({
+          success: 1,
           status: 'success',
           data: data,
           message: 'Retrieved all tables'
@@ -105,5 +156,6 @@ function datasetquery(req, res, next) {
 }
 
 module.exports.datasetbyid = datasetbyid;
+module.exports.datasetbyids = datasetbyids;
 module.exports.datasetsbysiteid = datasetsbysiteid;
 module.exports.datasetquery = datasetquery;

@@ -105,16 +105,16 @@ router.get('/', function(req, res, next) {
 
 /**
 * @swagger
-* /v1.5/data/chronology:
+* /v1.5/data/chronologies:
 *   get:
 *     summary: Chronology metadata for a dataset.
 *     description: Returns the chronology and chronological controls used for a dataset age model.
 *     parameters:
-*       - name: chronid
-*         description: Unique chronology identifier.
-*         in: path
+*       - in: path
 *         required: true
-*         type: string
+*         type: integer
+*         name: id
+*         description: Unique chronology identifier.
 *     produces:
 *       - application/json
 *     responses:
@@ -125,8 +125,9 @@ router.get('/', function(req, res, next) {
 *          items:
 *            $ref: '#/definitions/chronology'
 */
-router.get('/chronology', handlers.chronology);
-router.get('/chronology/:id', handlers.chronology);
+router.get('/chronologies/:id', handlers.chronology);
+//router.get('/chronology', handlers.chronology);
+//router.get('/chronology/:id', handlers.chronology);
 
 /**
 * @swagger
@@ -218,7 +219,7 @@ router.get('/contacts/:contactid', handlers.contactsbyid);
  *         description: Related site identifier.
  *         in: query
  *         required: false
- *     	   type: integer
+ *         type: integer
  *     produces:
  *       - application/json
  *     responses:
@@ -232,30 +233,37 @@ router.get('/contacts/:contactid', handlers.contactsbyid);
 
 //router.get('/dataset/', handlers.dataset);
 //router.get('/dataset/:id', handlers.dataset);
-router.get('/datasets/', handlers.datasets);
+//router.get('/datasets/', handlers.datasets);
+router.get('/datasets/:datasetid', handlers.datasets);
+router.get('/datasets', handlers.datasets);
 router.get('/datasets/:datasetid/publications', handlers.publicationbydataset);
 
 
 /**
 * @swagger
 * definitions:
-*   download:
+*   downloads:
 *     properties:
 *       type: object
 */
 
 /**
 * @swagger
-* /v1.5/data/download:
+* /v1.5/data/downloads:
 *   get:
 *     summary: Returns the named Neotoma Database table.
 *     description: Returns the named Neotoma Database table.
 *     parameters:
 *       - name: datasetid
-*         description: Table name.
+*         description: datasetid.
 *         in: path
 *         required: true
 *         type: string
+*       - name: "callback"
+*         in: "query"
+*         description: "jsonp callback function"
+*         required: false
+*         type: "string"
 *     produces:
 *       - application/json
 *     responses:
@@ -264,11 +272,11 @@ router.get('/datasets/:datasetid/publications', handlers.publicationbydataset);
 *        schema:
 *          type: array
 *          items:
-*            $ref: '#/definitions/download'
+*            $ref: '#/definitions/downloads'
 */
 
-router.get('/download/', handlers.download);
-router.get('/download/:datasetid', handlers.download);
+router.get('/downloads/', handlers.downloads);
+router.get('/downloads/:datasetid', handlers.downloads);
 
 /**
 * @swagger
@@ -346,7 +354,7 @@ router.get('/download/:datasetid', handlers.download);
 */
 
 
-router.get('/geopoliticalunits', handlers.geopoliticalunits);
+router.get('/geopoliticalunits/', handlers.geopoliticalunits);
 router.get('/geopoliticalunits/:gpid', handlers.geopoliticalbyid);
 router.get('/sites/:siteid/geopoliticalunits', handlers.geopolbysite);
 
@@ -429,6 +437,30 @@ router.get('/sites/:siteid/geopoliticalunits', handlers.geopolbysite);
 router.get('/occurrence/', handlers.occurrencequery);
 router.get('/occurrence/:occurrenceid', handlers.occurrencebyid);
 router.get('/taxa/:taxonid/occurrence', handlers.occurrencebytaxon);
+
+/**
+* @swagger
+* /v1.5/data/taxa:
+*   get:
+*     summary: Individual taxa records.
+*     description: Returns of taxa matching parameters for taxagroupid and taxonname.
+*     parameters:
+*       - name: occid
+*         description: Unique occurrence identifier.
+*         in: path
+*         required: true
+*         type: integer
+*         format: int64
+*     produces:
+*       - application/json
+*     responses:
+*       200:
+*        description: Occurrence
+*        schema:
+*          type: object
+*          items:
+*            $ref: '#/definitions/occurrence'
+*/
 
 /**
 * @swagger
@@ -560,7 +592,7 @@ router.get('/pollen/:id', handlers.pollen);
 
 /**
  * @swagger
- * /v1.5/data/publication:
+ * /v1.5/data/publications:
  *   get:
  *     summary: Returns information about Neotoma publications
  *     description: Returns information about Neotoma publications
@@ -581,8 +613,8 @@ router.get('/pollen/:id', handlers.pollen);
  *         description: Related site identifier.
  *         in: query
  *         required: false
- *     	   type: integer
- *     	   format: int32
+ *         type: integer
+ *         format: int32
  *     produces:
  *       - application/json
  *     responses:
@@ -658,7 +690,7 @@ router.get('/dataset/:datasetid/publications', handlers.publicationbydataset);
  *         description: Related site identifier.
  *         in: query
  *         required: false
- *     	   type: integer
+ *         type: integer
  *     produces:
  *       - application/json
  *     responses:
@@ -727,7 +759,7 @@ router.get('/geopoliticalunits/:gpid/sites', handlers.sitesbygeopol);
  *         description: Related site identifier.
  *         in: query
  *         required: false
- *     	   type: integer
+ *         type: integer
  *     produces:
  *       - application/json
  *     responses:
