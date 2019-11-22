@@ -1080,8 +1080,6 @@ paths:
       parameters:
         - $ref: '#/components/parameters/datasetidQuery'
         - $ref: '#/components/parameters/siteidQuery'
-      produces:
-        - application/json
       responses:
         '200':
           description: An array of geopolitical units.

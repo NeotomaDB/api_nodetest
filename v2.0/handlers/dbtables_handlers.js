@@ -3,11 +3,9 @@ var db = require('../../database/pgp_db');
 var pgp = db.$config.pgp;
 
 module.exports = {
-// RETURNING DATASETTYPES
-//  dataset: function (req, res, next) {
-//    var dataset = require('./helpers/datasets.js');
-//    dataset.datasetbyid(req, res, next);
-  relativeagescales: relativeagescales
+  relativeagescales: relativeagescales,
+  gettables: gettables,
+  tablenames: tablenames
 };
 
 // Defining the query functions:
@@ -27,4 +25,35 @@ function relativeagescales (req, res, next) {
     .catch(function (err) {
       return next(err);
     });
+}
+
+
+function table (req, res, next) {
+  db.query('SELECT * FROM ndb.' + req.table + ';')
+    .then(function (data)) {
+      res.status(200)
+      .json({
+        status: 'success',
+        data: JSON.stringify(data),
+        message: 'Retrieved all RelativeAgeScales'
+      });
+  })
+  .catch(function (err) {
+    return next(err);
+  });
+}
+
+function tablenames (req, res, next) {
+  db.query('SELECT * FROM pg_catalog.pg_tables where schemaname="ndb";')
+    .then(function (data)) {
+      res.status(200)
+      .json({
+        status: 'success',
+        data: JSON.stringify(data),
+        message: 'Retrieved all RelativeAgeScales'
+      });
+  })
+  .catch(function (err) {
+    return next(err);
+  });
 }
