@@ -63,6 +63,7 @@ if(novalues == true) {
           
           res.status(200)
             .json({
+              success: 1,
               status: 'success',
               data: {query: outobj, result: returner}
             });
@@ -95,6 +96,7 @@ function contactsbyid(req, res, next) {
     .then(function (data) {
       res.status(200)
         .json({
+          success: 1,
           status: 'success',
           data: data,
           message: 'Retrieved all tables'

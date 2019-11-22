@@ -1,8 +1,9 @@
+/*
 const bib   = require('../helpers/bib_format');
 //get global database object
 var db = require('../../database/pgp_db');
 var pgp = db.$config.pgp;
-
+*/
 
 
 
