@@ -9,8 +9,6 @@ info:
   version: "2.0-oas3"
   description: API Documentation for the Neotoma Paleoecological Database
   termsOfService: 'no'
-  externalDocs:
-    url: http://neotomadb.org
   contact:
     name: Simon J Goring
     email: goring@wisc.edu
@@ -22,7 +20,7 @@ tags:
   - name: Database tables
     description: Endpoints that access tables from Neotoma verbatim.
     externalDocs:
-      url: http://open.neotomadb.org/schema/#Structure
+      url: http://open.neotomadb.org/schemas/#Structure
   - name: Chronology metadata
     description: Information about chronological controls and the models used to add the temporal component to records.
   - name: Contact metadata
@@ -62,7 +60,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schema/collectionTypes'
+                $ref: '#/components/schemas/collectionTypes'
   /v1.5/apps/DatasetTypes:
     get:
       tags: ['Database tables', 'v1.5']
@@ -72,7 +70,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schema/datasetTypes'
+                $ref: '#/components/schemas/datasetTypes'
   /v1.5/apps/TaxaInDatasets:
     get:
       tags: ['v1.5']
@@ -83,7 +81,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schema/taxaInDatasets'
+                $ref: '#/components/schemas/taxaInDatasets'
   /v1.5/data/chronology/{chronid}:
     get:
       tags: ['Chronology metadata', 'v1.5']
@@ -101,7 +99,7 @@ paths:
               schema:
                 type: object
                 items:
-                  $ref: '#/components/schema/chronology'
+                  $ref: '#/components/schemas/chronology'
   /v1.5/data/contacts/{contactid}:
     get:
       tags: ['Contact metadata', 'v1.5']
@@ -123,7 +121,7 @@ paths:
               schema:
                 type: object
                 items:
-                  $ref: '#/components/schema/contact'
+                  $ref: '#/components/schemas/contact'
   /v1.5/data/datasets/{datasetid}:
     get:
       tags: ['Dataset metadata', 'v1.5']
@@ -139,7 +137,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/dataset'
+                  $ref: '#/components/schemas/dataset'
   /v1.5/data/datasets:
     get:
       tags: ['Dataset metadata', 'v1.5']
@@ -156,7 +154,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/dataset'
+                  $ref: '#/components/schemas/dataset'
   /v1.5/data/download/{datasetid}:
     get:
       tags: ['Data download', 'v1.5']
@@ -172,7 +170,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/download'
+                  $ref: '#/components/schemas/download'
   /v1.5/data/geopoliticalunits/{gpid}:
     get:
       tags: ['Geopolitical metadata', 'v1.5']
@@ -192,7 +190,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/geopolitical'
+                  $ref: '#/components/schemas/geopolitical'
   /v1.5/data/geopoliticalunits/:
     get:
       tags: ['Geopolitical metadata', 'v1.5']
@@ -230,7 +228,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/geopolitical'
+                  $ref: '#/components/schemas/geopolitical'
   /v1.5/data/occurrence/{taxonid}:
     get:
       tags: ['Occurrence metadata', 'v1.5']
@@ -247,7 +245,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/occurrence'
+                  $ref: '#/components/schemas/occurrence'
   /v1.5/data/occurrence:
     get:
       tags: ['Occurrence metadata', 'v1.5']
@@ -272,7 +270,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/occurrence'
+                  $ref: '#/components/schemas/occurrence'
   /v1.5/data/pollen/{taxonid}:
     get:
       tags: ['Pollen proportions', 'v1.5']
@@ -288,21 +286,16 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/pollen'
+                  $ref: '#/components/schemas/pollen'
   /v1.5/data/pollen:
     get:
       tags: ['Pollen proportions', 'v1.5']
       summary: Pollen data from Neotoma.
       description: Returns information about pollen.
       parameters:
-        - name: taxonname
-          description: 'Name of the taxon, can include wildcards.'
-          in: query
-          required: false
-          schema:
-            type: string
+        - $ref: '#/components/parameters/taxonnameQuery'
         - name: nametype
-          description: Not sure.
+          description: 'Not sure.'
           in: query
           required: false
           schema:
@@ -323,9 +316,25 @@ paths:
             type: number
             format: float
         - name: agedocontain
+          in: query
+          required: false
+          schema:
+            type: integer
         - name: coords
+          in: query
+          required: false
+          schema:
+            type: integer
         - name: bbox
+          in: query
+          required: false
+          schema:
+            type: integer
         - name: wkt
+          in: query
+          required: false
+          schema:
+            type: integer
         - name: sitename
           description: Name of site for pollen record.
           in: query
@@ -334,11 +343,27 @@ paths:
             type: string
         - $ref: '#/components/parameters/siteidQuery'
         - name: format
+          in: query
+          required: false
+          schema:
+            type: integer
         - $ref: '#/components/parameters/limitParam'
         - $ref: '#/components/parameters/offsetParam'
         - name: fields
+          in: query
+          required: false
+          schema:
+            type: string
         - name: vocab
+          in: query
+          required: false
+          schema:
+            type: string
         - name: occurrences
+          in: query
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: A pollen response.
@@ -347,7 +372,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/pollen'
+                  $ref: '#/components/schemas/pollen'
   /v1.5/data/publication/{pubid}:
     get:
       tags: ['Publication metadata', 'v1.5']
@@ -369,7 +394,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/publication'
+                  $ref: '#/components/schemas/publication'
   /v1.5/data/publication:
     get:
       tags: ['Publication metadata', 'v1.5']
@@ -386,7 +411,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/publication'
+                  $ref: '#/components/schemas/publication'
   /v1.5/data/sites/{siteid}:
     get:
       tags: ['Site metadata', 'v1.5']
@@ -402,7 +427,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/sites'
+                  $ref: '#/components/schemas/sites'
   /v1.5/data/sites:
     get:
       tags: ['Site metadata', 'v1.5']
@@ -419,7 +444,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/sites'
+                  $ref: '#/components/schemas/sites'
   /v1.5/data/taxa:
     get:
       tags: ['Taxonomic metadata', 'v1.5']
@@ -443,7 +468,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/taxa'
+                  $ref: '#/components/schemas/taxa'
   /v1.5/dbtables/{table}:
     get:
       tags: ['Database tables', 'v1.5']
@@ -451,9 +476,10 @@ paths:
       description: Returns the named Neotoma Database table.
       parameters:
         - name: table
-          description: Table name.
+          description: Neotoma database table name.
           in: path
           required: true
+          example: "geochrontypes"
           schema:
             type: string
       responses:
@@ -464,24 +490,17 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/dbtables'
+                  $ref: '#/components/schemas/dbtables'
   /v2.0/apps/collectionTypes:
     get:
       tags: ['Database tables', 'v2.0']
-      parameters:
-        - name: callback
-          in: query
-          description: jsonp callback function
-          required: false
-          schema:
-            type: string
       responses:
         '200':
           description: Definition generated from Swagger Inspector
           content:
             application/json:
               schema:
-                $ref: '#/components/schema/collectionTypes'
+                $ref: '#/components/schemas/collectionTypes'
   /v2.0/data/chronology/{chronid}:
     get:
       tags: ['Chronology metadata', 'v2.0']
@@ -499,7 +518,7 @@ paths:
               schema:
                 type: object
                 items:
-                  $ref: '#/components/schema/chronology'
+                  $ref: '#/components/schemas/chronology'
   /v2.0/data/contacts:
     get:
       tags: ['Contact metadata', 'v2.0']
@@ -515,8 +534,8 @@ paths:
           schema:
             type: integer
             format: int64
-          minimum: 1
-          example: 44
+            minimum: 1
+            example: 44
         - name: familyname
           description: Full name of the the researcher (may use the % wildcard)
           in: query
@@ -554,7 +573,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/contact'
+                  $ref: '#/components/schemas/contact'
   /v2.0/data/datasets/{datasetid}/contacts:
     get:
       tags: ['Contact metadata', 'v2.0']
@@ -570,7 +589,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/contact'
+                  $ref: '#/components/schemas/contact'
   /v2.0/data/sites/{siteid}/contacts:
     get:
       tags: ['Contact metadata', 'v2.0']
@@ -586,7 +605,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/contact'
+                  $ref: '#/components/schemas/contact'
   /v2.0/data/datasets:
     get:
       tags: ['Dataset metadata', 'v2.0']
@@ -595,73 +614,81 @@ paths:
       parameters:
         - $ref: '#/components/parameters/siteidQuery'
         - name: piid
-          description: >-
+          description: >
             Integer contact ID for the lead investigator. Can be obtained using
             the 'contacts' endpoint.
           in: query
           required: false
-          type: integer
-          format: int64
-          minimum: 1
-          example: 67
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+            example: 67
         - name: datasettype
           description: >-
             Neotoma contains data for a number of dataset types (see
             /dbtables/datasettypes.  This returns a subset of data types.
           in: query
           required: false
-          type: string
-          example: pollen
+          schema:
+            type: string
+            example: pollen
         - name: altmin
           description: Minimum altitude of the dataset site location (in meters)
           in: query
           required: false
-          type: integer
-          format: int64
-          example: 200
+          schema:
+            type: integer
+            format: int64
+            example: 200
         - name: altmax
           in: query
           description: Maximum altitude of the dataset site location (in meters)
           required: false
-          type: integer
-          format: int64
-          example: 300
+          schema:
+            type: integer
+            format: int64
+            example: 300
         - name: loc
           in: query
-          description: >-
+          description: >
             The geographic region of interest for the site, as a GeoJSON string
             or valid Well Known Text (WKT).  Assumed projection of EPSG:4376
             unless otherwise defined.
           required: false
-          type: string
-          format: geoJSON
+          schema:
+            type: string
+            format: geoJSON
         - name: ageyoung
           in: query
           description: >-
             Youngest age that intercepts with the dataset (in calibrated years
             before present, with 0 at 1950CE)
           required: false
-          type: integer
-          format: int64
-          example: -60
+          schema:
+            type: integer
+            format: int64
+            example: -60
         - name: ageold
           in: query
           description: >-
             Oldest age that intercepts with the dataset (in calibrated years
             before present, with 0 at 1950CE)
           required: false
-          type: integer
-          format: int64
-          example: 11430
+          schema:
+            type: integer
+            format: int64
+            example: 11430
         - name: ageof
           in: query
           description: >-
             Dataset age ranges must contain this age (in calibrated years before
             present, with 0 at 1950CE)
           required: false
-          type: integer
-          format: int64
-          example: 6700
+          schema:
+            type: integer
+            format: int64
+            example: 6700
       responses:
         '200':
           description: An array of datasets.
@@ -670,7 +697,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/dataset'
+                  $ref: '#/components/schemas/dataset'
   /v2.0/data/sites/{siteid}/datasets:
     get:
       tags: ['Dataset metadata', 'v2.0']
@@ -686,7 +713,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/dataset'
+                  $ref: '#/components/schemas/dataset'
   /v2.0/data/datasets/{datasetid}:
     get:
       tags: ['Dataset metadata', 'v2.0']
@@ -702,12 +729,12 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/dataset'
+                  $ref: '#/components/schemas/dataset'
   /v2.0/data/dbtables/{table}:
     get:
       tags: ['Database tables', 'v2.0']
       summary: Returns the full content of a named Neotoma Database table.
-      description: >-
+      description: >
         Returns the named Neotoma Database table.  An empty query will return a
         list of tables.
       parameters:
@@ -715,8 +742,9 @@ paths:
           description: Table name.
           in: path
           required: true
-          format:
+          schema:
             type: string
+            example: 'geochrontypes'
       responses:
         '200':
           description: Returned table.
@@ -725,7 +753,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/dbtables'
+                  $ref: '#/components/schemas/dbtables'
   /v2.0/data/download/{datasetid}:
     get:
       tags: ['Data download', 'v2.0']
@@ -743,7 +771,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/download'
+                  $ref: '#/components/schemas/download'
   /v2.0/data/sites/{siteid}/geopoliticalunits:
     get:
       tags: ['Geopolitical metadata', 'v2.0']
@@ -758,7 +786,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/geopolitical'
+                  $ref: '#/components/schemas/geopolitical'
   /v2.0/data/geopoliticalunits/{gpid}:
     get:
       tags: ['Geopolitical metadata', 'v2.0']
@@ -780,7 +808,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/geopolitical'
+                  $ref: '#/components/schemas/geopolitical'
   /v2.0/data/geopoliticalunits:
     get:
       tags: ['Geopolitical metadata', 'v2.0']
@@ -808,9 +836,9 @@ paths:
           in: query
           description: Should all lower ranked units below the target unit be returned?
           required: false
-          default: false
           schema:
             type: boolean
+            default: false
       responses:
         '200':
           description: An array of geopolitical units.
@@ -819,7 +847,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/geopolitical'
+                  $ref: '#/components/schemas/geopolitical'
   /v2.0/data/occurrences/{occid}:
     get:
       tags: ['Occurrence metadata', 'v2.0']
@@ -842,7 +870,7 @@ paths:
               schema:
                 type: object
                 items:
-                  $ref: '#/components/schema/occurrence'
+                  $ref: '#/components/schemas/occurrence'
   /v2.0/data/taxa/{taxonid}/occurrences:
     get:
       tags: ['Occurrence metadata', 'v2.0']
@@ -860,7 +888,7 @@ paths:
               schema:
                 type: object
                 items:
-                  $ref: '#/components/schema/occurrence'
+                  $ref: '#/components/schemas/occurrence'
   /v2.0/data/occurrences:
     get:
       tags: ['Occurrence metadata', 'v2.0']
@@ -941,7 +969,7 @@ paths:
               schema:
                 type: object
                 items:
-                  $ref: '#/components/schema/occurrence'
+                  $ref: '#/components/schemas/occurrence'
   /v2.0/data/pollen/{taxonid}:
     get:
       tags: ['Pollen proportions', 'v2.0']
@@ -957,21 +985,15 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/pollen'
+                  $ref: '#/components/schemas/pollen'
   /v2.0/data/pollen:
     get:
       tags: ['Pollen proportions', 'v2.0']
-      summary: Pollen data from Neotoma.
-      description: Returns information about pollen.
+      summary: Retrieve pollen data from Neotoma.
       parameters:
-        - name: taxonname
-          description: 'Name of the taxon, can include wildcards.'
-          in: query
-          required: false
-          schema:
-            type: string
+        - $ref: '#/components/parameters/taxonnameQuery'
         - name: nametype
-          description: Not sure.
+          description: 'Not sure.'
           in: query
           required: false
           schema:
@@ -981,8 +1003,8 @@ paths:
           description: 'Most recent age, in calendar years before present.'
           in: query
           required: false
-          type: number
           schema:
+            type: number
             format: float
         - name: ageold
           description: 'Oldest age, in calendar years before present.'
@@ -992,9 +1014,25 @@ paths:
             type: number
             format: float
         - name: agedocontain
+          in: query
+          required: false
+          schema:
+            type: integer
         - name: coords
+          in: query
+          required: false
+          schema:
+            type: integer
         - name: bbox
+          in: query
+          required: false
+          schema:
+            type: integer
         - name: wkt
+          in: query
+          required: false
+          schema:
+            type: integer
         - name: sitename
           description: Name of site for pollen record.
           in: query
@@ -1003,11 +1041,27 @@ paths:
             type: string
         - $ref: '#/components/parameters/siteidQuery'
         - name: format
+          in: query
+          required: false
+          schema:
+            type: integer
         - $ref: '#/components/parameters/limitParam'
         - $ref: '#/components/parameters/offsetParam'
         - name: fields
+          in: query
+          required: false
+          schema:
+            type: string
         - name: vocab
+          in: query
+          required: false
+          schema:
+            type: string
         - name: occurrences
+          in: query
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: A pollen response.
@@ -1016,7 +1070,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/pollen'
+                  $ref: '#/components/schemas/pollen'
   /v2.0/data/publications/{pubid}:
     get:
       tags: ['Publication metadata', 'v2.0']
@@ -1038,7 +1092,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/publications'
+                  $ref: '#/components/schemas/publications'
   /v2.0/data/publications:
     get:
       tags: ['Publication metadata', 'v2.0']
@@ -1055,7 +1109,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/publications'
+                  $ref: '#/components/schemas/publications'
   /v2.0/data/sites/{siteid}:
     get:
       tags: ['Site metadata', 'v2.0']
@@ -1071,7 +1125,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/sites'
+                  $ref: '#/components/schemas/sites'
   /v2.0/data/sites:
     get:
       tags: ['Site metadata', 'v2.0']
@@ -1088,7 +1142,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/sites'
+                  $ref: '#/components/schemas/sites'
   /v2.0/data/taxa/{taxonid}:
     get:
       tags: ['Taxonomic metadata', 'v2.0']
@@ -1104,7 +1158,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/taxa'
+                  $ref: '#/components/schemas/taxa'
   /v2.0/data/taxa:
     get:
       tags: ['Taxonomic metadata', 'v2.0']
@@ -1127,7 +1181,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schema/taxa'
+                  $ref: '#/components/schemas/taxa'
 components:
   parameters:
     offsetParam:
@@ -1190,21 +1244,21 @@ components:
         minimum: 0
     taxonidPath:
       name: taxonid
-      description: Unique taxonomic identifier (from the Neotoma taxon table).
+      description: >
+        Unique taxonomic identifier (from the Neotoma taxon table).
       in: path
       required: true
       schema:
         type: integer
         format: int32
-        minumum: 0
+        minimum: 0
     taxonidQuery:
-      name: taxonid
-      description: Unique taxonomic identifier (from the Neotoma taxon table).
       in: query
+      name: taxonid
       required: false
+      description: Unique taxonomic identifier (from the Neotoma taxon table).
       schema:
         type: integer
-        format: int32
         minimum: 0
     chronidPath:
       name: chronid
@@ -1215,7 +1269,14 @@ components:
         type: integer
         format: int64
         minimum: 0
-  schema:
+    taxonnameQuery:
+      in: query
+      name: taxonname
+      required: false
+      description: Unique taxonomic name (from the Neotoma taxon table).
+      schema:
+        type: string
+  schemas:
     collectionTypes:
       type: object
       properties:
@@ -1228,8 +1289,12 @@ components:
           items:
             type: object
             properties:
-              getcollectiontypes:
+              colltypeid:
+                type: integer
+                example: 8
+              colltype:
                 type: string
+                example: "Isolated specimen"
     datasetTypes:
       type: object
       properties:
@@ -1242,8 +1307,12 @@ components:
           items:
             type: object
             properties:
-              getdatasettypes:
+              datasettypeid:
+                type: integer
+                example: 14
+              datasettype:
                 type: string
+                example: "geochemistry"
     taxaInDatasets:
       type: object
       properties:
@@ -1267,31 +1336,54 @@ components:
                 items:
                   type: integer
     chronology:
+      type: object
       properties:
-        chronology:
+        agetype:
+          type: string
+          example: "Calibrated radiocarbon years BP"
+        default:
+          type: boolean
+          example: True
+        modelType:
+          type: string
+          example: 'linear interpolation'
+        chronologyid:
+          type: integer
+          example: 1
+        chronologyName:
+          type: string
+          example: 'NAPD 1'
+        datePrepared:
+          type: string
+          format: date
+          example: '2013-09-30'
+        reliableagespan:
           type: object
           properties:
-            chronologyid:
+            younger:
               type: integer
-            agetype:
-              type: string
-            default:
+              example: -30
+            older:
               type: integer
-            chronologyName:
+              example: 6490
+        preparedby:
+          type: object
+          properties:
+            initials:
               type: string
-            datePrepared:
+              example: "E.C."
+            contactid:
+              type: integer
+              example: 44
+            firstname:
               type: string
-              format: dateTime
-              example: '2013-09-30T21:02:51.000Z'
-            modelType:
+              example: "Eric"
+            familyname:
               type: string
-            ages:
-              type: object
-              properties:
-                younger:
-                  type: integer
-                older:
-                  type: integer
+              example: "Grimm"
+            contactname:
+              type: string
+              example: Grimm, Eric Christopher
         dataset:
           type: object
           properties:
@@ -1299,20 +1391,33 @@ components:
               type: integer
             datasettype:
               type: string
+        controls:
+          type: object
+          properties:
             chroncontrolid:
               type: integer
+              example: 5645
             depth:
-              type: numeric
+              type: number
+              example: 0.5
             thickness:
-              type: numeric
+              type: number
+              example: 2
             age:
-              type: numeric
-            ageyounger:
-              type: numeric
-            ageolder:
-              type: numeric
+              type: number
+              example: -45
+            controllimits:
+              type: object
+              properties:
+                ageyounger:
+                  type: number
+                  example: -48
+                ageolder:
+                  type: number
+                  example: -48
             controltype:
               type: string
+              example: "Core top"
     contact:
       properties:
         contactid:
@@ -1393,8 +1498,23 @@ components:
                 initials:
                   type: string
     download:
+      type: object
       properties:
-        type: object
+        datasetid:
+          type: integer
+        frozendata:
+          type: object
+          properties:
+            chronologies:
+              type: array
+              items:
+                $ref: '#/components/schemas/chronology'
+            dataset:
+              type: object
+              items:
+                $ref: '#/components/schemas/dataset'
+            samples:
+              type: array
     geopolitical:
       properties:
         geopoliticalid:
@@ -1462,7 +1582,8 @@ components:
               format: int64
             sitename:
               type: string
-              altitude: int32
+            altitude:
+              type: integer
             location:
               type: string
             datasettype:
@@ -1520,7 +1641,7 @@ components:
         geography:
           type: string
         altitude:
-          type: float
+          type: integer
         CollectionUnits:
           type: object
           properties:
@@ -1561,8 +1682,14 @@ components:
         status:
           type: boolean
     dbtables:
+      type: object
       properties:
-        type: object
+        status:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
     publications:
       properties:
         PublicationID:
