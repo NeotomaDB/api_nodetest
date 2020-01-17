@@ -16,7 +16,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/RelativeAgeScales', handlers.relativeagescales);
-router.get('/gettables', handlers.gettables);
+router.get('/gettables', handlers.table);
 router.get('/tablenames', handlers.tablenames)
 
 module.exports = router;
