@@ -4,7 +4,7 @@ var pgp = db.$config.pgp;
 
 module.exports = {
   relativeagescales: relativeagescales,
-  gettables: gettables,
+  table: table,
   tablenames: tablenames
 };
 
@@ -30,7 +30,7 @@ function relativeagescales (req, res, next) {
 
 function table (req, res, next) {
   db.query('SELECT * FROM ndb.' + req.table + ';')
-    .then(function (data)) {
+    .then(function (data) {
       res.status(200)
       .json({
         status: 'success',
@@ -45,7 +45,7 @@ function table (req, res, next) {
 
 function tablenames (req, res, next) {
   db.query('SELECT * FROM pg_catalog.pg_tables where schemaname="ndb";')
-    .then(function (data)) {
+    .then(function (data) {
       res.status(200)
       .json({
         status: 'success',
