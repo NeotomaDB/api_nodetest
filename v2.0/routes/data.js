@@ -27,6 +27,8 @@ router.get('/sites/:siteid/datasets_elc', handlers.datasetsbysite_elc); // Takes
 router.get('/datasets/', handlers.datasetquery);
 router.get('/datasets/:datasetid', handlers.datasetbyid);
 router.get('/sites/:siteid/datasets', handlers.datasetsbysite); // Takes integers, including comma separated
+router.get('/geopoliticalunits/:gpid/datasets', handlers.sitesbygeopol);
+
 
 router.get('/frozen/:datasetid', handlers.frozen);
 
