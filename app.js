@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 const YAML = require('yamljs');
 var swaggerUi = require('swagger-ui-express'),
-  swaggerDocument = YAML.load('./swagger.yaml');
+swaggerDocument = YAML.load('./swagger.yaml');
 var morgan = require('morgan');
 var fs = require('fs');
 
