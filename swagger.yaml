@@ -1514,7 +1514,7 @@ components:
               items:
                 $ref: '#/components/schemas/dataset'
             samples:
-              type: array
+              type: string
     geopolitical:
       properties:
         geopoliticalid:
@@ -1642,26 +1642,30 @@ components:
           type: string
         altitude:
           type: integer
-        CollectionUnits:
-          type: object
-          properties:
-            collectionunit:
-              type: string
-            collectionunitid:
-              type: integer
-              format: int64
-            handle:
-              type: string
-            collectionunittype:
-              type: string
-            datasets:
-              type: object
-              properties:
-                datasettype:
-                  type: string
-                datasetid:
-                  type: integer
-                  format: int64
+        collectionunits:
+          type: array
+          items:
+            type: object
+            properties:
+              collectionunit:
+                type: string
+              collectionunitid:
+                type: integer
+                format: int64
+              handle:
+                type: string
+              collectionunittype:
+                type: string
+              datasets:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    datasettype:
+                      type: string
+                    datasetid:
+                      type: integer
+                      format: int64
     taxa:
       properties:
         taxonid:
