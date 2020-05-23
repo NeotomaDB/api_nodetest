@@ -33,9 +33,9 @@
     "eslint-plugin-standard": "^4.0.1",
     "gulp": "^4.0.2",
     "gulp-mocha": "^6.0.0",
-    "gulp-nodemon": "^2.4.2",
-    "mocha": "^5.2.0",
-    "nodemon": "^1.19.4",
+    "gulp-nodemon": "^2.5.0",
+    "mocha": "^7.1.2",
+    "nodemon": "^2.0.4",
     "pre-commit": "^1.2.2",
     "supertest": "^3.4.2"
   }
