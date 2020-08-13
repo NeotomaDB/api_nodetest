@@ -68,6 +68,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 // identify version from header; still requires version directory paths in
 // hierarchy of <version>/handlers; <version>/routes; <version>/helpers;
 
+app.get('/v1', (req, res) => {
+  res.status(301).redirect('http://wnapi.neotomadb.org/')
+})
+
+app.get('/v1/*', (req, res) => {
+  res.status(301).redirect('http://wnapi.neotomadb.org' + req.originalUrl)
+})
+
 // use the v1.5 endpoints:
 app.use('/', v15index);
 app.use('/v1.5/apps', v15apps);
