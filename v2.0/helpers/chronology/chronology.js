@@ -19,7 +19,9 @@ const removeEmpty = function (obj) {
 // Helper for linking to external query files:
 function sql (file) {
   const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath, { minify: true });
+  return new pgp.QueryFile(fullPath, {
+    minify: true
+  });
 }
 
 const chronologybyidsql = sql('./chronologybyid.sql');
@@ -27,11 +29,12 @@ const chronologybydsidsql = sql('./chronologybydsid.sql');
 const chronologybystidsql = sql('./chronologybystid.sql');
 
 function chronologybyid (req, res, next) {
-
   if (!(req.params.chronologyid == null)) {
-    var chronologyid = String(req.params.chronologyid).split(',').map(function (item) {
-      return parseInt(item, 10);
-    });
+    var chronologyid = String(req.params.chronologyid)
+      .split(',')
+      .map(function (item) {
+        return parseInt(item, 10);
+      });
   } else {
     res.status(500)
       .json({
@@ -56,11 +59,12 @@ function chronologybyid (req, res, next) {
 }
 
 function chronologybydsid (req, res, next) {
-
   if (!(req.params.datasetid == null)) {
-    var datasetid = String(req.params.datasetid).split(',').map(function (item) {
-      return parseInt(item, 10);
-    });
+    var datasetid = String(req.params.datasetid)
+      .split(',')
+      .map(function (item) {
+        return parseInt(item, 10);
+      });
   } else {
     res.status(500)
       .json({
@@ -88,16 +92,18 @@ function chronologybydsid (req, res, next) {
 
 function chronologybystid (req, res, next) {
   if (!!req.params.siteid) {
-    var siteid = String(req.params.siteid).split(',').map(function (item) {
-      return parseInt(item, 10);
-    });
+    var siteid = String(req.params.siteid)
+      .split(',')
+      .map(function (item) {
+        return parseInt(item, 10);
+      });
   } else {
     res.status(500)
       .json({
         status: 'failure',
         data: null,
         message: 'Must pass either queries or an integer sequence.'
-    });
+      });
   };
 
   db.any(chronologybystidsql, [siteid])
@@ -110,7 +116,7 @@ function chronologybystid (req, res, next) {
         });
     })
     .catch(function (err) {
-        return next(err);
+      return next(err);
     })
 }
 
