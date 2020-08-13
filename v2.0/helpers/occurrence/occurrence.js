@@ -14,7 +14,9 @@ var pgp = db.$config.pgp;
 // Helper for linking to external query files:
 function sql (file) {
   const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath, {minify: true});
+  return new pgp.QueryFile(fullPath, {
+    minify: true
+  });
 }
 
 const occurrencequerysql = sql('./occurrencequery.sql');
@@ -59,7 +61,10 @@ function occurrencequery (req, res, next) {
     // Split up the name into the accepts and the drops.
     var name = parseTaxa(req.query.taxonname)
   } else {
-    var name = {taxa: null, drop: null};
+    name = {
+      taxa: null,
+      drop: null
+    };
   }
 
   // Get the input parameters:
@@ -188,7 +193,7 @@ function occurrencequery (req, res, next) {
   };
 };
 
-function occurrencebytaxon (req, res, next) {
+function occurrencebytaxon(req, res, next) {
   var taxonIdUsed = !!req.params.taxonid;
   if (taxonIdUsed) {
     var taxonlist = String(req.params.taxonid).split(',').map(function (item) {

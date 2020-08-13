@@ -12,7 +12,7 @@ var router = express.Router();
 
 /* GET home page. */
 // This just reroutes to the swagger docs when you go to the main endpoint.
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
   res.redirect('/api-docs');
 });
 
