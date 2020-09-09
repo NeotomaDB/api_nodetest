@@ -3,7 +3,7 @@
 const path = require('path');
 
 //get global database object
-var db = require('../../database/pgp_db');
+var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
 // Helper for linking to external query files:
@@ -17,7 +17,7 @@ function sql(file) {
 const sitebydsid = sql('./sitebydsid.sql');
   const sitebyid = sql('./sitebyid.sql');
 const sitebygpid = sql('./sitebygpid.sql');
- 
+
 function sitesbyid(req, res, next) {
 
   if (!!req.params.siteid) {
@@ -47,7 +47,7 @@ function sitesbyid(req, res, next) {
     })
     .catch(function (err) {
         return next(err);
-    }) 
+    })
 }
 
 

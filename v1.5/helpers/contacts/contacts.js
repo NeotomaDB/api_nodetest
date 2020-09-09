@@ -3,7 +3,7 @@
 const path = require('path');
 
 //get global database object
-var db = require('../../database/pgp_db');
+var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
 // Helper for linking to external query files:
@@ -15,7 +15,7 @@ function sql(file) {
 // Create a QueryFile globally, once per file:
 const contactbyid = sql('./contactbyid.sql');
 const contactquery = sql('./contactquery.sql');
- 
+
 
 function contacts(req, res, next) {
 
@@ -33,7 +33,7 @@ function contacts(req, res, next) {
                   'offset':req.query.offset
                };
 
-  var novalues = Object.keys(outobj).every(function(x) { 
+  var novalues = Object.keys(outobj).every(function(x) {
     return typeof outobj[x]==='undefined' || !outobj[x];
   });
 
@@ -60,7 +60,7 @@ if(novalues == true) {
           } else {
             returner = data;
           }
-          
+
           res.status(200)
             .json({
               success: 1,
@@ -104,7 +104,7 @@ function contactsbyid(req, res, next) {
     })
     .catch(function (err) {
         return next(err);
-    }) 
+    })
 }
 
 module.exports.contactquery = contacts;
