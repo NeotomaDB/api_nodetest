@@ -6,6 +6,7 @@ var options = {
 };
 
 const pgp = require('pg-promise')(options);
+pgp.pg.types.setTypeParser(20, BigInt);
 const ctStr = require('./db_connect.json');
 
 const db = pgp(ctStr);
