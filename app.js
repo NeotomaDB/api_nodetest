@@ -13,7 +13,8 @@ var fs = require('fs');
 var app = express();
 
 app.use(cors());
-
+//test trigger watch restart - 09/12/20
+//
 // create a write stream (in append mode)
 var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
 
@@ -67,6 +68,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // optionally, re-factor route paths here to strip version string and
 // identify version from header; still requires version directory paths in
 // hierarchy of <version>/handlers; <version>/routes; <version>/helpers;
+console.log("applying routes...")
 
 app.get('/v1', (req, res) => {
   res.status(301).redirect('http://wnapi.neotomadb.org/')
