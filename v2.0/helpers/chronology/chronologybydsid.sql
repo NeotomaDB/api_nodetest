@@ -62,4 +62,4 @@ FROM                    ndb.chronologies AS chrs
   LEFT OUTER JOIN       ndb.relativeages AS ra     ON ra.relativeageid = rc.relativeageid
   LEFT JOIN       ndb.analysisunits AS au     ON au.analysisunitid = chctrl.analysisunitid
 WHERE    dts.datasetid IN ($1:csv)
-GROUP BY chrs.chronologyid, aty.agetype, cnt.contactid, au.analysisunitid
+GROUP BY chrs.chronologyid, aty.agetype, cnt.contactid
