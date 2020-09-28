@@ -22,4 +22,5 @@ WHERE
   AND (${altmin} IS NULL OR sts.altitude >= ${altmin})
   AND (${altmax} IS NULL OR sts.altitude <= ${altmax})
   AND (${loc}    IS NULL OR ST_Intersects(ST_GeogFromText(${loc}), sts.geog))
+  AND (${siteid} IS NULL OR sts.siteid IN ${siteid})
   AND sts.siteid IN (SELECT siteid FROM sitid)

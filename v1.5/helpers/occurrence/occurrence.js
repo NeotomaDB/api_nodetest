@@ -3,7 +3,7 @@
 const path = require('path');
 
 //get global database object
-var db = require('../../database/pgp_db');
+var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
 // Helper for linking to external query files:
@@ -45,12 +45,12 @@ function occurrencebyid(req, res, next) {
     })
     .catch(function (err) {
         return next(err);
-    }) 
+    })
 }
 
 
 function occurrencequery(req, res, next) {
- 
+
   // Get the input parameters:
   var outobj = {'sitename':String(req.query.sitename),
                   'altmin':parseInt(String(req.query.altmin)),
@@ -93,7 +93,7 @@ function occurrencequery(req, res, next) {
     }
   };
 
-  var novalues = Object.keys(outobj).every(function(x) { 
+  var novalues = Object.keys(outobj).every(function(x) {
     return typeof outobj[x]==='undefined' || !outobj[x];
   });
 
