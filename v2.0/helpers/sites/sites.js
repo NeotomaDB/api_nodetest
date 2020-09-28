@@ -69,7 +69,7 @@ function sitesquery (req, res, next) {
   if (typeof req.query.siteid === 'undefined') {
     outobj.siteid = null
   } else {
-      var siteid = String(req.params.siteid).split(',').map(function (item) {
+      outobj.siteid = String(req.params.siteid).split(',').map(function (item) {
         return parseInt(item, 10);
       });
   }
