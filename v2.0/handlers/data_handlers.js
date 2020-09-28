@@ -36,7 +36,6 @@ module.exports = {
     var occurrences = require('../helpers/occurrence/occurrence.js')
     occurrences.occurrencebytaxon(req, res, next);
   },
-
   // RETURNING PUBLICATIONS
   publicationid: function (req, res, next) {
     var publn = require('../helpers/publications/publications.js');
