@@ -56,7 +56,7 @@ function sitesquery (req, res, next) {
   // Get the input parameters:
   var outobj = {
     'sitename': String(req.query.sitename),
-    'siteid': String(req.query.siteid),
+    'siteid': parseInt(String(req.query.siteid)),
     'altmin': parseInt(String(req.query.altmin)),
     'altmax': parseInt(String(req.query.altmax)),
     'loc': String(req.query.loc),
@@ -68,6 +68,10 @@ function sitesquery (req, res, next) {
   }
   if (typeof req.query.siteid === 'undefined') {
     outobj.siteid = null
+  } else {
+      var siteid = String(req.params.siteid).split(',').map(function (item) {
+        return parseInt(item, 10);
+      });
   }
   if (typeof req.query.altmin === 'undefined') {
     outobj.altmin = null
