@@ -9,6 +9,8 @@ var swaggerUi = require('swagger-ui-express'),
 swaggerDocument = YAML.load('./swagger.yaml');
 var morgan = require('morgan');
 var fs = require('fs');
+const dotenv = require('dotenv');
+dotenv.config();
 
 var app = express();
 
@@ -104,5 +106,11 @@ app.all('*', function (req, res) {
   res.redirect('/api-docs');
 });
 */
+
+// in production, port is 3001 and server started in script 'www'
+// The variable is stored in the gitignored `.env` file.
+if (process.env.NODE_ENV === 'development') {
+  app.listen(process.env.APIPORT)
+}
 
 module.exports = app;
