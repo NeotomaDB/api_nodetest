@@ -23,7 +23,7 @@ var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {
 app.use(morgan(':date[iso]\t:remote-addr\t:method\t:url\t:status\t:res[content-length]\t:response-time[0]\t:user-agent', { stream: accessLogStream }))
 
 var options = {
-  swaggerUrl: 'http://localhost:3000/api-docs',
+  swaggerUrl: 'http://localhost:3005/api-docs',
   customCssUrl: '/custom.css'
 }
 
@@ -51,6 +51,8 @@ var v2apps = require('./v2.0/routes/apps');
 
 // dbtables API routes
 var v2dbtables = require('./v2.0/routes/dbtables');
+
+app.set('port', process.env.APIPORT || 3005);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -107,10 +109,11 @@ app.all('*', function (req, res) {
 });
 */
 
-// in production, port is 3001 and server started in script 'www'
+// in production, port is 3005 and server started in script 'www'
 // The variable is stored in the gitignored `.env` file.
 if (process.env.NODE_ENV === 'development') {
-  app.listen(process.env.APIPORT)
+  console.log('here')
+  app.set('port', process.env.APIPORT || 3005);
 }
 
 module.exports = app;
