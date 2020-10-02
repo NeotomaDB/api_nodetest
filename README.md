@@ -1,3 +1,8 @@
+[![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+
+[![NSF-1550707](https://img.shields.io/badge/NSF-1550707-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1550707) [![NSF-1541002](https://img.shields.io/badge/NSF-1541002-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1541002)
+
+
 # Neotoma API Implementation
 
 This repository is intended to act as the core repository for the Neotoma API version 1.5 and greater.  There are two main branches, `master` and `dev`.  Master is intended as the production branch, while `dev` is the main testing and development branch.  For documentation of the Neotoma Paleoecology Database see [this](http://neotoma-manual.readthedocs.io/en/latest/neotoma_introduction.html) and of the community see [this](https://www.neotomadb.org/).  Version 1 of the API is documented [here](http://api.neotomadb.org/doc/home).
@@ -6,7 +11,7 @@ Currently [http://api-dev.neotomadb.org]() is the home for the API, and will res
 
 ## Development
 
-* Simon Goring - website: [http://goring.org]()
+* [Simon Goring](http://goring.org) University of Wisconsin - Madison [![orcid](https://img.shields.io/badge/orcid-0000--0002--2700--4605-brightgreen.svg)](https://orcid.org/0000-0002-2700-4605)
 * Mike Stryker
 
 ## Contribution
@@ -52,7 +57,6 @@ $ npm start
 
 > api-nodetest@0.0.0 start /home/simon/Documents/GitHub/api_nodetest
 > node ./bin/www
-
 
 ```
 
