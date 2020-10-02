@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 connect_remote.json
 package-lock.json
 public/api-docs/index.html
@@ -11,6 +12,14 @@ db_connect_remote.json
 
 ##pm2 nodejs user directory
 /nodejs
+=======
+# Connection strings
+db_connect.json
+
+# Created by https://www.gitignore.io/api/node
+
+nodejs
+>>>>>>> dev
 
 ### Node ###
 # Logs
@@ -83,3 +92,7 @@ api_project.sublime-workspace
 #local swaggerdef to account for host & port differences
 local_swaggerdefn.json
 
+<<<<<<< HEAD
+=======
+# End of https://www.gitignore.io/api/node
+>>>>>>> dev
