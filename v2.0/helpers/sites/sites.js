@@ -10,9 +10,35 @@ var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
 // Helper for linking to external query files:
-function sql (file) {
+function sql(file) {
   const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath, {minify: true});
+  return new pgp.QueryFile(fullPath, {
+    minify: true
+  });
+}
+
+/**
+* Parser for comma separated strings.
+* @param x A comma separated string.
+* @return An array of integers.
+*/
+function commaSep(x) {
+  return String(x).split(',').map(function(item) {
+    return parseInt(item, 10);
+  });
+}
+
+/**
+* Quickly return value or null.
+* @param x Any value passed in from an object.
+* @return either the value of `x` or a `null` value.
+*/
+function ifUndef(x) {
+  if (typeof x === 'undefined') {
+    return null;
+  } else {
+    return x;
+  }
 }
 
 // Create a QueryFile globally, once per file:
@@ -22,13 +48,18 @@ const sitebyid = sql('./sitebyid.sql');
 const sitebygpid = sql('./sitebygpid.sql');
 const sitebyctid = sql('./sitebyctid.sql');
 
-function sitesbyid (req, res, next) {
+/**
+* Return API results for sites when only a string of site IDs is passed in.
+* @param req The URL request
+* @param res The response object, to which the response (200, 404, 500) is sent.
+* @param next Callback argument to the middleware function (sends to the `next` function in app.js)
+* @return The function returns nothing, but sends the API result to the client.
+*/
+function sitesbyid(req, res, next) {
   var goodstid = !!req.params.siteid;
 
   if (goodstid) {
-    var siteid = String(req.params.siteid).split(',').map(function (item) {
-      return parseInt(item, 10);
-    });
+    var siteid = commaSep(req.params.siteid);
   } else {
     res.status(500)
       .json({
@@ -39,7 +70,7 @@ function sitesbyid (req, res, next) {
   }
 
   db.any(sitebyid, [siteid])
-    .then(function (data) {
+    .then(function(data) {
       res.status(200)
         .json({
           status: 'success',
@@ -47,38 +78,37 @@ function sitesbyid (req, res, next) {
           message: 'Retrieved all tables'
         });
     })
-    .catch(function (err) {
+    .catch(function(err) {
       return next(err);
     })
 }
 
-function sitesquery (req, res, next) {
-  // Get the input parameters:
-  var outobj = {
-    'sitename': String(req.query.sitename),
-    'siteid': parseInt(String(req.query.siteid)),
-    'altmin': parseInt(String(req.query.altmin)),
-    'altmax': parseInt(String(req.query.altmax)),
-    'loc': String(req.query.loc),
-    'gpid': parseInt(req.query.gpid)
-  };
+/**
+* Return API results for sites when a set of parameters are passed in.
+* @param req The URL request
+* @param res The response object, to which the response (200, 404, 500) is sent.
+* @param next Callback argument to the middleware function (sends to the `next` function in app.js)
+* @return The function returns nothing, but sends the API result to the client.
+*/
+function sitesquery(req, res, next) {
+  expectedParams = {'sitename': 'string',
+                    'siteid': 'array',
+                    'altmin': 'integer',
+                    'altmax': 'integer',
+                    'loc': 'string',
+                    'gpid': 'array']
 
-  if (typeof req.query.sitename === 'undefined') {
-    outobj.sitename = null
-  }
-  if (typeof req.query.siteid === 'undefined') {
-    outobj.siteid = null
-  } else {
-      outobj.siteid = String(req.params.siteid).split(',').map(function (item) {
-        return parseInt(item, 10);
-      });
-  }
-  if (typeof req.query.altmin === 'undefined') {
-    outobj.altmin = null
-  }
-  if (typeof req.query.altmax === 'undefined')   { outobj.altmax = null }
-  if (typeof req.query.loc === 'undefined')      { outobj.loc = null }
-  if (typeof req.query.gpid === 'undefined')     { outobj.gpid = null }
+  // Get the input parameters:
+
+
+  var outobj = {
+    'sitename': String(ifUndef(req.query.sitename)),
+    'siteid': commaSep(ifUndef(req.query.siteid)),
+    'altmin': parseInt(String(ifUndef(req.query.altmin))),
+    'altmax': parseInt(String(ifUndef(req.query.altmax))),
+    'loc': String(ifUndef(req.query.loc)),
+    'gpid': parseInt(ifUndef(req.query.gpid))
+  };
 
   if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
     return res.status(500)
@@ -102,7 +132,7 @@ function sitesquery (req, res, next) {
   }
 
   db.any(siteQuery, outobj)
-    .then(function (data) {
+    .then(function(data) {
       res.status(200)
         .json({
           status: 'success',
@@ -110,7 +140,7 @@ function sitesquery (req, res, next) {
           message: 'Retrieved all tables'
         });
     })
-    .catch(function (err) {
+    .catch(function(err) {
       return next(err);
     });
 }
@@ -119,7 +149,7 @@ function sitesbydataset(req, res, next) {
   var gooddsid = !!req.params.datasetid;
 
   if (gooddsid) {
-    var datasetid = String(req.params.datasetid).split(',').map(function (item) {
+    var datasetid = String(req.params.datasetid).split(',').map(function(item) {
       return parseInt(item, 10);
     });
   } else {
@@ -132,7 +162,7 @@ function sitesbydataset(req, res, next) {
   }
 
   db.any(sitebydsid, [datasetid])
-    .then(function (data) {
+    .then(function(data) {
       res.status(200)
         .json({
           status: 'success',
@@ -140,16 +170,16 @@ function sitesbydataset(req, res, next) {
           message: 'Retrieved all tables'
         });
     })
-    .catch(function (err) {
+    .catch(function(err) {
       return next(err);
     });
 }
 
-function sitesbygeopol (req, res, next) {
+function sitesbygeopol(req, res, next) {
   var goodgp = !!req.params.gpid;
 
   if (goodgp) {
-    var gpid = String(req.params.gpid).split(',').map(function (item) {
+    var gpid = String(req.params.gpid).split(',').map(function(item) {
       return parseInt(item, 10);
     });
   } else {
@@ -162,7 +192,7 @@ function sitesbygeopol (req, res, next) {
   }
 
   db.any(sitebygpid, [gpid])
-    .then(function (data) {
+    .then(function(data) {
       res.status(200)
         .json({
           status: 'success',
@@ -170,16 +200,16 @@ function sitesbygeopol (req, res, next) {
           message: 'Retrieved all tables'
         });
     })
-    .catch(function (err) {
+    .catch(function(err) {
       return next(err);
     });
 }
 
-function sitesbycontact (req, res, next) {
+function sitesbycontact(req, res, next) {
   var goodctc = !!req.params.contactid
 
   if (goodctc) {
-    var contactid = String(req.params.contactid).split(',').map(function (item) {
+    var contactid = String(req.params.contactid).split(',').map(function(item) {
       return parseInt(item, 10);
     });
   } else {
@@ -192,7 +222,7 @@ function sitesbycontact (req, res, next) {
   }
 
   db.any(sitebyctid, [contactid])
-    .then(function (data) {
+    .then(function(data) {
       res.status(200)
         .json({
           status: 'success',
@@ -200,7 +230,7 @@ function sitesbycontact (req, res, next) {
           message: 'Retrieved all tables'
         });
     })
-    .catch(function (err) {
+    .catch(function(err) {
       return next(err);
     });
 }
