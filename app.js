@@ -103,6 +103,7 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
+<<<<<<< HEAD
 /*
 app.all('*', function (req, res) {
   res.redirect('/api-docs');
@@ -116,4 +117,6 @@ if (process.env.NODE_ENV === 'development') {
   app.set('port', process.env.APIPORT || 3005);
 }
 
+=======
+>>>>>>> dev
 module.exports = app;
