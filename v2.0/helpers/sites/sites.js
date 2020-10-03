@@ -18,10 +18,10 @@ function sql(file) {
 }
 
 /**
-* Parser for comma separated strings.
-* @param x A comma separated string.
-* @return An array of integers.
-*/
+ * Parser for comma separated strings.
+ * @param x A comma separated string.
+ * @return An array of integers.
+ */
 function commaSep(x) {
   return String(x).split(',').map(function(item) {
     return parseInt(item, 10);
@@ -29,10 +29,10 @@ function commaSep(x) {
 }
 
 /**
-* Quickly return value or null.
-* @param x Any value passed in from an object.
-* @return either the value of `x` or a `null` value.
-*/
+ * Quickly return value or null.
+ * @param x Any value passed in from an object.
+ * @return either the value of `x` or a `null` value.
+ */
 function ifUndef(x) {
   if (typeof x === 'undefined') {
     return null;
@@ -49,12 +49,12 @@ const sitebygpid = sql('./sitebygpid.sql');
 const sitebyctid = sql('./sitebyctid.sql');
 
 /**
-* Return API results for sites when only a string of site IDs is passed in.
-* @param req The URL request
-* @param res The response object, to which the response (200, 404, 500) is sent.
-* @param next Callback argument to the middleware function (sends to the `next` function in app.js)
-* @return The function returns nothing, but sends the API result to the client.
-*/
+ * Return API results for sites when only a string of site IDs is passed in.
+ * @param req The URL request
+ * @param res The response object, to which the response (200, 404, 500) is sent.
+ * @param next Callback argument to the middleware function (sends to the `next` function in app.js)
+ * @return The function returns nothing, but sends the API result to the client.
+ */
 function sitesbyid(req, res, next) {
   var goodstid = !!req.params.siteid;
 
@@ -84,23 +84,15 @@ function sitesbyid(req, res, next) {
 }
 
 /**
-* Return API results for sites when a set of parameters are passed in.
-* @param req The URL request
-* @param res The response object, to which the response (200, 404, 500) is sent.
-* @param next Callback argument to the middleware function (sends to the `next` function in app.js)
-* @return The function returns nothing, but sends the API result to the client.
-*/
+ * Return API results for sites when a set of parameters are passed in.
+ * @param req The URL request
+ * @param res The response object, to which the response (200, 404, 500) is sent.
+ * @param next Callback argument to the middleware function (sends to the `next` function in app.js)
+ * @return The function returns nothing, but sends the API result to the client.
+ */
 function sitesquery(req, res, next) {
-  expectedParams = {'sitename': 'string',
-                    'siteid': 'array',
-                    'altmin': 'integer',
-                    'altmax': 'integer',
-                    'loc': 'string',
-                    'gpid': 'array']
 
   // Get the input parameters:
-
-
   var outobj = {
     'sitename': String(ifUndef(req.query.sitename)),
     'siteid': commaSep(ifUndef(req.query.siteid)),
