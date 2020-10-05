@@ -1,10 +1,10 @@
-WITH sitid AS (
-  SELECT DISTINCT siteid
+WITH allgpu AS (
+  SELECT DISTINCT siteid, geopoliticalid
   FROM
     ndb.geopaths AS gp
     INNER JOIN ndb.sitegeopolitical AS sgp ON sgp.geopoliticalid = gp.geoin
     WHERE ($1) && gp.geoout OR gp.geoin = ANY(($1))
- )
+ ),
  collu AS (
    SELECT sts.siteid,
     json_build_object('collectionunitid', clu.collectionunitid,
@@ -19,27 +19,35 @@ WITH sitid AS (
  	  LEFT JOIN ndb.sites AS sts ON sts.siteid = clu.siteid
  	  LEFT JOIN ndb.datasettypes AS dst ON dst.datasettypeid = dts.datasettypeid
  	  LEFT OUTER JOIN ndb.collectiontypes as cts ON clu.colltypeid = cts.colltypeid
-  WHERE sts.siteid IN ($1:csv)
  	GROUP BY sts.siteid, clu.collectionunitid, cts.colltype
- )
-SELECT gpu.geopoliticalid AS geopoliticalid,
-       gpu.geopoliticalname AS geopoliticalname,
-       gpu.geopoliticalunit AS geopoliticalunit,
-       gpu.rank AS rank,
-       gpu.highergeopoliticalid AS highergeopoliticalid,
-       json_build_object('siteid', sts.siteid,
+ ),
+ sites AS (
+SELECT 'siteid', sts.siteid AS siteid,
+	 json_build_object('siteid', sts.siteid,
               'sitename', sts.sitename,
               'sitedescription', sts.sitedescription,
               'geography', ST_AsGeoJSON(sts.geog,5,2),
               'altitude', sts.altitude,
          	   'collectionunits', json_agg(cus.collectionunit)) AS sites
 FROM
-allgpu  LEFT OUTER JOIN
-ndb.geopoliticalunits AS gpu ON gpu.geopoliticalid IN (allgpu.geopoliticalid) LEFT OUTER JOIN
-ndb.sitegeopolitical AS sgp ON sgp.geopoliticalid IN (allgpu.geopoliticalid) LEFT OUTER JOIN
-ndb.sites AS sts ON sts.siteid = sgp.siteid LEFT OUTER JOIN
-ndb.collectionunits AS clu ON clu.siteid = sts.siteid LEFT OUTER JOIN
-ndb.collectiontypes as cts ON clu.colltypeid = cts.colltypeid LEFT OUTER JOIN
-ndb.datasets AS dts ON dts.collectionunitid = clu.collectionunitid LEFT OUTER JOIN
-ndb.datasettypes as dst ON dst.datasettypeid = dts.datasettypeid
+  allgpu  LEFT JOIN
+  collu AS cus on cus.siteid = allgpu.siteid LEFT OUTER JOIN
+  ndb.sitegeopolitical AS sgp ON sgp.geopoliticalid IN (allgpu.geopoliticalid) LEFT OUTER JOIN
+  ndb.sites AS sts ON sts.siteid = sgp.siteid LEFT OUTER JOIN
+  ndb.collectionunits AS clu ON clu.siteid = sts.siteid LEFT OUTER JOIN
+  ndb.collectiontypes as cts ON clu.colltypeid = cts.colltypeid LEFT OUTER JOIN
+  ndb.datasets AS dts ON dts.collectionunitid = clu.collectionunitid LEFT OUTER JOIN
+  ndb.datasettypes as dst ON dst.datasettypeid = dts.datasettypeid
+GROUP BY sts.siteid
+ )
+SELECT gpu.geopoliticalid AS geopoliticalid,
+       gpu.geopoliticalname AS geopoliticalname,
+       gpu.geopoliticalunit AS geopoliticalunit,
+       gpu.rank AS rank,
+       gpu.highergeopoliticalid AS highergeopoliticalid,
+       json_agg(sit.sites) AS sites
+	   FROM
+  allgpu  LEFT JOIN
+  sites AS sit on sit.siteid = allgpu.siteid LEFT OUTER JOIN
+  ndb.geopoliticalunits AS gpu ON gpu.geopoliticalid IN (allgpu.geopoliticalid)
 GROUP BY gpu.geopoliticalid;
