@@ -171,9 +171,7 @@ function sitesbygeopol(req, res, next) {
   var goodgp = !!req.params.gpid;
 
   if (goodgp) {
-    var gpid = String(req.params.gpid).split(',').map(function(item) {
-      return parseInt(item, 10);
-    });
+    var gpid = commaSep(req.params.gpid);
   } else {
     res.status(500)
       .json({
