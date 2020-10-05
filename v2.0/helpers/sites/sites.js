@@ -33,11 +33,17 @@ function commaSep(x) {
  * @param x Any value passed in from an object.
  * @return either the value of `x` or a `null` value.
  */
-function ifUndef(x) {
+function ifUndef(x, opr) {
   if (typeof x === 'undefined') {
     return null;
   } else {
-    return x;
+    switch (opr) {
+      case 'string':
+        return String(x);
+      case 'sep':
+        return commaSep(x);
+      case 'int':
+        return parseInt(x, 10);
   }
 }
 
@@ -94,12 +100,12 @@ function sitesquery(req, res, next) {
 
   // Get the input parameters:
   var outobj = {
-    'sitename': String(ifUndef(req.query.sitename)),
-    'siteid': commaSep(ifUndef(req.query.siteid)),
-    'altmin': parseInt(String(ifUndef(req.query.altmin))),
-    'altmax': parseInt(String(ifUndef(req.query.altmax))),
-    'loc': String(ifUndef(req.query.loc)),
-    'gpid': parseInt(ifUndef(req.query.gpid))
+    'sitename': ifUndef(req.query.sitename, 'string'),
+    'siteid': ifUndef(req.query.siteid, 'sep'),
+    'altmin': ifUndef(req.query.altmin, 'int'),
+    'altmax': ifUndef(req.query.altmax, 'int'),
+    'loc': ifUndef(req.query.loc, 'string'),
+    'gpid': ifUndef(req.query.gpid, 'int')
   };
 
   if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
