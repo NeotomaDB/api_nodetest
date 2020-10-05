@@ -3,7 +3,7 @@ WITH allgpu AS (
   FROM
     ndb.geopaths AS gp
     INNER JOIN ndb.sitegeopolitical AS sgp ON sgp.geopoliticalid = gp.geoin
-    WHERE ($1) && gp.geoout OR gp.geoin = ANY(($1))
+    WHERE ${gpid} && gp.geoout OR gp.geoin = ANY(${gpid})
  ),
  collu AS (
    SELECT sts.siteid,
