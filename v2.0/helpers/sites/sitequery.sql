@@ -3,7 +3,7 @@ WITH sitid AS (
   FROM
     ndb.sitegeopolitical AS sgp
   WHERE
-    (${gpid} IS NULL OR sgp.geopoliticalid = ${gpid})
+    (${gpid} IS NULL OR sgp.geopoliticalid = ANY(${gpid}))
 ),
 collunit AS (
 	SELECT sts.siteid,
