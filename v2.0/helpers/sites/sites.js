@@ -44,6 +44,7 @@ function ifUndef(x, opr) {
         return commaSep(x);
       case 'int':
         return parseInt(x, 10);
+    }
   }
 }
 
