@@ -82,24 +82,24 @@ paths:
             application/json:
               schema:
                 $ref:                          '#/components/schemas/taxaInDatasets'
-  /v1.5/data/chronology/{chronid}:
-    get:
-      tags:                                    ['Chronology metadata', 'v1.5']
-      summary:                                 Chronology metadata for a dataset.
-      description:                             >-
-        Returns the chronology and chronological controls used for a dataset age
-        model.
-      parameters:
-        - $ref:                                '#/components/parameters/chronidPath'
-      responses:
-        '200':
-          description:                         Chronology
-          content:
-            application/json:
-              schema:
-                type:                          object
-                items:
-                  $ref:                        '#/components/schemas/chronology'
+  # /v1.5/data/chronology/{chronid}:
+  #   get:
+  #     tags:                                    ['Chronology metadata', 'v1.5']
+  #     summary:                                 Chronology metadata for a dataset.
+  #     description:                             >-
+  #       Returns the chronology and chronological controls used for a dataset age
+  #       model.
+  #     parameters:
+  #       - $ref:                                '#/components/parameters/chronidPath'
+  #     responses:
+  #       '200':
+  #         description:                         Chronology
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type:                          object
+  #               items:
+  #                 $ref:                        '#/components/schemas/chronology'
   /v1.5/data/contacts/{contactid}:
     get:
       tags:                                    ['Contact metadata', 'v1.5']
@@ -138,23 +138,23 @@ paths:
                 type:                          array
                 items:
                   $ref:                        '#/components/schemas/dataset'
-  /v1.5/data/datasets:
-    get:
-      tags:                                    ['Dataset metadata', 'v1.5']
-      summary:                                 Dataset information.
-      description:                             Returns information about Neotoma dataset
-      parameters:
-        - $ref:                                '#/components/parameters/datasetidQuery'
-        - $ref:                                '#/components/parameters/siteidQuery'
-      responses:
-        '200':
-          description:                         An array of datasets.
-          content:
-            application/json:
-              schema:
-                type:                          array
-                items:
-                  $ref:                        '#/components/schemas/dataset'
+  # /v1.5/data/datasets:
+  #   get:
+  #     tags:                                    ['Dataset metadata', 'v1.5']
+  #     summary:                                 Dataset information.
+  #     description:                             Returns information about Neotoma dataset
+  #     parameters:
+  #       - $ref:                                '#/components/parameters/datasetidQuery'
+  #       - $ref:                                '#/components/parameters/siteidQuery'
+  #     responses:
+  #       '200':
+  #         description:                         An array of datasets.
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type:                          array
+  #               items:
+  #                 $ref:                        '#/components/schemas/dataset'
   /v1.5/data/download/{datasetid}:
     get:
       tags:                                    ['Data download', 'v1.5']
