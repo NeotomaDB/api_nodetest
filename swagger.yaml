@@ -155,7 +155,7 @@ paths:
   #               type:                          array
   #               items:
   #                 $ref:                        '#/components/schemas/dataset'
-  /v1.5/data/download/{datasetid}:
+  /v1.5/data/downloads/{datasetid}:
     get:
       tags:                                    ['Data download', 'v1.5']
       summary:                                 Returns the named Neotoma Database table.
@@ -191,7 +191,7 @@ paths:
                 type:                          array
                 items:
                   $ref:                        '#/components/schemas/geopolitical'
-  /v1.5/data/geopoliticalunits/:
+  /v1.5/data/geopoliticalunits:
     get:
       tags:                                    ['Geopolitical metadata', 'v1.5']
       summary:                                 Returns information about geopolitical units.
@@ -229,17 +229,17 @@ paths:
                 type:                          array
                 items:
                   $ref:                        '#/components/schemas/geopolitical'
-  /v1.5/data/occurrence/{taxonid}:
+  /v1.5/data/occurrence/{occurrenceid}:
     get:
       tags:                                    ['Occurrence metadata', 'v1.5']
       summary:                                 Occurrence information for a taxon and sample.
       description:                             >-
-        Given a unique taxon identifier associated with a taxon in Neotoma, return individual occurrence information for a particular sample.
+        Given a unique occurrence identifier associated with a unique occurrence in Neotoma, return individual occurrence information for the sample.
       parameters:
-        - $ref:                                '#/components/parameters/taxonidPath'
+        - $ref:                                '#/components/parameters/occurrenceidPath'
       responses:
         '200':
-          description:                         A taxon or array of taxa.
+          description:                         A single occurrence object.
           content:
             application/json:
               schema:
@@ -1264,6 +1264,15 @@ components:
       schema:
         type:                                  string
         example:                               Stern Excavation Site
+    occurrenceidPath:
+      name:                                    occurrenceid
+      description:                             Valid Neotoma occurrence identifier (integer), either singly or in a comma separated list.
+      in:                                      path
+      required:                                true
+      schema:
+        type:                                  integer
+        format:                                int32
+        minimum:                               0
     datasetidQuery:
       name:                                    datasetid
       description:                             Valid Neotoma dataset identifier (integer), either singly or in a comma separated list.
