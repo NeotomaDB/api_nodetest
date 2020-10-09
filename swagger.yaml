@@ -395,23 +395,22 @@ paths:
   #               type:                          array
   #               items:
   #                 $ref:                        '#/components/schemas/publication'
-  /v1.5/data/publication:
-    get:
-      tags:                                    ['Publication metadata', 'v1.5']
-      summary:                                 Returns information about Neotoma publications
-      description:                             Returns information about Neotoma publications
-      parameters:
-        - $ref:                                '#/components/parameters/datasetidQuery'
-        - $ref:                                '#/components/parameters/siteidQuery'
-      responses:
-        '200':
-          description:                         An array of geopolitical units.
-          content:
-            application/json:
-              schema:
-                type:                          array
-                items:
-                  $ref:                        '#/components/schemas/publication'
+  # /v1.5/data/publications:
+  #   get:
+  #     tags:                                    ['Publication metadata', 'v1.5']
+  #     summary:                                 Returns information about Neotoma publications
+  #     description:                             Returns information about Neotoma publications
+  #     parameters:
+  #       - $ref:                                '#/components/parameters/datasetidQuery'
+  #     responses:
+  #       '200':
+  #         description:                         An array of geopolitical units.
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type:                          array
+  #               items:
+  #                 $ref:                        '#/components/schemas/publication'
   /v1.5/data/sites/{siteid}:
     get:
       tags:                                    ['Site metadata', 'v1.5']
@@ -428,69 +427,69 @@ paths:
                 type:                          array
                 items:
                   $ref:                        '#/components/schemas/sites'
-  /v1.5/data/sites:
-    get:
-      tags:                                    ['Site metadata', 'v1.5']
-      summary:                                 Site information.
-      description:                             Returns information about Neotoma publications
-      parameters:
-        - $ref:                                '#/components/parameters/datasetidQuery'
-        - $ref:                                '#/components/parameters/siteidQuery'
-      responses:
-        '200':
-          description:                         An array of geopolitical units.
-          content:
-            application/json:
-              schema:
-                type:                          array
-                items:
-                  $ref:                        '#/components/schemas/sites'
-  /v1.5/data/taxa:
-    get:
-      tags:                                    ['Taxonomic metadata', 'v1.5']
-      summary:                                 Taxonomic information.
-      description:                             Returns information about a taxon and (if requested) related taxa.
-      parameters:
-        - $ref:                                '#/components/parameters/taxonidQuery'
-        - name:                                taxonname
-          description:                         Taxon name or partial name.
-          in:                                  query
-          required:                            false
-          schema:
-            type:                              string
-        - $ref:                                '#/components/parameters/datasetidQuery'
-        - $ref:                                '#/components/parameters/siteidQuery'
-      responses:
-        '200':
-          description:                         A taxon or array of taxa.
-          content:
-            application/json:
-              schema:
-                type:                          array
-                items:
-                  $ref:                        '#/components/schemas/taxa'
-  /v1.5/dbtables/{table}:
-    get:
-      tags:                                    ['Database tables', 'v1.5']
-      summary:                                 Returns the named Neotoma Database table.
-      description:                             Returns the named Neotoma Database table.
-      parameters:
-        - name:                                table
-          description:                         Neotoma database table name.
-          in:                                  path
-          required:                            true
-          example:                             "geochrontypes"
-          schema:
-            type:                              string
-      responses:
-        '200':
-          description:                         Returned table.
-          content:
-            application/json:
-              schema:
-                type:                          array
-                items:
-                  $ref:                        '#/components/schemas/dbtables'
+  # /v1.5/data/sites:
+  #   get:
+  #     tags:                                    ['Site metadata', 'v1.5']
+  #     summary:                                 Site information.
+  #     description:                             Returns information about Neotoma publications
+  #     parameters:
+  #       - $ref:                                '#/components/parameters/datasetidQuery'
+  #       - $ref:                                '#/components/parameters/siteidQuery'
+  #     responses:
+  #       '200':
+  #         description:                         An array of geopolitical units.
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type:                          array
+  #               items:
+  #                 $ref:                        '#/components/schemas/sites'
+  # /v1.5/data/taxa:
+  #   get:
+  #     tags:                                    ['Taxonomic metadata', 'v1.5']
+  #     summary:                                 Taxonomic information.
+  #     description:                             Returns information about a taxon and (if requested) related taxa.
+  #     parameters:
+  #       - $ref:                                '#/components/parameters/taxonidQuery'
+  #       - name:                                taxonname
+  #         description:                         Taxon name or partial name.
+  #         in:                                  query
+  #         required:                            false
+  #         schema:
+  #           type:                              string
+  #       - $ref:                                '#/components/parameters/datasetidQuery'
+  #       - $ref:                                '#/components/parameters/siteidQuery'
+  #     responses:
+  #       '200':
+  #         description:                         A taxon or array of taxa.
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type:                          array
+  #               items:
+  #                 $ref:                        '#/components/schemas/taxa'
+  # /v1.5/dbtables/{table}:
+  #   get:
+  #     tags:                                    ['Database tables', 'v1.5']
+  #     summary:                                 Returns the named Neotoma Database table.
+  #     description:                             Returns the named Neotoma Database table.
+  #     parameters:
+  #       - name:                                table
+  #         description:                         Neotoma database table name.
+  #         in:                                  path
+  #         required:                            true
+  #         example:                             "geochrontypes"
+  #         schema:
+  #           type:                              string
+  #     responses:
+  #       '200':
+  #         description:                         Returned table.
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type:                          array
+  #               items:
+  #                 $ref:                        '#/components/schemas/dbtables'
 # Version 2.0 Elements:
   /v2.0/apps/collectionTypes:
     get:
