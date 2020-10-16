@@ -134,7 +134,7 @@ function explorersearch(req, res, next) {
   // Get the query string:
 
   //search input param is stringified JSON object, thus parse first
-  var inputParamObj = req.query.search;
+  var inputParamObj = JSON.parse(req.query.search);
 
   console.dir("req.query.search object: " + inputParamObj);
 
