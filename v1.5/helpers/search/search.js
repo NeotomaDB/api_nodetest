@@ -134,7 +134,8 @@ function explorersearch(req, res, next) {
   // Get the query string:
 
   //search input param is stringified JSON object, thus parse first
-  var inputParamObj = JSON.parse(req.query.search);
+  var inputParamObj = req.query.search;
+
   console.dir("req.query.search object: " + inputParamObj);
 
   //console.log("Object.entries: "+Object.entries(inputParamObj));
@@ -163,7 +164,7 @@ function explorersearch(req, res, next) {
     '_debug': null
   }
 
-  if (inputParamObj.taxa) {
+  if (!(typeof inputParamObj.taxa === 'undefined')) {
     //qryParams._taxonids = inputParamObj.taxa.taxonIds;
     qryParams._taxonids = String(inputParamObj.taxa.taxonIds)
       .split(',')
@@ -175,7 +176,7 @@ function explorersearch(req, res, next) {
     }
   }
 
-  if (inputParamObj.elementTypes) {
+  if (!(typeof inputParamObj.elementTypes === 'undefined')) {
     qryParams._elemtypeids = String(inputParamObj.elementTypes)
       .split(',')
       .map(function(item) {
@@ -192,7 +193,7 @@ function explorersearch(req, res, next) {
       "exactlyDated": false
 
   */
-  if (inputParamObj.time) {
+  if (!(typeof inputParamObj.time === 'undefined')) {
     if (inputParamObj.time.ageOlder) {
       qryParams._ageold = parseInt(inputParamObj.time.ageOlder, 10);
     }
@@ -216,7 +217,7 @@ function explorersearch(req, res, next) {
 
   */
 
-  if (inputParamObj.metadata) {
+  if (!(typeof inputParamObj.metadata === 'undefined')) {
     console.log("metadata are:" + JSON.stringify(inputParamObj.metadata));
     if (inputParamObj.metadata.siteName) {
       qryParams._sitename = String(inputParamObj.metadata.siteName);
@@ -255,12 +256,13 @@ function explorersearch(req, res, next) {
   */
   console.dir("have inputParamObj.space" + inputParamObj.space);
 
-  if (inputParamObj.space) {
+  //qryParams._datasettypeid = 3;
+  if (!(typeof inputParamObj.datasetTypeId === 'undefined') {
+    qryParams._datasettypeid = parseInt(inputParamObj.datasetTypeId, 10);
+  }
 
-    //qryParams._datasettypeid = 3;
-    if (inputParamObj.datasetTypeId) {
-      qryParams._datasettypeid = parseInt(inputParamObj.datasetTypeId, 10);
-    }
+  if (!(typeof inputParamObj.space === 'undefined')) {
+
     console.log("parsing inputParamObj.space");
     //check for geopolitical unit
     if (inputParamObj.space.gpId) {
@@ -289,7 +291,7 @@ function explorersearch(req, res, next) {
 
   console.log("qryParams is: " + JSON.stringify(qryParams, null, 2));
   console.log("inputParamObj is: " + JSON.stringify(inputParamObj, null, 2));
-  
+
   db.any(explorersearchQry, qryParams)
     .then(function(data) {
       if (data.length > 0) {
