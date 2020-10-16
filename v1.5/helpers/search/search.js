@@ -257,7 +257,7 @@ function explorersearch(req, res, next) {
   console.dir("have inputParamObj.space" + inputParamObj.space);
 
   //qryParams._datasettypeid = 3;
-  if (!(typeof inputParamObj.datasetTypeId === 'undefined') {
+  if (!(typeof inputParamObj.datasetTypeId === 'undefined')) {
     qryParams._datasettypeid = parseInt(inputParamObj.datasetTypeId, 10);
   }
 
