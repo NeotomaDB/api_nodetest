@@ -287,7 +287,9 @@ function explorersearch(req, res, next) {
   }
 
 
-  console.dir("qryParams is: " + JSON.stringify(qryParams, null, 2));
+  console.log("qryParams is: " + JSON.stringify(qryParams, null, 2));
+  console.log("inputParamObj is: " + JSON.stringify(inputParamObj, null, 2));
+  
   db.any(explorersearchQry, qryParams)
     .then(function(data) {
       if (data.length > 0) {
