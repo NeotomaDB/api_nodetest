@@ -714,7 +714,7 @@ paths:
                 items:
                   $ref:                        '#/components/schemas/dbtables'
 # Returning Full Records
-  /v2.0/data/download/{datasetid}:
+  /v2.0/data/downloads/{datasetid}:
     get:
       tags:                                    ['Data download', 'v2.0']
       summary:                                 >-
@@ -933,147 +933,147 @@ paths:
                 items:
                   $ref:                        '#/components/schemas/occurrence'
 # Returning Pollen records
-  /v2.0/data/pollen/{taxonid}:
-    get:
-      tags:                                    ['Pollen proportions', 'v2.0']
-      summary:                                 Pollen data from Neotoma.
-      description:                             Returns information about pollen.
-      parameters:
-        - $ref:                                '#/components/parameters/taxonidPath'
-      responses:
-        '200':
-          description:                         A pollen response..
-          content:
-            application/json:
-              schema:
-                type:                          array
-                items:
-                  $ref:                        '#/components/schemas/pollen'
-  /v2.0/data/pollen:
-    get:
-      tags:                                    ['Pollen proportions', 'v2.0']
-      summary:                                 Retrieve pollen data from Neotoma.
-      parameters:
-        - $ref:                                '#/components/parameters/taxonnameQuery'
-        - name:                                nametype
-          description:                         'Not sure.'
-          in:                                  query
-          required:                            false
-          schema:
-            type:                              string
-        - $ref:                                '#/components/parameters/taxonidQuery'
-        - name:                                ageyoung
-          description:                         'Most recent age, in calendar years before present.'
-          in:                                  query
-          required:                            false
-          schema:
-            type:                              number
-            format:                            float
-        - name:                                ageold
-          description:                         'Oldest age, in calendar years before present.'
-          in:                                  query
-          required:                            false
-          schema:
-            type:                              number
-            format:                            float
-        - name:                                agedocontain
-          in:                                  query
-          required:                            false
-          schema:
-            type:                              integer
-        - name:                                coords
-          in:                                  query
-          required:                            false
-          schema:
-            type:                              integer
-        - name:                                bbox
-          in:                                  query
-          required:                            false
-          schema:
-            type:                              integer
-        - name:                                wkt
-          in:                                  query
-          required:                            false
-          schema:
-            type:                              integer
-        - name:                                sitename
-          description:                         Name of site for pollen record.
-          in:                                  query
-          required:                            false
-          schema:
-            type:                              string
-        - $ref:                                '#/components/parameters/siteidQuery'
-        - name:                                format
-          in:                                  query
-          required:                            false
-          schema:
-            type:                              integer
-        - $ref:                                '#/components/parameters/limitParam'
-        - $ref:                                '#/components/parameters/offsetParam'
-        - name:                                fields
-          in:                                  query
-          required:                            false
-          schema:
-            type:                              string
-        - name:                                vocab
-          in:                                  query
-          required:                            false
-          schema:
-            type:                              string
-        - name:                                occurrences
-          in:                                  query
-          required:                            false
-          schema:
-            type:                              string
-      responses:
-        '200':
-          description:                         A pollen response.
-          content:
-            application/json:
-              schema:
-                type:                          array
-                items:
-                  $ref:                        '#/components/schemas/pollen'
+#  /v2.0/data/pollen/{taxonid}:
+#     get:
+#       tags:                                    ['Pollen proportions', 'v2.0']
+#       summary:                                 Pollen data from Neotoma.
+#       description:                             Returns information about pollen.
+#       parameters:
+#         - $ref:                                '#/components/parameters/taxonidPath'
+#       responses:
+#         '200':
+#           description:                         A pollen response..
+#           content:
+#             application/json:
+#               schema:
+#                 type:                          array
+#                 items:
+#                   $ref:                        '#/components/schemas/pollen'
+#  /v2.0/data/pollen:
+#     get:
+#       tags:                                    ['Pollen proportions', 'v2.0']
+#       summary:                                 Retrieve pollen data from Neotoma.
+#       parameters:
+#         - $ref:                                '#/components/parameters/taxonnameQuery'
+#         - name:                                nametype
+#           description:                         'Not sure.'
+#           in:                                  query
+#           required:                            false
+#           schema:
+#             type:                              string
+#         - $ref:                                '#/components/parameters/taxonidQuery'
+#         - name:                                ageyoung
+#           description:                         'Most recent age, in calendar years before present.'
+#           in:                                  query
+#           required:                            false
+#           schema:
+#             type:                              number
+#             format:                            float
+#         - name:                                ageold
+#           description:                         'Oldest age, in calendar years before present.'
+#           in:                                  query
+#           required:                            false
+#           schema:
+#             type:                              number
+#             format:                            float
+#         - name:                                agedocontain
+#           in:                                  query
+#           required:                            false
+#           schema:
+#             type:                              integer
+#         - name:                                coords
+#           in:                                  query
+#           required:                            false
+#           schema:
+#             type:                              integer
+#         - name:                                bbox
+#           in:                                  query
+#           required:                            false
+#           schema:
+#             type:                              integer
+#         - name:                                wkt
+#           in:                                  query
+#           required:                            false
+#           schema:
+#             type:                              integer
+#         - name:                                sitename
+#           description:                         Name of site for pollen record.
+#           in:                                  query
+#           required:                            false
+#           schema:
+#             type:                              string
+#         - $ref:                                '#/components/parameters/siteidQuery'
+#         - name:                                format
+#           in:                                  query
+#           required:                            false
+#           schema:
+#             type:                              integer
+#         - $ref:                                '#/components/parameters/limitParam'
+#         - $ref:                                '#/components/parameters/offsetParam'
+#         - name:                                fields
+#           in:                                  query
+#           required:                            false
+#           schema:
+#             type:                              string
+#         - name:                                vocab
+#           in:                                  query
+#           required:                            false
+#           schema:
+#             type:                              string
+#         - name:                                occurrences
+#           in:                                  query
+#           required:                            false
+#           schema:
+#             type:                              string
+#       responses:
+#         '200':
+#           description:                         A pollen response.
+#           content:
+#             application/json:
+#               schema:
+#                 type:                          array
+#                 items:
+#                   $ref:                        '#/components/schemas/pollen'
 # Returning Publications
-  /v2.0/data/publications/{pubid}:
-    get:
-      tags:                                    ['Publication metadata', 'v2.0']
-      summary:                                 Returns information about Neotoma publications
-      description:                             Returns information about Neotoma publications
-      parameters:
-        - name:                                pubid
-          description:                         Numeric ID for publications.
-          in:                                  path
-          required:                            true
-          schema:
-            type:                              integer
-            format:                            int32
-      responses:
-        '200':
-          description:                         A list of publications.
-          content:
-            application/json:
-              schema:
-                type:                          array
-                items:
-                  $ref:                        '#/components/schemas/publications'
-  /v2.0/data/publications:
-    get:
-      tags:                                    ['Publication metadata', 'v2.0']
-      summary:                                 Returns information about Neotoma publications
-      description:                             Returns information about Neotoma publications
-      parameters:
-        - $ref:                                '#/components/parameters/datasetidQuery'
-        - $ref:                                '#/components/parameters/siteidQuery'
-      responses:
-        '200':
-          description:                         A list of publications.
-          content:
-            application/json:
-              schema:
-                type:                          array
-                items:
-                  $ref:                        '#/components/schemas/publications'
+#  /v2.0/data/publications/{pubid}:
+#     get:
+#       tags:                                    ['Publication metadata', 'v2.0']
+#       summary:                                 Returns information about Neotoma publications
+#       description:                             Returns information about Neotoma publications
+#       parameters:
+#         - name:                                pubid
+#           description:                         Numeric ID for publications.
+#           in:                                  path
+#           required:                            true
+#           schema:
+#             type:                              integer
+#             format:                            int32
+#       responses:
+#         '200':
+#           description:                         A list of publications.
+#           content:
+#             application/json:
+#               schema:
+#                 type:                          array
+#                 items:
+#                   $ref:                        '#/components/schemas/publications'
+#   /v2.0/data/publications:
+#     get:
+#       tags:                                    ['Publication metadata', 'v2.0']
+#       summary:                                 Returns information about Neotoma publications
+#       description:                             Returns information about Neotoma publications
+#       parameters:
+#         - $ref:                                '#/components/parameters/datasetidQuery'
+#         - $ref:                                '#/components/parameters/siteidQuery'
+#       responses:
+#         '200':
+#           description:                         A list of publications.
+#           content:
+#             application/json:
+#               schema:
+#                 type:                          array
+#                 items:
+#                   $ref:                        '#/components/schemas/publications'
 # Returning Sites
   /v2.0/data/sites/{siteid}:
     get:
