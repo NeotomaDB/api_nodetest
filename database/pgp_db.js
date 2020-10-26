@@ -1,22 +1,26 @@
-var promise = require('bluebird');
+const promise = require('bluebird');
 
-var options = {
+const initOptions = {
   // Initialization Options
   promiseLib: promise
 };
 
-const pgp = require('pg-promise')(options);
+const pgp = require('pg-promise')(initOptions);
 pgp.pg.types.setTypeParser(20, BigInt);
 const ctStr = require('./db_connect.json');
 
 const db = pgp(ctStr);
 
-db.proc('version')
-  .then(data => {
-    // console.log(data.version);
+db.connect()
+  .then(obj => {
+    // log server version:
+    const serverVersion = obj.client.serverVersion;
+    console.log(serverVersion);
+
+    obj.done(); // success, release the connection;
   })
   .catch(error => {
-    console.log("error connecting");
+    console.log('ERROR:', error.message || error);
   });
 
 module.exports = db;
