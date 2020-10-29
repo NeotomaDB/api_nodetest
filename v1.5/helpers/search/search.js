@@ -66,7 +66,6 @@ const rollupSites = function(data) {
   var currentID = null;
   var currentSite;
 
-
   data.forEach(function(d) {
     if (siteData.length == 0 || currentID != d.siteid) {
       //console.log("rollup- adding new site");
@@ -105,7 +104,6 @@ const rollupSites = function(data) {
       newDataset.minage = d.minage;
       newSite.datasets.push(newDataset);
       siteData.push(newSite);
-
 
     } else {
       //add dataset
@@ -164,7 +162,7 @@ function explorersearch(req, res, next) {
     '_debug': null
   }
 
-  if (!(typeof inputParamObj.taxa === 'undefined')) {
+  if (inputParamObj.taxa) {
     //qryParams._taxonids = inputParamObj.taxa.taxonIds;
     qryParams._taxonids = String(inputParamObj.taxa.taxonIds)
       .split(',')
@@ -176,7 +174,7 @@ function explorersearch(req, res, next) {
     }
   }
 
-  if (!(typeof inputParamObj.elementTypes === 'undefined')) {
+  if (inputParamObj.elementTypes) {
     qryParams._elemtypeids = String(inputParamObj.elementTypes)
       .split(',')
       .map(function(item) {
@@ -193,7 +191,8 @@ function explorersearch(req, res, next) {
       "exactlyDated": false
 
   */
-  if (!(typeof inputParamObj.time === 'undefined')) {
+
+  if (inputParamObj.time) {
     if (inputParamObj.time.ageOlder) {
       qryParams._ageold = parseInt(inputParamObj.time.ageOlder, 10);
     }
@@ -217,7 +216,7 @@ function explorersearch(req, res, next) {
 
   */
 
-  if (!(typeof inputParamObj.metadata === 'undefined')) {
+  if (inputParamObj.metadata) {
     console.log("metadata are:" + JSON.stringify(inputParamObj.metadata));
     if (inputParamObj.metadata.siteName) {
       qryParams._sitename = String(inputParamObj.metadata.siteName);
@@ -248,6 +247,10 @@ function explorersearch(req, res, next) {
 
   }
 
+  if (inputParamObj.datasetTypeId) {
+    qryParams._datasettypeid = parseInt(inputParamObj.datasetTypeId, 10);
+  }
+
   /* space options
    "space": {
       "type": "geoPolitical",
@@ -256,12 +259,7 @@ function explorersearch(req, res, next) {
   */
   console.dir("have inputParamObj.space" + inputParamObj.space);
 
-  //qryParams._datasettypeid = 3;
-  if (!(typeof inputParamObj.datasetTypeId === 'undefined')) {
-    qryParams._datasettypeid = parseInt(inputParamObj.datasetTypeId, 10);
-  }
-
-  if (!(typeof inputParamObj.space === 'undefined')) {
+  if (inputParamObj.space) {
 
     console.log("parsing inputParamObj.space");
     //check for geopolitical unit
