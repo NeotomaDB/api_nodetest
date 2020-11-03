@@ -4,7 +4,6 @@ const bib   = require('../helpers/bib_format');
 var db = require('../../database/pgp_db');
 var pgp = db.$config.pgp;
 
-
 module.exports = {
     datasettypes: datasettypes,
     collectiontypes: collectiontypes,
