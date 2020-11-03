@@ -1,13 +1,18 @@
+[![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+
+[![NSF-1550707](https://img.shields.io/badge/NSF-1550707-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1550707) [![NSF-1541002](https://img.shields.io/badge/NSF-1541002-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1541002)
+
+
 # Neotoma API Implementation
 
-This repository is intended to act as the core repository for the Neotoma API version 1.5 and greater.  There are two main branches, `master` and `dev`.  Master is intended as the production branch, while `dev` is the main testing and development branch.  For documentation of the Neotoma Paleoecology Database see [this](http://neotoma-manual.readthedocs.io/en/latest/neotoma_introduction.html) and of the community see [this](https://www.neotomadb.org/).  Version 1 of the API is documented [here](http://api.neotomadb.org/doc/home).
+This repository is intended to act as the core repository for the Neotoma API version 1.5 and greater.  There are two main branches, `master` and `dev`.  Master is intended as the production branch, while `dev` is the main testing and development branch.  For documentation of the Neotoma Paleoecology Database see [this](http://neotoma-manual.readthedocs.io/en/latest/neotoma_introduction.html) and of the community see [this](https://www.neotomadb.org/).  Version 1 of the API is documented [here](http://wnapi.neotomadb.org/doc/home).
 
-Currently [http://api-dev.neotomadb.org]() is the home for the API, and will resolve to a [Swagger](http://swagger.io) landing page with API documentation and search functionality.  The documentation is generated dynamically using [swagger-jsdoc](https://www.npmjs.com/package/swagger-jsdoc), as implemented in the `routes` files.  For an example, see [`routes/data.js`](https://github.com/NeotomaDB/api_nodetest/blob/dev/routes/data.js).
+Currently [http://api.neotomadb.org]() is the home for the API, and will resolve to a [OpenAPI](http://swagger.io) landing page with API documentation and search functionality.  The documentation is generated dynamically using [swagger-jsdoc](https://www.npmjs.com/package/swagger-jsdoc), as implemented in the `routes` files.  For an example, see [`routes/data.js`](https://github.com/NeotomaDB/api_nodetest/blob/dev/routes/data.js).
 
 ## Development
 
-* Simon Goring - website: [http://goring.org]()
-* Mike Stryker
+* [Simon Goring](http://goring.org): University of Wisconsin - Madison [![orcid](https://img.shields.io/badge/orcid-0000--0002--2700--4605-brightgreen.svg)](https://orcid.org/0000-0002-2700-4605)
+* Mike Stryker: Pennsylvania State University
 
 ## Contribution
 
@@ -23,7 +28,7 @@ This code is currently in preliminary release.
 
 #### Database Snapshot
 
-The code in this repository is run directly against the production database on the Neotoma servers at the Center for Ecological Informatics at Penn State.  It is possible to run this repository on a local server (on your own machine) or on a remote server (using cloud services or a university server) by installing Postgres and restoring one of the [Neotoma Database Snapshots](https://www.neotomadb.org/snapshots).  If you are planning to run the application in this way, please ensure that you have set appropriate security measures, and have these documented in the `db_connect.json` file, as described below.
+The code in this repository is run directly against the production database on the Neotoma servers at the Center for Environmental Informatics at Penn State.  It is possible to run this repository on a local server (on your own machine) or on a remote server (using cloud services or a university server) by installing Postgres and restoring one of the [Neotoma Database Snapshots](https://www.neotomadb.org/snapshots).  If you are planning to run the application in this way, please ensure that you have set appropriate security measures, and have these documented in the `db_connect.json` file, as described below.
 
 #### Connection File
 
@@ -52,7 +57,6 @@ $ npm start
 
 > api-nodetest@0.0.0 start /home/simon/Documents/GitHub/api_nodetest
 > node ./bin/www
-
 
 ```
 
@@ -87,4 +91,4 @@ The router is in `[routes/data.js](https://github.com/NeotomaDB/api_nodetest/blo
 
 ## Funding
 
-This work is funded by NSF grants to Neotoma: NSF Geoinformatics - [1550707](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1550707&HistoricalAwards=false) and NSF EarthCube [1541002](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1541002&HistoricalAwards=false).
+This work is funded by NSF grants to Neotoma: NSF Geoinformatics - [1550707](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1550707&HistoricalAwards=false)/[1948926](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1948926&HistoricalAwards=false) and NSF EarthCube [1541002](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1541002&HistoricalAwards=false).

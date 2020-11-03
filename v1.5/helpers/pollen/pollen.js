@@ -4,8 +4,6 @@
 var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
-const bib   = require('./bib_format');
-
 function pollen(req, res, next) {
 
   // Get the query string:

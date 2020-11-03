@@ -9,6 +9,8 @@ var swaggerUi = require('swagger-ui-express'),
 swaggerDocument = YAML.load('./swagger.yaml');
 var morgan = require('morgan');
 var fs = require('fs');
+const dotenv = require('dotenv');
+dotenv.config();
 
 var app = express();
 
@@ -22,22 +24,17 @@ var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {
 app.use(morgan(':date[iso]\t:remote-addr\t:method\t:url\t:status\t:res[content-length]\t:response-time[0]\t:user-agent', { stream: accessLogStream }))
 
 var options = {
-  swaggerUrl: 'http://localhost:3000/api-docs',
+  swaggerUrl: 'http://localhost:3005/api-docs',
   customCssUrl: '/custom.css'
 }
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 
 // Locations of files:
-
-// default route
-var v15index = require('./v1.5/routes/index');
-// data API routes
-var v15data = require('./v1.5/routes/data');
-// apps API routes
-var v15apps = require('./v1.5/routes/apps');
-// dbtables API routes
-var v15dbtables = require('./v1.5/routes/dbtables');
+var v15index = require('./v1.5/routes/index');       // default route
+var v15data = require('./v1.5/routes/data');         // data API routes
+var v15apps = require('./v1.5/routes/apps');         // apps API routes
+var v15dbtables = require('./v1.5/routes/dbtables'); // dbtables API routes
 
 // v2 routes
 var v2index = require('./v2.0/routes/index');
@@ -94,7 +91,7 @@ app.use('/v2.0/dbtables', v2dbtables);
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.locals.error = process.env.NODE_ENV === 'development' ? err : {};
 
   // render the error page
   res.status(err.status || 500);
@@ -106,5 +103,6 @@ app.all('*', function (req, res) {
   res.redirect('/api-docs');
 });
 */
+// app.listen(process.env.APIPORT);
 
 module.exports = app;

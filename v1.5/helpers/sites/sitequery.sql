@@ -20,4 +20,5 @@ ndb.collectiontypes as cts ON clu.colltypeid = cts.colltypeid WHERE
 (${sitename} IS NULL OR sts.sitename LIKE ${sitename})
 AND (${altmin} IS NULL OR sts.altitude >= ${altmin})
 AND (${altmax} IS NULL OR sts.altitude <= ${altmax})
+AND (${siteid} IS NULL OR sts.siteid IN ${siteid})
 AND sts.siteid IN (SELECT siteid FROM sitid)
