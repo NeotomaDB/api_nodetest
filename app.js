@@ -69,6 +69,10 @@ app.get('/v1', (req, res) => {
   res.status(301).redirect('http://wnapi.neotomadb.org/')
 })
 
+app.get('/v1/doc/*', (req, res) => {
+  res.redirect('/api-docs');
+});
+
 app.get('/v1/*', (req, res) => {
   res.status(301).redirect('http://wnapi.neotomadb.org' + req.originalUrl)
 })
@@ -95,5 +99,10 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+app.all('*', function (req, res) {
+  res.redirect('/api-docs');
+});
+
 
 module.exports = app;
