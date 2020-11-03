@@ -11,16 +11,4 @@ const ctStr = require('./db_connect.json');
 
 const db = pgp(ctStr);
 
-db.connect()
-  .then(obj => {
-    // log server version:
-    const serverVersion = obj.client.serverVersion;
-    console.log(serverVersion);
-
-    obj.done(); // success, release the connection;
-  })
-  .catch(error => {
-    console.log('ERROR:', error.message || error);
-  });
-
 module.exports = db;

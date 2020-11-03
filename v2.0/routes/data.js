@@ -38,8 +38,8 @@ router.get('/frozen/:datasetid', handlers.frozen);
 router.get('/dbtables/', handlers.dbtables);
 router.get('/dbtables/:table', handlers.dbtables);
 
-router.get('/download/', handlers.downloadbyid);
-router.get('/download/:datasetid', handlers.downloadbyid);
+router.get('/downloads/', handlers.downloadbyid);
+router.get('/downloads/:datasetid', handlers.downloadbyid);
 
 router.get('/geopoliticalunits', handlers.geopoliticalunits);
 router.get('/geopoliticalunits/:gpid', handlers.geopoliticalbyid);
