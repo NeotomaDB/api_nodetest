@@ -14,6 +14,7 @@ router.get('/', function (req, res, next) {
   res.redirect('/api-docs');
 });
 
+router.post('/oxcal/calibrate', handlers.oxcalibrate)
 router.get('/contacts/', handlers.contactquery);
 router.get('/contacts/:contactid', handlers.contactsbyid);
 router.get('/datasets/:datasetid/contacts', handlers.contactsbydataid);
