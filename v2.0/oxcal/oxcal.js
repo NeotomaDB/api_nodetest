@@ -64,8 +64,6 @@ function calibrate(req, res, next) {
 
   outputFile = calib + '\n' + dateAdds.join('\n')
 
-  console.log(outputFile)
-
   fs.writeFileSync(tempFile, outputFile)
 
   command = `/home/simon/Downloads/OxCal/bin/OxCalLinux ${tempFile}`
@@ -77,29 +75,52 @@ function calibrate(req, res, next) {
       console.log('a');
     })
     .catch(function(err) {
-      console.log(err)
+      silent = err;
     })
-    .then(function(result) {
-      var filein = fs.readFileSync('/tmp/' + fname + '.txt')
-        .toString()
-        .split('\n')
+    .then(function(x) {
+      // We have to read in the `js` file, it's not JSON though, so we have to
+      // read it and evaluate it as if it were javascript to be executed.
+      fs.readFile('/tmp/' + fname + '.js', {
+        encoding: 'utf-8'
+      }, function(err, data) {
+        if (!err) {
+          // create variables to hold oxcal results
+          var ocd = [];
+          var calib = [];
+          var model = null;
+          eval(data);
 
-      resultOut = filein
-        .map(x => x.split('\t'))
-        .filter(x => x.length > 5)
-        .map(function(x) {
-          aa = {name: x[0], sd1: x.slice(1,3), sd2: x.slice(3,5)}
-          return aa
-        })
+          curve = model.element[0]['name']
 
-      res.status(200)
-        .json({
-          status: 'success',
-          data: resultOut,
-          message: 'Retrieved all tables'
-        });
+          // Now parse the ages:
+          outputs = ocd.map(function(x) {
+            if (!!x.likelihood.range) {
+              result = {name: x.name,
+                        input: {date: x.date, error: x.error, curve: curve},
+                        ref: x.ref,
+                        mean: {mean: x.likelihood.mean, sigma: x.likelihood.sigma},
+                        median: x.likelihood.median,
+                        range: x.likelihood.range[2].map(function(x) {
+                          range = {from: x[0], to: x[1], probability: x[2]}
+                          return range;
+                        })
+                      }
+              return result;
+            } else {
+              return null;
+            }
+          })
+          .filter(function(x){ return x != null })
+
+          res.status(200)
+            .json({
+              status: 'success',
+              data: outputs,
+              message: 'Returning calibrated ages'
+            });
+        }
+      })
     })
-
 }
 
 module.exports.calibrate = calibrate;
