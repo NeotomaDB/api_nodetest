@@ -13,9 +13,9 @@ function calibrate(req, res, next) {
   //  "round":false}
   // It returns four elements:
   // T	-401.5	-393.5	-407	-389.5
-  // The function must write to an `input` file (likely in `tmp`), and then
-  // read from the output file, splitting by spaces.
-  command = '/usr/local/OxCal/bin/OxCalLinux'
+  // The function must write to an `input` file (using a random hash in `tmp`),
+  // and then read from the output file, splitting by spaces.
+  command = process.env.OXCALPATH
   fname = crypto.randomBytes(20).toString('hex')
   input = req.body
 
