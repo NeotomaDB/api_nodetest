@@ -66,7 +66,7 @@ function calibrate(req, res, next) {
 
   fs.writeFileSync(tempFile, outputFile)
 
-  command = `/home/simon/Downloads/OxCal/bin/OxCalLinux ${tempFile}`
+  command = command + ` ${tempFile}`
 
   var outputb = exec(command, {
       encoding: 'utf-8'
