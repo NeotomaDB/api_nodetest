@@ -80,25 +80,28 @@ function geopoliticalunits(req, res, next) {
 
   var querySQL, gpID;
   //no id passed, return top level geopoliticalunits
-  if(!req.params.hasOwnProperty("id")){
+  if(!req.query.hasOwnProperty("id")) {
     querySQL = "select geopoliticalid, geopoliticalname from da.geopoliticalunits where rank = 1";
   } else {
-    querySQL = "select geopoliticalid, geopoliticalname from da.geopoliticalunits where highergeopoliticalid = $1";
+    gpID = String(req.query.id).split(',').map(function(item) {
+      return parseInt(item, 10);
+    });
+    querySQL = "select geopoliticalid, geopoliticalname from da.geopoliticalunits where highergeopoliticalid = " + gpID;
   }
   
-    db.any(querySQL, gpID)
-      .then(function (data) {
-        res.status(200)
-          .jsonp({
-            success: 1,
-            status: 'success',
-            data: data
-          });
-      })
-      .catch(function (err) {
-        return next(err);
-      });
-  } 
+  db.any(querySQL, gpID)
+    .then(function (data) {
+      res.status(200)
+        .jsonp({
+          success: 1,
+          status: 'success',
+          data: data
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+} 
 
 
 // function geopolbysite(req, res, next) {
