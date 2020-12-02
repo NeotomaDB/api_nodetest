@@ -125,6 +125,10 @@ module.exports = {
     var dataset = require('../helpers/datasets/datasets.js');
     dataset.datasetbysiteid(req, res, next);
   },
+  datasetsbydb: function (req, res, next) {
+    var dataset = require('../helpers/datasets/datasets.js');
+    dataset.datasetbydb(req, res, next);
+  },
   contactquery: function (req, res, next) {
     var contact = require('../helpers/contacts/contacts.js');
     contact.contactquery(req, res, next);

@@ -16,6 +16,7 @@ var WKT = require('terraformer-wkt-parser');
 
 const datasetquerysql = sql('./datasetquery.sql');
 const datasetbyidsql = sql('./datasetbyid.sql');
+const datasetbydbsql = sql('./datasetbydb.sql');
 const datasetbysite = sql('./datasetbysite.sql');
 
 function datasetbyid (req, res, next) {
@@ -37,6 +38,44 @@ function datasetbyid (req, res, next) {
   }
 
   db.any(datasetbyidsql, [datasetid])
+    .then(function (data) {
+      if (data.length === 0) {
+        // We're returning the structure, but nothing inside it:
+        var returner = [];
+      } else {
+        returner = data;
+      };
+      res.status(200)
+        .json({
+          status: 'success',
+          data: returner,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+      next(err);
+    });
+}
+
+function datasetbydb (req, res, next) {
+  var dbUsed = !!req.query.database;
+
+  if (dbUsed) {
+    var database = {'database': req.query.database,
+                    'limit': parseInt(req.query.limit),
+                    'offset':parseInt(req.query.offset)
+                  }
+    database = validate(database)
+  } else {
+    res.status(500)
+      .json({
+        status: 'failure',
+        data: null,
+        message: 'Must pass either queries or a comma separated list.'
+      });
+  }
+
+  db.any(datasetbydbsql, database)
     .then(function (data) {
       if (data.length === 0) {
         // We're returning the structure, but nothing inside it:
@@ -169,3 +208,4 @@ function datasetquery (req, res, next) {
 module.exports.datasetbyid = datasetbyid;
 module.exports.datasetbysiteid = datasetbysiteid;
 module.exports.datasetquery = datasetquery;
+module.exports.datasetbydb = datasetbydb;
