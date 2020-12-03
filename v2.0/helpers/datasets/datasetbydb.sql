@@ -32,12 +32,7 @@ WITH dssites AS (
             (${database} = cstdb.databasename)
 
     GROUP BY sts.siteid, clu.collectionunitid, cts.colltype, dts.datasetid, cstdb.databasename
-    OFFSET (CASE WHEN ${offset} IS NULL THEN 0
-                 ELSE ${offset}
-            END)
-    LIMIT (CASE WHEN ${limit} IS NULL THEN 25
-                ELSE ${limit}
-           END)
+
 ),
 dspiagg AS (
     SELECT
@@ -88,4 +83,10 @@ FROM
   (SELECT * FROM dssites) AS dssites
   LEFT OUTER JOIN (SELECT * FROM dspiagg) AS dspiagg ON dssites.datasetid = dspiagg.datasetid
 GROUP BY
-  dssites.sites;
+  dssites.sites
+OFFSET (CASE WHEN ${offset} IS NULL THEN 0
+             ELSE ${offset}
+        END)
+LIMIT (CASE WHEN ${limit} IS NULL THEN 25
+            ELSE ${limit}
+       END);
