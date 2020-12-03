@@ -49,9 +49,9 @@ dspiagg AS (
                                                             'familyname', cnt.familyname,
                                                             'firstname', cnt.givennames,
                                                             'initials', cnt.leadinginitials)),
-                             'agerange', json_build_object('ageyoung', agerange.younger,
+                             'agerange', json_agg(json_build_object('ageyoung', agerange.younger,
                                                            'ageold', agerange.older,
-                                                           'units', agetypes.agetype))
+                                                           'units', agetypes.agetype)))
                              AS dataset
   	FROM
   	(SELECT * FROM dssites) AS dssites
@@ -72,10 +72,7 @@ dspiagg AS (
       dssites.datasetid,
       dst.datasettype,
       dts.notes,
-      cstdb.databasename,
-      agerange.younger,
-      agerange.older,
-      agetypes.agetype
+      cstdb.databasename
   )
 SELECT  json_build_object('site', dssites.sites,
                           'datasets', json_agg(dspiagg.dataset)) AS sites
