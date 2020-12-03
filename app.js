@@ -104,5 +104,4 @@ app.all('*', function (req, res) {
   res.redirect('/api-docs');
 });
 
-
 module.exports = app;
