@@ -10,7 +10,7 @@ var router = express.Router();
 
 var handlers = require('../handlers/data_handlers');
 
-router.get('/oxcal/calibrate', handlers.oxcalibrate)
+router.post('/oxcal/calibrate', handlers.oxcalibrate)
 router.get('/contacts/', handlers.contactquery);
 router.get('/contacts/:contactid', handlers.contactsbyid);
 router.get('/datasets/:datasetid/contacts', handlers.contactsbydataid);

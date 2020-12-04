@@ -40,7 +40,6 @@ function calibrate(req, res, next) {
     input.round = 'FALSE'
   }
 
-
   if (hasBCAD) {
     if (input.bcad) {
       input.bcad = 'TRUE'
