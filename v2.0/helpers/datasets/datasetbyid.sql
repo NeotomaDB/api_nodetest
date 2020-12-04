@@ -8,12 +8,12 @@ WITH dspiagg AS (
                            'datasetnotes', dts.notes,
                            'database', cstdb.databasename,
                            'doi', json_agg(DISTINCT doi.doi),
-                           'datasetpi', json_agg(json_build_object('contactid', cnt.contactid,
+                           'datasetpi', json_agg(DISTINCT jsonb_build_object('contactid', cnt.contactid,
                                                                 'contactname', cnt.contactname,
                                                                 'familyname', cnt.familyname,
                                                                 'firstname', cnt.givennames,
                                                                 'initials', cnt.leadinginitials)),
-                                 'agerange', json_agg(json_build_object('ageyoung', agerange.younger,
+                                 'agerange', json_agg(DISTINCT jsonb_build_object('ageyoung', agerange.younger,
                                                                'ageold', agerange.older,
                                                                'units', agetypes.agetype)))
                                  AS dataset
