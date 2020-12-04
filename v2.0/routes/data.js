@@ -9,10 +9,6 @@ var express = require('express');
 var router = express.Router();
 
 var handlers = require('../handlers/data_handlers');
-console.log('12')
-router.get('/', function (req, res, next) {
-  res.redirect('/api-docs');
-});
 
 router.get('/oxcal/calibrate', handlers.oxcalibrate)
 router.get('/contacts/', handlers.contactquery);
