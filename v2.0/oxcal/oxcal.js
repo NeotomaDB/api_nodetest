@@ -18,7 +18,7 @@ function calibrate(req, res, next) {
   // and then read from the output file, splitting by spaces.
   command = process.env.OXCALPATH
   fname = crypto.randomBytes(20).toString('hex')
-  input = req.body
+  input = JSON.parse(req.query.calib)
 
   hasCurve = !!input.curve
   hasBCAD = !!input.bcad
