@@ -193,11 +193,11 @@ function explorersearch(req, res, next) {
   */
 
   if (inputParamObj.time) {
-    if (inputParamObj.time.ageOlder) {
-      qryParams._ageold = parseInt(inputParamObj.time.ageOlder, 10);
+    if (inputParamObj.time.ageolder) {
+      qryParams._ageold = parseInt(inputParamObj.time.ageolder, 10);
     }
-    if (inputParamObj.time.ageYounger) {
-      qryParams._ageyoung = parseInt(inputParamObj.time.ageYounger, 10);
+    if (inputParamObj.time.ageyounger) {
+      qryParams._ageyoung = parseInt(inputParamObj.time.ageyounger, 10);
     }
     inputParamObj.time.resultType == "intersects" ? qryParams._agedocontain = false : qryParams._agedocontain = true;
     inputParamObj.time.exactlyDated == true ? qryParams._agedirectdate = true : qryParams._agedirectdate = false;
