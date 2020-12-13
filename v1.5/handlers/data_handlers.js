@@ -276,7 +276,7 @@ function publicationquery(req, res, next) {
   var query =  "select distinct pubtype, citation, year, publicationid" +
      " from da.publications" +
      " where 1 = 1" +
-     " and publicationid = $1";
+     " and datasetid = $1";
   
   if(!datasetId){
     res.status(200)
