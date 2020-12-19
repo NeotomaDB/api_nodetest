@@ -4,6 +4,10 @@
 
 // Defining the query functions:
 module.exports = {
+  oxcalibrate:  function (req, res, next) {
+    var oxcal = require('../oxcal/oxcal.js');
+    oxcal.calibrate(req, res, next);
+  },
   frozen: function (req, res, next) {
     var frozen = require('../helpers/frozendata/frozen.js');
     frozen.frozenbyid(req, res, next);
@@ -120,6 +124,10 @@ module.exports = {
   datasetsbysite: function (req, res, next) {
     var dataset = require('../helpers/datasets/datasets.js');
     dataset.datasetbysiteid(req, res, next);
+  },
+  datasetsbydb: function (req, res, next) {
+    var dataset = require('../helpers/datasets/datasets.js');
+    dataset.datasetbydb(req, res, next);
   },
   contactquery: function (req, res, next) {
     var contact = require('../helpers/contacts/contacts.js');

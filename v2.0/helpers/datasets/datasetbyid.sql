@@ -8,38 +8,36 @@ WITH dspiagg AS (
                            'datasetnotes', dts.notes,
                            'database', cstdb.databasename,
                            'doi', json_agg(DISTINCT doi.doi),
-                           'datasetpi', json_agg(json_build_object('contactid', cnt.contactid,
+                           'datasetpi', json_agg(DISTINCT jsonb_build_object('contactid', cnt.contactid,
                                                                 'contactname', cnt.contactname,
                                                                 'familyname', cnt.familyname,
                                                                 'firstname', cnt.givennames,
                                                                 'initials', cnt.leadinginitials)),
-                                 'agerange', json_build_object('ageyoung', agerange.younger,
+                                 'agerange', json_agg(DISTINCT jsonb_build_object('ageyoung', agerange.younger,
                                                                'ageold', agerange.older,
-                                                               'units', agetypes.agetype))
+                                                               'units', agetypes.agetype)))
                                  AS dataset
 	FROM
-	ndb.datasets AS dts
-	LEFT OUTER JOIN ndb.collectionunits      AS clu      ON clu.collectionunitid = dts.collectionunitid
-	LEFT OUTER JOIN ndb.datasettypes         AS dst      ON dst.datasettypeid = dts.datasettypeid
-  LEFT OUTER JOIN ndb.datasetdoi           AS doi      ON dts.datasetid = doi.datasetid
-	LEFT OUTER JOIN ndb.datasetdatabases     AS dsdb     ON dsdb.datasetid = dts.datasetid
-	LEFT OUTER JOIN ndb.datasetpis           AS dspi     ON dspi.datasetid = dts.datasetid
-	LEFT OUTER JOIN ndb.contacts             AS cnt      ON cnt.contactid = dspi.contactid
-	LEFT OUTER JOIN ndb.dsageranges          AS agerange ON dts.datasetid = agerange.datasetid
-	LEFT OUTER JOIN ndb.agetypes             AS agetypes ON agetypes.agetypeid = agerange.agetypeid
-	LEFT OUTER JOIN ndb.constituentdatabases AS cstdb    ON dsdb.databaseid = cstdb.databaseid
-	LEFT OUTER JOIN ndb.sites                AS sts      ON sts.siteid = clu.siteid
+  	ndb.datasets AS dts
+  	LEFT OUTER JOIN ndb.collectionunits      AS clu      ON clu.collectionunitid = dts.collectionunitid
+  	LEFT OUTER JOIN ndb.datasettypes         AS dst      ON dst.datasettypeid = dts.datasettypeid
+    LEFT OUTER JOIN ndb.datasetdoi           AS doi      ON dts.datasetid = doi.datasetid
+  	LEFT OUTER JOIN ndb.datasetdatabases     AS dsdb     ON dsdb.datasetid = dts.datasetid
+  	LEFT OUTER JOIN ndb.datasetpis           AS dspi     ON dspi.datasetid = dts.datasetid
+  	LEFT OUTER JOIN ndb.contacts             AS cnt      ON cnt.contactid = dspi.contactid
+  	LEFT OUTER JOIN ndb.dsageranges          AS agerange ON dts.datasetid = agerange.datasetid
+  	LEFT OUTER JOIN ndb.agetypes             AS agetypes ON agetypes.agetypeid = agerange.agetypeid
+  	LEFT OUTER JOIN ndb.constituentdatabases AS cstdb    ON dsdb.databaseid = cstdb.databaseid
+  	LEFT OUTER JOIN ndb.sites                AS sts      ON sts.siteid = clu.siteid
   WHERE dts.datasetid = ANY ($1)
   GROUP BY
-	  sts.siteid,
     clu.collectionunitid,
     dts.datasetid,
     dst.datasettype,
+    dts.notes,
     cstdb.databasename,
-    agerange.younger,
-    agerange.older,
-    agetypes.agetype
-)
+    sts.siteid
+ )
 SELECT json_build_object(       'siteid', sts.siteid,
                               'sitename', sts.sitename,
                        'sitedescription', sts.sitedescription,
