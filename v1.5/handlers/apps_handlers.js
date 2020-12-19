@@ -8,7 +8,7 @@ module.exports = {
     datasettypes: datasettypes,
     collectiontypes: collectiontypes,
     elementtypes: elementtypes,
-    geochronologies: function (req, res, next) { 
+    geochronologies: function (req, res, next) {
       var geochronologies = require('../helpers/geochronologies/geochronologies.js');
       geochronologies.geochronologies(req, res, next);
     },
@@ -21,10 +21,10 @@ module.exports = {
     depositionalenvironments: depositionalenvironments,
     depositionalenvironmentsbyid: depositionalenvironmentsbyid,
     relativeages: relativeages,
-    search: function (req, res, next) { 
+    search: function (req, res, next) {
       console.log("calling search helper");
       var exsearch = require('../helpers/search/search.js');
-      exsearch.explorersearch(req, res, next); 
+      exsearch.explorersearch(req, res, next);
     }
     //search: exsearch
 };
@@ -69,8 +69,6 @@ function datasettypes(req, res, next) {
     .catch(function (err) {
       return next(err);
     });
-
-
 }
 
 
@@ -82,7 +80,7 @@ function exsearch(req, res, next) {
   console.log("hitting app/search handler");
   var data = [];
   // Get the query string:
- 
+
   //search input param is stringified JSON object, thus parse first
   var inputParamObj = JSON.parse(req.query.search);
   console.log("req.query.search object using JSON.stringify: "+ JSON.stringify(inputParamObj));
@@ -135,7 +133,7 @@ if (inputParamObj.space){
 
 
 //parse search parameters
-  Object.keys(inputParamObj).every(function(x) { 
+  Object.keys(inputParamObj).every(function(x) {
     var modProp = "_"+x;
     console.log("x: "+x);
     console.log("modProp: "+ modProp);
@@ -144,7 +142,7 @@ if (inputParamObj.space){
     }
   });
 
-   Object.getOwnPropertyNames(inputParamObj).every(function(x) { 
+   Object.getOwnPropertyNames(inputParamObj).every(function(x) {
     var modProp = "_"+x;
     console.log("x: "+x);
     console.log("modProp: "+ modProp);
@@ -199,7 +197,7 @@ function elementtypes(req, res, next){
   var taxonid, taxagroupid;
   taxonid = req.query.taxonid;
   taxagroupid = req.query.taxagroupid;
-  
+
   if( !parseInt(taxonid) && !taxagroupid ){
     res.status(200)
       .jsonp({
@@ -246,13 +244,13 @@ function elementtypes(req, res, next){
 }
 
 function taxaindatasets(req, res, next){
-  
+
   db.query('select * from ap.gettaxaindatasets()')
     .then(function(data){
       //data are records of (taxonid, taxonname, taxagroupid, datasettypeid)
       //example record: {"gettaxaindatasets":"(27739,albite,CHM,28)"}
       //desired output:  [...,{"TaxonName":"Acalypha-type","TaxonID":27017,"TaxaGroupID":"VPL","DatasetTypeIDs":[3,4,7,23]},...]
-    
+
       var rawTaxa = data;
       var datasettypesByTaxon = [];
       var currentTaxonID = -1;
@@ -275,14 +273,14 @@ function taxaindatasets(req, res, next){
           dtbytxnObj.datasettypeids = [];
           dtbytxnObj.datasettypeids.push(+d.datasettypeid)
         }
-      })      
+      })
 
       //add last taxon object to results
       if (dtbytxnObj.hasOwnProperty("taxonid")){
         datasettypesByTaxon.push(dtbytxnObj);
       }
 
-     
+
        res.status(200)
         .type('application/json')
         .jsonp({

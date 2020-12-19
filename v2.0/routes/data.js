@@ -10,10 +10,7 @@ var router = express.Router();
 
 var handlers = require('../handlers/data_handlers');
 
-router.get('/', function (req, res, next) {
-  res.redirect('/api-docs');
-});
-
+router.get('/oxcal/calibrate', handlers.oxcalibrate)
 router.get('/contacts/', handlers.contactquery);
 router.get('/contacts/:contactid', handlers.contactsbyid);
 router.get('/datasets/:datasetid/contacts', handlers.contactsbydataid);
@@ -24,11 +21,11 @@ router.get('/datasets_elc/', handlers.datasetquery_elc);
 router.get('/datasets_elc/:datasetid', handlers.datasetbyid_elc);
 router.get('/sites/:siteid/datasets_elc', handlers.datasetsbysite_elc); // Takes integers, including comma separated
 
+router.get('/datasets/db', handlers.datasetsbydb);  // Take database names
 router.get('/datasets/', handlers.datasetquery);
 router.get('/datasets/:datasetid', handlers.datasetbyid);
 router.get('/sites/:siteid/datasets', handlers.datasetsbysite); // Takes integers, including comma separated
 router.get('/geopoliticalunits/:gpid/datasets', handlers.sitesbygeopol);
-
 
 router.get('/frozen/:datasetid', handlers.frozen);
 

@@ -57,8 +57,8 @@ app.set('view engine', 'jade');
 
 app.use(express.static('public'));
 app.use(logger('dev'));
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -105,6 +105,5 @@ app.use(function (err, req, res, next) {
 app.all('*', function (req, res) {
   res.redirect('/api-docs');
 });
-
 
 module.exports = app;
