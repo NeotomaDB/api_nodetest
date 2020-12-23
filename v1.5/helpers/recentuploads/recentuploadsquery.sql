@@ -1,17 +1,19 @@
-SELECT json_build_object(       'datasetid', datasets.datasetid, 
-                              'recdatecreated', datasets.recdatecreated,
-                              'datasettype', datasettypes.datasettype,
-                             'databasename', constituentdatabases.databasename,
-                             'sitename', sites.sitename,
-                              'geo', string_agg(distinct geopoliticalunits.geopoliticalname, ' | ')) as record
-from ndb.datasets, ndb.datasettypes, ndb.constituentdatabases, ndb.datasetdatabases, ndb.collectionunits, ndb.sites, ndb.sitegeopolitical, ndb.geopoliticalunits
-where datasets.recdatecreated >= date_trunc('month', current_date - interval '3 month') and
-      datasets.recdatecreated < date_trunc('month', current_date) and
-	datasets.datasettypeid = datasettypes.datasettypeid and
-	datasets.datasetid = datasetdatabases.datasetid and
-	datasetdatabases.databaseid = constituentdatabases.databaseid and
-      ndb.datasets.collectionunitid = ndb.collectionunits.collectionunitid and
-      ndb.collectionunits.siteid = ndb.sites.siteid and
-      ndb.sites.siteid = ndb.sitegeopolitical.siteid and
-      ndb.sitegeopolitical.geopoliticalid = ndb.geopoliticalunits.geopoliticalid
-group by datasets.datasetid, datasets.recdatecreated, datasettypes.datasettype, constituentdatabases.databasename, sites.sitename;
+SELECT json_build_object(       'datasetid', ds.datasetid, 
+                              'recdatecreated', ds.recdatecreated,
+                              'datasettype', dst.datasettype,
+                             'databasename', cdb.databasename,
+                             'sitename', st.sitename,
+                              'geo', string_agg(distinct gpu.geopoliticalname, ' | ')) as record
+FROM ndb.datasets AS ds
+INNER JOIN ndb.datasettypes AS dst ON ds.datasettypeid = dst.datasettypeid
+INNER JOIN	 ndb.datasetdatabases AS dsdb ON ds.datasetid = dsdb.datasetid 
+INNER JOIN	 ndb.constituentdatabases AS cdb ON dsdb.databaseid = cdb.databaseid
+INNER JOIN	 ndb.collectionunits AS cu ON ds.collectionunitid = cu.collectionunitid
+INNER JOIN	 ndb.sites AS st ON cu.siteid = st.siteid 
+INNER JOIN	 ndb.sitegeopolitical AS sgp ON st.siteid = sgp.siteid
+INNER JOIN	 ndb.geopoliticalunits AS gpu ON sgp.geopoliticalid = gpu.geopoliticalid
+where ds.recdatecreated BETWEEN date_trunc('month', current_date - interval '3 month') AND date_trunc('month', current_date) 
+group by ds.datasetid, 
+         dst.datasettype, 
+		 cdb.databasename, 
+		 st.sitename;
