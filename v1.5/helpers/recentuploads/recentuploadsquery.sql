@@ -12,8 +12,9 @@ INNER JOIN	 ndb.collectionunits AS cu ON ds.collectionunitid = cu.collectionunit
 INNER JOIN	 ndb.sites AS st ON cu.siteid = st.siteid 
 INNER JOIN	 ndb.sitegeopolitical AS sgp ON st.siteid = sgp.siteid
 INNER JOIN	 ndb.geopoliticalunits AS gpu ON sgp.geopoliticalid = gpu.geopoliticalid
-where ds.recdatecreated BETWEEN date_trunc('month', current_date - interval '3 month') AND date_trunc('month', current_date) 
+where ds.recdatecreated BETWEEN date_trunc('month', current_date - ($1 * interval '1 month')) AND date_trunc('month', current_date) 
 group by ds.datasetid, 
          dst.datasettype, 
 		 cdb.databasename, 
-		 st.sitename;
+		 st.sitename
+ORDER BY ds.recdatecreated DESC;
