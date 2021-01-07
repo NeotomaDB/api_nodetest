@@ -3,6 +3,7 @@ WITH dssites AS (
     dts.datasetid AS datasetid,
     sts.siteid AS siteid,
     clu.collectionunitid AS collectionunitid,
+    cstdb.databasename AS constituentdatabase,
     jsonb_build_object(       'siteid', sts.siteid,
                            'sitename', sts.sitename,
                     'sitedescription', sts.sitedescription,
@@ -25,26 +26,13 @@ WITH dssites AS (
       LEFT OUTER JOIN            ndb.contacts  AS cnt      ON cnt.contactid = dspi.contactid
       LEFT OUTER JOIN         ndb.dsageranges  AS agerange ON dts.datasetid = agerange.datasetid
       LEFT OUTER JOIN            ndb.agetypes  AS agetypes ON agetypes.agetypeid = agerange.agetypeid
+      LEFT OUTER JOIN ndb.datasetdatabases     AS dsdb     ON dsdb.datasetid = dts.datasetid
+      LEFT OUTER JOIN ndb.constituentdatabases AS cstdb    ON dsdb.databaseid = cstdb.databaseid
       WHERE
-           (${siteid} IS NULL OR      sts.siteid = ANY (${siteid}))   AND
-      (${datasettype} IS NULL OR dst.datasettype LIKE ${datasettype}) AND
-             (${piid} IS NULL OR   cnt.contactid = ANY (${piid}))     AND
-           (${altmin} IS NULL OR    sts.altitude > ${altmin})         AND
-           (${altmax} IS NULL OR    sts.altitude < ${altmax})         AND
-              (${loc} IS NULL OR ST_Intersects(ST_GeogFromText(${loc}), sts.geog)) AND
-         (${ageyoung} IS NULL OR     ${ageyoung} > agerange.younger)  AND
-           (${ageold} IS NULL OR       ${ageold} < agerange.older)    AND
-            (${ageof} IS NULL OR        ${ageof} BETWEEN agerange.younger AND agerange.older) AND
-            ((${datasetid}) IS NULL OR dts.datasetid = ANY (${datasetid}))
+            (${database} = cstdb.databasename)
 
-    GROUP BY sts.siteid, clu.collectionunitid, cts.colltype, dts.datasetid
+    GROUP BY sts.siteid, clu.collectionunitid, cts.colltype, dts.datasetid, cstdb.databasename
 
-    OFFSET (CASE WHEN ${offset} IS NULL THEN 0
-                 ELSE ${offset}
-            END)
-    LIMIT (CASE WHEN ${limit} IS NULL THEN 25
-                ELSE ${limit}
-           END)
 ),
 dspiagg AS (
     SELECT
@@ -92,4 +80,10 @@ FROM
   (SELECT * FROM dssites) AS dssites
   LEFT OUTER JOIN (SELECT * FROM dspiagg) AS dspiagg ON dssites.datasetid = dspiagg.datasetid
 GROUP BY
-  dssites.sites;
+  dssites.sites
+OFFSET (CASE WHEN ${offset} IS NULL THEN 0
+             ELSE ${offset}
+        END)
+LIMIT (CASE WHEN ${limit} IS NULL THEN 25
+            ELSE ${limit}
+       END);

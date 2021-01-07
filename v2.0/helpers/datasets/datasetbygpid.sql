@@ -20,9 +20,9 @@ WITH RECURSIVE allgpu AS (SELECT gpu.geopoliticalid, gpu.highergeopoliticalid
                                                                 'familyname', cnt.familyname,
                                                                 'firstname', cnt.givennames,
                                                                 'initials', cnt.leadinginitials)),
-                                 'agerange', json_build_object('ageyoung', agerange.younger,
+                                 'agerange', json_agg(DISTINCT jsonb_build_object('ageyoung', agerange.younger,
                                                                'ageold', agerange.older,
-                                                               'units', agetypes.agetype))
+                                                               'units', agetypes.agetype)))
                                  AS dataset
 	FROM
 	ndb.datasets AS dts
@@ -42,10 +42,7 @@ WITH RECURSIVE allgpu AS (SELECT gpu.geopoliticalid, gpu.highergeopoliticalid
     clu.collectionunitid,
     dts.datasetid,
     dst.datasettype,
-    cstdb.databasename,
-    agerange.younger,
-    agerange.older,
-    agetypes.agetype
+    cstdb.databasename
 )
 
 SELECT  json_build_object('geopoliticalid', gpu.geopoliticalid,
