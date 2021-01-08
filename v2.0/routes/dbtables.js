@@ -11,12 +11,12 @@ var router = express.Router();
 
 var handlers = require('../handlers/dbtables_handlers');
 
-router.get('/', function (req, res, next) {
+router.get('/', function(req, res, next) {
   res.send('NeotomaDB dbtables API: please provide a valid request');
 });
 
 router.get('/RelativeAgeScales', handlers.relativeagescales);
-router.get('/gettables', handlers.table);
 router.get('/tablenames', handlers.tablenames)
+router.get('/table', handlers.ndbtable);
 
 module.exports = router;
