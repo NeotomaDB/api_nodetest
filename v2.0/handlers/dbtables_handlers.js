@@ -4,7 +4,7 @@ var pgp = db.$config.pgp;
 
 module.exports = {
   relativeagescales: relativeagescales,
-  table: table,
+  ndbtable: getNDBtable,
   tablenames: tablenames
 };
 
@@ -13,7 +13,7 @@ module.exports = {
 /* All the Endpoint functions */
 
 function relativeagescales (req, res, next) {
-  db.query('select ndb.getrelativeagescales();')
+  db.query('select ti.getrelativeagescales();')
     .then(function (data) {
       res.status(200)
         .json({
@@ -27,14 +27,37 @@ function relativeagescales (req, res, next) {
     });
 }
 
+function getNDBtable (req, res, next) {
 
-function table (req, res, next) {
-  db.query('SELECT * FROM ndb.' + req.table + ';')
+  if (!!req.query.table) {
+    var table = new pgp.helpers.TableName({table: req.query.table, schema: 'ndb'});
+  } else {
+    res.status(500)
+      .json({
+        status: 'failure',
+        data: null,
+        message: 'Must pass a table name parameter to the API.'
+      });
+  }
+
+  if (!!req.query.limit) {
+    var limit = parseInt(req.query.limit);
+  } else {
+    limit = 25;
+  }
+
+  if (!!req.query.offset) {
+    var offset = parseInt(req.query.offset);
+  } else {
+    offset = 0;
+  }
+
+  db.query('SELECT * FROM $1 LIMIT $2 OFFSET $3;', [table, limit, offset])
     .then(function (data) {
       res.status(200)
       .json({
         status: 'success',
-        data: JSON.stringify(data),
+        data: {limit: limit, offset: offset, data: data},
         message: 'Retrieved all RelativeAgeScales'
       });
   })
@@ -44,13 +67,13 @@ function table (req, res, next) {
 }
 
 function tablenames (req, res, next) {
-  db.query('SELECT * FROM pg_catalog.pg_tables where schemaname="ndb";')
+  db.query("SELECT tablename FROM pg_catalog.pg_tables where schemaname='ndb';")
     .then(function (data) {
       res.status(200)
       .json({
         status: 'success',
-        data: JSON.stringify(data),
-        message: 'Retrieved all RelativeAgeScales'
+        data: data.map(x=>x['tablename']).sort(),
+        message: 'Retrieved all tablenames for Neotoma.'
       });
   })
   .catch(function (err) {
