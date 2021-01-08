@@ -15,7 +15,6 @@ router.get('/', function(req, res, next) {
   res.send('NeotomaDB dbtables API: please provide a valid request');
 });
 
-router.get('/RelativeAgeScales', handlers.relativeagescales);
 router.get('/tablenames', handlers.tablenames)
 router.get('/table', handlers.ndbtable);
 
