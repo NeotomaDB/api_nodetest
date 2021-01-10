@@ -1,9 +1,9 @@
 SELECT
   jsonb_build_object('datasetid', dspi.datasetid,
     'contacts', json_agg(json_build_object('contactid', cnt.contactid,
-			                        'fullName', cnt.contactname,
-		                          'lastName', cnt.familyname,
-			                       'firstName', cnt.givennames,
+			                        'fullname', cnt.contactname,
+		                          'lastname', cnt.familyname,
+			                       'firstname', cnt.givennames,
                                    'url', cnt.url,
                                  'email', cnt.email,
                                'address', cnt.address))) AS contacts
