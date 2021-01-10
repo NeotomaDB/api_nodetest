@@ -109,8 +109,6 @@ function gettaxonquery (req, res, next) {
     'offset': req.query.offset
   }
 
-  console.log(outobj);
-
   if (typeof outobj.taxonid === 'undefined') {
     outobj.taxonid = null;
   };
