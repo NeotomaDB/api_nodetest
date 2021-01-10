@@ -3,7 +3,6 @@ var db = require('../../database/pgp_db');
 var pgp = db.$config.pgp;
 
 module.exports = {
-  relativeagescales: relativeagescales,
   ndbtable: getNDBtable,
   tablenames: tablenames
 };
@@ -11,21 +10,6 @@ module.exports = {
 // Defining the query functions:
 
 /* All the Endpoint functions */
-
-function relativeagescales (req, res, next) {
-  db.query('select ti.getrelativeagescales();')
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: JSON.stringify(data),
-          message: 'Retrieved all RelativeAgeScales'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-}
 
 function getNDBtable (req, res, next) {
 
