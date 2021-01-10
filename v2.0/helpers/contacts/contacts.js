@@ -32,6 +32,8 @@ function contacts (req, res, next) {
     'contactname': req.query.contactname,
     'familyname': req.query.familyname,
     'contactstatus': req.query.contactstatus,
+    'name': req.query.name,
+    'similarity': req.query.similarity,
     'limit': req.query.limit,
     'offset': req.query.offset
   };
