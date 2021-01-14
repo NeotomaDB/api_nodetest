@@ -864,4 +864,7 @@ router.get('/taxa/', handlers.taxonquery);
 router.get('/occurrence/', handlers.occurrencequery);
 router.get('/taxa/:taxonid/occurrence/', handlers.occurrencebytaxon);
 
+// router for xml endpoint to feed recent uploads widget on website
+router.get('/recentuploads/:months', handlers.recentuploadsquery);
+
 module.exports = router;
