@@ -29,6 +29,10 @@ module.exports = {
     var occurrences = require('../helpers/occurrence/occurrence.js')
     occurrences.occurrencequery(req, res, next);
   },
+  recentuploadsquery: function (req, res, next) {
+    var recentuploads = require('../helpers/recentuploads/recentuploads.js')
+    recentuploads.recentuploadsquery(req, res, next);
+  },
   occurrencebytaxon: function (req, res, next) {
     var occurrences = require('../helpers/occurrence/occurrence.js')
     occurrences.occurrencebytaxon(req, res, next);
