@@ -1,11 +1,7 @@
 SELECT
-  cnt.contactid AS contactid,
-  cnt.contactname AS fullName,
-  cnt.familyname AS lastName,
-  cnt.givennames AS firstName,
-  cnt.url AS url,
-  cnt.email AS email,
-  cnt.address AS address
+  cnt.*,
+  cst.contactstatus
 FROM
   ndb.contacts AS cnt
+  INNER JOIN ndb.contactstatuses AS cst ON cnt.contactstatusid = cst.contactstatusid
 WHERE cnt.contactid IN ($1:csv);
