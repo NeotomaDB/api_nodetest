@@ -145,17 +145,16 @@ module.exports = {
     var contact = require('../helpers/contacts/contacts.js');
     contact.contactsbysiteid(req, res, next);
   },
-  // CHRONOLOGIES
-  chronology: chronology,
-  chronologybyid: function (req, res, next) {
+  // Chronologies
+  chronologiesbyid: function (req, res, next) {
     var chronology = require('../helpers/chronology/chronology.js');
     chronology.chronologybyid(req, res, next);
   },
-  chronologybydsid: function (req, res, next) {
+  chronologiesbydsid: function (req, res, next) {
     var chronology = require('../helpers/chronology/chronology.js');
     chronology.chronologybydsid(req, res, next);
   },
-  chronologybystid: function (req, res, next) {
+  chronologiesbystid: function (req, res, next) {
     var chronology = require('../helpers/chronology/chronology.js');
     chronology.chronologybystid(req, res, next);
   },
@@ -184,15 +183,3 @@ module.exports = {
     summaries.rawbymonth(req, res, next);
   },
 };
-
-function chronology (req, res, next) {
-  // Get the query string:
-  var query = {};
-
-  res.status(200)
-    .json({
-      status: 'success',
-      query: query,
-      message: 'Retrieved chronology'
-    })
-}

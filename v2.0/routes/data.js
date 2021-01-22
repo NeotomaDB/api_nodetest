@@ -1,8 +1,6 @@
 /*
-*
 * v2.0/routes/data.js
 * By: Simon Goring, Michael Stryker
-*
 */
 
 var express = require('express');
@@ -42,13 +40,12 @@ router.get('/geopoliticalunits', handlers.geopoliticalunits);
 router.get('/geopoliticalunits/:gpid', handlers.geopoliticalbyid);
 router.get('/sites/:siteid/geopoliticalunits', handlers.geopolbysite);
 
-
 router.get('/occurrences', handlers.occurrencequery);
 router.get('/occurrences/:occurrenceid', handlers.occurrencebyid);
 router.get('/taxa/:taxonid/occurrences', handlers.occurrencebytaxon);
 
-router.get('/occurrence', handlers.occurrencequery);
-router.get('/occurrence/:occurrenceid', handlers.occurrencebyid);
+router.get('/occurrences', handlers.occurrencequery);
+router.get('/occurrences/:occurrenceid', handlers.occurrencebyid);
 router.get('/taxa/:taxonid/occurrence', handlers.occurrencebytaxon);
 
 router.get('/pollen/', handlers.pollen);
@@ -59,7 +56,6 @@ router.get('/publications', handlers.publicationquery);
 router.get('/publications/:pubid', handlers.publicationid);
 router.get('/sites/:siteid/publications', handlers.publicationbysite);
 router.get('/datasets/:datasetid/publications', handlers.publicationbydataset);
-
 
 router.get('/sites/', handlers.sitesquery); // Goes to the queries.
 router.get('/sites/:siteid', handlers.sitesbyid); // Takes integers, including comma separated
@@ -74,9 +70,9 @@ router.get('/taxa/', handlers.taxonquery);
 router.get('/datasets/:datasetid/taxa/', handlers.taxonbydsid);
 
 
-router.get('/chronology/:chronologyid', handlers.chronologybyid);
-router.get('/datasets/:datasetid/chronology', handlers.chronologybydsid);
-router.get('/sites/:siteid/chronology', handlers.chronologybystid);
+router.get('/chronologies/:chronologyid', handlers.chronologiesbyid);
+router.get('/datasets/:datasetid/chronologies', handlers.chronologiesbydsid);
+router.get('/sites/:siteid/chronologies', handlers.chronologiesbystid);
 
 router.get('/summary/dstypemonth/', handlers.dstypemonth);
 router.get('/summary/dsdbmonth/', handlers.dsdbmonth);
