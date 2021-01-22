@@ -5,13 +5,8 @@ WITH tightnames AS (
 	FROM ndb.contacts AS ct
     GROUP BY ct.contactid)
 SELECT
-  cnt.contactid AS contactid,
-  cnt.contactname AS contactname,
-  cnt.familyname AS familyname,
-  cnt.givennames AS givennames,
-  cnt.url AS url,
-  cnt.email AS email,
-  cnt.address AS address
+  cnt.*,
+	cst.contactstatus
 FROM
   ndb.contacts AS cnt
   INNER JOIN ndb.contactstatuses AS cst ON cnt.contactstatusid = cst.contactstatusid
