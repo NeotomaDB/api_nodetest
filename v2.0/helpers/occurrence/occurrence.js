@@ -67,8 +67,6 @@ function occurrencequery (req, res, next) {
     };
   }
 
-  console.log(req.query)
-
   if (!!req.query.occurrenceid) {
     req.query.occid = req.query.occurrenceid;
   }
@@ -113,7 +111,7 @@ function occurrencequery (req, res, next) {
     'offset': req.query.offset,
     'limit': req.query.limit
   };
-  console.log(outobj)
+
   outobj = validate(outobj);
 
   if (!(typeof outobj.taxonname === 'undefined') & !outobj.taxonname === null) {
