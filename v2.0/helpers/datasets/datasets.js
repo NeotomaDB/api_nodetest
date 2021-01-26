@@ -140,7 +140,7 @@ function datasetquery (req, res, next) {
       .map(function (item) { return parseInt(item, 10); }),
     'piid': String(req.query.piid).split(',')
       .map(function (item) { return parseInt(item, 10); }),
-    'datasettype': String(req.query.sitename),
+    'datasettype': String(req.query.datasettype),
     'altmin': parseInt(String(req.query.altmin)),
     'altmax': parseInt(String(req.query.altmax)),
     'loc': String(req.query.loc),
