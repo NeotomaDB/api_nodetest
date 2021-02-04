@@ -6,34 +6,37 @@ WITH stpub AS
   	ON sts.datasetid = dp.datasetid
     WHERE ($1 IS NULL OR sts.siteid IN ($1:csv)))
 SELECT DISTINCT jsonb_build_object('siteid', stpub.siteid,
-              'publicationid', pub.publicationid,
-              'pubtypeid', pub.pubtypeid,
-              'pubtype', pt.pubtype,
-              'articletitle', pub.articletitle,
-              'journal', pub.journal,
-              'year' , pub.year,
-              'booktitle' , pub.booktitle,
-              'volume'  , pub.volume,
-              'series'  , pub.seriestitle,
-              'issue'   , pub.issue,
-              'pages'   , pub.pages,
-              'citation', pub.citation,
-              'note' , pub.notes,
-              'publisher' , pub.publisher,
-              'edition'   , pub.edition,
-              'city'      , pub.city,
-              'country'   , pub.country,
-              'doi'       , pub.doi,
-              'author', json_agg(json_build_object('familyname', ca.familyname,
+  'publicationid', pub.publicationid,
+                           'pubtypeid', pub.pubtypeid,
+                           'pubtype', pt.pubtype,
+                           'year' , pub.year,
+                           'citation', pub.citation,
+                           'articletitle', pub.articletitle,
+                           'journal', pub.journal,
+                           'volume'  , pub.volume,
+                           'issue'   , pub.issue,
+                           'pages'   , pub.pages,
+                           'citationnumber', pub.citationnumber,
+                           'doi', pub.doi,
+                           'booktitle' , pub.booktitle,
+                           'numvolumes', pub.numvolumes,
+                           'edition'   , pub.edition,
+                           'volumetitle', pub.volumetitle,
+                           'seriestitle', pub.seriestitle,
+                           'seriesvolume', pub.seriesvolume,
+                           'publisher' , pub.publisher,
+                           'url', pub.url,
+                           'city'      , pub.city,
+                           'state', pub.state,
+                           'country'   , pub.country,
+                           'originallanguage', pub.originallanguage,
+                           'notes' , pub.notes,
+              'author', json_agg(DISTINCT jsonb_build_object('familyname', ca.familyname,
                                                    'givennames', ca.givennames,
                                                    'order', pa.authororder))) AS publication
-FROM
-  ndb.publications AS pub
-INNER JOIN
-  ndb.publicationauthors AS pa ON pub.publicationid = pa.publicationid
-INNER JOIN
-  ndb.contacts as ca ON ca.contactid = pa.contactid
+FROM ndb.publications AS pub
+INNER JOIN ndb.publicationauthors AS pa ON pub.publicationid = pa.publicationid
+INNER JOIN ndb.contacts as ca ON ca.contactid = pa.contactid
 INNER JOIN stpub ON pub.publicationid = stpub.publicationid
-INNER JOIN
-	     ndb.publicationtypes AS pt  ON     pub.pubtypeid = pt.pubtypeid
+INNER JOIN ndb.publicationtypes AS pt  ON     pub.pubtypeid = pt.pubtypeid
 GROUP BY pub.publicationid, pt.pubtype, stpub.siteid
