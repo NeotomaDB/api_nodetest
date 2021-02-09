@@ -2,7 +2,11 @@ var assert = require('assert');
 var should = require('chai').should();
 var expect = require('chai').expect;
 var supertest = require('supertest');
-var api = supertest('http://localhost:3000/');
+
+const dotenv = require('dotenv');
+dotenv.config();
+
+var api = supertest('http://localhost:' + process.env.APIPORT + '/');
 
 // *************************************************
 // Contact Data:
@@ -67,7 +71,7 @@ describe('Get contact data:', function () {
 		api.get('v2.0/data/datasets/12,13/contacts')
 		.set('Accept', 'application/json')
 		.end(function(err, res){
-			assert.equal(Object.keys(res.body.data[0]['contact'][0])[0], 'contactid');
+			assert.equal(Object.keys(res.body.data[0]['contacts'][0])[0], 'contactid');
 			done();
 		});
 	});
