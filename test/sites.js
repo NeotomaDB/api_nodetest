@@ -2,8 +2,11 @@ var assert = require('assert');
 var should = require('chai').should();
 var expect = require('chai').expect;
 var supertest = require('supertest');
-var api = supertest('http://localhost:3000/');
 
+const dotenv = require('dotenv');
+dotenv.config();
+
+var api = supertest('http://localhost:' + process.env.APIPORT + '/');
 // *************************************************
 // Site Data:
 //
@@ -37,7 +40,7 @@ describe('Get site data any number of ways:', function () {
   });
 
   it('Break sites by flipping altitudes:', function (done) {
-    api.get('v2.0/data/sites/?altmax=3000&altmin=5000') 
+    api.get('v2.0/data/sites/?altmax=3000&altmin=5000')
       .set('Accept', 'application/json')
       .end((err, res) => {
         if (err) {
