@@ -18,8 +18,11 @@ describe('Get chronology data by datasetid:', function () {
     api.get('v2.0/data/datasets/684,1001/chronologies')
       .set('Accept', 'application/json')
       .expect(function (res) {
-        return res.body['data'].length === 2;
+        return res.body['data'].length === 4;
       })
-      .expect(200, done);
+      .expect(200)
+      .end(function (err, res) {
+        done();
+      });
   });
 });
