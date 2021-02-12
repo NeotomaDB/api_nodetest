@@ -33,7 +33,7 @@ describe('Get publication data any number of ways:', function () {
   });
 
   it('Get publication by querying author:', function (done) {
-    api.get('v2.0/data/publications/?familyname=Grimm')
+    api.get('v2.0/data/publications?familyname=Grimm')
       .set('Accept', 'application/json')
       .expect(function (res) {
         return res.body.data.result.length > 0;
