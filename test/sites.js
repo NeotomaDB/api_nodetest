@@ -67,14 +67,14 @@ describe('Get site data any number of ways:', function () {
       });
   });
 
-  it('Get site by geopolitical units returns gp and site data:', function (done) {
+/*  it('Get site by geopolitical units returns gp and site data:', function (done) {
     api.get('v2.0/data/geopoliticalunits/765/sites')
       .set('Accept', 'application/json')
       .expect(function (res) {
         return Object.keys(res.body['data'][0]).length === 2;
       })
       .expect(200, done);
-  });
+  }); */
   it('Get site by contact information for multiple authors:', function (done) {
     api.get('v2.0/data/contacts/12,13/sites')
       .set('Accept', 'application/json')
