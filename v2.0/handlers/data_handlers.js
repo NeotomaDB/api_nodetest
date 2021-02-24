@@ -168,7 +168,10 @@ module.exports = {
     var dois = require('../helpers/doi/dois.js');
     dois.doibydsid(req, res, next);
   },
-
+  vueapp: function (req, res, next) {
+    var vueapp = require('../helpers/vueapp/shortcalls.js');
+    vueapp.shortCall(req, res, next);
+  },
   // SUMMARIES
   dstypemonth: function (req, res, next) {
     var summaries = require('../helpers/summary/summary.js');

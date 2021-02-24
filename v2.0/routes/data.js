@@ -73,13 +73,12 @@ router.get('/chronologies/:chronologyid', handlers.chronologiesbyid);
 router.get('/datasets/:datasetid/chronologies', handlers.chronologiesbydsid);
 router.get('/sites/:siteid/chronologies', handlers.chronologiesbystid);
 
-router.get('/vueapp/short', handlers.shortCall);
+router.get('/vueapp/short', handlers.vueapp);
 
 router.get('/summary/dstypemonth/', handlers.dstypemonth);
 router.get('/summary/dsdbmonth/', handlers.dsdbmonth);
 router.get('/summary/rawbymonth/', handlers.rawbymonth);
 
 router.get('/datasets/:datasetid/doi', handlers.doibydsid);
-
 
 module.exports = router;

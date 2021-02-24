@@ -4,6 +4,10 @@ var pgp = db.$config.pgp;
 var validate = require('../validateOut').validateOut
 
 function shortCall (req, res, next) {
+
+  var params = {status: '',
+                dsid: ''}
+
   if (req.params.status === "1") {
     res.status(200)
       .json({
