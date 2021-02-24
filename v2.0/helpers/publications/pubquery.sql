@@ -39,6 +39,7 @@ WHERE
   (${familyname} IS NULL OR     ca.familyname LIKE  ${familyname})  AND
   (${pubtype}    IS NULL OR        pt.pubtype =     ${pubtype})     AND
   (${year}       IS NULL OR          pub.year =     ${year})        AND
+  (${doi}        IS NULL OR           pub.doi =     ${doi})         AND
   (${search}     IS NULL OR      pub.citation SIMILAR TO (${search}))
 GROUP BY pub.publicationid, pt.pubtype, ca.contactid
 OFFSET (CASE WHEN ${offset} IS NULL THEN 0

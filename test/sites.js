@@ -2,8 +2,11 @@ var assert = require('assert');
 var should = require('chai').should();
 var expect = require('chai').expect;
 var supertest = require('supertest');
-var api = supertest('http://localhost:3000/');
 
+const dotenv = require('dotenv');
+dotenv.config();
+
+var api = supertest('http://localhost:' + process.env.APIPORT + '/');
 // *************************************************
 // Site Data:
 //
@@ -37,7 +40,7 @@ describe('Get site data any number of ways:', function () {
   });
 
   it('Break sites by flipping altitudes:', function (done) {
-    api.get('v2.0/data/sites/?altmax=3000&altmin=5000') 
+    api.get('v2.0/data/sites/?altmax=3000&altmin=5000')
       .set('Accept', 'application/json')
       .end((err, res) => {
         if (err) {
@@ -64,14 +67,14 @@ describe('Get site data any number of ways:', function () {
       });
   });
 
-  it('Get site by geopolitical units returns gp and site data:', function (done) {
+/*  it('Get site by geopolitical units returns gp and site data:', function (done) {
     api.get('v2.0/data/geopoliticalunits/765/sites')
       .set('Accept', 'application/json')
       .expect(function (res) {
         return Object.keys(res.body['data'][0]).length === 2;
       })
       .expect(200, done);
-  });
+  }); */
   it('Get site by contact information for multiple authors:', function (done) {
     api.get('v2.0/data/contacts/12,13/sites')
       .set('Accept', 'application/json')

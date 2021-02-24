@@ -36,7 +36,8 @@ function publicationid (req, res, next) {
 
   db.any(rawpub, pubid)
     .then(function (data) {
-      var bibOutput = bib.formatpublbib(data);
+      // var bibOutput = bib.formatpublbib(data);
+      var bibOutput = data
 
       res.status(200)
         .json({
@@ -69,6 +70,7 @@ function publicationquery (req, res, next) {
       .map(function (item) {
         return parseInt(item, 10);
       }),
+    'doi': String(req.query.doi).split(','),
     'familyname': String(req.query.familyname),
     'pubtype': String(req.query.pubtype),
     'year': parseInt(req.query.year),
@@ -77,6 +79,11 @@ function publicationquery (req, res, next) {
     'offset': parseInt(req.query.offset)
   };
 
+  console.log(typeof outobj.doi[0])
+
+  if (outobj.doi[0] === 'undefined') {
+    outobj.doi = null;
+  }
   outobj = validate(outobj);
 
   var novalues = Object.keys(outobj).every(function (x) {
@@ -92,7 +99,8 @@ function publicationquery (req, res, next) {
   } else {
     db.any(pubquery, outobj)
       .then(function (data) {
-        var returner = bib.formatpublbib(data);
+        // var returner = bib.formatpublbib(data);
+        var returner = data;
 
         res.status(200)
           .json({
@@ -121,7 +129,8 @@ function publicationbysite (req, res, next) {
 
   db.any(pubbystid, [siteid])
     .then(function (data) {
-      var bibOutput = bib.formatpublbib(data);
+      // var bibOutput = bib.formatpublbib(data);
+      var bibOutput = data;
 
       /* This is a sequence I use to aggregate the publications by site */
       var returner = [];
@@ -171,7 +180,8 @@ function publicationbydataset (req, res, next) {
 
   db.any(pubbydsid, [datasetid])
     .then(function (data) {
-      var bibOutput = bib.formatpublbib(data);
+      // var bibOutput = bib.formatpublbib(data);
+      var bibOutput = data;
 
       /* This is a sequence I use to aggregate the publications by site */
       var returner = [];
