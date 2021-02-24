@@ -2,8 +2,11 @@ var assert = require('assert');
 var should = require('chai').should();
 var expect = require('chai').expect;
 var supertest = require('supertest');
-var api = supertest('http://localhost:3000/');
 
+const dotenv = require('dotenv');
+dotenv.config();
+
+var api = supertest('http://localhost:' + process.env.APIPORT + '/');
 // *************************************************
 // Site Data:
 //
@@ -30,7 +33,7 @@ describe('Get publication data any number of ways:', function () {
   });
 
   it('Get publication by querying author:', function (done) {
-    api.get('v2.0/data/publications/?familyname=Grimm')
+    api.get('v2.0/data/publications?familyname=Grimm')
       .set('Accept', 'application/json')
       .expect(function (res) {
         return res.body.data.result.length > 0;
