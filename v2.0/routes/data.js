@@ -69,10 +69,11 @@ router.get('/taxa/:taxonid', handlers.taxonbyid);
 router.get('/taxa/', handlers.taxonquery);
 router.get('/datasets/:datasetid/taxa/', handlers.taxonbydsid);
 
-
 router.get('/chronologies/:chronologyid', handlers.chronologiesbyid);
 router.get('/datasets/:datasetid/chronologies', handlers.chronologiesbydsid);
 router.get('/sites/:siteid/chronologies', handlers.chronologiesbystid);
+
+router.get('/vueapp/short', handlers.shortCall);
 
 router.get('/summary/dstypemonth/', handlers.dstypemonth);
 router.get('/summary/dsdbmonth/', handlers.dsdbmonth);
