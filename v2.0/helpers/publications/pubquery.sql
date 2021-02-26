@@ -40,15 +40,9 @@ WHERE
   (${familyname} IS NULL OR     ca.familyname LIKE  ${familyname})  AND
   (${pubtype}    IS NULL OR        pt.pubtype =     ${pubtype})     AND
   (${year}       IS NULL OR          pub.year =     ${year})        AND
-<<<<<<< HEAD
   (${search}     IS NULL OR      pts.pubtsv @@ to_tsquery(${search}))
 GROUP BY pub.publicationid, pt.pubtype, ca.contactid, pts.pubtsv
 ORDER BY ts_rank(pts.pubtsv, to_tsquery('climate')) DESC
-=======
-  (${doi}        IS NULL OR           pub.doi =     ${doi})         AND
-  (${search}     IS NULL OR      pub.citation SIMILAR TO (${search}))
-GROUP BY pub.publicationid, pt.pubtype, ca.contactid
->>>>>>> a4458158c8eda7872dc833c7c7b78b3d82771fe8
 OFFSET (CASE WHEN ${offset} IS NULL THEN 0
              ELSE ${offset}
         END)
