@@ -33,14 +33,16 @@ INNER JOIN ndb.publicationauthors AS pa  ON pub.publicationid = pa.publicationid
 INNER JOIN ndb.contacts AS ca  ON      ca.contactid = pa.contactid
 LEFT JOIN ndb.datasetpublications AS dp ON dp.publicationid = pub.publicationid
 INNER JOIN ndb.publicationtypes AS pt  ON     pub.pubtypeid = pt.pubtypeid
+INNER JOIN ndb.pubtsv AS pts ON pts.publicationid = pub.publicationid
 WHERE
   (${pubid}      IS NULL OR pub.publicationid = ANY (${pubid}::int[]))     AND
   (${datasetid}  IS NULL OR      dp.datasetid = ANY (${datasetid})) AND
   (${familyname} IS NULL OR     ca.familyname LIKE  ${familyname})  AND
   (${pubtype}    IS NULL OR        pt.pubtype =     ${pubtype})     AND
   (${year}       IS NULL OR          pub.year =     ${year})        AND
-  (${search}     IS NULL OR      pub.citation SIMILAR TO (${search}))
-GROUP BY pub.publicationid, pt.pubtype, ca.contactid
+  (${search}     IS NULL OR      pts.pubtsv @@ to_tsquery(${search}))
+GROUP BY pub.publicationid, pt.pubtype, ca.contactid, pts.pubtsv
+ORDER BY ts_rank(pts.pubtsv, to_tsquery('climate')) DESC
 OFFSET (CASE WHEN ${offset} IS NULL THEN 0
              ELSE ${offset}
         END)
