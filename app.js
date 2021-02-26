@@ -1,20 +1,24 @@
-var express = require('express');
-var cors = require('cors');
-var path = require('path');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+let express = require('express');
+let apicache = require('apicache');
+let cors = require('cors');
+let path = require('path');
+let logger = require('morgan');
+let cookieParser = require('cookie-parser');
+let bodyParser = require('body-parser');
 const YAML = require('yamljs');
-var swaggerUi = require('swagger-ui-express'),
+let swaggerUi = require('swagger-ui-express'),
 swaggerDocument = YAML.load('./swagger.yaml');
-var morgan = require('morgan');
-var fs = require('fs');
+let morgan = require('morgan');
+let fs = require('fs');
 const dotenv = require('dotenv');
 dotenv.config();
 
-var app = express();
+let app = express();
+let cache = apicache.middleware
 
 app.use(cors());
+app.use(cache('15 minutes'));
+
 //test trigger watch restart - 09/12/20
 //
 // create a write stream (in append mode)
