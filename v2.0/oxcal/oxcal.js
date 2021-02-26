@@ -5,7 +5,6 @@ var crypto = require("crypto");
 var exec = require('child-process-promise').exec;
 
 function calibrate(req, res, next) {
-  console.log('hey!')
   // This function takes in an object with three parameters:
   // {"curve":"IntCal20.14c",
   //  "bcad":true,
@@ -60,8 +59,6 @@ function calibrate(req, res, next) {
       Round = ${input.round};
     };`
 
-  console.log(input)
-
   dateAdds = input.dates.map(x => `R_Date("${x.name}", ${x.date}, ${x.sd});`)
 
   outputFile = calib + '\n' + dateAdds.join('\n')
@@ -72,9 +69,6 @@ function calibrate(req, res, next) {
 
   var outputb = exec(command, {
       encoding: 'utf-8'
-    })
-    .then(function(result) {
-      console.log('a');
     })
     .catch(function(err) {
       silent = err;
