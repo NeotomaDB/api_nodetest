@@ -14,7 +14,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 let app = express();
-let cache = apicache.middleware
+let cache = apicache.middleware;
 
 app.use(cors());
 app.use(cache('15 minutes'));

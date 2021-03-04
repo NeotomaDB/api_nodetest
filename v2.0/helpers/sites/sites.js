@@ -106,7 +106,7 @@ function sitesquery(req, res, next) {
     'altmin': ifUndef(req.query.altmin, 'int'),
     'altmax': ifUndef(req.query.altmax, 'int'),
     'loc': ifUndef(req.query.loc, 'string'),
-    'gpid': ifUndef(req.query.gpid, 'int')
+    'gpid': ifUndef(req.query.gpid, 'sep')
   };
 
   if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {

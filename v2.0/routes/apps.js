@@ -7,6 +7,7 @@ Last Updated: September 13, 2017
  */
 
 var express = require('express');
+
 var router = express.Router();
 
 var handlers = require('../handlers/apps_handlers');
