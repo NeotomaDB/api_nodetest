@@ -73,7 +73,7 @@ function publicationquery (req, res, next) {
     'doi': String(req.query.doi).split(','),
     'familyname': String(req.query.familyname),
     'pubtype': String(req.query.pubtype),
-    'year': parseInt(req.query.year),
+    'year': req.query.year,
     'search': String(req.query.search),
     'limit': parseInt(req.query.limit),
     'offset': parseInt(req.query.offset)
