@@ -34,4 +34,4 @@ LEFT JOIN ndb.datasetpublications AS dp ON dp.publicationid = pub.publicationid
 INNER JOIN   ndb.publicationtypes AS pt  ON     pub.pubtypeid = pt.pubtypeid
 WHERE
   (${pubid} IS NULL OR pub.publicationid = ${pubid})
-GROUP BY pub.publicationid, pt.pubtype, ca.contactid
+GROUP BY pub.publicationid, pt.pubtype
