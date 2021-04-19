@@ -41,7 +41,7 @@ WHERE
   (${pubtype}    IS NULL OR        pt.pubtype =     ${pubtype})     AND
   (${year}       IS NULL OR          pub.year =     ${year})        AND
   (${search}     IS NULL OR      pts.pubtsv @@ plainto_tsquery(${search}))
-GROUP BY pub.publicationid, pt.pubtype, ca.contactid, pts.pubtsv
+GROUP BY pub.publicationid, pt.pubtype, pts.pubtsv
 ORDER BY ts_rank(pts.pubtsv, to_tsquery('climate')) DESC
 OFFSET (CASE WHEN ${offset} IS NULL THEN 0
              ELSE ${offset}

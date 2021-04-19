@@ -40,4 +40,4 @@ INNER JOIN
 	     ndb.publicationtypes AS pt  ON     pub.pubtypeid = pt.pubtypeid
 WHERE
   pub.publicationid = ANY (${pubid})
-GROUP BY pub.publicationid, pt.pubtype, ca.contactid
+GROUP BY pub.publicationid, pt.pubtype
