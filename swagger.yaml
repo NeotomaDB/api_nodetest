@@ -1,9 +1,9 @@
 openapi:                                       3.0.1
 servers:
-  - url:                                       'http://api-dev.neotomadb.org/'
-    description:                               Neotoma development server.
   - url:                                       'http://api.neotomadb.org/'
     description:                               Neotoma production server.
+  - url:                                       'http://api-dev.neotomadb.org/'
+    description:                               Neotoma development server.
 info:
   title:                                       Neotoma API
   version:                                     "2.0-oas3"
@@ -418,7 +418,7 @@ paths:
   #       - $ref:                                '#/components/parameters/datasetidQuery'
   #     responses:
   #       '200':
-  #         description:                         An array of geopolitical units.
+  #         description:                         An array of publication.
   #         content:
   #           application/json:
   #             schema:
@@ -1071,23 +1071,54 @@ paths:
 #                 type:                          array
 #                 items:
 #                   $ref:                        '#/components/schemas/publications'
-#   /v2.0/data/publications:
-#     get:
-#       tags:                                    ['Publication metadata', 'v2.0']
-#       summary:                                 Returns information about Neotoma publications
-#       description:                             Returns information about Neotoma publications
-#       parameters:
-#         - $ref:                                '#/components/parameters/datasetidQuery'
-#         - $ref:                                '#/components/parameters/siteidQuery'
-#       responses:
-#         '200':
-#           description:                         A list of publications.
-#           content:
-#             application/json:
-#               schema:
-#                 type:                          array
-#                 items:
-#                   $ref:                        '#/components/schemas/publications'
+  /v2.0/data/publications:
+    get:
+      tags:                                    ['Publication metadata', 'v2.0']
+      summary:                                 Returns information about Neotoma publications
+      description:                             Returns information about Neotoma publications
+      parameters:
+        - $ref:                                '#/components/parameters/publicationidQuery'
+        - $ref:                                '#/components/parameters/datasetidQuery'
+        - $ref:                                '#/components/parameters/siteidQuery'
+        - name: familyname
+          description: Text string with an individual's last (family) name, as it would be in a publication list.
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: pubtype
+          description: The type of publication requested.
+          required: false
+          in: query
+          schema:
+            type: string
+            enum: [Legacy, Journal Article, Book Chapter, Authored Book, Edited Book, Master's Thesis, Doctoral Dissertation, Authored Report, Edited Report, Other Authored, Other Edited, Website, Undergraduate thesis]
+        - name: year
+          description: The year of publication, either as a single value or comma separated string.
+          required: false
+          in: query
+          schema:
+            type: integer
+            format: int32
+            minimum: 1500
+            maximum: 2100
+        - name: search
+          description: A fulltext search string.  Either a literal portion of the article name, or keywords.
+          in: query
+          required: false
+          schema:
+            type: string
+        - $ref:                                '#/components/parameters/limitParam'
+        - $ref:                                '#/components/parameters/offsetParam'
+      responses:
+        '200':
+          description:                         A list of publications.
+          content:
+            application/json:
+              schema:
+                type:                          array
+                items:
+                  $ref:                        '#/components/schemas/publications'
 # Returning Sites
   /v2.0/data/sites/{siteid}:
     get:
@@ -1191,13 +1222,25 @@ components:
       description:                             >-
             Unique contact identifier within the Neotoma Database, alone or
             comma separated.
+      in:                                      query
+      required:                                false
+      schema:
+        type:                                  integer
+        format:                              int64
+        minimum:                             1
+        example:                             44
+    contactidPath:
+      name:                                    contactid
+      description:                             >-
+            Unique contact identifier within the Neotoma Database, alone or
+            comma separated.
       in:                                      path
       required:                                true
       schema:
         type:                                  integer
-          format:                              int64
-          minimum:                             1
-          example:                             44
+        format:                              int64
+        minimum:                             1
+        example:                             44
     familyNameQuery:
       name:                                    familyname
       description:                             Full name of the the researcher (may use the % wildcard)
@@ -1300,6 +1343,16 @@ components:
       description:                             Valid Neotoma dataset identifier (integer), either singly or in a comma separated list.
       in:                                      path
       required:                                true
+      schema:
+        type:                                  integer
+        format:                                int32
+        minimum:                               0
+    publicationidQuery:
+      name:                                    publicationid
+      description:                             >
+        Unique publication identifier (from the Neotoma publication table).
+      in:                                      query
+      required:                                false
       schema:
         type:                                  integer
         format:                                int32
