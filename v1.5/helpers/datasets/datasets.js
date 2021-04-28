@@ -16,14 +16,11 @@ const datasetbyidsql = sql('./datasetbyid.sql');
 const datasetsbysitesql = sql('./datasetbysites.sql');
 
 function datasetbyid(req, res, next) {
-  console.log(req.params.datasetid);
   var datasetid = req.query.datasetid;
   //check if datasetid provided by query or URL slug
   if (!!req.query.datasetid){
     datasetid = req.query.datasetid;
-  }
-
-  if (!!req.params.datasetid) {
+  } else if (!!req.params.datasetid) {
     datasetid = req.params.datasetid;
   } else {
     res.status(500)
@@ -97,7 +94,7 @@ function datasetsbysiteid(req, res, next) {
   console.log("called datasetsbysiteid");
   console.log("req.params.siteid: "+req.params.siteid);
   console.log("req.query.siteid: "+req.query.siteid);
-  
+
   //check if valid integer siteid
   var siteid = +req.query.siteid;
 
@@ -129,14 +126,14 @@ function datasetsbysiteid(req, res, next) {
 
 
 function datasetquery(req, res, next) {
-  
+  console.log('Here')
   var datasetid = req.params.datasetid;
 
   // Get the query string:
   var query = 'SELECT * FROM ndb.datasets as dts WHERE ';
 
   if (!!datasetid) {
-    query = query + 'dts.datasetid = '  + datasetid;
+    query = query + 'dts.datasetid = '  + parseInt(datasetid);
   }
 
   db.any(query)
