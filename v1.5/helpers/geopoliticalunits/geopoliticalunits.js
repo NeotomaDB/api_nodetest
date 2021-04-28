@@ -72,7 +72,7 @@ function geopoliticalunits(req, res, next) {
   /*
   Geopolitical units work this way:
     Can pass a string or identifier to figure out names & IDs.
-      - Not really sure why this is important. . . 
+      - Not really sure why this is important. . .
     Should be able to pass in site IDs, or dataset IDs to then figure out
       where the records are, with regards to political units.
   */
@@ -86,9 +86,13 @@ function geopoliticalunits(req, res, next) {
     gpID = String(req.query.id).split(',').map(function(item) {
       return parseInt(item, 10);
     });
-    querySQL = "select geopoliticalid, geopoliticalname from da.geopoliticalunits where highergeopoliticalid = " + gpID;
+    if(!isNaN(gpID[0])) {
+      querySQL = "select geopoliticalid, geopoliticalname from da.geopoliticalunits where highergeopoliticalid = " + gpID;
+    } else {
+      querySQL = "select geopoliticalid, geopoliticalname from da.geopoliticalunits"
+    }
   }
-  
+
   db.any(querySQL, gpID)
     .then(function (data) {
       res.status(200)
@@ -101,7 +105,7 @@ function geopoliticalunits(req, res, next) {
     .catch(function (err) {
       return next(err);
     });
-} 
+}
 
 
 // function geopolbysite(req, res, next) {
@@ -111,7 +115,7 @@ function geopoliticalunits(req, res, next) {
 //   */
 
 //   if (!!req.params.siteid) {
-  
+
 //     var siteid = String(req.params.siteid).split(',').map(function(item) {
 //       return parseInt(item, 10);
 //     });
