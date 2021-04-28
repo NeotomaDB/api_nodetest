@@ -55,6 +55,7 @@ function sitesquery(req, res, next) {
 
   // Get the input parameters:
   var outobj = {'sitename':String(req.query.sitename),
+                  'siteid': parseInt(String(req.query.siteid)),
                   'altmin':parseInt(String(req.query.altmin)),
                   'altmax':parseInt(String(req.query.altmax)),
                      'loc':String(req.query.loc),
@@ -62,6 +63,7 @@ function sitesquery(req, res, next) {
                };
 
   if (typeof req.query.sitename === 'undefined') { outobj.sitename = null }
+  if (typeof req.query.siteid === 'undefined')   { outobj.siteid = null }
   if (typeof req.query.altmin === 'undefined')   {   outobj.altmin = null }
   if (typeof req.query.altmax === 'undefined')   {   outobj.altmax = null }
   if (typeof req.query.loc === 'undefined')      {      outobj.loc = null }
@@ -73,7 +75,6 @@ function sitesquery(req, res, next) {
         status: 'failure',
         message: 'The altmin is greater than altmax.  Please fix this!'
       });
-
   }
 
   db.any(siteQuery, outobj)
