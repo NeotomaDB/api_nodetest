@@ -8,18 +8,18 @@ module.exports = {
   chronology:chronology,
   publicationbydataset:publicationbydataset,
   downloads:downloads,
-  geopoliticalunits: function (req, res, next) { 
+  geopoliticalunits: function (req, res, next) {
     console.log("calling geopoliticalunits helper");
     var geopol = require('../helpers/geopoliticalunits/geopoliticalunits.js');
-    geopol.geopoliticalunits(req, res, next); 
+    geopol.geopoliticalunits(req, res, next);
   },
-  geopolbysite: function (req, res, next) { 
+  geopolbysite: function (req, res, next) {
     var geopol = require('../helpers/geopoliticalunits/geopoliticalunits.js');
-    geopol.geopolbysite(req, res, next); 
+    geopol.geopolbysite(req, res, next);
   },
-  geopoliticalbyid: function (req, res, next) { 
+  geopoliticalbyid: function (req, res, next) {
     var geopol = require('../helpers/geopoliticalunits/geopoliticalunits.js');
-    geopol.geopoliticalbyid(req, res, next); 
+    geopol.geopoliticalbyid(req, res, next);
   },
   occurrencebyid: function (req, res, next) {
     var occurrences = require('../helpers/occurrence/occurrence.js')
@@ -40,37 +40,37 @@ module.exports = {
   publicationid:publicationid,
   publicationquery:publicationquery,
   publicationbysite:publicationbysite,
-  taxonbyid: function (req, res, next) { 
+  taxonbyid: function (req, res, next) {
     var taxon = require('../helpers/taxa/taxa.js');
     taxon.taxonbyid(req, res, next);
   },
-  taxonquery: function (req, res, next) { 
+  taxonquery: function (req, res, next) {
     var taxon = require('../helpers/taxa/taxa.js');
     taxon.gettaxonquery(req, res, next);
   },
-  pollen: function (req, res, next) { 
+  pollen: function (req, res, next) {
     var pollen = require('../helpers/pollen/pollen.js');
     pollen(req, res, next);
   },
 // RETURNING SITES:
-  sitesbyid: function (req, res, next) { 
+  sitesbyid: function (req, res, next) {
     var sites = require('../helpers/sites/sites.js');
     sites.sitesbyid(req, res, next);
   },
-  sitesquery:function (req, res, next) { 
+  sitesquery:function (req, res, next) {
     var sites = require('../helpers/sites/sites.js');
-    sites.sitesquery(req, res, next); 
+    sites.sitesquery(req, res, next);
   },
-  sitesbygeopol:function (req, res, next) { 
+  sitesbygeopol:function (req, res, next) {
     var sites = require('../helpers/sites/sites.js');
     sites.sitesbygeopol(req, res, next);
   },
-  sitesbydataset:function (req, res, next) { 
+  sitesbydataset:function (req, res, next) {
     var sites = require('../helpers/sites/sites.js');
-    sites.sitesbydataset(req, res, next); 
+    sites.sitesbydataset(req, res, next);
   },
 // RETURNING DATASETS
-  datasets: function (req, res, next) { 
+  datasets: function (req, res, next) {
     console.log("datasets handler");
     var datasets = require('../helpers/datasets/datasets.js');
     //messy need for which or if conditional to check for which
@@ -80,23 +80,23 @@ module.exports = {
       console.log("req.query.siteid: "+req.query.siteid);
       datasets.datasetsbysiteid(req,res,next);
     } else if (req.query.hasOwnProperty('datasetids')){
-       datasets.datasetbyids(req, res, next); 
+       datasets.datasetbyids(req, res, next);
     } else {
-       datasets.datasetbyid(req, res, next); 
+       datasets.datasetbyid(req, res, next);
     }
   },
 
-  datasetquery: function (req, res, next) { 
+  datasetquery: function (req, res, next) {
     var dataset = require('../helpers/datasets/datasets.js');
-    dataset.datasetquery(req, res, next); 
+    dataset.datasetquery(req, res, next);
   },
-  contactquery: function (req, res, next) { 
+  contactquery: function (req, res, next) {
     var contact = require('../helpers/contacts/contacts.js');
-    contact.contactquery(req, res, next); 
+    contact.contactquery(req, res, next);
   },
-  contactsbyid: function (req, res, next) { 
+  contactsbyid: function (req, res, next) {
     var contact = require('../helpers/contacts/contacts.js');
-    contact.contactsbyid(req, res, next); 
+    contact.contactsbyid(req, res, next);
   },
 
 
@@ -104,7 +104,7 @@ module.exports = {
 
 function downloads(req,res,next){
   var datasetId = req.params.datasetid;
-  
+
   if(!datasetId){
     res.status(200)
       .type('application/json')
@@ -225,7 +225,7 @@ function chronology(req, res, next) {
           })
       }).catch(function (err) {
         return next(err);
-    });    
+    });
   } else {
      res.status(200)
       .jsonp({
@@ -240,15 +240,15 @@ function chronology(req, res, next) {
 
 
 function publicationid(req, res, next) {
-  
+
   if (!!req.params.pubid) {
     var pubid = parseInt(req.params.pubid);
   } else {
     var pubid = null;
   }
-  
+
   var query = 'select * from ndb.publications AS pubs where pubs.publicationid = $1';
-  
+
 
 
   output = db.any(query, [pubid])
@@ -281,7 +281,7 @@ function publicationquery(req, res, next) {
      " from da.publications" +
      " where 1 = 1" +
      " and datasetid = $1";
-  
+
   if(!datasetId){
     res.status(200)
       .jsonp({
@@ -305,8 +305,8 @@ function publicationquery(req, res, next) {
           console.log("ERROR:", err.message || err);
           next(err);
       });
-  }   
-  
+  }
+
 };
 
 function publicationbysite(req, res, next) {
@@ -320,12 +320,12 @@ function publicationbydataset(req, res, next) {
   */
 
   if (!!req.params.datasetid) {
-  
+
     var datasetid = String(req.params.datasetid).split(',').map(function(item) {
       return parseInt(item, 10);
     });
 
-    
+
     query = 'WITH dpub AS '+
             '(SELECT * FROM ndb.datasetpublications as dp ' +
             'WHERE ($1 IS NULL OR dp.datasetid IN ($1:csv))) ' +
@@ -335,7 +335,7 @@ function publicationbydataset(req, res, next) {
             'WHERE pub.publicationid IN (SELECT publicationid FROM dpub)'
 
   }
-  
+
   output = db.any(query, [datasetid])
     .then(function (data) {
       bib_output = bib.formatpublbib(data);
