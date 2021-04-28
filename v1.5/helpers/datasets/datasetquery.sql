@@ -1,9 +1,9 @@
-SELECT json_build_object(       'siteid', sts.siteid, 
+SELECT json_build_object(       'siteid', sts.siteid,
                               'sitename', sts.sitename,
                        'sitedescription', sts.sitedescription,
                              'sitenotes', sts.notes,
                              'geography', ST_AsGeoJSON(sts.geog,5,2),
-                              'altitude', sts.altitude, 
+                              'altitude', sts.altitude,
                       'collectionunitid', clu.collectionunitid,
                         'collectionunit', clu.collunitname,
                                 'handle', clu.handle,
@@ -14,7 +14,7 @@ SELECT json_build_object(       'siteid', sts.siteid,
                                 'datasetnotes', dts.notes,
                                 'database', cstdb.databasename,
                                         'doi', doi.doi,
-                                 'datasetpi', json_build_object('contactid', cnt.contactid, 
+                                 'datasetpi', json_build_object('contactid', cnt.contactid,
                                                                 'contactname', cnt.contactname,
                                                                 'familyname', cnt.familyname,
                                                                 'firstname', cnt.givennames,
@@ -28,10 +28,11 @@ ndb.collectiontypes as cts ON clu.colltypeid = cts.colltypeid LEFT OUTER JOIN
 ndb.datasetdatabases AS dsdb ON dsdb.datasetid = dts.datasetid LEFT OUTER JOIN
 ndb.datasetpis AS dspi ON dspi.datasetid = dts.datasetid LEFT OUTER JOIN
 ndb.contacts AS cnt ON cnt.contactid = dspi.contactid LEFT OUTER JOIN
-ndb.constituentdatabases AS cstdb ON dsdb.databaseid = cstdb.databaseid 
+ndb.constituentdatabases AS cstdb ON dsdb.databaseid = cstdb.databaseid
 WHERE
 (${siteid} IS NULL OR sts.siteid LIKE ${siteid}) AND
 (${datasettype} IS NULL OR dst.datasettype LIKE ${datasettype}) AND
+(${datasetid} IS NULL OR dst.datasetid IN (${datasetid}:csv)) AND
 (${piid} IS NULL OR cnt.contactid IN (${piid}:csv)) AND
 (${altmin} IS NULL OR sts.altitude > ${altmin}) AND
 (${altmax} IS NULL OR sts.altitude > ${altmax}) AND
