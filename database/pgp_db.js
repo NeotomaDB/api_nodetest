@@ -7,6 +7,16 @@ const initOptions = {
 
 const pgp = require('pg-promise')(initOptions);
 pgp.pg.types.setTypeParser(20, BigInt);
+BigInt.prototype.toJSON = function() {
+  try {
+    result = this.parseInt();
+  }
+  catch(err) {
+    result = this.toString();
+  };
+  return result;
+};
+
 const ctStr = require('./db_connect.json');
 
 const db = pgp(ctStr);
