@@ -55,7 +55,7 @@ function publicationid (req, res, next) {
 
 function publicationquery (req, res, next) {
   var outobj = {
-    'pubid': String(req.query.publicationid)
+    'publicationid': String(req.query.publicationid)
       .split(',')
       .map(function (item) {
         return parseInt(item, 10);

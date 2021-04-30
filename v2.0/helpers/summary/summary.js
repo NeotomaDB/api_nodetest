@@ -15,10 +15,6 @@ function sql(file)
     });
 }
 
-const datasetquerysql = sql('./datasetquery.sql');
-const datasetbyidsql = sql('./datasetbyid.sql');
-const datasetbysite = sql('./datasetbysite.sql');
-
 function datasettypesbymonths(req, res, next)
 {
     var start = parseInt(req.query.start);
