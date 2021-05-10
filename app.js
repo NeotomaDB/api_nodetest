@@ -25,6 +25,7 @@ app.use(cache('15 minutes'));
 var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
 
 // setup the logger
+app.enable('trust proxy');
 app.use(morgan(':date[iso]\t:remote-addr\t:method\t:url\t:status\t:res[content-length]\t:response-time[0]\t:user-agent', { stream: accessLogStream }))
 
 var options = {
