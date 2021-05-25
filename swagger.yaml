@@ -1,8 +1,8 @@
 openapi:                                       3.0.1
 servers:
-  - url:                                       'http://api.neotomadb.org/'
+  - url:                                       'https://api.neotomadb.org/'
     description:                               Neotoma production server.
-  - url:                                       'http://api-dev.neotomadb.org/'
+  - url:                                       'https://api-dev.neotomadb.org/'
     description:                               Neotoma development server.
 info:
   title:                                       Neotoma API
@@ -66,6 +66,7 @@ tags:
 paths:
   /v1.5/apps/collectionTypes:
     get:
+      operationId:                             getCollTypes
       tags:                                    ['Database tables', 'v1.5']
       summary:                                 Return the list of collection types.
       responses:
@@ -133,9 +134,7 @@ paths:
           content:
             application/json:
               schema:
-                type:                          object
-                items:
-                  $ref:                        '#/components/schemas/contact'
+                $ref:                        '#/components/schemas/contact'
   /v1.5/data/datasets/{datasetid}:
     get:
       tags:                                    ['Dataset metadata', 'v1.5']
@@ -530,7 +529,7 @@ paths:
           content:
             application/json:
               schema:
-                type:                          object
+                type:                          array
                 items:
                   $ref:                        '#/components/schemas/chronology'
 # Returning Contacts
@@ -844,7 +843,7 @@ paths:
           content:
             application/json:
               schema:
-                type:                          object
+                type:                          array
                 items:
                   $ref:                        '#/components/schemas/occurrence'
   /v2.0/data/taxa/{taxonid}/occurrences:
@@ -862,7 +861,7 @@ paths:
           content:
             application/json:
               schema:
-                type:                          object
+                type:                          array
                 items:
                   $ref:                        '#/components/schemas/occurrence'
   /v2.0/data/occurrences:
@@ -943,7 +942,7 @@ paths:
           content:
             application/json:
               schema:
-                type:                          object
+                type:                          array
                 items:
                   $ref:                        '#/components/schemas/occurrence'
 # Returning Pollen records
@@ -1613,6 +1612,7 @@ components:
               type:                            string
               example:                         "Core top"
     contact:
+      type:                                    object
       properties:
         contactid:
           type:                                integer
@@ -1638,6 +1638,7 @@ components:
           format:                              url
           example:                             'http://goring.org'
     dataset:
+      type: object
       properties:
         site:
           type:                                object
@@ -1704,7 +1705,7 @@ components:
               items:
                 $ref:                          '#/components/schemas/chronology'
             dataset:
-              type:                            object
+              type:                            array
               items:
                 $ref:                          '#/components/schemas/dataset'
             samples:
@@ -1738,6 +1739,7 @@ components:
           format:                              dateTime
           example:                             '2013-09-30T21:02:51.000Z'
     occurrence:
+      type: object
       properties:
         occurrence:
           type:                                integer
@@ -1821,6 +1823,8 @@ components:
           type:                                string
         Authors:
           type:                                array
+          items:
+            type: string
         Citation:
           type:                                string
     sites:
@@ -1829,14 +1833,19 @@ components:
           type:                                integer
           format:                              int64
           minimum: 1
+          example:  666
         sitename:
           type:                                string
+          example: Devils Lake
         altitude:
           type:                                integer
+          example: 294
         geography:
           type:                                string
+          example: {\"type\":\"Polygon\",\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}},\"coordinates\":[[[-89.7385,43.4083],[-89.7256,43.4083],[-89.7256,43.4273],[-89.7385,43.4273],[-89.7385,43.4083]]]}
         sitedescription:
           type:                                string
+          example: Lake is located in a pre-glacial gorge of the Wisconsin river cut through the Baraboo Hills, a bedrock high. The valley is dammed at both ends by terminal moraines deposited by the Green Bay lobe, which flowed around the Baraboo Hills. Lake is fed by groundwater. Surrounding vegetation: white-black-bur oak.
         collectionunits:
           type:                                array
           items:
@@ -1846,12 +1855,16 @@ components:
                 type:                          integer
                 format:                        int64
                 minimum:                           1
+                example: 666
               collectionunit:
                 type:                          string
+                example: NULL
               handle:
                 type:                          string
+                example: DEVILSWI
               collectionunittype:
                 type:                          string
+                example: Core
               datasets:
                 type:                          array
                 items:
@@ -1874,6 +1887,8 @@ components:
           type:                                string
         ecolgroup:
           type:                                array
+          items:
+            type: string
         highertaxonid:
           type:                                integer
           format:                              int32
@@ -1901,5 +1916,7 @@ components:
           type:                                string
         Authors:
           type:                                array
+          items:
+            type: string
         Citation:
           type:                                string
