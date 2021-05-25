@@ -79,8 +79,6 @@ function publicationquery (req, res, next) {
     'offset': parseInt(req.query.offset)
   };
 
-  console.log(typeof outobj.doi[0])
-
   if (outobj.doi[0] === 'undefined') {
     outobj.doi = null;
   }
