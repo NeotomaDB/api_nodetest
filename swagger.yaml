@@ -1618,16 +1618,29 @@ components:
           type:                                integer
           format:                              int64
           example:                             123
+        aliasid:
+          type:                                integer
+          format:                              int64
+          example:                             123
         contactname:
           type:                                string
           example:                             Goring, Simon J
+        leadinginitials:
+          type:                                string
+          example:                             S. J.
         familyname:
           type:                                string
           example:                             Goring
-        firstname:
+        givennames:
           type:                                string
           example:                             Simon
-        contactstatus:
+        title:
+          type:                                string
+          example:                             Lord Mayor
+        suffix:
+          type:                                string
+          example:                             Esq.
+        contactstatusid:
           type:                                string
           example:                             Active
         address:
@@ -1637,6 +1650,17 @@ components:
           type:                                string
           format:                              url
           example:                             'http://goring.org'
+        email:
+          type:                                string
+          format:
+            email
+          example:
+            'goring@wisc.edu'
+        notes:
+          type:                                string
+          format:
+            email
+          example:  This user is a member of the Neotoma Leadership Team.
     dataset:
       type: object
       properties:
@@ -1845,7 +1869,7 @@ components:
           example: {\"type\":\"Polygon\",\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}},\"coordinates\":[[[-89.7385,43.4083],[-89.7256,43.4083],[-89.7256,43.4273],[-89.7385,43.4273],[-89.7385,43.4083]]]}
         sitedescription:
           type:                                string
-          example: Lake is located in a pre-glacial gorge of the Wisconsin river cut through the Baraboo Hills, a bedrock high. The valley is dammed at both ends by terminal moraines deposited by the Green Bay lobe, which flowed around the Baraboo Hills. Lake is fed by groundwater. Surrounding vegetation: white-black-bur oak.
+          example: Lake is located in a pre-glacial gorge of the Wisconsin river cut through the Baraboo Hills, a bedrock high. The valley is dammed at both ends by terminal moraines deposited by the Green Bay lobe, which flowed around the Baraboo Hills. Lake is fed by groundwater. Surrounding vegetation, white-black-bur oak.
         collectionunits:
           type:                                array
           items:

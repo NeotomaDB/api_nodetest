@@ -6,8 +6,8 @@ let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 const YAML = require('yamljs');
-let swaggerUi = require('swagger-ui-express'),
-swaggerDocument = YAML.load('./swagger.yaml');
+let swaggerUi = require('swagger-ui-express');
+let swaggerDocument = YAML.load('./swagger.yaml');
 let morgan = require('morgan');
 let fs = require('fs');
 const dotenv = require('dotenv');
@@ -19,12 +19,13 @@ let cache = apicache.middleware;
 app.use(cors());
 app.use(cache('15 minutes'));
 
-//test trigger watch restart - 09/12/20
+// test trigger watch restart - 09/12/20
 //
 // create a write stream (in append mode)
 var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
 
 // setup the logger
+app.enable('trust proxy');
 app.use(morgan(':date[iso]\t:remote-addr\t:method\t:url\t:status\t:res[content-length]\t:response-time[0]\t:user-agent', { stream: accessLogStream }))
 
 var options = {
@@ -69,7 +70,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // optionally, re-factor route paths here to strip version string and
 // identify version from header; still requires version directory paths in
 // hierarchy of <version>/handlers; <version>/routes; <version>/helpers;
-console.log("applying routes...")
+console.log('applying routes...')
 
 app.get('/v1', (req, res) => {
   res.status(301).redirect('http://wnapi.neotomadb.org/')
