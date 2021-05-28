@@ -85,3 +85,7 @@ api_project.sublime-workspace
 
 #local swaggerdef to account for host & port differences
 local_swaggerdefn.json
+
+resources/
+
+.vscode/
