@@ -42,7 +42,7 @@ describe('Get publication data any number of ways:', function () {
   });
 
   it('Get publications using pubs with missing links:', function (done) {
-    api.get('v2.0/data/publications/?pubid=12,14,1412')
+    api.get('v2.0/data/publications?publicationid=12,14,1412,99999')
       .set('Accept', 'application/json')
       .expect(function (res) {
         return res.body.data.result.length > 0;
