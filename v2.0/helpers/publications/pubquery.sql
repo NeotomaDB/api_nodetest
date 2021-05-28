@@ -1,33 +1,37 @@
 SELECT
 json_build_object('publicationid', pub.publicationid,
-                         'pubtypeid', pub.pubtypeid,
-                         'pubtype', pt.pubtype,
-                         'year' , pub.year,
-                         'citation', pub.citation,
-                         'articletitle', pub.articletitle,
-                         'journal', pub.journal,
-                         'volume'  , pub.volume,
-                         'issue'   , pub.issue,
-                         'pages'   , pub.pages,
-                         'citationnumber', pub.citationnumber,
-                         'doi', pub.doi,
-                         'booktitle' , pub.booktitle,
-                         'numvolumes', pub.numvolumes,
-                         'edition'   , pub.edition,
-                         'volumetitle', pub.volumetitle,
-                         'seriestitle', pub.seriestitle,
-                         'seriesvolume', pub.seriesvolume,
-                         'publisher' , pub.publisher,
-                         'url', pub.url,
-                         'city'      , pub.city,
-                         'state', pub.state,
-                         'country'   , pub.country,
-                         'originallanguage', pub.originallanguage,
-                         'notes' , pub.notes,
-              'author', json_agg(DISTINCT jsonb_build_object('familyname', ca.familyname,
+                  'pubtypeid', pub.pubtypeid,
+                  'pubtype', pt.pubtype,
+                  'year' , pub.year,
+                  'citation', pub.citation,
+                  'articletitle', pub.articletitle,
+                  'journal', pub.journal,
+                  'volume'  , pub.volume,
+                  'issue'   , pub.issue,
+                  'pages'   , pub.pages,
+                  'citationnumber', pub.citationnumber,
+                  'doi', pub.doi,
+                  'booktitle' , pub.booktitle,
+                  'numvolumes', pub.numvolumes,
+                  'edition'   , pub.edition,
+                  'volumetitle', pub.volumetitle,
+                  'seriestitle', pub.seriestitle,
+                  'seriesvolume', pub.seriesvolume,
+                  'publisher' , pub.publisher,
+                  'url', pub.url,
+                  'city'      , pub.city,
+                  'state', pub.state,
+                  'country'   , pub.country,
+                  'originallanguage', pub.originallanguage,
+                  'notes' , pub.notes,
+                  'author', json_agg(DISTINCT jsonb_build_object('familyname', ca.familyname,
                                                    'givennames', ca.givennames,
                                                    'order', pa.authororder)),
-              'datasets', COALESCE(json_agg(DISTINCT dp.datasetid) FILTER (WHERE dp.datasetid IS NOT NULL), '[]')) AS publication
+              'datasets', COALESCE(json_agg(DISTINCT dp.datasetid) FILTER (WHERE dp.datasetid IS NOT NULL), '[]')) AS publication,
+              CASE WHEN ${search} IS NULL
+                THEN 1
+              ELSE word_similarity(citation, ${search}) 
+              END AS match
 FROM ndb.publications AS pub
 INNER JOIN ndb.publicationauthors AS pa  ON pub.publicationid = pa.publicationid
 INNER JOIN ndb.contacts           AS ca  ON      ca.contactid = pa.contactid
@@ -42,9 +46,9 @@ WHERE
   (${familyname} IS NULL OR     ca.familyname LIKE  ${familyname})  AND
   (${pubtype}    IS NULL OR        pt.pubtype =     ${pubtype})     AND
   (${year}       IS NULL OR          pub.year =     ${year})        AND
-  (${search}     IS NULL OR      pts.pubtsv @@ plainto_tsquery(${search}))
+  (${search}     IS NULL OR      word_similarity(citation, ${search}) > 0.1)
 GROUP BY pub.publicationid, pt.pubtype, pts.pubtsv
-ORDER BY ts_rank(pts.pubtsv, to_tsquery(${search})) DESC
+ORDER BY word_similarity(citation, ${search}) DESC
 OFFSET (CASE WHEN ${offset} IS NULL THEN 0
              ELSE ${offset}
         END)

@@ -87,3 +87,5 @@ api_project.sublime-workspace
 local_swaggerdefn.json
 
 resources/
+
+.vscode/
