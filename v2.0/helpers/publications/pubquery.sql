@@ -45,8 +45,7 @@ WHERE
   (${siteid}     IS NULL OR      dsl.siteid = ANY (${siteid})) AND
   (${familyname} IS NULL OR     ca.familyname LIKE  ${familyname})  AND
   (${pubtype}    IS NULL OR        pt.pubtype =     ${pubtype})     AND
-  (${year}       IS NULL OR          pub.year =     ${year})        AND
-  (${search}     IS NULL OR      word_similarity(citation, ${search}) > 0.1)
+  (${year}       IS NULL OR          pub.year =     ${year}))
 GROUP BY pub.publicationid, pt.pubtype, pts.pubtsv
 ORDER BY word_similarity(citation, ${search}) DESC
 OFFSET (CASE WHEN ${offset} IS NULL THEN 0
