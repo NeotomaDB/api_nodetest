@@ -1,16 +1,20 @@
 SELECT 
-    json_build_object(       'siteid', sts.siteid, 
-                              'sitename', sts.sitename,
-                       'sitedescription', sts.sitedescription,
-                             'sitenotes', sts.notes,
-                             'geography', ST_AsGeoJSON(sts.geog,5,2),
-                              'altitude', sts.altitude, 
-                              'unittype', cts.colltype) as site,
+    json_build_object(  'siteid', sts.siteid, 
+                        'sitename', sts.sitename,
+                        'sitedescription', sts.sitedescription,
+                        'sitenotes', sts.notes,
+                        'geography', ST_AsGeoJSON(sts.geog,5,2),
+                        'latitudesouth', ST_YMin(ST_GeomFromText(ST_AsText(sts.geog),4326)),
+                        'latitudenorth', ST_YMax(ST_GeomFromText(ST_AsText(sts.geog),4326)),
+                        'longitudeeast', ST_XMax(ST_GeomFromText(ST_AsText(sts.geog),4326)),
+                        'longitudewest', ST_XMin(ST_GeomFromText(ST_AsText(sts.geog),4326)),
+                        'altitude', sts.altitude, 
+                        'unittype', cts.colltype ) as site,
                  json_agg(
                           json_build_object(
-                             'contactid', cntct.contactid,
-                           'contactname', cntct.contactname
-                        )) as datasetpis,
+                            'contactid', cntct.contactid,
+                            'contactname', cntct.contactname
+                        ) ) as datasetpis,
                  json_agg(
                       json_build_object(
                         'submissiondate', dtssubs.submissiondate,

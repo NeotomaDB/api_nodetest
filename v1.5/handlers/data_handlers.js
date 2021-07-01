@@ -76,9 +76,9 @@ module.exports = {
     //messy need for which or if conditional to check for which
     //query parameters have been passed
 
-    if(req.query.hasOwnProperty('siteid')){
+    if(req.query.hasOwnProperty('siteids')){
       console.log("req.query.siteid: "+req.query.siteid);
-      datasets.datasetsbysiteid(req,res,next);
+      datasets.datasetsbysiteids(req,res,next);
     } else if (req.query.hasOwnProperty('datasetids')){
        datasets.datasetbyids(req, res, next);
     } else {
