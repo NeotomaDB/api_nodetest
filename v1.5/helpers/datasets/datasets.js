@@ -125,6 +125,48 @@ function datasetsbysiteid(req, res, next) {
 }
 
 
+function datasetsbysiteids(req, res, next) {
+  var badstid = false;
+  var siteids = [];
+  siteids = String(req.query.siteids)
+    .split(",")
+    .map(function(item) {
+      if(NaN == parseInt(item)) {
+        badstid = true
+        //bad datasetid
+        return
+      }
+      return parseInt(item, 10)
+    });
+
+  //check if datasetid is sequence is not valid
+  if (badstid) {
+    res.status(500)
+      .jsonp({
+        success: 0,
+        status: 'failure',
+        data: null,
+        message: 'Must pass valid datasetids as integer sequence.'
+      });
+  }
+
+  db.any(datasetsbysitesql, [siteids])
+    .then(function (data) {
+      res.status(200)
+        .type('application/json')
+        .jsonp({
+          success: 1,
+          status: 'success',
+          data: data,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+      next(err);
+    });
+}
+
+
 function datasetquery(req, res, next) {
   console.log('Here')
   var datasetid = req.params.datasetid;
@@ -155,4 +197,5 @@ function datasetquery(req, res, next) {
 module.exports.datasetbyid = datasetbyid;
 module.exports.datasetbyids = datasetbyids;
 module.exports.datasetsbysiteid = datasetsbysiteid;
+module.exports.datasetsbysiteids = datasetsbysiteids;
 module.exports.datasetquery = datasetquery;
