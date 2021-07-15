@@ -38,15 +38,15 @@ INNER JOIN ndb.contacts           AS ca  ON      ca.contactid = pa.contactid
 LEFT JOIN ndb.datasetpublications AS dp  ON dp.publicationid = pub.publicationid
 LEFT JOIN ndb.dslinks             AS dsl ON dsl.datasetid = dp.datasetid
 INNER JOIN ndb.publicationtypes   AS pt  ON     pub.pubtypeid = pt.pubtypeid
-INNER JOIN ndb.pubtsv             AS pts ON pts.publicationid = pub.publicationid
 WHERE
   (${publicationid} IS NULL OR pub.publicationid = ANY (${publicationid}::int[]))     AND
   (${datasetid}  IS NULL OR      dp.datasetid = ANY (${datasetid})) AND
   (${siteid}     IS NULL OR      dsl.siteid = ANY (${siteid})) AND
   (${familyname} IS NULL OR     ca.familyname LIKE  ${familyname})  AND
   (${pubtype}    IS NULL OR        pt.pubtype =     ${pubtype})     AND
-  (${year}       IS NULL OR          pub.year =     ${year}))
-GROUP BY pub.publicationid, pt.pubtype, pts.pubtsv
+  (${year}       IS NULL OR          pub.year =     ${year})        AND
+  (${search}     IS NULL OR      word_similarity(citation, ${search}) > 0)
+GROUP BY pub.publicationid, pt.pubtype
 ORDER BY word_similarity(citation, ${search}) DESC
 OFFSET (CASE WHEN ${offset} IS NULL THEN 0
              ELSE ${offset}

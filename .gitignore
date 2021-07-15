@@ -89,3 +89,5 @@ local_swaggerdefn.json
 resources/
 
 .vscode/
+
+workspace.code-workspace
