@@ -188,4 +188,8 @@ module.exports = {
     const summaries = require('../helpers/summary/summary.js');
     summaries.rawbymonth(req, res, next);
   },
+  lithologybydsid: function (req, res, next) {
+    const lithologies = require('../helpers/lithology/lithology.js');
+    lithologies.lithologybydsid(req, res, next);
+  }
 };
