@@ -51,7 +51,6 @@ router.get('/taxa/:taxonid/occurrence', handlers.occurrencebytaxon);
 router.get('/pollen/', handlers.pollen);
 router.get('/pollen/:id', handlers.pollen);
 
-
 router.get('/publications', handlers.publicationquery);
 router.get('/publications/:pubid', handlers.publicationid);
 router.get('/sites/:siteid/publications', handlers.publicationbysite);
@@ -80,5 +79,6 @@ router.get('/summary/rawbymonth/', handlers.rawbymonth);
 
 router.get('/datasets/:datasetid/doi', handlers.doibydsid);
 
+router.get('/datasets/:datasetid/lithology', handlers.lithologybydsid);
 
 module.exports = router;
