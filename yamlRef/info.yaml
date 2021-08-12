@@ -1,0 +1,12 @@
+info:
+  title:                                       Neotoma API
+  version:                                     "2.0-oas3"
+  description:                                 API Documentation for the Neotoma Paleoecological Database
+  termsOfService:                              'no'
+  contact:
+    name:                                      Simon J Goring
+    email:                                     goring@wisc.edu
+    url:                                       'http://goring.org'
+  license:
+    name:                                      MIT
+    url:                                       'https://opensource.org/licenses/MIT'

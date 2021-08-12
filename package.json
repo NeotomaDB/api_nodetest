@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "mocha --config=test/.mocharc.yml --node-env=test --exit"
+    "test": "mocha --config=test/.mocharc.yml --node-env=test --exit --timeout 15000 --bail"
   },
   "pre-commit": "test",
   "dependencies": {
@@ -12,6 +12,7 @@
     "apicache": "^1.6.2",
     "bluebird": "^3.7.2",
     "body-parser": "~1.18.3",
+    "chakram": "^1.5.0",
     "child-process-promise": "^2.2.1",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",

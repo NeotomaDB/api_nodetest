@@ -1,0 +1,47 @@
+tags:
+  - name:                                      Database tables
+    description:                               Endpoints that access tables from Neotoma verbatim.
+    externalDocs:
+      url:                                     http://open.neotomadb.org/schemas/#Structure
+  - name:                                      Chronology metadata
+    description:                               Information about chronological controls and the models used to add the temporal component to records.
+    externalDocs:
+      url:                                     https://neotoma-manual.readthedocs.io/en/latest/tables_chron.html
+  - name:                                      Contact metadata
+    description:                               Information about Neotoma data contributors, authors and data analysts.
+    externalDocs:
+      url:                                     https://neotoma-manual.readthedocs.io/en/latest/tables_contacts.html
+  - name:                                      Dataset metadata
+    description:                               Information about site location and metadata specific to the individual dataset.
+    externalDocs:
+      url:                                     https://neotoma-manual.readthedocs.io/en/latest/tables_dataset.html
+  - name:                                      Data download
+    description:                               Full dataset download, including all sample data for a particular dataset.
+    externalDocs:
+      url:                                     https://neotoma-manual.readthedocs.io/en/latest/tables_samples.html
+  - name:                                      Geopolitical metadata
+    description:                               Information about the geopolitical units in which a site is located.
+  - name:                                      Occurrence metadata
+    description:                               A simplified data return, similar to the data download, but specific to a particular taxon, time or location.
+  - name:                                      Pollen proportions
+    description:                               For ease of use in online applications, pre-calculated pollen percentages for taxa, location or temporal bins.
+  - name:                                      Publication metadata
+    description:                               Formatted publication data related to Neotoma records.
+    externalDocs:
+      url:                                     https://neotoma-manual.readthedocs.io/en/latest/tables_publications.html
+  - name:                                      Site metadata
+    description:                               All metadata associated with a particular site with fossil records.
+    externalDocs:
+      url:                                     https://neotoma-manual.readthedocs.io/en/latest/tables_site.html
+  - name:                                      Taxonomic metadata
+    description:                               All available information about a particular taxon.
+    externalDocs:
+      url:                                     https://neotoma-manual.readthedocs.io/en/latest/tables_taxa.html
+  - name:                                      v1.5
+    description:                               All API endpoints associated with v1.5 of the Neotoma API.
+    externalDocs:
+      url:                                     http://github.com/NeotomaDB/api_nodetest
+  - name:                                      v2.0
+    description:                               All API endpoints associated with v2.0 of the Neotoma API.
+    externalDocs:
+      url:                                     http://github.com/NeotomaDB/api_nodetest

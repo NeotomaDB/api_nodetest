@@ -36,9 +36,9 @@ var options = {
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 
 // Locations of files:
-var v15index = require('./v1.5/routes/index');       // default route
-var v15data = require('./v1.5/routes/data');         // data API routes
-var v15apps = require('./v1.5/routes/apps');         // apps API routes
+var v15index = require('./v1.5/routes/index'); // default route
+var v15data = require('./v1.5/routes/data'); // data API routes
+var v15apps = require('./v1.5/routes/apps'); // apps API routes
 var v15dbtables = require('./v1.5/routes/dbtables'); // dbtables API routes
 
 // v2 routes
