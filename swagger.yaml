@@ -371,7 +371,7 @@ paths:
       tags:
         - Contact metadata
         - v2.0
-  /v2.0/data/dbtables/{table}:
+  /v2.0/data/dbtables:
     get:
       description: |
         Returns the named Neotoma Database table.  An empty query will return a list of tables.
@@ -827,6 +827,45 @@ components:
       schema:
         type:                              string
         example:                           pollen
+        enum:
+          - geochronologic
+          - loss-on-ignition
+          - pollen
+          - plant macrofossil
+          - vertebrate fauna
+          - macroinvertebrate
+          - pollen surface sample
+          - insect
+          - ostracode
+          - water chemistry
+          - diatom
+          - ostracode surface sample
+          - diatom surface sample
+          - geochemistry
+          - physical sedimentology
+          - charcoal
+          - testate amoebae
+          - X-ray fluorescence (XRF)
+          - X-ray diffraction (XRD)
+          - energy dispersive X-ray spectroscopy (EDS/EDX)
+          - biomarker
+          - modern plant biomarker
+          - phytolith
+          - specimen stable isotope
+          - paleomagnetic
+          - biochemistry
+          - modern biochemistry
+          - organic carbon
+          - insect modern
+          - chironomid
+          - stable isotope
+          - testate amoebae surface sample
+          - charcoal surface sample
+          - cladocera
+          - diatom top-bottom
+          - microcharcoal
+          - macrocharcoal
+          - pollen trap
     familyNameQuery:
       name:                                    familyname
       description:                             Full name of the the researcher (may use the % wildcard)
