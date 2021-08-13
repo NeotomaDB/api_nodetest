@@ -38,3 +38,9 @@ FROM
    (SELECT * FROM collunit) AS cus
    LEFT JOIN ndb.sites AS sts ON cus.siteid = sts.siteid
 GROUP BY sts.siteid
+OFFSET (CASE WHEN ${offset} IS NULL THEN 0
+                 ELSE ${offset}
+            END)
+LIMIT (CASE WHEN ${limit} IS NULL THEN 25
+			ELSE ${limit}
+		END)
