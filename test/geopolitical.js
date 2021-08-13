@@ -47,5 +47,4 @@ describe('Get geopolitical data:', function () {
         done();
       });
   });
-
 });

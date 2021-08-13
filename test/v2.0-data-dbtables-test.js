@@ -4,10 +4,11 @@ var chakram = require('chakram');
 var request = chakram.request;
 var expect = chakram.expect;
 
-describe('tests for /v1.5/apps/DatasetTypes', function () {
+describe('tests for /v2.0/data/dbtables', function () {
   describe('tests for get', function () {
-    it('should respond 200 for "Returns the set of dataset types supported by Neotoma."', function () {
-      var response = request('get', 'http://localhost:3005/v1.5/apps/DatasetTypes', {
+    it('should respond 200 for "Returned table."', function () {
+      var response = request('get', 'http://localhost:3005/v2.0/data/dbtables', {
+        'qs': { 'table': 'ipsum deserunt culpa', 'limit': 65731677, 'offset': 47355495 },
         'time': true
       });
 

@@ -37,6 +37,7 @@ describe('Get occurrence data any number of ways:', function () {
   })
 
   it('Failing Canis test works:', function (done) {
+    // This casuses timeout fails for some reason.  It's frustrating.
     api.get('v2.0/data/occurrences?taxonname=Canis&lower=true&limit=999999')
       .set('Accept', 'application/json')
       .expect(function (res) {

@@ -67,7 +67,7 @@ describe('Get site data any number of ways:', function () {
       });
   });
 
-/*  it('Get site by geopolitical units returns gp and site data:', function (done) {
+  /*  it('Get site by geopolitical units returns gp and site data:', function (done) {
     api.get('v2.0/data/geopoliticalunits/765/sites')
       .set('Accept', 'application/json')
       .expect(function (res) {

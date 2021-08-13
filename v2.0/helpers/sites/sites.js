@@ -1,13 +1,13 @@
 // Sites query:
-
-var Terraformer = require('terraformer');
-var WKT = require('terraformer-wkt-parser');
+const he = require('he');
+const Terraformer = require('terraformer');
+const WKT = require('terraformer-wkt-parser');
 
 const path = require('path');
 
 // get global database object
-var db = require('../../../database/pgp_db');
-var pgp = db.$config.pgp;
+const db = require('../../../database/pgp_db');
+const pgp = db.$config.pgp;
 
 // Helper for linking to external query files:
 function sql (file) {
@@ -110,6 +110,9 @@ function sitesquery (req, res, next) {
     'limit': ifUndef(req.query.limit, 'int')
   };
 
+  if(!!outobj.loc) {
+    outobj.loc = he.decode(outobj.loc);
+  }
   if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
     return res.status(500)
       .json({

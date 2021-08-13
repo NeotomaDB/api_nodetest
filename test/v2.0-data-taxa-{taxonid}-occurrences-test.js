@@ -4,16 +4,15 @@ var chakram = require('chakram');
 var request = chakram.request;
 var expect = chakram.expect;
 
-describe('tests for /v2.0/data/taxa/{taxonid}/occurrences', function() {
-    describe('tests for get', function() {
-        it('should respond 200 for "occurrence"', function() {
-            var response = request('get', 'http://localhost:3005/v2.0/data/taxa/6802/occurrences', { 
-                'time': true
-            });
+describe('tests for /v2.0/data/taxa/{taxonid}/occurrences', function () {
+  describe('tests for get', function () {
+    it('should respond 200 for "occurrence"', function () {
+      var response = request('get', 'http://localhost:3005/v2.0/data/taxa/11602/occurrences', {
+        'time': true
+      });
 
-            expect(response).to.have.status(200);
-            return chakram.wait();
-        });
-    
+      expect(response).to.have.status(200);
+      return chakram.wait();
     });
+  });
 });

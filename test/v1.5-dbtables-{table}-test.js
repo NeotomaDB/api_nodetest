@@ -4,16 +4,15 @@ var chakram = require('chakram');
 var request = chakram.request;
 var expect = chakram.expect;
 
-describe('tests for /v1.5/dbtables/{table}', function() {
-    describe('tests for get', function() {
-        it('should respond 200 for "Returned table."', function() {
-            var response = request('get', 'http://localhost:3005/v1.5/dbtables/geochrontypes', { 
-                'time': true
-            });
+describe('tests for /v1.5/dbtables/{table}', function () {
+  describe('tests for get', function () {
+    it('should respond 200 for "Returned table."', function () {
+      var response = request('get', 'http://localhost:3005/v1.5/dbtables/geochrontypes', {
+        'time': true
+      });
 
-            expect(response).to.have.status(200);
-            return chakram.wait();
-        });
-    
+      expect(response).to.have.status(200);
+      return chakram.wait();
     });
+  });
 });
