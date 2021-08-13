@@ -1,7 +1,6 @@
 // Occurrences query:
-const he = require('he');
 const Terraformer = require('terraformer');
-
+const he = require('he')
 const WKT = require('terraformer-wkt-parser');
 const path = require('path');
 const validate = require('../validateOut').validateOut
@@ -67,13 +66,9 @@ function occurrencequery (req, res, next) {
     };
   }
 
-  if (!!req.query.occurrenceid) {
-    req.query.occid = req.query.occurrenceid;
-  }
-
   // Get the input parameters:
   var outobj = {
-    'occid': String(req.query.occid)
+    'occurrenceid': String(req.query.occurrenceid)
       .split(',')
       .map(function (item) {
         return parseInt(item, 10);
@@ -147,7 +142,6 @@ function occurrencequery (req, res, next) {
       var newloc = JSON.parse(outobj.loc)
       newloc = WKT.convert(JSON.parse(outobj.loc));
     } catch (err) {
-      console.log(err);
       newloc = outobj.loc;
     }
     outobj.loc = newloc;

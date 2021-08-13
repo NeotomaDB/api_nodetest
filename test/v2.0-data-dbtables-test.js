@@ -8,7 +8,7 @@ describe('tests for /v2.0/data/dbtables', function () {
   describe('tests for get', function () {
     it('should respond 200 for "Returned table."', function () {
       var response = request('get', 'http://localhost:3005/v2.0/data/dbtables', {
-        'qs': { 'table': 'ipsum deserunt culpa', 'limit': 65731677, 'offset': 47355495 },
+        'qs': { 'table': 'esse dolore fugiat enim est', 'limit': 79009783, 'offset': 4473146 },
         'time': true
       });
 

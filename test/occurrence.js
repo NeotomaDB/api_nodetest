@@ -13,7 +13,7 @@ var api = supertest('http://localhost:' + process.env.APIPORT + '/');
 //
 
 describe('Get occurrence data any number of ways:', function () {
-  this.timeout(15000);
+  this.timeout(30000);
 
   it('Get occurrence by singular id & return same id:', function (done) {
     api.get('v2.0/data/occurrences/12')
