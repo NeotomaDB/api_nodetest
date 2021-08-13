@@ -20,9 +20,8 @@ describe('Get contact data:', function () {
       .set('Accept', 'application/json')
       .expect(302)
       .end(function (err, res) {
-        if (err) {
-          console.log(err)
-        }
+        if (err) return done(err);
+        expect(500, done);
         done();
       });
   });
@@ -31,9 +30,7 @@ describe('Get contact data:', function () {
     api.get('v2.0/data/contacts/?contactstatus=retired')
       .set('Accept', 'application/json')
       .end(function (err, res) {
-        if (err) {
-          console.log(err)
-        }
+        if (err) return done(err);
         assert.strictEqual(Object.keys(res.body.data.result).length, 25);
         done();
       });
@@ -43,9 +40,7 @@ describe('Get contact data:', function () {
     api.get('v2.0/data/contacts?familyname=Grimm&contactstatus=active&limit=25')
       .set('Accept', 'application/json')
       .end(function (err, res) {
-        if (err) {
-          console.log(err)
-        }
+        if (err) return done(err);
         assert.strictEqual(res.body.data.result[0]['familyname'], 'Grimm')
         done();
       });
@@ -55,9 +50,7 @@ describe('Get contact data:', function () {
     api.get('v2.0/data/contacts/?contactstatus=Retired')
       .set('Accept', 'application/json')
       .end(function (err, res) {
-        if (err) {
-          console.log(err)
-        }
+        if (err) return done(err);
         assert.strictEqual(Object.keys(res.body.data.result).length, 25);
         done();
       });
@@ -67,9 +60,7 @@ describe('Get contact data:', function () {
     api.get('v2.0/data/contacts/?status=retired&limit=30')
       .set('Accept', 'application/json')
       .end(function (err, res) {
-        if (err) {
-          console.log(err)
-        }
+        if (err) return done(err);
         assert.strictEqual(Object.keys(res.body.data.result).length, 30);
         done();
       });
@@ -79,9 +70,7 @@ describe('Get contact data:', function () {
     api.get('v2.0/data/contacts/12')
       .set('Accept', 'application/json')
       .end(function (err, res) {
-        if (err) {
-          console.log(err)
-        }
+        if (err) return done(err);
         assert.strictEqual(res.body.data[0]['contactid'], 12);
         done();
       });
@@ -91,9 +80,7 @@ describe('Get contact data:', function () {
     api.get('v2.0/data/datasets/12,13/contacts')
       .set('Accept', 'application/json')
       .end(function (err, res) {
-        if (err) {
-          console.log(err)
-        }
+        if (err) return done(err);
         assert.strictEqual(res.body.data.length, 2);
         done();
       });
@@ -103,9 +90,7 @@ describe('Get contact data:', function () {
     api.get('v2.0/data/datasets/12,13/contacts')
       .set('Accept', 'application/json')
       .end(function (err, res) {
-        if (err) {
-          console.log(err)
-        }
+        if (err) return done(err);
         var test = []
         assert.strictEqual(test.length, 0);
         done();
@@ -116,9 +101,7 @@ describe('Get contact data:', function () {
     api.get('v2.0/data/datasets/102,1435,1,27/contacts')
       .set('Accept', 'application/json')
       .end(function (err, res) {
-        if (err) {
-          console.log(err)
-        }
+        if (err) return done(err);
         assert.strictEqual(Object.keys(res.body.data).length, 4);
         done();
       });
