@@ -1,15 +1,15 @@
 // Occurrences query:
+const he = require('he');
+const Terraformer = require('terraformer');
 
-var Terraformer = require('terraformer');
-
-var WKT = require('terraformer-wkt-parser');
+const WKT = require('terraformer-wkt-parser');
 const path = require('path');
-var validate = require('../validateOut').validateOut
-var parseTaxa = require('../parsetaxa.js').parseTaxa
+const validate = require('../validateOut').validateOut
+const parseTaxa = require('../parsetaxa.js').parseTaxa
 
 // get global database object
-var db = require('../../../database/pgp_db');
-var pgp = db.$config.pgp;
+const db = require('../../../database/pgp_db');
+const pgp = db.$config.pgp;
 
 // Helper for linking to external query files:
 function sql (file) {
@@ -81,7 +81,7 @@ function occurrencequery (req, res, next) {
     'sitename': String(req.query.sitename),
     'altmin': parseInt(String(req.query.altmin)),
     'altmax': parseInt(String(req.query.altmax)),
-    'loc': String(req.query.loc),
+    'loc': he.decode(String(req.query.loc)),
     'gpid': String(req.query.gpid)
       .split(',')
       .map(function (item) {

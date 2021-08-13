@@ -1,14 +1,15 @@
 // Sites query:
 const path = require('path');
 // get global database object
-var db = require('../../../database/pgp_db');
-var pgp = db.$config.pgp;
-var validate = require('../validateOut').validateOut
+const he = require('he')
+const db = require('../../../database/pgp_db');
+const pgp = db.$config.pgp;
+const validate = require('../validateOut').validateOut
 
 // Helper for linking to external query files:
 function sql (file) {
   const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath, {minify: true});
+  return new pgp.QueryFile(fullPath, { minify: true });
 }
 
 var Terraformer = require('terraformer');
@@ -61,10 +62,10 @@ function datasetbydb (req, res, next) {
   var dbUsed = !!req.query.database;
 
   if (dbUsed) {
-    var database = {'database': req.query.database,
-                    'limit': parseInt(req.query.limit),
-                    'offset':parseInt(req.query.offset)
-                  }
+    var database = { 'database': req.query.database,
+      'limit': parseInt(req.query.limit),
+      'offset': parseInt(req.query.offset)
+    }
     database = validate(database)
   } else {
     res.status(500)
@@ -143,13 +144,13 @@ function datasetquery (req, res, next) {
     'datasettype': String(req.query.datasettype),
     'altmin': parseInt(String(req.query.altmin)),
     'altmax': parseInt(String(req.query.altmax)),
-    'loc': String(req.query.loc),
+    'loc': he.decode(String(req.query.loc)),
     'gpid': parseInt(req.query.gpid),
     'ageyoung': parseInt(req.query.ageyoung),
     'ageold': parseInt(req.query.ageold),
     'ageof': parseInt(req.query.ageold),
     'limit': parseInt(req.query.limit),
-    'offset':parseInt(req.query.offset)
+    'offset': parseInt(req.query.offset)
   };
 
   outobj = validate(outobj);
@@ -171,8 +172,7 @@ function datasetquery (req, res, next) {
   }
 
   var goodloc = !!outobj.loc
-  console.log(goodloc);
-
+console.log(outobj.loc)
   if (goodloc) {
     try {
       var newloc = JSON.parse(outobj.loc)

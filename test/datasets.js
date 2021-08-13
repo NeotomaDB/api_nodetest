@@ -17,7 +17,7 @@ describe('Get datasets any number of ways:', function () {
     api.get('v2.0/data/sites/2570/datasets')
       .set('Accept', 'application/json')
       .expect(function (res) {
-        return Object.keys(res.body['data'][0]).includes("site", "dataset");
+        return Object.keys(res.body['data'][0]).includes('site', 'dataset');
       })
       .expect(function (res) {
         return res.body['data'][0].site.siteid === 2570;
@@ -46,7 +46,6 @@ describe('Get datasets any number of ways:', function () {
       })
       .expect(200, done);
   });
-
 
   // This takes 11 seconds, why?!
   this.timeout(15000);

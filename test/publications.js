@@ -27,7 +27,7 @@ describe('Get publication data any number of ways:', function () {
     api.get('v2.0/data/publications/12,13')
       .set('Accept', 'application/json')
       .expect(function (res) {
-        return res.body.data.map(x => x.publicationid) == [12,13];
+        return res.body.data.map(x => x.publicationid) == [12, 13];
       })
       .expect(200, done);
   });
@@ -63,7 +63,6 @@ describe('Get publication data any number of ways:', function () {
     api.get('v2.0/data/sites/12,13,14,15/publications')
       .set('Accept', 'application/json')
       .expect(function (res) {
-
         const flatten = list => list.reduce(
           (a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []
         );
@@ -78,7 +77,6 @@ describe('Get publication data any number of ways:', function () {
     api.get('v2.0/data/datasets/12,13,2201,6000/publications')
       .set('Accept', 'application/json')
       .expect(function (res) {
-
         const flatten = list => list.reduce(
           (a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []
         );
@@ -89,5 +87,4 @@ describe('Get publication data any number of ways:', function () {
       })
       .expect(200, done);
   });
-
 });

@@ -28,7 +28,7 @@ describe('Get taxon data:', function () {
       });
   });
 
-    it('Taxon queries should be case insensitive:', function (done) {
+  it('Taxon queries should be case insensitive:', function (done) {
     api.get('v2.0/data/taxa/?taxonname=abies')
       .set('Accept', 'application/json')
       .end(function (err, res) {
@@ -54,7 +54,6 @@ describe('Get taxon data:', function () {
         done();
       });
   });
-
 
   it('Taxon queries should accept `*` as a wildcard:', function (done) {
     api.get('v2.0/data/taxa/?taxonname=abie*')
