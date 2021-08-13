@@ -30,7 +30,7 @@ router.get('/frozen/:datasetid', handlers.frozen);
 // router.get('/publications/:pubid/datasets', handlers.datasetsbypub);
 // router.get('/contacts/:contactid/datasets', handlers.datasetsbycontact);
 
-router.get('/dbtables/', handlers.dbtables);
+router.get('/dbtables', handlers.dbtables);
 router.get('/dbtables/:table', handlers.dbtables);
 
 router.get('/downloads/', handlers.downloadbyid);

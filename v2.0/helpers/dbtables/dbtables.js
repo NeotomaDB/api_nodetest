@@ -7,17 +7,20 @@ var pgp = db.$config.pgp;
 // Defining the query function:
 
 function dbtables (req, res, next) {
-  var tableparam = !!req.params.table;
+  var tableparam = !!req.query.table;
+
+  console.log(req.query)
 
   if (tableparam) {
-    var query = 'SELECT * FROM ndb.' + req.params.table + ';'
+    var queryTable = { queryTable: 'ndb.' + String(req.query.table).toLowerCase() };
+    var query = 'SELECT * FROM ${queryTable:raw};'
   } else {
     query = "SELECT tablename FROM pg_tables WHERE schemaname='ndb';";
   }
+  console.log(query)
 
-
-  db.any(query)
-    .then(function (data) {
+  db.any(query, queryTable)
+    .then(function (data, queryTable) {
       res.status(200)
         .json({
           status: 'success',
@@ -26,6 +29,7 @@ function dbtables (req, res, next) {
         });
     })
     .catch(function (err) {
+      console.log(err.message)
       res.status(500)
         .json({
           status: 'failure',
