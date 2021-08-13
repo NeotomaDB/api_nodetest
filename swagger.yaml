@@ -496,7 +496,7 @@ paths:
       tags:
         - Occurrence metadata
         - v2.0
-  /v2.0/data/occurrences/{occid}:
+  /v2.0/data/occurrences/{occurrenceid}:
     get:
       description: Returns occurrence information for a particular taxon, geographic region or temporal slice.
       parameters:

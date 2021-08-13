@@ -31,7 +31,7 @@ SELECT
 	          ) ON ds.datasetid = dd.datasetid
 WHERE
 	   tx.taxonname IS NOT NULL AND
-	      (${occid} IS NULL OR data.dataid    = ANY (${occid}))      AND
+	      (${occurrenceid} IS NULL OR data.dataid    = ANY (${occurrenceid}))      AND
 	  (${taxonname} IS NULL OR LOWER(tx.taxonname)   LIKE  ANY(${taxonname}))   AND
 	    (${taxonid} IS NULL OR var.taxonid    = ANY (${taxonid}))    AND
 	     (${siteid} IS NULL OR links.siteid   = ANY (${siteid}))     AND

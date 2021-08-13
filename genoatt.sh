@@ -21,6 +21,7 @@ HELP
 
 run_oatt() {
 
+    rm ./test/v*.js
     oatts generate --host localhost:3005 -s ./swagger.yaml -w test
     eslint --fix ./test
 
@@ -37,22 +38,33 @@ run_oatt() {
  # Resetting OPTIND is necessary if getopts was used previously in the script.
  # It is a good idea to make OPTIND local if you process options in a function.
  
- while getopts ":h:t" opt; do
+test=0
+
+ while getopts "ht" opt; do
      case $opt in
          h)
              show_help
              exit 0
              ;;
          t)
-             run_oatt
-             npm test             
-             exit 0
+             test=1
              ;;
          *)
-             run_oatt
-             exit 0
+             echo You didn\'t use the correct flag.
+             show_help
+             exit 1
              ;;
      esac
  done
+
+run_oatt
+
+if [ $test -eq 1 ]; then
+    echo Waiting for API to rebuild before tests \(3s\)
+    sleep 3s
+    npm test
+    exit 0
+fi
+
  shift "$((OPTIND-1))"   # Discard the options and sentinel --
  

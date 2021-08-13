@@ -45,7 +45,7 @@ SELECT
 	           LEFT OUTER JOIN ndb.constituentdatabases AS cdb ON dd.databaseid = cdb.databaseid
 	          ) ON ds.datasetid = dd.datasetid
 WHERE
-        (${occid} IS NULL OR data.dataid = ANY (${occid}))       AND
+        (${occurrenceid} IS NULL OR data.dataid = ANY (${occurrenceid}))       AND
 	     (${siteid} IS NULL OR links.siteid = ANY (${siteid}))     AND
    	 (${sitename} IS NULL OR sts.sitename   LIKE ${sitename})    AND
  	(${datasettype} IS NULL OR dt.datasettype LIKE ${datasettype}) AND
