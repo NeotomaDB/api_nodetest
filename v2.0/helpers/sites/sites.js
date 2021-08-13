@@ -10,7 +10,7 @@ var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
 // Helper for linking to external query files:
-function sql(file) {
+function sql (file) {
   const fullPath = path.join(__dirname, file);
   return new pgp.QueryFile(fullPath, {
     minify: true
@@ -22,8 +22,8 @@ function sql(file) {
  * @param x A comma separated string.
  * @return An array of integers.
  */
-function commaSep(x) {
-  return String(x).split(',').map(function(item) {
+function commaSep (x) {
+  return String(x).split(',').map(function (item) {
     return parseInt(item, 10);
   });
 }
@@ -33,7 +33,7 @@ function commaSep(x) {
  * @param x Any value passed in from an object.
  * @return either the value of `x` or a `null` value.
  */
-function ifUndef(x, opr) {
+function ifUndef (x, opr) {
   if (typeof x === 'undefined') {
     return null;
   } else {
@@ -62,7 +62,7 @@ const sitebyctid = sql('./sitebyctid.sql');
  * @param next Callback argument to the middleware function (sends to the `next` function in app.js)
  * @return The function returns nothing, but sends the API result to the client.
  */
-function sitesbyid(req, res, next) {
+function sitesbyid (req, res, next) {
   var goodstid = !!req.params.siteid;
 
   if (goodstid) {
@@ -77,7 +77,7 @@ function sitesbyid(req, res, next) {
   }
 
   db.any(sitebyid, [siteid])
-    .then(function(data) {
+    .then(function (data) {
       res.status(200)
         .json({
           status: 'success',
@@ -85,7 +85,7 @@ function sitesbyid(req, res, next) {
           message: 'Retrieved all tables'
         });
     })
-    .catch(function(err) {
+    .catch(function (err) {
       return next(err);
     })
 }
@@ -97,8 +97,7 @@ function sitesbyid(req, res, next) {
  * @param next Callback argument to the middleware function (sends to the `next` function in app.js)
  * @return The function returns nothing, but sends the API result to the client.
  */
-function sitesquery(req, res, next) {
-
+function sitesquery (req, res, next) {
   // Get the input parameters:
   var outobj = {
     'sitename': ifUndef(req.query.sitename, 'string'),
@@ -106,7 +105,9 @@ function sitesquery(req, res, next) {
     'altmin': ifUndef(req.query.altmin, 'int'),
     'altmax': ifUndef(req.query.altmax, 'int'),
     'loc': ifUndef(req.query.loc, 'string'),
-    'gpid': ifUndef(req.query.gpid, 'sep')
+    'gpid': ifUndef(req.query.gpid, 'sep'),
+    'offset': ifUndef(req.query.offset, 'int'),
+    'limit': ifUndef(req.query.limit, 'int')
   };
 
   if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
@@ -131,7 +132,7 @@ function sitesquery(req, res, next) {
   }
 
   db.any(siteQuery, outobj)
-    .then(function(data) {
+    .then(function (data) {
       res.status(200)
         .json({
           status: 'success',
@@ -139,16 +140,16 @@ function sitesquery(req, res, next) {
           message: 'Retrieved all tables'
         });
     })
-    .catch(function(err) {
+    .catch(function (err) {
       return next(err);
     });
 }
 
-function sitesbydataset(req, res, next) {
+function sitesbydataset (req, res, next) {
   var gooddsid = !!req.params.datasetid;
 
   if (gooddsid) {
-    var datasetid = String(req.params.datasetid).split(',').map(function(item) {
+    var datasetid = String(req.params.datasetid).split(',').map(function (item) {
       return parseInt(item, 10);
     });
   } else {
@@ -161,7 +162,7 @@ function sitesbydataset(req, res, next) {
   }
 
   db.any(sitebydsid, [datasetid])
-    .then(function(data) {
+    .then(function (data) {
       res.status(200)
         .json({
           status: 'success',
@@ -169,16 +170,16 @@ function sitesbydataset(req, res, next) {
           message: 'Retrieved all tables'
         });
     })
-    .catch(function(err) {
+    .catch(function (err) {
       return next(err);
     });
 }
 
-function sitesbygeopol(req, res, next) {
+function sitesbygeopol (req, res, next) {
   var goodgp = !!req.params.gpid;
 
   if (goodgp) {
-    var gpid = commaSep(req.params.gpid);
+    var gpid = { gpid: commaSep(req.params.gpid) };
   } else {
     res.status(500)
       .json({
@@ -188,25 +189,38 @@ function sitesbygeopol(req, res, next) {
       });
   }
 
-  db.any(sitebygpid, [gpid])
-    .then(function(data) {
+  if (!!req.query.limit) {
+    gpid.limit = req.query.limit
+  } else {
+    gpid.limit = 25
+  }
+
+  if (!!req.query.offset) {
+    gpid.offset = req.query.offset
+  } else {
+    gpid.offset = 25
+  }
+
+  db.any(sitebygpid, gpid)
+    .then(function (data) {
       res.status(200)
         .json({
           status: 'success',
+          query: gpid,
           data: data,
           message: 'Retrieved all tables'
         });
     })
-    .catch(function(err) {
+    .catch(function (err) {
       return next(err);
     });
 }
 
-function sitesbycontact(req, res, next) {
+function sitesbycontact (req, res, next) {
   var goodctc = !!req.params.contactid
 
   if (goodctc) {
-    var contactid = String(req.params.contactid).split(',').map(function(item) {
+    var contactid = String(req.params.contactid).split(',').map(function (item) {
       return parseInt(item, 10);
     });
   } else {
@@ -219,7 +233,7 @@ function sitesbycontact(req, res, next) {
   }
 
   db.any(sitebyctid, [contactid])
-    .then(function(data) {
+    .then(function (data) {
       res.status(200)
         .json({
           status: 'success',
@@ -227,7 +241,7 @@ function sitesbycontact(req, res, next) {
           message: 'Retrieved all tables'
         });
     })
-    .catch(function(err) {
+    .catch(function (err) {
       return next(err);
     });
 }

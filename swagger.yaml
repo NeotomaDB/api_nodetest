@@ -451,6 +451,8 @@ paths:
     get:
       parameters:
         - $ref: './yamlRef/parameters.yaml#/parameters/gpidPath'
+        - $ref: './yamlRef/parameters.yaml#/parameters/limitParam'
+        - $ref: './yamlRef/parameters.yaml#/parameters/offsetParam'
       responses:
         '200':
           content:
@@ -459,8 +461,8 @@ paths:
                 items:
                   $ref: './yamlRef/schemas.yaml#/schemas/sitesv2'
                 type: array
-          description: An array of geopolitical units.
-      summary: Returns information about sites based on containing geopolitical unit.
+          description: An array of sites.
+      summary: Returns information about sites based on the geopolitical unit in which they occur.
       tags:
         - Site metadata
         - v2.0
@@ -547,6 +549,8 @@ paths:
         - $ref: './yamlRef/parameters.yaml#/parameters/altMaxQuery'
         - $ref: './yamlRef/parameters.yaml#/parameters/altMinQuery'
         - $ref: './yamlRef/parameters.yaml#/parameters/locQuery'
+        - $ref: './yamlRef/parameters.yaml#/parameters/limitParam'
+        - $ref: './yamlRef/parameters.yaml#/parameters/offsetParam'
       responses:
         '200':
           content:
@@ -618,6 +622,8 @@ paths:
     get:
       parameters:
         - $ref: './yamlRef/parameters.yaml#/parameters/siteidPath'
+        - $ref: './yamlRef/parameters.yaml#/parameters/limitParam'
+        - $ref: './yamlRef/parameters.yaml#/parameters/offsetParam'
       responses:
         '200':
           content:

@@ -9,12 +9,13 @@ var pgp = db.$config.pgp;
 // Helper for linking to external query files:
 function sql (file) {
   const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath, {minify: true});
+  return new pgp.QueryFile(fullPath, { minify: true });
 }
 
 // Create a QueryFile globally, once per file:
 const gpuQuery = sql('./gpuQuery.sql');
 const gpuid = sql('./gpubyid.sql');
+const gpsiteid = sql('./geopolbysiteid.sql');
 
 function geopoliticalbyid (req, res, next) {
   var gpIdUsed = !!req.params.gpid;
@@ -35,7 +36,7 @@ function geopoliticalbyid (req, res, next) {
     .then(function (data) {
       if (data.length === 0) {
         // We're returning the structure, but nothing inside it:
-        var returner = [{'geopoliticalid': null,
+        var returner = [{ 'geopoliticalid': null,
           'highergeopoliticalid': null,
           'rank': null,
           'geopoliticalunit': null,
@@ -43,7 +44,7 @@ function geopoliticalbyid (req, res, next) {
           'higher': null,
           'lower': null,
           'recdatecreated': null,
-          'recdatemodified': null}]
+          'recdatemodified': null }]
       } else {
         returner = data.sort(function (obj1, obj2) {
           return obj1.Rank - obj2.Rank;
@@ -69,7 +70,7 @@ function geopoliticalunits (req, res, next) {
       where the records are, with regards to political units.
   */
 
-  var outobj = {'gpid': req.query.gpid,
+  var outobj = { 'gpid': req.query.gpid,
     'gpname': req.query.gpname,
     'rank': req.query.rank,
     'lower': req.query.lower,
@@ -82,7 +83,7 @@ function geopoliticalunits (req, res, next) {
       .then(function (data) {
         if (data.length === 0) {
           // We're returning the structure, but nothing inside it:
-          var returner = [{'geopoliticalid': null,
+          var returner = [{ 'geopoliticalid': null,
             'highergeopoliticalid': null,
             'rank': null,
             'geopoliticalunit': null,
@@ -90,7 +91,7 @@ function geopoliticalunits (req, res, next) {
             'higher': null,
             'lower': null,
             'recdatecreated': null,
-            'recdatemodified': null}]
+            'recdatemodified': null }]
         } else {
           returner = data.sort(function (obj1, obj2) {
             return obj1.Rank - obj2.Rank;
@@ -100,7 +101,7 @@ function geopoliticalunits (req, res, next) {
         res.status(200)
           .json({
             status: 'success',
-            data: {query: outobj, result: returner}
+            data: { query: outobj, result: returner }
           });
       })
       .catch(function (err) {
@@ -111,29 +112,50 @@ function geopoliticalunits (req, res, next) {
   }
 }
 
-// function geopolbysite(req, res, next) {
+function geopolbysite (req, res, next) {
+  /*
+  Get geopolitical units by associated site IDs:
+  */
 
-//   /*
-//   Get geopolitical units by associated site IDs:
-//   */
+  if (req.params.siteid) {
+    var siteid = String(req.params.siteid).split(',').map(function (item) {
+      return parseInt(item, 10);
+    });
+    var outobj = { siteid: siteid }
 
-//   if (!!req.params.siteid) {
-//     var siteid = String(req.params.siteid).split(',').map(function(item) {
-//       return parseInt(item, 10);
-//     });
+    if (req.query.limit) { 
+      outobj.limit = req.query.limit;
+    } else {
+      outobj.limit = 25;
+    }
+    if (req.query.offset) {
+      outobj.offset = req.query.offset
+    } else {
+      outobj.offset = 0;
+    }
 
-//     console.log(siteid);
+    db.any(gpsiteid, outobj)
+      .then(function (data) {
+        var returner = data.sort(function (obj1, obj2) {
+          return obj1.Rank - obj2.Rank;
+        });
 
-//   }
+        res.status(200)
+          .json({
+            status: 'success',
+            query: outobj,
+            data: returner
+          });
+      })
+      .catch(function (err) {
+        return next(err);
+      });
+  } else {
+    res.redirect('/api-docs');
+  }
+}
 
-//   res.status(200)
-//   .json({
-//     status: 'success',
-//     data: siteid
-//   });
-// }
-
-// module.exports.geopolbysite = geopolbysite;
+module.exports.geopolbysite = geopolbysite;
 
 module.exports.geopoliticalunits = geopoliticalunits;
 module.exports.geopoliticalbyid = geopoliticalbyid;

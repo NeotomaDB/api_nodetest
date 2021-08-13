@@ -212,11 +212,12 @@ parameters:
     name:                                    occurrenceid
     description:                             Valid Neotoma occurrence identifier (integer), either singly or in a comma separated list.
     in:                                      path
-    required:                                true
+    required:                            true
     schema:
-      type:                                  integer
-      format:                                int32
-      minimum:                               0
+      type:                              integer
+      format:                            int32
+      minimum:                           0
+      maximum: 10000000
   offsetParam:
     name:                                    offset
     description:                             >-

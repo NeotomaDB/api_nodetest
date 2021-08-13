@@ -8,7 +8,7 @@ describe('tests for /v2.0/data/sites', function() {
     describe('tests for get', function() {
         it('should respond 200 for "An array of sites."', function() {
             var response = request('get', 'http://localhost:3005/v2.0/data/sites', { 
-                'qs': {"siteid":7645,"sitename":"esse anim deserunt cillum","altmax":8599,"altmin":196,"loc":"{)WWNOU2D}"},
+                'qs': {"siteid":7645,"sitename":"esse anim deserunt cillum","altmax":8599,"altmin":196},
                 'time': true
             });
 
