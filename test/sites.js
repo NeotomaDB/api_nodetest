@@ -29,13 +29,9 @@ describe('Get site data any number of ways:', function () {
     api.get('v2.0/data/sites/?altmax=5000&altmin=3000')
       .set('Accept', 'application/json')
       .end((err, res) => {
-        if (err) {
-          console.log(err);
-          done();
-        } else {
-          expect(Object.keys(res.body['data'][0]).length > 0);
-          done();
-        };
+        if (err) return done(err);
+        expect(Object.keys(res.body['data'][0]).length > 0);
+        done();
       });
   });
 
@@ -43,13 +39,9 @@ describe('Get site data any number of ways:', function () {
     api.get('v2.0/data/sites/?altmax=3000&altmin=5000')
       .set('Accept', 'application/json')
       .end((err, res) => {
-        if (err) {
-          console.log(err);
-          done();
-        } else {
-          expect(res.body.status === 'failure');
-          done();
-        };
+        if (err) return done(err);
+        expect(res.body.status === 'failure');
+        done();
       });
   });
 
@@ -57,13 +49,9 @@ describe('Get site data any number of ways:', function () {
     api.get('v2.0/data/sites/abcd')
       .set('Accept', 'application/json')
       .end((err, res) => {
-        if (err) {
-          console.log(err);
-          done();
-        } else {
-          expect(500, done);
-          done();
-        }
+        if (err) return done(err);
+        expect(500, done);
+        done();
       });
   });
 

@@ -7,7 +7,7 @@ var pgp = db.$config.pgp;
 // Helper for linking to external query files:
 function sql (file) {
   const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath, {minify: true});
+  return new pgp.QueryFile(fullPath, { minify: true });
 }
 
 const downloadsql = sql('./downloadbydsid.sql');

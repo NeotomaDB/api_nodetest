@@ -22,9 +22,7 @@ describe('Get chronology data by datasetid:', function () {
       })
       .expect(200)
       .end(function (err, res) {
-        if (err) {
-          console.log(err)
-        }
+        if (err) return done(err);
         done();
       });
   });

@@ -18,8 +18,6 @@ function datasettypesbymonths (req, res, next) {
   var start = parseInt(req.query.start);
   var end = parseInt(req.query.end);
 
-  console.log(req);
-
   var query = 'SELECT * FROM ndb.datasettypecontrib(${start}::int, ${end}::int)'
 
   db.any(query,
@@ -97,8 +95,6 @@ function rawbymonth (req, res, next) {
 function datasetdbsbymonths (req, res, next) {
   var start = parseInt(req.query.start);
   var end = parseInt(req.query.end);
-
-  console.log(req);
 
   var query = 'SELECT * FROM ndb.datasetconstitdb(${start}::int, ${end}::int)'
 
