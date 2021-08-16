@@ -172,13 +172,12 @@ function datasetquery (req, res, next) {
   }
 
   var goodloc = !!outobj.loc
-console.log(outobj.loc)
+
   if (goodloc) {
     try {
       var newloc = JSON.parse(outobj.loc)
       newloc = WKT.convert(JSON.parse(outobj.loc));
     } catch (err) {
-      console.log(err);
       newloc = outobj.loc;
     }
     outobj.loc = newloc;
@@ -186,7 +185,6 @@ console.log(outobj.loc)
 
   db.any(datasetquerysql, outobj)
     .then(function (data) {
-      console.log(data);
       if (data.length === 0) {
         // We're returning the structure, but nothing inside it:
         var returner = [];

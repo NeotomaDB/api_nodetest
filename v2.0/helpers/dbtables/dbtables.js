@@ -9,15 +9,12 @@ var pgp = db.$config.pgp;
 function dbtables (req, res, next) {
   var tableparam = !!req.query.table;
 
-  console.log(req.query)
-
   if (tableparam) {
     var queryTable = { queryTable: 'ndb.' + String(req.query.table).toLowerCase().replace(/\s/g, '') };
     var query = 'SELECT * FROM ${queryTable:raw};'
   } else {
     query = "SELECT tablename FROM pg_tables WHERE schemaname='ndb';";
   }
-  console.log(query)
 
   db.any(query, queryTable)
     .then(function (data, queryTable) {
