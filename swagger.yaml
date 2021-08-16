@@ -468,6 +468,87 @@ components:
               type: integer
           type: object
       type: object
+    chronologyv2_0:
+      properties:
+        agetype:
+          example: Calibrated radiocarbon years BP
+          type: string
+        chronologyName:
+          example: NAPD 1
+          type: string
+        chronologyid:
+          example: 1
+          type: integer
+        controls:
+          properties:
+            age:
+              example: -45
+              type: number
+            chroncontrolid:
+              example: 5645
+              type: integer
+            controllimits:
+              properties:
+                ageolder:
+                  $ref: '#/components/schemas/ageold'
+                ageyounger:
+                  $ref: '#/components/schemas/ageyoung'
+              type: object
+            controltype:
+              example: Core top
+              type: string
+            depth:
+              example: 0.5
+              type: number
+            thickness:
+              example: 2
+              type: number
+          type: object
+        dataset:
+          properties:
+            datasetid:
+              $ref: '#/components/schemas/datasetid'
+            datasettype:
+              type: string
+          type: object
+        datePrepared:
+          example: '2013-09-30'
+          format: date
+          type: string
+        default:
+          example: true
+          type: boolean
+        modelType:
+          example: linear interpolation
+          type: string
+        preparedby:
+          properties:
+            contactid:
+              example: 44
+              type: integer
+            contactname:
+              example: Grimm, Eric Christopher
+              type: string
+            familyname:
+              example: Grimm
+              type: string
+            firstname:
+              example: Eric
+              type: string
+            initials:
+              example: E.C.
+              type: string
+          type: object
+        reliableagespan:
+          properties:
+            older:
+              example: 6490
+              type: integer
+            younger:
+              example: -30
+              type: integer
+          type: object
+      type: object
     collectionTypes:
       properties:
         data:
