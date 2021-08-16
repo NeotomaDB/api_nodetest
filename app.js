@@ -5,19 +5,22 @@ let path = require('path');
 let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
-const YAML = require('yamljs');
+let YAML = require('yamljs');
 let swaggerUi = require('swagger-ui-express');
 let swaggerDocument = YAML.load('./swagger.yaml');
 let morgan = require('morgan');
 let fs = require('fs');
+
 const dotenv = require('dotenv');
 dotenv.config();
 
 let app = express();
 let cache = apicache.middleware;
 
+app.engine('html', require('ejs').renderFile);
 app.use(cors());
 app.use(cache('15 minutes'));
+app.use(express.static('mochawesome-report'));
 
 // test trigger watch restart - 09/12/20
 //
@@ -82,6 +85,10 @@ app.get('/v1/doc/*', (req, res) => {
 
 app.get('/v1/*', (req, res) => {
   res.status(301).redirect('http://wnapi.neotomadb.org' + req.originalUrl)
+})
+
+app.get('/tests/*', (req, res) => {
+  express.static(path.join(__dirname + '/mochawesome-report/mochawesome.html'))
 })
 
 // use the v1.5 endpoints:
