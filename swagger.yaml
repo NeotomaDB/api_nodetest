@@ -71,7 +71,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './yamlRef/schemas.yaml#/schemas/datasetTypes'
+                $ref: '#/components/schemas/datasetTypes'
           description: Returns the set of dataset types supported by Neotoma.
       tags:
         - Database tables
@@ -84,7 +84,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './yamlRef/schemas.yaml#/schemas/taxaInDatasets'
+                $ref: '#/components/schemas/taxaInDatasets'
           description: An array of taxon identities with associated dataset IDs.
       summary: Lists all Neotoma taxa (alphebetically) and the dataset types in which the taxa appear.
       tags:
@@ -97,7 +97,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './yamlRef/schemas.yaml#/schemas/collectionTypes'
+                $ref: '#/components/schemas/collectionTypes'
           description: Returns the set of collectiontypes recorded in Neotoma.
       summary: Return the list of collection types.
       tags:
@@ -119,7 +119,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './yamlRef/schemas.yaml#/schemas/contact'
+                $ref: '#/components/schemas/contact'
           description: Contact
       summary: Contact information for Neotoma contributors.
       tags:
@@ -129,7 +129,7 @@ paths:
     get:
       description: Returns information about Neotoma dataset
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/datasetidPath'
+        - $ref: '#/components/parameters/datasetidPath'
       responses:
         '200':
           content:
@@ -145,14 +145,14 @@ paths:
     get:
       description: Returns the named Neotoma Database table.
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/datasetidPath'
+        - $ref: '#/components/parameters/datasetidPath'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/downloadv1point5'
+                  $ref: '#/components/schemas/downloadv1point5'
                 type: object
           description: Returned download object.
       summary: Returns the named Neotoma Database table.
@@ -162,17 +162,17 @@ paths:
   /v1.5/data/geopoliticalunits:
     get:
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/gpidQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/gpnameQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/rankQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/lowergpQuery'
+        - $ref: '#/components/parameters/gpidQuery'
+        - $ref: '#/components/parameters/gpnameQuery'
+        - $ref: '#/components/parameters/rankQuery'
+        - $ref: '#/components/parameters/lowergpQuery'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/geopolitical'
+                  $ref: '#/components/schemas/geopolitical'
                 type: array
           description: An array of geopolitical units.
       summary: Returns information about geopolitical units.
@@ -182,14 +182,14 @@ paths:
   /v1.5/data/geopoliticalunits/{gpid}:
     get:
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/gpidPath'
+        - $ref: '#/components/parameters/gpidPath'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/geopolitical'
+                  $ref: '#/components/schemas/geopolitical'
                 type: object
           description: An array of geopolitical units.
       summary: Returns information about geopolitical units.
@@ -200,14 +200,14 @@ paths:
     get:
       description: Given a unique occurrence identifier associated with a unique occurrence in Neotoma, return individual occurrence information for the sample.
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/occurrenceidPath'
+        - $ref: '#/components/parameters/occurrenceidPath'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/occurrence'
+                  $ref: '#/components/schemas/occurrence'
                 type: array
           description: A single occurrence object.
       summary: Occurrence information for a taxon and sample.
@@ -218,14 +218,14 @@ paths:
     get:
       description: Returns information about Neotoma publications
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/siteidPath'
+        - $ref: '#/components/parameters/siteidPath'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/sitesv1point5'
+                  $ref: '#/components/schemas/sitesv1point5'
                 type: array
           description: An array of site elements.
       summary: Site information.
@@ -249,7 +249,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/dbtables'
+                  $ref: '#/components/schemas/dbtables'
                 type: array
           description: Returned table.
       summary: Returns the named Neotoma Database table.
@@ -263,7 +263,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './yamlRef/schemas.yaml#/schemas/collectionTypes'
+                $ref: '#/components/schemas/collectionTypes'
           description: A table of Neotoma collection types.
       tags:
         - Database tables
@@ -272,14 +272,14 @@ paths:
     get:
       description: Returns the chronology and chronological controls used for a dataset age model.
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/chronidPath'
+        - $ref: '#/components/parameters/chronidPath'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/chronology'
+                  $ref: '#/components/schemas/chronology'
                 type: array
           description: A Neotoma chronology object.
       summary: Chronology metadata for a dataset.
@@ -290,19 +290,19 @@ paths:
     get:
       description: Returns researcher contact information associated with a record.
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/contactidQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/familyNameQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/contactNameQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/contactStatusQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/limitParam'
-        - $ref: './yamlRef/parameters.yaml#/parameters/offsetParam'
+        - $ref: '#/components/parameters/contactidQuery'
+        - $ref: '#/components/parameters/familyNameQuery'
+        - $ref: '#/components/parameters/contactNameQuery'
+        - $ref: '#/components/parameters/contactStatusQuery'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/offsetParam'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/contact'
+                  $ref: '#/components/schemas/contact'
                 type: array
           description: contact
       summary: Contact information for Neotoma contributors.
@@ -313,22 +313,22 @@ paths:
     get:
       description: Returns information about Neotoma dataset
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/siteidQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/contactidQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/datasettypeQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/altMinQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/altMaxQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/locQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/ageYoungQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/ageOldQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/ageOfQuery'
+        - $ref: '#/components/parameters/siteidQuery'
+        - $ref: '#/components/parameters/contactidQuery'
+        - $ref: '#/components/parameters/datasettypeQuery'
+        - $ref: '#/components/parameters/altMinQuery'
+        - $ref: '#/components/parameters/altMaxQuery'
+        - $ref: '#/components/parameters/locQuery'
+        - $ref: '#/components/parameters/ageYoungQuery'
+        - $ref: '#/components/parameters/ageOldQuery'
+        - $ref: '#/components/parameters/ageOfQuery'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/datasetv2'
+                  $ref: '#/components/schemas/datasetv2'
                 type: array
           description: An array of datasets.
       summary: Dataset information.
@@ -339,14 +339,14 @@ paths:
     get:
       description: Returns information about Neotoma dataset
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/datasetidPath'
+        - $ref: '#/components/parameters/datasetidPath'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/dataset'
+                  $ref: '#/components/schemas/dataset'
                 type: array
           description: An array of datasets.
       summary: Dataset information.
@@ -357,14 +357,14 @@ paths:
     get:
       description: Returns researcher contact information associated with a record.
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/datasetidPath'
+        - $ref: '#/components/parameters/datasetidPath'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/contact'
+                  $ref: '#/components/schemas/contact'
                 type: array
           description: contact
       summary: Contact information for Neotoma contributors.
@@ -376,16 +376,16 @@ paths:
       description: |
         Returns the named Neotoma Database table.  An empty query will return a list of tables.
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/tableQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/limitParam'
-        - $ref: './yamlRef/parameters.yaml#/parameters/offsetParam'
+        - $ref: '#/components/parameters/tableQuery'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/offsetParam'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/dbtables'
+                  $ref: '#/components/schemas/dbtables'
                 type: array
           description: Returned table.
       summary: Returns the full content of a named Neotoma Database table.
@@ -396,14 +396,14 @@ paths:
     get:
       description: Returns the named Neotoma Database table.
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/datasetidPath'
+        - $ref: '#/components/parameters/datasetidPath'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/downloadv2'
+                  $ref: '#/components/schemas/downloadv2'
                 type: array
           description: Returned download object.
       summary: Returns the named Neotoma Database table. Currently not operational, use "occurrences" instead.
@@ -413,17 +413,17 @@ paths:
   /v2.0/data/geopoliticalunits:
     get:
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/gpidQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/gpnameQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/rankQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/lowergpQuery'
+        - $ref: '#/components/parameters/gpidQuery'
+        - $ref: '#/components/parameters/gpnameQuery'
+        - $ref: '#/components/parameters/rankQuery'
+        - $ref: '#/components/parameters/lowergpQuery'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/geopolitical'
+                  $ref: '#/components/schemas/geopolitical'
                 type: array
           description: An array of geopolitical units.
       summary: Returns information about geopolitical units.
@@ -433,14 +433,14 @@ paths:
   /v2.0/data/geopoliticalunits/{gpid}:
     get:
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/gpidPath'
+        - $ref: '#/components/parameters/gpidPath'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/geopolitical'
+                  $ref: '#/components/schemas/geopolitical'
                 type: array
           description: An array of geopolitical units.
       summary: Returns information about geopolitical units.
@@ -450,16 +450,16 @@ paths:
   /v2.0/data/geopoliticalunits/{gpid}/sites:
     get:
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/gpidPath'
-        - $ref: './yamlRef/parameters.yaml#/parameters/limitParam'
-        - $ref: './yamlRef/parameters.yaml#/parameters/offsetParam'
+        - $ref: '#/components/parameters/gpidPath'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/offsetParam'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/sitesv2'
+                  $ref: '#/components/schemas/sitesv2'
                 type: array
           description: An array of sites.
       summary: Returns information about sites based on the geopolitical unit in which they occur.
@@ -470,26 +470,26 @@ paths:
     get:
       description: Returns occurrence information for a particular taxon, geographic region or temporal slice.
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/taxonNameQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/taxonidQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/siteidQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/siteNameQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/datasettypeQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/altMinQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/altMaxQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/locQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/ageOfQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/ageYoungQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/ageOldQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/limitParam'
-        - $ref: './yamlRef/parameters.yaml#/parameters/offsetParam'
+        - $ref: '#/components/parameters/taxonNameQuery'
+        - $ref: '#/components/parameters/taxonidQuery'
+        - $ref: '#/components/parameters/siteidQuery'
+        - $ref: '#/components/parameters/siteNameQuery'
+        - $ref: '#/components/parameters/datasettypeQuery'
+        - $ref: '#/components/parameters/altMinQuery'
+        - $ref: '#/components/parameters/altMaxQuery'
+        - $ref: '#/components/parameters/locQuery'
+        - $ref: '#/components/parameters/ageOfQuery'
+        - $ref: '#/components/parameters/ageYoungQuery'
+        - $ref: '#/components/parameters/ageOldQuery'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/offsetParam'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/occurrence'
+                  $ref: '#/components/schemas/occurrence'
                 type: array
           description: occurrence
       summary: Individual occurrence records for Neotoma records.
@@ -500,14 +500,14 @@ paths:
     get:
       description: Returns occurrence information for a particular taxon, geographic region or temporal slice.
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/occurrenceidPath'
+        - $ref: '#/components/parameters/occurrenceidPath'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/occurrence'
+                  $ref: '#/components/schemas/occurrence'
                 type: array
           description: occurrence
       summary: Individual occurrence records for Neotoma records.
@@ -518,22 +518,22 @@ paths:
     get:
       description: Returns information about Neotoma publications
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/publicationidQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/datasetidQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/siteidQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/familyNameQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/pubtypeQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/pubyearQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/pubsearchQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/limitParam'
-        - $ref: './yamlRef/parameters.yaml#/parameters/offsetParam'
+        - $ref: '#/components/parameters/publicationidQuery'
+        - $ref: '#/components/parameters/datasetidQuery'
+        - $ref: '#/components/parameters/siteidQuery'
+        - $ref: '#/components/parameters/familyNameQuery'
+        - $ref: '#/components/parameters/pubtypeQuery'
+        - $ref: '#/components/parameters/pubyearQuery'
+        - $ref: '#/components/parameters/pubsearchQuery'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/offsetParam'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/publications'
+                  $ref: '#/components/schemas/publications'
                 type: array
           description: A list of publications.
       summary: Returns information about Neotoma publications
@@ -544,20 +544,20 @@ paths:
     get:
       description: Returns information about Neotoma sites
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/siteidQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/siteNameQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/altMaxQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/altMinQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/locQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/limitParam'
-        - $ref: './yamlRef/parameters.yaml#/parameters/offsetParam'
+        - $ref: '#/components/parameters/siteidQuery'
+        - $ref: '#/components/parameters/siteNameQuery'
+        - $ref: '#/components/parameters/altMaxQuery'
+        - $ref: '#/components/parameters/altMinQuery'
+        - $ref: '#/components/parameters/locQuery'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/offsetParam'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/sitesv2'
+                  $ref: '#/components/schemas/sitesv2'
                 type: array
           description: An array of sites.
       summary: Site information.
@@ -568,14 +568,14 @@ paths:
     get:
       description: Returns information about Neotoma sites.
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/siteidPath'
+        - $ref: '#/components/parameters/siteidPath'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/sitesv2'
+                  $ref: '#/components/schemas/sitesv2'
                 type: array
           description: An array of sites.
       summary: Site information.
@@ -586,14 +586,14 @@ paths:
     get:
       description: Given a Neotoma siteid, return all associated contacts.
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/siteidPath'
+        - $ref: '#/components/parameters/siteidPath'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/contact'
+                  $ref: '#/components/schemas/contact'
                 type: array
           description: contact
       summary: Contact information for Neotoma contributors based on a known Neotoma site.
@@ -604,14 +604,14 @@ paths:
     get:
       description: Returns information about Neotoma dataset
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/siteidPath'
+        - $ref: '#/components/parameters/siteidPath'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/dataset'
+                  $ref: '#/components/schemas/dataset'
                 type: array
           description: An array of datasets.
       summary: Dataset information.
@@ -621,16 +621,16 @@ paths:
   /v2.0/data/sites/{siteid}/geopoliticalunits:
     get:
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/siteidPath'
-        - $ref: './yamlRef/parameters.yaml#/parameters/limitParam'
-        - $ref: './yamlRef/parameters.yaml#/parameters/offsetParam'
+        - $ref: '#/components/parameters/siteidPath'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/offsetParam'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/geopolitical'
+                  $ref: '#/components/schemas/geopolitical'
                 type: array
           description: An array of geopolitical units.
       summary: Returns information about geopolitical units.
@@ -641,16 +641,16 @@ paths:
     get:
       description: Returns information about a taxon and (if requested) related taxa.
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/taxonNameQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/datasetidQuery'
-        - $ref: './yamlRef/parameters.yaml#/parameters/siteidQuery'
+        - $ref: '#/components/parameters/taxonNameQuery'
+        - $ref: '#/components/parameters/datasetidQuery'
+        - $ref: '#/components/parameters/siteidQuery'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/taxa'
+                  $ref: '#/components/schemas/taxa'
                 type: array
           description: A taxon or array of taxa.
       summary: Taxonomic information.
@@ -661,14 +661,14 @@ paths:
     get:
       description: Returns information about a taxon and (if requested) related taxa.
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/taxonidPath'
+        - $ref: '#/components/parameters/taxonidPath'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/taxa'
+                  $ref: '#/components/schemas/taxa'
                 type: array
           description: A taxon or array of taxa.
       summary: Taxonomic information.
@@ -679,14 +679,14 @@ paths:
     get:
       description: Returns occurrence information for a particular taxon, geographic region or temporal slice.
       parameters:
-        - $ref: './yamlRef/parameters.yaml#/parameters/taxonidPath'
+        - $ref: '#/components/parameters/taxonidPath'
       responses:
         '200':
           content:
             application/json:
               schema:
                 items:
-                  $ref: './yamlRef/schemas.yaml#/schemas/occurrence'
+                  $ref: '#/components/schemas/occurrence'
                 type: array
           description: occurrence
       summary: Individual occurrence records for Neotoma records.
@@ -833,45 +833,6 @@ components:
       schema:
         type:                              string
         example:                           pollen
-        enum:
-          - geochronologic
-          - loss-on-ignition
-          - pollen
-          - plant macrofossil
-          - vertebrate fauna
-          - macroinvertebrate
-          - pollen surface sample
-          - insect
-          - ostracode
-          - water chemistry
-          - diatom
-          - ostracode surface sample
-          - diatom surface sample
-          - geochemistry
-          - physical sedimentology
-          - charcoal
-          - testate amoebae
-          - X-ray fluorescence (XRF)
-          - X-ray diffraction (XRD)
-          - energy dispersive X-ray spectroscopy (EDS/EDX)
-          - biomarker
-          - modern plant biomarker
-          - phytolith
-          - specimen stable isotope
-          - paleomagnetic
-          - biochemistry
-          - modern biochemistry
-          - organic carbon
-          - insect modern
-          - chironomid
-          - stable isotope
-          - testate amoebae surface sample
-          - charcoal surface sample
-          - cladocera
-          - diatom top-bottom
-          - microcharcoal
-          - macrocharcoal
-          - pollen trap
     familyNameQuery:
       name:                                    familyname
       description:                             Full name of the the researcher (may use the % wildcard)
@@ -947,11 +908,12 @@ components:
       name:                                    occurrenceid
       description:                             Valid Neotoma occurrence identifier (integer), either singly or in a comma separated list.
       in:                                      path
-      required:                                true
+      required:                            true
       schema:
-        type:                                  integer
-        format:                                int32
-        minimum:                               0
+        type:                              integer
+        format:                            int32
+        minimum:                           0
+        maximum: 10000000
     offsetParam:
       name:                                    offset
       description:                             >-
@@ -1614,7 +1576,6 @@ components:
               example: 294
               type: integer
             geography:
-              example: Thing
               type: string
             sitedescription:
               example: Lake is located in a pre-glacial gorge of the Wisconsin river cut through the Baraboo Hills, a bedrock high. The valley is dammed at both ends by terminal moraines deposited by the Green Bay lobe, which flowed around the Baraboo Hills. Lake is fed by groundwater. Surrounding vegetation, white-black-bur oak.
@@ -1726,4 +1687,3 @@ components:
         success:
           type: integer
       type: object
-
