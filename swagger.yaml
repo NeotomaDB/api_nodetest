@@ -1,68 +1,1124 @@
-openapi: 3.0.0
-servers:
-  - url:                                       'https://api.neotomadb.org/'
-    description:                               Neotoma production server.
-  - url:                                       'https://api-dev.neotomadb.org/'
-    description:                               Neotoma development server.
+---
+components:
+  parameters:
+    ageOfQuery:
+      description: Dataset age ranges must contain this age (in calibrated years before present, with 0 at 1950CE)
+      in: query
+      name: ageof
+      required: false
+      schema:
+        example: 6700
+        format: int64
+        maximum: 23900000
+        minimum: -100
+        type: integer
+    ageOldQuery:
+      description: Oldest age that intercepts with the dataset (in calibrated years before present, with 0 at 1950CE)
+      in: query
+      name: ageold
+      required: false
+      schema:
+        example: 11430
+        format: int64
+        maximum: 23900000
+        minimum: -100
+        type: integer
+    ageYoungQuery:
+      description: Youngest age that intercepts with the dataset (in calibrated years before present, with 0 at 1950CE)
+      in: query
+      name: ageyoung
+      required: false
+      schema:
+        example: -60
+        format: int64
+        maximum: 23900000
+        minimum: -100
+        type: integer
+    altMaxQuery:
+      description: Maximum altitude of the dataset site location (in meters)
+      in: query
+      name: altmax
+      required: false
+      schema:
+        example: 300
+        format: int64
+        maximum: 8900
+        minimum: -500
+        type: integer
+    altMinQuery:
+      description: Minimum altitude of the dataset site location (in meters)
+      in: query
+      name: altmin
+      required: false
+      schema:
+        example: 200
+        format: int64
+        maximum: 8900
+        minimum: -500
+        type: integer
+    chronidPath:
+      description: Unique chronology identifier.
+      in: path
+      name: chronid
+      required: true
+      schema:
+        format: int64
+        minimum: 0
+        type: integer
+    contactNameQuery:
+      description: Last name of the researcher (may use the % wildcard)
+      in: query
+      name: contactname
+      required: false
+      schema:
+        example: Grimm, Eric Christopher
+        type: string
+    contactStatusQuery:
+      description: Current employment status
+      in: query
+      name: contactstatus
+      required: false
+      schema:
+        enum:
+          - active
+          - deceased
+          - defunct
+          - extant
+          - inactive
+          - retired
+          - unknown
+        example: active
+        type: string
+    contactidPath:
+      description: Unique contact identifier within the Neotoma Database, alone or comma separated.
+      in: path
+      name: contactid
+      required: true
+      schema:
+        example: 44
+        format: int64
+        minimum: 1
+        type: integer
+    contactidQuery:
+      description: Unique contact identifier within the Neotoma Database, alone or comma separated.
+      in: query
+      name: contactid
+      required: false
+      schema:
+        example: 44
+        format: int64
+        minimum: 1
+        type: integer
+    datasetidPath:
+      description: Valid Neotoma dataset identifier (integer), either singly or in a comma separated list.
+      in: path
+      name: datasetid
+      required: true
+      schema:
+        example: 100
+        format: int32
+        minimum: 0
+        type: integer
+    datasetidQuery:
+      description: Valid Neotoma dataset identifier (integer), either singly or in a comma separated list.
+      in: query
+      name: datasetid
+      required: false
+      schema:
+        format: int32
+        minimum: 0
+        type: integer
+    datasettypeQuery:
+      description: Neotoma contains data for a number of dataset types (see /dbtables/datasettypes.  This returns a subset of data types.
+      in: query
+      name: datasettype
+      required: false
+      schema:
+        example: pollen
+        type: string
+    familyNameQuery:
+      description: Full name of the the researcher (may use the % wildcard)
+      in: query
+      name: familyname
+      required: false
+      schema:
+        type: string
+    gpidPath:
+      description: Numeric ID for the geopolitical unit.
+      in: path
+      name: gpid
+      required: true
+      schema:
+        format: int32
+        minimum: 0
+        type: integer
+    gpidQuery:
+      description: Numeric ID for the geopolitical unit.
+      in: query
+      name: gpid
+      required: false
+      schema:
+        format: int32
+        minimum: 0
+        type: integer
+    gpnameQuery:
+      description: Name for a geopolitical unit.
+      in: query
+      name: gpname
+      required: false
+      schema:
+        example: Canada
+        type: string
+    limitParam:
+      description: The maximum number of records to be returned, default is 25.
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 25
+        format: int32
+        minimum: 1
+        type: integer
+    locQuery:
+      description: |
+        The geographic region of interest for the site, as a GeoJSON string or valid Well Known Text (WKT).  Assumed projection of EPSG:4376 unless otherwise defined.
+      in: query
+      name: loc
+      required: false
+      schema:
+        pattern: ^\{.*\}$
+        type: string
+    lowergpQuery:
+      description: Should all lower ranked units below the target unit be returned?
+      in: query
+      name: lower
+      required: false
+      schema:
+        default: false
+        type: boolean
+    occurrenceidPath:
+      description: Valid Neotoma occurrence identifier (integer), either singly or in a comma separated list.
+      in: path
+      name: occurrenceid
+      required: true
+      schema:
+        format: int32
+        maximum: 10000000
+        minimum: 0
+        type: integer
+    occurrenceidQuery:
+      description: Valid Neotoma occurrence identifier (integer), either singly or in a comma separated list.
+      in: query
+      name: occurrenceid
+      required: false
+      schema:
+        format: int32
+        minimum: 0
+        type: integer
+    offsetParam:
+      description: The offset for returned records when a limit is present.  Default is 0.
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        format: int32
+        minimum: 0
+        type: integer
+    publicationidQuery:
+      description: |
+        Unique publication identifier (from the Neotoma publication table).
+      in: query
+      name: publicationid
+      required: false
+      schema:
+        format: int32
+        minimum: 0
+        type: integer
+    pubsearchQuery:
+      description: A fulltext search string.  Either a literal portion of the article name, or keywords.
+      in: query
+      name: search
+      required: false
+      schema:
+        type: string
+    pubtypeQuery:
+      description: The type of publication requested.
+      in: query
+      name: pubtype
+      required: false
+      schema:
+        enum:
+          - Legacy
+          - Journal Article
+          - Book Chapter
+          - Authored Book
+          - Edited Book
+          - Master's Thesis
+          - Doctoral Dissertation
+          - Authored Report
+          - Edited Report
+          - Other Authored
+          - Other Edited
+          - Website
+          - Undergraduate thesis
+        type: string
+    pubyearQuery:
+      description: The year of publication, either as a single value or comma separated string.
+      in: query
+      name: year
+      required: false
+      schema:
+        format: int32
+        maximum: 2100
+        minimum: 1500
+        type: integer
+    rankQuery:
+      description: The unit rank.  Ranges from 1 (country) - 4 (e.g., parks).
+      in: query
+      name: rank
+      required: false
+      schema:
+        maximum: 4
+        minimum: 1
+        type: integer
+    siteNameQuery:
+      description: Name of the study site (may use the % wildcard)
+      in: query
+      name: sitename
+      required: false
+      schema:
+        example: Stern Excavation Site
+        type: string
+    siteidPath:
+      description: Valid Neotoma site identifier (integer), either singly or in a comma separated list.
+      in: path
+      name: siteid
+      required: true
+      schema:
+        format: int32
+        maximum: 30000
+        minimum: 1
+        type: integer
+    siteidQuery:
+      description: Valid Neotoma site identifier (integer), either singly or in a comma separated list.
+      in: query
+      name: siteid
+      required: false
+      schema:
+        format: int32
+        maximum: 30000
+        minimum: 1
+        type: integer
+    tableQuery:
+      description: Valid name for a Neotoma Table
+      in: query
+      name: table
+      required: false
+      schema:
+        example: sites
+        type: string
+    taxonNameQuery:
+      description: Taxon name or partial name.
+      in: query
+      name: taxonname
+      required: false
+      schema:
+        example: Canis
+        type: string
+    taxonidPath:
+      description: |
+        Unique taxonomic identifier (from the Neotoma taxon table).
+      in: path
+      name: taxonid
+      required: true
+      schema:
+        format: int32
+        maximum: 50000
+        minimum: 1
+        type: integer
+    taxonidQuery:
+      description: Unique taxonomic identifier (from the Neotoma taxon table).
+      in: query
+      name: taxonid
+      required: false
+      schema:
+        maximum: 50000
+        minimum: 1
+        type: integer
+    taxonnameQuery:
+      description: Unique taxonomic name (from the Neotoma taxon table).
+      in: query
+      name: taxonname
+      required: false
+      schema:
+        type: string
+  schemas:
+    ageold:
+      example: 11452
+      format: int64
+      nullable: true
+      type: integer
+    agerange:
+      properties:
+        ageold:
+          $ref: '#/components/schemas/ageold'
+        ageyoung:
+          $ref: '#/components/schemas/ageyoung'
+        units:
+          $ref: '#/components/schemas/ageunittype'
+      type: object
+    ageunittype:
+      enum:
+        - Calendar years AD/BC
+        - Calendar years BP
+        - Calibrated radiocarbon years BP
+        - ' Radiocarbon years BP'
+        - Varve years BP
+      type: string
+    ageyoung:
+      example: -35
+      format: int64
+      nullable: true
+      type: integer
+    altitude:
+      example: 0
+      format: int32
+      maximum: 9000
+      minimum: -500
+      type: integer
+    chronology:
+      properties:
+        agetype:
+          example: Calibrated radiocarbon years BP
+          type: string
+        chronologyName:
+          example: NAPD 1
+          type: string
+        chronologyid:
+          example: 1
+          type: integer
+        controls:
+          properties:
+            age:
+              example: -45
+              type: number
+            chroncontrolid:
+              example: 5645
+              type: integer
+            controllimits:
+              properties:
+                ageolder:
+                  $ref: '#/components/schemas/ageold'
+                ageyounger:
+                  $ref: '#/components/schemas/ageyoung'
+              type: object
+            controltype:
+              example: Core top
+              type: string
+            depth:
+              example: 0.5
+              type: number
+            thickness:
+              example: 2
+              type: number
+          type: object
+        dataset:
+          properties:
+            datasetid:
+              $ref: '#/components/schemas/datasetid'
+            datasettype:
+              type: string
+          type: object
+        datePrepared:
+          example: '2013-09-30'
+          format: date
+          type: string
+        default:
+          example: true
+          type: boolean
+        modelType:
+          example: linear interpolation
+          type: string
+        preparedby:
+          properties:
+            contactid:
+              example: 44
+              type: integer
+            contactname:
+              example: Grimm, Eric Christopher
+              type: string
+            familyname:
+              example: Grimm
+              type: string
+            firstname:
+              example: Eric
+              type: string
+            initials:
+              example: E.C.
+              type: string
+          type: object
+        reliableagespan:
+          properties:
+            older:
+              example: 6490
+              type: integer
+            younger:
+              example: -30
+              type: integer
+          type: object
+      type: object
+    collectionTypes:
+      properties:
+        data:
+          items:
+            properties:
+              colltype:
+                example: Isolated specimen
+                type: string
+              colltypeid:
+                example: 8
+                type: integer
+            type: object
+          type: array
+        message:
+          type: string
+        status:
+          type: string
+      type: object
+    collectionunit:
+      example: 15-1
+      nullable: true
+      type: string
+    collectionunitid:
+      example: 666
+      format: int64
+      minimum: 1
+      type: integer
+    contact:
+      properties:
+        address:
+          example: 550 N Park St, Madison WI, USA
+          type: string
+        aliasid:
+          example: 123
+          format: int64
+          type: integer
+        contactid:
+          example: 123
+          format: int64
+          type: integer
+        contactname:
+          example: Goring, Simon J
+          type: string
+        contactstatusid:
+          example: Active
+          type: string
+        email:
+          example: goring@wisc.edu
+          format: email
+          type: string
+        familyname:
+          example: Goring
+          type: string
+        givennames:
+          example: Simon
+          type: string
+        leadinginitials:
+          example: S. J.
+          type: string
+        notes:
+          example: This user is a member of the Neotoma Leadership Team.
+          format: email
+          type: string
+        suffix:
+          example: Esq.
+          type: string
+        title:
+          example: Lord Mayor
+          type: string
+        url:
+          example: http://goring.org
+          format: url
+          type: string
+      type: object
+    dataset:
+      properties:
+        data:
+          items:
+            properties:
+              dataset:
+                properties:
+                  database:
+                    type: string
+                  datasetid:
+                    $ref: '#/components/schemas/datasetid'
+                  datasetnotes:
+                    type: string
+                  datasetpi:
+                    properties:
+                      contactid:
+                        type: integer
+                      contactname:
+                        type: string
+                      familyname:
+                        type: string
+                      firstname:
+                        type: string
+                      initials:
+                        type: string
+                    type: object
+                  datasettype:
+                    type: string
+                  doi:
+                    format: doi
+                    type: string
+                type: object
+              site:
+                properties:
+                  altitude:
+                    type: integer
+                  collectionunit:
+                    type: string
+                  collectionunitid:
+                    $ref: '#/components/schemas/collectionunitid'
+                  geography:
+                    format: geoJSON
+                    type: string
+                  handle:
+                    type: string
+                  sitedescription:
+                    type: string
+                  siteid:
+                    $ref: '#/components/schemas/siteid'
+                  sitename:
+                    $ref: '#/components/schemas/sitename'
+                  sitenotes:
+                    type: string
+                  unittype:
+                    type: string
+                type: object
+            type: object
+          type: array
+        message:
+          type: string
+        status:
+          type: string
+        success:
+          type: integer
+      type: object
+    datasetTypes:
+      properties:
+        data:
+          items:
+            properties:
+              datasettype:
+                $ref: '#/components/schemas/datasettype'
+              datasettypeid:
+                example: 14
+                type: integer
+            type: object
+          type: array
+        message:
+          type: string
+        status:
+          type: string
+      type: object
+    datasetid:
+      example: 666
+      format: int64
+      minimum: 1
+      type: integer
+    datasetnotes:
+      example: This dataset was digitized from an original publication in Finnish.
+      type: string
+    datasettype:
+      example: geochemistry
+      type: string
+    datasetv2:
+      properties:
+        data:
+          items:
+            properties:
+              site:
+                properties:
+                  altitude:
+                    $ref: '#/components/schemas/altitude'
+                  collectionunit:
+                    $ref: '#/components/schemas/collectionunit'
+                  collectionunitid:
+                    $ref: '#/components/schemas/collectionunitid'
+                  dataset:
+                    items:
+                      properties:
+                        agerange:
+                          $ref: '#/components/schemas/agerange'
+                        database:
+                          type: integer
+                        datasetid:
+                          $ref: '#/components/schemas/datasetid'
+                        datasetnotes:
+                          $ref: '#/components/schemas/datasetnotes'
+                        datasetpi:
+                          type: array
+                        datasettype:
+                          $ref: '#/components/schemas/datasettype'
+                        doi:
+                          items:
+                            type: string
+                          type: array
+                      type: object
+                    type: array
+                  geography:
+                    $ref: '#/components/schemas/geography'
+                  handle:
+                    $ref: '#/components/schemas/handle'
+                  sitedescription:
+                    $ref: '#/components/schemas/sitedescription'
+                  siteid:
+                    $ref: '#/components/schemas/siteid'
+                  sitename:
+                    $ref: '#/components/schemas/sitename'
+                  sitenotes:
+                    $ref: '#/components/schemas/sitenotes'
+                  unittype:
+                    $ref: '#/components/schemas/unittype'
+            type: object
+          type: array
+        message:
+          $ref: '#/components/schemas/message'
+        status:
+          $ref: '#/components/schemas/status'
+      type: object
+    dbtables:
+      properties:
+        data:
+          items:
+            type: object
+          type: array
+        status:
+          type: string
+      type: object
+    downloadv1point5:
+      properties:
+        data:
+          type: object
+        message:
+          $ref: '#/components/schemas/message'
+        success:
+          $ref: '#/components/schemas/success'
+      type: object
+    downloadv2:
+      properties:
+        datasetid:
+          $ref: '#/components/schemas/datasetid'
+        record:
+          properties:
+            chronologies:
+              items:
+                $ref: '#/components/schemas/chronology'
+              type: array
+            data:
+              properties:
+                dataset:
+                  items:
+                    $ref: '#/components/schemas/dataset'
+                  type: array
+                samples:
+                  type: string
+              type: object
+          type: object
+        success:
+          $ref: '#/components/schemas/success'
+      type: object
+    geography:
+      example: '{"type":"Point","crs":{"type":"name","properties":{"name":"EPSG:4326"}},"coordinates":[-75.25,55.09167]}'
+      type: string
+    geopolitical:
+      properties:
+        data:
+          properties:
+            geopoliticalid:
+              $ref: '#/components/schemas/geopoliticalid'
+            geopoliticalname:
+              $ref: '#/components/schemas/geopoliticalname'
+            geopoliticalunit:
+              $ref: '#/components/schemas/geopoliticalunit'
+            highergeopoliticalid:
+              $ref: '#/components/schemas/highergeopoliticalid'
+            rank:
+              example: 2
+              format: int32
+              type: integer
+            recdatecreated:
+              example: '2013-09-30T21:02:51.000Z'
+              format: dateTime
+              type: string
+            recdatemodified:
+              example: '2013-09-30T21:02:51.000Z'
+              format: dateTime
+              type: string
+          type: array
+        status:
+          $ref: '#/components/schemas/status'
+    geopoliticalid:
+      example: 757
+      format: int32
+      type: integer
+    geopoliticalname:
+      example: Canada
+      type: string
+    geopoliticalunit:
+      example: province
+      type: string
+    geopoliticalv1_5:
+      properties:
+        data:
+          items:
+            properties:
+              geopoliticalid:
+                $ref: '#/components/schemas/geopoliticalid'
+              geopoliticalname:
+                example: Antarctica
+                type: string
+            type: object
+          type: array
+        status:
+          $ref: '#/components/schemas/status'
+        success:
+          $ref: '#/components/schemas/success'
+      type: object
+    handle:
+      example: HORSEHEAD
+      nullable: true
+      type: string
+    highergeopoliticalid:
+      example: 756
+      format: int32
+      type: integer
+    message:
+      example: Returned a vaild response.
+      type: string
+    occurrence:
+      properties:
+        data:
+          items:
+            properties:
+              ages:
+                properties:
+                  age:
+                    format: int64
+                    type: integer
+                  ageolder:
+                    $ref: '#/components/schemas/ageold'
+                  ageyounger:
+                    $ref: '#/components/schemas/ageyoung'
+                type: object
+              occurrence:
+                format: int64
+                type: integer
+              sample:
+                format: int64
+                type: integer
+              site:
+                properties:
+                  altitude:
+                    type: integer
+                  database:
+                    type: string
+                  datasetid:
+                    $ref: '#/components/schemas/datasetid'
+                  datasettype:
+                    $ref: '#/components/schemas/datasettype'
+                  location:
+                    type: string
+                  siteid:
+                    $ref: '#/components/schemas/siteid'
+                  sitename:
+                    $ref: '#/components/schemas/sitename'
+                type: object
+              taxon:
+                properties:
+                  taxonid:
+                    format: int64
+                    type: integer
+                  taxonname:
+                    type: string
+                type: object
+            type: object
+          type: array
+        message:
+          type: string
+        status:
+          type: string
+        success:
+          type: integer
+      type: object
+    occurrencev1_5:
+      properties:
+        data:
+          items:
+            properties:
+              ages:
+                properties:
+                  age:
+                    format: int64
+                    nullable: true
+                    type: integer
+                  ageolder:
+                    $ref: '#/components/schemas/ageold'
+                  ageyounger:
+                    $ref: '#/components/schemas/ageyoung'
+                type: object
+              occurrence:
+                format: int64
+                type: integer
+              sample:
+                format: int64
+                type: integer
+              site:
+                properties:
+                  altitude:
+                    type: integer
+                  database:
+                    type: string
+                  datasetid:
+                    $ref: '#/components/schemas/datasetid'
+                  datasettype:
+                    $ref: '#/components/schemas/datasettype'
+                  location:
+                    type: string
+                  siteid:
+                    $ref: '#/components/schemas/siteid'
+                  sitename:
+                    $ref: '#/components/schemas/sitename'
+                type: object
+              taxon:
+                properties:
+                  taxonid:
+                    format: int64
+                    type: integer
+                  taxonname:
+                    type: string
+                type: object
+            type: object
+          type: array
+        message:
+          type: string
+        status:
+          type: string
+        success:
+          type: integer
+      type: object
+    pollen:
+      properties:
+        Author:
+          type: string
+        EcolGroups:
+          items:
+            type: string
+          type: array
+        Extinct:
+          type: boolean
+        HigherTaxonID:
+          format: int32
+          type: integer
+        Notes:
+          type: string
+        PublicationID:
+          format: int32
+          type: integer
+        TaxaGroupID:
+          type: string
+        TaxonCode:
+          type: string
+        TaxonID:
+          format: int32
+          type: integer
+        TaxonName:
+          type: string
+    publication:
+      properties:
+        Authors:
+          items:
+            type: string
+          type: array
+        Citation:
+          type: string
+        PubType:
+          type: string
+        PublicationID:
+          type: integer
+        Year:
+          type: string
+    publications:
+      properties:
+        Authors:
+          items:
+            type: string
+          type: array
+        Citation:
+          type: string
+        PubType:
+          type: string
+        PublicationID:
+          type: integer
+        Year:
+          type: string
+    sitedescription:
+      example: Lake is located in a pre-glacial gorge of the Wisconsin river cut through the Baraboo Hills, a bedrock high. The valley is dammed at both ends by terminal moraines deposited by the Green Bay lobe, which flowed around the Baraboo Hills. Lake is fed by groundwater. Surrounding vegetation, white-black-bur oak.
+      type: string
+    siteid:
+      example: 666
+      format: int64
+      minimum: 1
+      type: integer
+    sitename:
+      example: Devils Lake
+      type: string
+    sitenotes:
+      example: This record has some little things that seem funny about it.
+      type: string
+    sitesv1point5:
+      properties:
+        data:
+          properties:
+            altitude:
+              $ref: '#/components/schemas/altitude'
+            collectionunit:
+              $ref: '#/components/schemas/collectionunit'
+            collectionunitid:
+              $ref: '#/components/schemas/collectionunitid'
+            datasetid:
+              $ref: '#/components/schemas/datasetid'
+            datasettype:
+              $ref: '#/components/schemas/datasettype'
+            geography:
+              $ref: '#/components/schemas/geography'
+            handle:
+              $ref: '#/components/schemas/handle'
+            sitedescription:
+              $ref: '#/components/schemas/sitedescription'
+            siteid:
+              $ref: '#/components/schemas/siteid'
+            sitename:
+              $ref: '#/components/schemas/sitename'
+            unittype:
+              $ref: '#/components/schemas/unittype'
+          type: object
+        message:
+          $ref: '#/components/schemas/message'
+        status:
+          $ref: '#/components/schemas/status'
+        success:
+          $ref: '#/components/schemas/success'
+    sitesv2:
+      properties:
+        altitude:
+          example: 294
+          type: integer
+        collectionunits:
+          items:
+            properties:
+              collectionunit:
+                example: null
+                type: string
+              collectionunitid:
+                $ref: '#/components/schemas/collectionunitid'
+              collectionunittype:
+                example: Core
+                type: string
+              datasets:
+                items:
+                  properties:
+                    datasetid:
+                      $ref: '#/components/schemas/datasetid'
+                    datasettype:
+                      $ref: '#/components/schemas/datasettype'
+                  type: object
+                type: array
+              handle:
+                example: DEVILSWI
+                type: string
+            type: object
+          type: array
+        geography:
+          $ref: '#/components/schemas/geography'
+        sitedescription:
+          $ref: '#/components/schemas/sitedescription'
+        siteid:
+          $ref: '#/components/schemas/siteid'
+        sitename:
+          $ref: '#/components/schemas/sitename'
+    status:
+      example: success
+      type: string
+    success:
+      enum:
+        - 0
+        - 1
+      type: integer
+    taxa:
+      properties:
+        author:
+          type: string
+        ecolgroup:
+          items:
+            type: string
+          type: array
+        highertaxonid:
+          format: int32
+          type: integer
+        publicationid:
+          format: int32
+          type: integer
+        status:
+          type: boolean
+        taxonid:
+          format: int32
+          type: integer
+        taxonname:
+          type: string
+    taxaInDatasets:
+      properties:
+        data:
+          items:
+            properties:
+              datasettypeids:
+                items:
+                  type: integer
+                type: array
+              taxongroupid:
+                type: string
+              taxonid:
+                type: integer
+              taxonname:
+                type: string
+            type: object
+          type: array
+        message:
+          type: string
+        status:
+          type: string
+        success:
+          type: integer
+      type: object
+    unittype:
+      example: Modern
+      type: string
 info:
-  title:                                       Neotoma API
-  version:                                     "2.0-oas3"
-  description:                                 API Documentation for the Neotoma Paleoecological Database
-  termsOfService:                              'no'
   contact:
-    name:                                      Simon J Goring
-    email:                                     goring@wisc.edu
-    url:                                       'http://goring.org'
+    email: goring@wisc.edu
+    name: Simon J Goring
+    url: http://goring.org
+  description: API Documentation for the Neotoma Paleoecological Database
   license:
-    name:                                      MIT
-    url:                                       'https://opensource.org/licenses/MIT'
-tags:
-  - name:                                      Database tables
-    description:                               Endpoints that access tables from Neotoma verbatim.
-    externalDocs:
-      url:                                     http://open.neotomadb.org/schemas/#Structure
-  - name:                                      Chronology metadata
-    description:                               Information about chronological controls and the models used to add the temporal component to records.
-    externalDocs:
-      url:                                     https://neotoma-manual.readthedocs.io/en/latest/tables_chron.html
-  - name:                                      Contact metadata
-    description:                               Information about Neotoma data contributors, authors and data analysts.
-    externalDocs:
-      url:                                     https://neotoma-manual.readthedocs.io/en/latest/tables_contacts.html
-  - name:                                      Dataset metadata
-    description:                               Information about site location and metadata specific to the individual dataset.
-    externalDocs:
-      url:                                     https://neotoma-manual.readthedocs.io/en/latest/tables_dataset.html
-  - name:                                      Data download
-    description:                               Full dataset download, including all sample data for a particular dataset.
-    externalDocs:
-      url:                                     https://neotoma-manual.readthedocs.io/en/latest/tables_samples.html
-  - name:                                      Geopolitical metadata
-    description:                               Information about the geopolitical units in which a site is located.
-  - name:                                      Occurrence metadata
-    description:                               A simplified data return, similar to the data download, but specific to a particular taxon, time or location.
-  - name:                                      Pollen proportions
-    description:                               For ease of use in online applications, pre-calculated pollen percentages for taxa, location or temporal bins.
-  - name:                                      Publication metadata
-    description:                               Formatted publication data related to Neotoma records.
-    externalDocs:
-      url:                                     https://neotoma-manual.readthedocs.io/en/latest/tables_publications.html
-  - name:                                      Site metadata
-    description:                               All metadata associated with a particular site with fossil records.
-    externalDocs:
-      url:                                     https://neotoma-manual.readthedocs.io/en/latest/tables_site.html
-  - name:                                      Taxonomic metadata
-    description:                               All available information about a particular taxon.
-    externalDocs:
-      url:                                     https://neotoma-manual.readthedocs.io/en/latest/tables_taxa.html
-  - name:                                      v1.5
-    description:                               All API endpoints associated with v1.5 of the Neotoma API.
-    externalDocs:
-      url:                                     http://github.com/NeotomaDB/api_nodetest
-  - name:                                      v2.0
-    description:                               All API endpoints associated with v2.0 of the Neotoma API.
-    externalDocs:
-      url:                                     http://github.com/NeotomaDB/api_nodetest
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: 'no'
+  title: Neotoma API
+  version: 2.0-oas3
+openapi: 3.0.0
 paths:
   /v1.5/apps/DatasetTypes:
     get:
@@ -171,9 +1227,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/geopolitical'
-                type: array
+                $ref: '#/components/schemas/geopoliticalv1_5'
           description: An array of geopolitical units.
       summary: Returns information about geopolitical units.
       tags:
@@ -206,9 +1260,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/occurrence'
-                type: array
+                $ref: '#/components/schemas/occurrencev1_5'
           description: A single occurrence object.
       summary: Occurrence information for a taxon and sample.
       tags:
@@ -224,9 +1276,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/sitesv1point5'
-                type: array
+                $ref: '#/components/schemas/sitesv1point5'
           description: An array of site elements.
       summary: Site information.
       tags:
@@ -278,9 +1328,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/chronology'
-                type: array
+                $ref: '#/components/schemas/chronologyv2_0'
           description: A Neotoma chronology object.
       summary: Chronology metadata for a dataset.
       tags:
@@ -345,9 +1393,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/dataset'
-                type: array
+                $ref: '#/components/schemas/dataset'
           description: An array of datasets.
       summary: Dataset information.
       tags:
@@ -363,9 +1409,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/contact'
-                type: array
+                $ref: '#/components/schemas/contact'
           description: contact
       summary: Contact information for Neotoma contributors.
       tags:
@@ -384,9 +1428,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/dbtables'
-                type: array
+                $ref: '#/components/schemas/dbtables'
           description: Returned table.
       summary: Returns the full content of a named Neotoma Database table.
       tags:
@@ -402,9 +1444,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/downloadv2'
-                type: array
+                $ref: '#/components/schemas/downloadv2'
           description: Returned download object.
       summary: Returns the named Neotoma Database table. Currently not operational, use "occurrences" instead.
       tags:
@@ -422,9 +1462,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/geopolitical'
-                type: array
+                $ref: '#/components/schemas/geopolitical'
           description: An array of geopolitical units.
       summary: Returns information about geopolitical units.
       tags:
@@ -439,9 +1477,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/geopolitical'
-                type: array
+                $ref: '#/components/schemas/geopolitical'
           description: An array of geopolitical units.
       summary: Returns information about geopolitical units.
       tags:
@@ -458,9 +1494,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/sitesv2'
-                type: array
+                $ref: '#/components/schemas/sitesv2'
           description: An array of sites.
       summary: Returns information about sites based on the geopolitical unit in which they occur.
       tags:
@@ -488,9 +1522,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/occurrence'
-                type: array
+                $ref: '#/components/schemas/occurrence'
           description: occurrence
       summary: Individual occurrence records for Neotoma records.
       tags:
@@ -506,9 +1538,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/occurrence'
-                type: array
+                $ref: '#/components/schemas/occurrence'
           description: occurrence
       summary: Individual occurrence records for Neotoma records.
       tags:
@@ -532,9 +1562,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/publications'
-                type: array
+                $ref: '#/components/schemas/publications'
           description: A list of publications.
       summary: Returns information about Neotoma publications
       tags:
@@ -556,9 +1584,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/sitesv2'
-                type: array
+                $ref: '#/components/schemas/sitesv2'
           description: An array of sites.
       summary: Site information.
       tags:
@@ -574,9 +1600,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/sitesv2'
-                type: array
+                $ref: '#/components/schemas/sitesv2'
           description: An array of sites.
       summary: Site information.
       tags:
@@ -592,9 +1616,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/contact'
-                type: array
+                $ref: '#/components/schemas/contact'
           description: contact
       summary: Contact information for Neotoma contributors based on a known Neotoma site.
       tags:
@@ -610,9 +1632,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/dataset'
-                type: array
+                $ref: '#/components/schemas/dataset'
           description: An array of datasets.
       summary: Dataset information.
       tags:
@@ -629,9 +1649,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/geopolitical'
-                type: array
+                $ref: '#/components/schemas/geopolitical'
           description: An array of geopolitical units.
       summary: Returns information about geopolitical units.
       tags:
@@ -649,9 +1667,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/taxa'
-                type: array
+                $ref: '#/components/schemas/taxa'
           description: A taxon or array of taxa.
       summary: Taxonomic information.
       tags:
@@ -667,9 +1683,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/taxa'
-                type: array
+                $ref: '#/components/schemas/taxa'
           description: A taxon or array of taxa.
       summary: Taxonomic information.
       tags:
@@ -685,1005 +1699,61 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/occurrence'
-                type: array
+                $ref: '#/components/schemas/occurrence'
           description: occurrence
       summary: Individual occurrence records for Neotoma records.
       tags:
         - Occurrence metadata
         - v2.0
-components:
-  parameters:
-    ageYoungQuery:
-      name:                                    ageyoung
-      in:                                      query
-      description:                             >-
-            Youngest age that intercepts with the dataset (in calibrated years
-            before present, with 0 at 1950CE)
-      required:                                false
-      schema:
-        type:                                  integer
-        format:                                int64
-        example:                               -60
-        maximum: 23900000
-        minimum: -100
-    ageOldQuery:
-      name:                                    ageold
-      in:                                      query
-      description:                             >-
-            Oldest age that intercepts with the dataset (in calibrated years
-            before present, with 0 at 1950CE)
-      required:                                false
-      schema:
-        type:                                  integer
-        format:                                int64
-        example:                               11430
-        maximum: 23900000
-        minimum: -100
-    ageOfQuery:
-      name:                                    ageof
-      in:                                      query
-      description:                             >-
-            Dataset age ranges must contain this age (in calibrated years before
-            present, with 0 at 1950CE)
-      required:                                false
-      schema:
-        type:                                  integer
-        format:                                int64
-        example:                               6700
-        maximum: 23900000
-        minimum: -100
-    altMinQuery:
-      name:                                    altmin
-      description:                             Minimum altitude of the dataset site location (in meters)
-      in:                                      query
-      required:                                false
-      schema:
-        type:                                  integer
-        format:                                int64
-        minimum:  -500
-        maximum: 8900
-        example:                               200
-    altMaxQuery:
-      name:                                    altmax
-      in:                                      query
-      description:                             Maximum altitude of the dataset site location (in meters)
-      required:                                false
-      schema:
-        type:                                  integer
-        format:                                int64
-        minimum:  -500
-        maximum: 8900
-        example:                               300
-    contactidQuery:
-      name:                                    contactid
-      description:                             >-
-            Unique contact identifier within the Neotoma Database, alone or
-            comma separated.
-      in:                                      query
-      required:                                false
-      schema:
-        type:                                  integer
-        format:                              int64
-        minimum:                             1
-        example:                             44
-    contactidPath:
-      name:                                    contactid
-      description:                             >-
-            Unique contact identifier within the Neotoma Database, alone or
-            comma separated.
-      in:                                      path
-      required:                                true
-      schema:
-        type:                                  integer
-        format:                              int64
-        minimum:                             1
-        example:                             44
-    contactNameQuery:
-      name:                                    contactname
-      description:                             Last name of the researcher (may use the % wildcard)
-      in:                                      query
-      required:                                false
-      schema:
-        type:                                  string
-        example:                               Grimm, Eric Christopher
-    contactStatusQuery:
-      name:                                    contactstatus
-      in:                                      query
-      description:                             Current employment status
-      required:                                false
-      schema:
-        type:                                  string
-        enum:
-          - active
-          - deceased
-          - defunct
-          - extant
-          - inactive
-          - retired
-          - unknown
-        example:                               active
-    datasetidQuery:
-      name:                                    datasetid
-      description:                             Valid Neotoma dataset identifier (integer), either singly or in a comma separated list.
-      in:                                      query
-      required:                                false
-      schema:
-        type:                                  integer
-        format:                                int32
-        minimum:                               0
-    datasetidPath:
-      name:                                    datasetid
-      description:                             Valid Neotoma dataset identifier (integer), either singly or in a comma separated list.
-      in:                                      path
-      required:                                true
-      schema:
-        type:                                  integer
-        format:                                int32
-        minimum:                               0
-        example:          100
-    datasettypeQuery:
-      name:                                datasettype
-      description:                         >-
-        Neotoma contains data for a number of dataset types (see
-        /dbtables/datasettypes.  This returns a subset of data types.
-      in:                                  query
-      required:                            false
-      schema:
-        type:                              string
-        example:                           pollen
-    familyNameQuery:
-      name:                                    familyname
-      description:                             Full name of the the researcher (may use the % wildcard)
-      in:                                      query
-      required:                                false
-      schema:
-        type:                                  string
-    gpidPath:
-      name:                                gpid
-      in:                                  path
-      description:                         Numeric ID for the geopolitical unit.
-      required:                            true
-      schema:
-        type:                              integer
-        format:                            int32
-        minimum:                           0
-    gpidQuery:
-      name:                                gpid
-      in:                                  query
-      description:                         Numeric ID for the geopolitical unit.
-      required:                            false
-      schema:
-        type:                              integer
-        format:                            int32
-        minimum:                           0
-    gpnameQuery:
-      name:                                gpname
-      in:                                  query
-      description:                         Name for a geopolitical unit.
-      required:                            false
-      schema:
-        type:                              string
-        example:                           Canada
-    limitParam:
-      name:                                    limit
-      description:                             'The maximum number of records to be returned, default is 25.'
-      schema:
-        type:                                  integer
-        format:                                int32
-        default:                               25
-        minimum:                               1
-      in:                                      query
-      required:                                false
-    locQuery:
-      name:                                    loc
-      in:                                      query
-      description:                             >
-            The geographic region of interest for the site, as a GeoJSON string
-            or valid Well Known Text (WKT).  Assumed projection of EPSG:4376
-            unless otherwise defined.
-      required:                                false
-      schema:
-        type:                                  string
-        pattern: '^\{.*\}$'
-    lowergpQuery:
-      name:                                lower
-      in:                                  query
-      description:                         Should all lower ranked units below the target unit be returned?
-      required:                            false
-      schema:
-        type:                              boolean
-        default:                           false
-    occurrenceidQuery:
-      name:                                    occurrenceid
-      description:                             Valid Neotoma occurrence identifier (integer), either singly or in a comma separated list.
-      in:                                      query
-      required:                                false
-      schema:
-        type:                                  integer
-        format:                                int32
-        minimum:                               0
-    occurrenceidPath:
-      name:                                    occurrenceid
-      description:                             Valid Neotoma occurrence identifier (integer), either singly or in a comma separated list.
-      in:                                      path
-      required:                            true
-      schema:
-        type:                              integer
-        format:                            int32
-        minimum:                           0
-        maximum: 10000000
-    offsetParam:
-      name:                                    offset
-      description:                             >-
-        The offset for returned records when a limit is present.  Default is
-        0.
-      in:                                      query
-      required:                                false
-      schema:
-        type:                                  integer
-        format:                                int32
-        default:                               0
-        minimum:                               0
-    publicationidQuery:
-      name:                                    publicationid
-      description:                             >
-        Unique publication identifier (from the Neotoma publication table).
-      in:                                      query
-      required:                                false
-      schema:
-        type:                                  integer
-        format:                                int32
-        minimum:                               0
-    pubsearchQuery:
-      name: search
-      description: A fulltext search string.  Either a literal portion of the article name, or keywords.
-      in: query
-      required: false
-      schema:
-        type: string
-    pubtypeQuery:
-      name: pubtype
-      description: The type of publication requested.
-      required: false
-      in: query
-      schema:
-        type: string
-        enum: [Legacy, Journal Article, Book Chapter, Authored Book, Edited Book, Master's Thesis, Doctoral Dissertation, Authored Report, Edited Report, Other Authored, Other Edited, Website, Undergraduate thesis]
-    pubyearQuery:
-      name: year
-      description: The year of publication, either as a single value or comma separated string.
-      required: false
-      in: query
-      schema:
-        type: integer
-        format: int32
-        minimum: 1500
-        maximum: 2100
-    rankQuery:
-      name:                                rank
-      in:                                  query
-      description:                         'The unit rank.  Ranges from 1 (country) - 4 (e.g., parks).'
-      required:                            false
-      schema:
-        type:                              integer
-        minimum: 1
-        maximum: 4
-    siteidPath:
-      name:                                    siteid
-      description:                             Valid Neotoma site identifier (integer), either singly or in a comma separated list.
-      in:                                      path
-      required:                                true
-      schema:
-        type:                                  integer
-        format:                                int32
-        minimum:                               1
-        maximum:  30000
-    siteidQuery:
-      name:                                    siteid
-      description:                             Valid Neotoma site identifier (integer), either singly or in a comma separated list.
-      in:                                      query
-      required:                                false
-      schema:
-        type:                                  integer
-        format:                                int32
-        minimum:                               1
-        maximum:  30000
-    siteNameQuery:
-      name:                                    sitename
-      description:                             Name of the study site (may use the % wildcard)
-      in:                                      query
-      required:                                false
-      schema:
-        type:                                  string
-        example:                               Stern Excavation Site
-    tableQuery:
-      name:                                    table
-      description: Valid name for a Neotoma Table 
-      in: query 
-      required: false 
-      schema:
-        type: string
-        example: sites
-    taxonidPath:
-      name:                                    taxonid
-      description:                             >
-        Unique taxonomic identifier (from the Neotoma taxon table).
-      in:                                      path
-      required:                                true
-      schema:
-        type:                                  integer
-        format:                                int32
-        minimum:                               1
-        maximum: 50000
-    taxonidQuery:
-      in:                                      query
-      name:                                    taxonid
-      required:                                false
-      description:                             Unique taxonomic identifier (from the Neotoma taxon table).
-      schema:
-        type:                                  integer
-        minimum:                               1
-        maximum: 50000
-    taxonNameQuery:
-      name:                                taxonname
-      description:                         Taxon name or partial name.
-      in:                                  query
-      required:                            false
-      schema:
-        type:                              string
-        example: "Canis"
-    chronidPath:
-      name:                                    chronid
-      description:                             Unique chronology identifier.
-      in:                                      path
-      required:                                true
-      schema:
-        type:                                  integer
-        format:                                int64
-        minimum:                               0
-    taxonnameQuery:
-      in:                                      query
-      name:                                    taxonname
-      required:                                false
-      description:                             Unique taxonomic name (from the Neotoma taxon table).
-      schema:
-        type:                                  string
-  schemas:
-    chronology:
-      properties:
-        agetype:
-          example: Calibrated radiocarbon years BP
-          type: string
-        chronologyName:
-          example: NAPD 1
-          type: string
-        chronologyid:
-          example: 1
-          type: integer
-        controls:
-          properties:
-            age:
-              example: -45
-              type: number
-            chroncontrolid:
-              example: 5645
-              type: integer
-            controllimits:
-              properties:
-                ageolder:
-                  example: -48
-                  type: number
-                ageyounger:
-                  example: -48
-                  type: number
-              type: object
-            controltype:
-              example: Core top
-              type: string
-            depth:
-              example: 0.5
-              type: number
-            thickness:
-              example: 2
-              type: number
-          type: object
-        dataset:
-          properties:
-            datasetid:
-              $ref: '#schema/datasetid'
-            datasettype:
-              type: string
-          type: object
-        datePrepared:
-          example: '2013-09-30'
-          format: date
-          type: string
-        default:
-          example: true
-          type: boolean
-        modelType:
-          example: linear interpolation
-          type: string
-        preparedby:
-          properties:
-            contactid:
-              example: 44
-              type: integer
-            contactname:
-              example: Grimm, Eric Christopher
-              type: string
-            familyname:
-              example: Grimm
-              type: string
-            firstname:
-              example: Eric
-              type: string
-            initials:
-              example: E.C.
-              type: string
-          type: object
-        reliableagespan:
-          properties:
-            older:
-              example: 6490
-              type: integer
-            younger:
-              example: -30
-              type: integer
-          type: object
-      type: object
-    collectionTypes:
-      properties:
-        data:
-          items:
-            properties:
-              colltype:
-                example: Isolated specimen
-                type: string
-              colltypeid:
-                example: 8
-                type: integer
-            type: object
-          type: array
-        message:
-          type: string
-        status:
-          type: string
-      type: object
-    contact:
-      properties:
-        address:
-          example: 550 N Park St, Madison WI, USA
-          type: string
-        aliasid:
-          example: 123
-          format: int64
-          type: integer
-        contactid:
-          example: 123
-          format: int64
-          type: integer
-        contactname:
-          example: Goring, Simon J
-          type: string
-        contactstatusid:
-          example: Active
-          type: string
-        email:
-          example: goring@wisc.edu
-          format: email
-          type: string
-        familyname:
-          example: Goring
-          type: string
-        givennames:
-          example: Simon
-          type: string
-        leadinginitials:
-          example: S. J.
-          type: string
-        notes:
-          example: This user is a member of the Neotoma Leadership Team.
-          format: email
-          type: string
-        suffix:
-          example: Esq.
-          type: string
-        title:
-          example: Lord Mayor
-          type: string
-        url:
-          example: http://goring.org
-          format: url
-          type: string
-      type: object
-    dataset:
-      properties:
-        data:
-          items:
-            properties:
-              dataset:
-                properties:
-                  database:
-                    type: string
-                  datasetid:
-                    $ref: '#schema/datasetid'
-                  datasetnotes:
-                    type: string
-                  datasetpi:
-                    properties:
-                      contactid:
-                        type: integer
-                      contactname:
-                        type: string
-                      familyname:
-                        type: string
-                      firstname:
-                        type: string
-                      initials:
-                        type: string
-                    type: object
-                  datasettype:
-                    type: string
-                  doi:
-                    format: doi
-                    type: string
-                type: object
-              site:
-                properties:
-                  altitude:
-                    type: integer
-                  collectionunit:
-                    type: string
-                  collectionunitid:
-                    type: integer
-                  geography:
-                    format: geoJSON
-                    type: string
-                  handle:
-                    type: string
-                  sitedescription:
-                    type: string
-                  siteid:
-                    $ref: '#schemas/siteid'
-                  sitename:
-                    $ref: '#schemas/sitename'
-                  sitenotes:
-                    type: string
-                  unittype:
-                    type: string
-                type: object
-            type: object
-          type: array
-        message:
-          type: string
-        status:
-          type: string
-        success:
-          type: integer
-      type: object
-    datasetv2:
-      properties:
-        data:
-          items:
-            properties:
-              dataset:
-                properties:
-                  database:
-                    type: string
-                  datasetid:
-                    $ref: '#schema/datasetid'
-                  datasetnotes:
-                    type: string
-                  datasetpi:
-                    properties:
-                      contactid:
-                        type: integer
-                      contactname:
-                        type: string
-                      familyname:
-                        type: string
-                      firstname:
-                        type: string
-                      initials:
-                        type: string
-                    type: object
-                  datasettype:
-                    type: string
-                  doi:
-                    format: doi
-                    type: string
-                type: object
-              site:
-                properties:
-                  altitude:
-                    type: integer
-                  collectionunit:
-                    type: string
-                  collectionunitid:
-                    type: integer
-                  geography:
-                    format: geoJSON
-                    type: string
-                  handle:
-                    type: string
-                  sitedescription:
-                    type: string
-                  siteid:
-                    $ref: '#schemas/siteid'
-                  sitename:
-                    $ref: '#schemas/sitename'
-                  sitenotes:
-                    type: string
-                  unittype:
-                    type: string
-                type: object
-            type: object
-          type: array
-        message:
-          type: string
-        status:
-          type: string
-      type: object
-    datasetTypes:
-      properties:
-        data:
-          items:
-            properties:
-              datasettype:
-                example: geochemistry
-                type: string
-              datasettypeid:
-                example: 14
-                type: integer
-            type: object
-          type: array
-        message:
-          type: string
-        status:
-          type: string
-      type: object
-    dbtables:
-      properties:
-        data:
-          items:
-            type: object
-          type: array
-        status:
-          type: string
-      type: object
-    downloadv1point5:
-      properties:
-        data:
-          type: object
-        success:
-          $ref: '#schema/success'
-        message:
-          $ref: '#schema/message'
-      type: object
-    downloadv2:
-      properties:
-        datasetid:
-          $ref: '#schema/datasetid'
-        record:
-          properties:
-            chronologies:
-              items:
-                $ref: '#schemas/chronology'
-              type: array
-            data:
-              dataset:
-                items:
-                  $ref: '#schemas/dataset'
-                type: array
-              samples:
-                type: string
-            type: object
-        success:
-          $ref: '#schema/success'
-      type: object
-    geopolitical:
-      properties:
-        geopoliticalid:
-          example: 757
-          format: int32
-          type: integer
-        geopoliticalname:
-          example: province
-          type: string
-        geopoliticalunit:
-          example: Alberta
-          type: string
-        highergeopoliticalid:
-          example: 756
-          format: int32
-          type: integer
-        rank:
-          example: 2
-          format: int32
-          type: integer
-        recdatecreated:
-          example: '2013-09-30T21:02:51.000Z'
-          format: dateTime
-          type: string
-        recdatemodified:
-          example: '2013-09-30T21:02:51.000Z'
-          format: dateTime
-          type: string
-    message:
-      type: string
-      example: 'Returned a vaild response.'
-    occurrence:
-      properties:
-        data:
-          items:
-            properties:
-              ages:
-                properties:
-                  age:
-                    format: int64
-                    type: integer
-                  ageolder:
-                    format: int64
-                    type: integer
-                  ageyounger:
-                    format: int64
-                    type: integer
-                type: object
-              occurrence:
-                format: int64
-                type: integer
-              sample:
-                format: int64
-                type: integer
-              site:
-                properties:
-                  altitude:
-                    type: integer
-                  database:
-                    type: string
-                  datasetid:
-                    $ref: '#schema/datasetid'
-                  datasettype:
-                    type: string
-                  location:
-                    type: string
-                  siteid:
-                    $ref: '#schemas/siteid'
-                  sitename:
-                    $ref: '#schemas/sitename'
-                type: object
-              taxon:
-                properties:
-                  taxonid:
-                    format: int64
-                    type: integer
-                  taxonname:
-                    type: string
-                type: object
-            type: object
-          type: array
-        message:
-          type: string
-        status:
-          type: string
-        success:
-          type: integer
-      type: object
-    pollen:
-      properties:
-        Author:
-          type: string
-        EcolGroups:
-          items:
-            type: string
-          type: array
-        Extinct:
-          type: boolean
-        HigherTaxonID:
-          format: int32
-          type: integer
-        Notes:
-          type: string
-        PublicationID:
-          format: int32
-          type: integer
-        TaxaGroupID:
-          type: string
-        TaxonCode:
-          type: string
-        TaxonID:
-          format: int32
-          type: integer
-        TaxonName:
-          type: string
-    publication:
-      properties:
-        Authors:
-          items:
-            type: string
-          type: array
-        Citation:
-          type: string
-        PubType:
-          type: string
-        PublicationID:
-          type: integer
-        Year:
-          type: string
-    publications:
-      properties:
-        Authors:
-          items:
-            type: string
-          type: array
-        Citation:
-          type: string
-        PubType:
-          type: string
-        PublicationID:
-          type: integer
-        Year:
-          type: string
-    datasetid:
-      example: 666
-      format: int64
-      minimum: 1
-      type: integer
-    siteid:
-      example: 666
-      format: int64
-      minimum: 1
-      type: integer
-    sitename:
-      example: Devils Lake
-      type: string
-    sitesv1point5:
-      properties:
-        collectionunits:
-          items:
-            properties:
-              collectionunit:
-                example: null
-                type: string
-              collectionunitid:
-                example: 666
-                format: int64
-                minimum: 1
-                type: integer
-              collectionunittype:
-                example: Core
-                type: string
-              datasets:
-                items:
-                  properties:
-                    datasetid:
-                      $ref: '#schema/datasetid'
-                    datasettype:
-                      type: string
-                  type: object
-                type: array
-              handle:
-                example: DEVILSWI
-                type: string
-            type: object
-          type: array
-        data:
-          properties:
-            altitude:
-              example: 294
-              type: integer
-            geography:
-              type: string
-            sitedescription:
-              example: Lake is located in a pre-glacial gorge of the Wisconsin river cut through the Baraboo Hills, a bedrock high. The valley is dammed at both ends by terminal moraines deposited by the Green Bay lobe, which flowed around the Baraboo Hills. Lake is fed by groundwater. Surrounding vegetation, white-black-bur oak.
-              type: string
-            siteid:
-              $ref: '#schemas/siteid'
-            sitename:
-              $ref: '#schemas/sitename'
-            unittype:
-              type: string
-          type: object
-        message:
-          $ref: '#schemas/message'
-        status:
-          $ref: '#schemas/status'
-        success:
-          $ref: '#schemas/success'
-    sitesv2:
-      properties:
-        altitude:
-          example: 294
-          type: integer
-        collectionunits:
-          items:
-            properties:
-              collectionunit:
-                example: null
-                type: string
-              collectionunitid:
-                example: 666
-                format: int64
-                minimum: 1
-                type: integer
-              collectionunittype:
-                example: Core
-                type: string
-              datasets:
-                items:
-                  properties:
-                    datasetid:
-                      $ref: '#schema/datasetid'
-                    datasettype:
-                      type: string
-                  type: object
-                type: array
-              handle:
-                example: DEVILSWI
-                type: string
-            type: object
-          type: array
-        geography:
-          type: string
-        sitedescription:
-          example: Lake is located in a pre-glacial gorge of the Wisconsin river cut through the Baraboo Hills, a bedrock high. The valley is dammed at both ends by terminal moraines deposited by the Green Bay lobe, which flowed around the Baraboo Hills. Lake is fed by groundwater. Surrounding vegetation, white-black-bur oak.
-          type: string
-        siteid:
-          $ref: '#schemas/siteid'
-        sitename:
-          $ref: '#schemas/sitename'
-    status:
-      type: string
-    success:
-      enum:
-        - 0
-        - 1
-      type: integer
-    taxa:
-      properties:
-        author:
-          type: string
-        ecolgroup:
-          items:
-            type: string
-          type: array
-        highertaxonid:
-          format: int32
-          type: integer
-        publicationid:
-          format: int32
-          type: integer
-        status:
-          type: boolean
-        taxonid:
-          format: int32
-          type: integer
-        taxonname:
-          type: string
-    taxaInDatasets:
-      properties:
-        data:
-          items:
-            properties:
-              datasettypeids:
-                items:
-                  type: integer
-                type: array
-              taxongroupid:
-                type: string
-              taxonid:
-                type: integer
-              taxonname:
-                type: string
-            type: object
-          type: array
-        message:
-          type: string
-        status:
-          type: string
-        success:
-          type: integer
-      type: object
+servers:
+  - description: Neotoma production server.
+    url: https://api.neotomadb.org/
+  - description: Neotoma development server.
+    url: https://api-dev.neotomadb.org/
+tags:
+  - description: Endpoints that access tables from Neotoma verbatim.
+    externalDocs:
+      url: http://open.neotomadb.org/schemas/#Structure
+    name: Database tables
+  - description: Information about chronological controls and the models used to add the temporal component to records.
+    externalDocs:
+      url: https://neotoma-manual.readthedocs.io/en/latest/tables_chron.html
+    name: Chronology metadata
+  - description: Information about Neotoma data contributors, authors and data analysts.
+    externalDocs:
+      url: https://neotoma-manual.readthedocs.io/en/latest/tables_contacts.html
+    name: Contact metadata
+  - description: Information about site location and metadata specific to the individual dataset.
+    externalDocs:
+      url: https://neotoma-manual.readthedocs.io/en/latest/tables_dataset.html
+    name: Dataset metadata
+  - description: Full dataset download, including all sample data for a particular dataset.
+    externalDocs:
+      url: https://neotoma-manual.readthedocs.io/en/latest/tables_samples.html
+    name: Data download
+  - description: Information about the geopolitical units in which a site is located.
+    name: Geopolitical metadata
+  - description: A simplified data return, similar to the data download, but specific to a particular taxon, time or location.
+    name: Occurrence metadata
+  - description: For ease of use in online applications, pre-calculated pollen percentages for taxa, location or temporal bins.
+    name: Pollen proportions
+  - description: Formatted publication data related to Neotoma records.
+    externalDocs:
+      url: https://neotoma-manual.readthedocs.io/en/latest/tables_publications.html
+    name: Publication metadata
+  - description: All metadata associated with a particular site with fossil records.
+    externalDocs:
+      url: https://neotoma-manual.readthedocs.io/en/latest/tables_site.html
+    name: Site metadata
+  - description: All available information about a particular taxon.
+    externalDocs:
+      url: https://neotoma-manual.readthedocs.io/en/latest/tables_taxa.html
+    name: Taxonomic metadata
+  - description: All API endpoints associated with v1.5 of the Neotoma API.
+    externalDocs:
+      url: http://github.com/NeotomaDB/api_nodetest
+    name: v1.5
+  - description: All API endpoints associated with v2.0 of the Neotoma API.
+    externalDocs:
+      url: http://github.com/NeotomaDB/api_nodetest
+    name: v2.0
