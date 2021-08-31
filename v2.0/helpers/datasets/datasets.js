@@ -4,21 +4,16 @@ const path = require('path');
 const he = require('he')
 const db = require('../../../database/pgp_db');
 const pgp = db.$config.pgp;
-const validate = require('../validateOut').validateOut
 
-// Helper for linking to external query files:
-function sql (file) {
-  const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath, { minify: true });
-}
+const { sql, commaSep, ifUndef, removeEmpty, validateOut } = require('../../../src/neotomaapi.js');
 
 var Terraformer = require('terraformer');
 var WKT = require('terraformer-wkt-parser');
 
-const datasetquerysql = sql('./datasetquery.sql');
-const datasetbyidsql = sql('./datasetbyid.sql');
-const datasetbydbsql = sql('./datasetbydb.sql');
-const datasetbysite = sql('./datasetbysite.sql');
+const datasetquerysql = sql('../v2.0/helpers/datasets/datasetquery.sql');
+const datasetbyidsql = sql('../v2.0/helpers/datasets/datasetbyid.sql');
+const datasetbydbsql = sql('../v2.0/helpers/datasets/datasetbydb.sql');
+const datasetbysite = sql('../v2.0/helpers/datasets/datasetbysite.sql');
 
 function datasetbyid (req, res, next) {
   var dsIdUsed = !!req.params.datasetid;
@@ -66,7 +61,7 @@ function datasetbydb (req, res, next) {
       'limit': parseInt(req.query.limit),
       'offset': parseInt(req.query.offset)
     }
-    database = validate(database)
+    database = validateOut(database)
   } else {
     res.status(500)
       .json({
@@ -153,7 +148,7 @@ function datasetquery (req, res, next) {
     'offset': parseInt(req.query.offset)
   };
 
-  outobj = validate(outobj);
+  outobj = validateOut(outobj);
 
   if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
     res.status(500)

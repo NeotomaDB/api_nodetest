@@ -25,7 +25,10 @@ app.use(express.static('mochawesome-report'));
 // test trigger watch restart - 09/12/20
 //
 // create a write stream (in append mode)
-var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'),
+  { flags: 'a',
+    interval: '1d', // rotate daily
+    path: path.join(__dirname, 'log') })
 
 // setup the logger
 app.enable('trust proxy');
