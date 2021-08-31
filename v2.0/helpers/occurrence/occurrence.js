@@ -3,32 +3,24 @@ const Terraformer = require('terraformer');
 const he = require('he')
 const WKT = require('terraformer-wkt-parser');
 const path = require('path');
-const validate = require('../validateOut').validateOut
 const parseTaxa = require('../parsetaxa.js').parseTaxa
 
 // get global database object
 const db = require('../../../database/pgp_db');
 const pgp = db.$config.pgp;
 
-// Helper for linking to external query files:
-function sql (file) {
-  const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath, {
-    minify: true
-  });
-}
+const { sql, commaSep, ifUndef, removeEmpty, validateOut } = require('../../../src/neotomaapi.js');
 
-const occurrencequerysql = sql('./occurrencequery.sql');
-const occurrencerecursquerysql = sql('./occurrence_recurs_query.sql');
-const occurrencetaxonquerysql = sql('./occurrencebytaxon.sql');
-const occurrencebyidsql = sql('./occurrencebyid.sql');
+const occurrencequerysql = sql('../v2.0/helpers/occurrence/occurrencequery.sql');
+const occurrencerecursquerysql = sql('../v2.0/helpers/occurrence/occurrence_recurs_query.sql');
+const occurrencetaxonquerysql = sql('../v2.0/helpers/occurrence/occurrencebytaxon.sql');
+const occurrencebyidsql = sql('../v2.0/helpers/occurrence/occurrencebyid.sql');
 
 function occurrencebyid (req, res, next) {
   var occid = !!req.params.occurrenceid
 
   if (occid) {
-    var occurrenceid = String(req.params.occurrenceid).split(',').map(function (item) {
-      return parseInt(item, 10);
+    var occurrenceid = commaSep(req.params.occurrenceid);
     });
   } else {
     res.status(500)
@@ -68,46 +60,26 @@ function occurrencequery (req, res, next) {
 
   // Get the input parameters:
   var outobj = {
-    'occurrenceid': String(req.query.occurrenceid)
-      .split(',')
-      .map(function (item) {
-        return parseInt(item, 10);
-      }),
+    'occurrenceid': commaSep(req.query.occurrenceid),
     'sitename': String(req.query.sitename),
     'altmin': parseInt(String(req.query.altmin)),
     'altmax': parseInt(String(req.query.altmax)),
     'loc': he.decode(String(req.query.loc)),
-    'gpid': String(req.query.gpid)
-      .split(',')
-      .map(function (item) {
-        return parseInt(item, 10);
-      }),
-    'taxonid': String(req.query.taxonid)
-      .split(',')
-      .map(function (item) {
-        return parseInt(item, 10);
-      }),
+    'gpid': commaSep(req.query.gpid),
+    'taxonid': commaSep(req.query.taxonid),
     'taxonname': name['taxa'],
     'taxondrop': name['drop'],
     'lower': req.query.lower,
-    'siteid': String(req.query.siteid)
-      .split(',')
-      .map(function (item) {
-        return parseInt(item, 10);
-      }),
+    'siteid': commaSep(req.query.siteid),
     'datasettype': String(req.query.datasettype),
-    'piid': String(req.query.piid)
-      .split(',')
-      .map(function (item) {
-        return parseInt(item, 10);
-      }),
+    'piid': commaSep(req.query.piid),
     'ageold': parseInt(String(req.query.ageold)),
     'ageyoung': parseInt(String(req.query.ageyoung)),
     'offset': req.query.offset,
     'limit': req.query.limit
   };
 
-  outobj = validate(outobj);
+  outobj = validateOut(outobj);
 
   if (!(typeof outobj.taxonname === 'undefined') & !outobj.taxonname === null) {
     // Adding in or replacing any stars in the name to allow wildcards.
@@ -194,9 +166,7 @@ function occurrencequery (req, res, next) {
 function occurrencebytaxon(req, res, next) {
   var taxonIdUsed = !!req.params.taxonid;
   if (taxonIdUsed) {
-    var taxonlist = String(req.params.taxonid).split(',').map(function (item) {
-      return parseInt(item, 10);
-    });
+    var taxonlist = commaSep(req.params.taxonid);
   } else {
     res.status(500)
       .json({

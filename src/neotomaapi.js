@@ -1,11 +1,16 @@
-import { join } from 'path';
+const path = require('path'); 
 
-import { $config } from '../../../database/pgp_db';
-var pgp = $config.pgp;
+// Goes through an object tree and clears out NULL elements (not sure this is the best).
+function removeEmpty (obj) {
+  Object.keys(obj).forEach(key => {
+    if (obj[key] && typeof obj[key] === 'object') removeEmpty(obj[key]);
+    else if (obj[key] == null) delete obj[key];
+  });
+};
 
 // Helper for linking to external query files:
 function sql (file) {
-  const fullPath = join(__dirname, file);
+  const fullPath = path.join(__dirname, file);
   return new pgp.QueryFile(fullPath, {
     minify: true
   });
@@ -42,11 +47,52 @@ function ifUndef (x, opr) {
   }
 }
 
-const _ifUndef = ifUndef;
-export { _ifUndef as ifUndef };
+//  To validate objects that are going to be passed from a param/query to a DB call.
+function validateOut (outobj) {
+  var keyLength = Object.keys(outobj).length - 1;
 
-const _sql = sql;
-export { _sql as sql };
+  for (var i = keyLength; i > -1; i--) {
+    // Check for undefined values
+    if (typeof outobj[Object.keys(outobj)[i]] === 'undefined' |
+        outobj[Object.keys(outobj)[i]] === 'undefined') {
+      outobj[Object.keys(outobj)[i]] = null;
+    }
+    // Check for stand-alone null values.
+    if (typeof outobj[Object.keys(outobj)[i]] === 'number' & isNaN(outobj[Object.keys(outobj)[i]])) {
+      outobj[Object.keys(outobj)[i]] = null;
+    }
 
-const _commaSep = commaSep;
-export { _commaSep as commaSep };
+    // Check to see if the array is just an array of NaN:
+    if (Array.isArray(outobj[Object.keys(outobj)[i]])) {
+      if (outobj[Object.keys(outobj)[i]][0] !== outobj[Object.keys(outobj)[i]][0]) {
+        outobj[Object.keys(outobj)[i]] = null;
+      }
+    }
+  }
+
+  return outobj;
+}
+
+function failure (query, msg) {
+  failobj = {'status': 0,
+             'data': null,
+             'query': query,
+             'message': msg}
+  return failobj;
+}
+
+
+function success (query, datam msg) {
+  success = {'status': 1,
+             'data': data,
+             'query': query,
+             'message': msg}
+  return success;
+}
+
+module.exports.failobj = failobj;
+module.exports.validateOut = validateOut;
+module.exports.sql = sql;
+module.exports.ifUndef = ifUndef;
+module.exports.commaSep = commaSep;
+module.exports.removeEmpty = removeEmpty;

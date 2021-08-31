@@ -4,23 +4,15 @@ const path = require('path');
 var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
-// Helper for linking to external query files:
-function sql (file) {
-  const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath, {minify: true});
-}
+const { sql, commaSep, ifUndef, removeEmpty, validateOut } = require('../../../src/neotomaapi.js');
 
-const doisql = sql('./doibydsid.sql');
+const doisql = sql('../v2.0/helpers/doi/doibydsid.sql');
 
 function doibydsid (req, res, next) {
   var dsIdUsed = !!req.params.datasetid;
 
   if (dsIdUsed) {
-    var datasetid = String(req.params.datasetid)
-      .split(',')
-      .map(function (item) {
-        return parseInt(item, 10);
-      });
+    var datasetid = commaSep(req.params.datasetid);
   } else {
     res.status(500)
       .json({

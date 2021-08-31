@@ -8,7 +8,7 @@ describe('tests for /v2.0/data/publications', function () {
   describe('tests for get', function () {
     it('should respond 200 for "A list of publications."', function () {
       var response = request('get', 'http://localhost:3005/v2.0/data/publications', {
-        'qs': { 'publicationid': 98523315, 'datasetid': 55954799, 'siteid': 5235, 'familyname': 'pariatur aliquip', 'pubtype': 'Undergraduate thesis', 'year': 1988, 'search': 'non Ut', 'limit': 88376352, 'offset': 85983082 },
+        'qs': { 'publicationid': 3696700, 'datasetid': 20407579, 'siteid': 4983, 'familyname': 'in id enim dolore veniam', 'pubtype': 'Authored Book', 'year': 1629, 'search': 'consequat exercitation ullamco consectetur', 'limit': 95623353, 'offset': 77433200 },
         'time': true
       });
 

@@ -5,19 +5,15 @@ const path = require('path');
 // get global database object
 var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
-var validate = require('../validateOut').validateOut;
+
+const { sql, commaSep, ifUndef, removeEmpty ,validateOut } = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
-const contactbyid = sql('./contactbyid.sql');
-const contactquery = sql('./contactquery.sql');
-const contactbydsid = sql('./contactbydsid.sql');
-const contactbystid = sql('./contactbysiteid.sql');
+const contactbyid = sql('../v2.0/helpers/contacts/contactbyid.sql');
+const contactquery = sql('../v2.0/helpers/contacts/contactquery.sql');
+const contactbydsid = sql('../v2.0/helpers/contacts/contactbydsid.sql');
+const contactbystid = sql('../v2.0/helpers/contacts/contactbysiteid.sql');
 
-// Helper for linking to external query files:
-function sql (file) {
-  const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath, {minify: true});
-}
 
 function contacts (req, res, next) {
   var contactIdUsed = !!req.query.contactid;
@@ -38,7 +34,7 @@ function contacts (req, res, next) {
     'offset': req.query.offset
   };
 
-  outobj = validate(outobj);
+  outobj = validateOut(outobj);
 
   var novalues = Object.keys(outobj).every(function (x) {
     return typeof outobj[x] === 'undefined' || !outobj[x];

@@ -8,25 +8,11 @@ var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
 /* A function to remove null elements. */
+const { sql, commaSep, ifUndef, removeEmpty } = require('../../../src/neotomaapi.js');
 
-const removeEmpty = function (obj) {
-  Object.keys(obj).forEach(key => {
-    if (obj[key] && typeof obj[key] === 'object') removeEmpty(obj[key]);
-    else if (obj[key] == null) delete obj[key];
-  });
-};
-
-// Helper for linking to external query files:
-function sql (file) {
-  const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath, {
-    minify: true
-  });
-}
-
-const chronologybyidsql = sql('./chronologybyid.sql');
-const chronologybydsidsql = sql('./chronologybydsid.sql');
-const chronologybystidsql = sql('./chronologybystid.sql');
+const chronologybyidsql = sql('../v2.0/helpers/chronology/chronologybyid.sql');
+const chronologybydsidsql = sql('../v2.0/helpers/chronology/chronologybydsid.sql');
+const chronologybystidsql = sql('../v2.0/helpers/chronology/chronologybystid.sql');
 
 function chronologybyid (req, res, next) {
   if (!(req.params.chronologyid == null)) {

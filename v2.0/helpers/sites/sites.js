@@ -3,57 +3,19 @@ const he = require('he');
 const Terraformer = require('terraformer');
 const WKT = require('terraformer-wkt-parser');
 
-const path = require('path');
-
 // get global database object
 const db = require('../../../database/pgp_db');
 const pgp = db.$config.pgp;
 
 // Helper for linking to external query files:
-function sql (file) {
-  const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath, {
-    minify: true
-  });
-}
-
-/**
- * Parser for comma separated strings.
- * @param x A comma separated string.
- * @return An array of integers.
- */
-function commaSep (x) {
-  return String(x).split(',').map(function (item) {
-    return parseInt(item, 10);
-  });
-}
-
-/**
- * Quickly return value or null.
- * @param x Any value passed in from an object.
- * @return either the value of `x` or a `null` value.
- */
-function ifUndef (x, opr) {
-  if (typeof x === 'undefined') {
-    return null;
-  } else {
-    switch (opr) {
-      case 'string':
-        return String(x);
-      case 'sep':
-        return commaSep(x);
-      case 'int':
-        return parseInt(x, 10);
-    }
-  }
-}
+const { sql, commaSep, ifUndef } = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
-const siteQuery = sql('./sitequery.sql');
-const sitebydsid = sql('./sitebydsid.sql');
-const sitebyid = sql('./sitebyid.sql');
-const sitebygpid = sql('./sitebygpid.sql');
-const sitebyctid = sql('./sitebyctid.sql');
+const siteQuery = sql('../v2.0/helpers/sites/sitequeryfaster.sql');
+const sitebydsid = sql('../v2.0/helpers/sites/sitebydsid.sql');
+const sitebyid = sql('../v2.0/helpers/sites/sitebyid.sql');
+const sitebygpid = sql('../v2.0/helpers/sites/sitebygpid.sql');
+const sitebyctid = sql('../v2.0/helpers/sites/sitebyctid.sql');
 
 /**
  * Return API results for sites when only a string of site IDs is passed in.
@@ -62,6 +24,7 @@ const sitebyctid = sql('./sitebyctid.sql');
  * @param next Callback argument to the middleware function (sends to the `next` function in app.js)
  * @return The function returns nothing, but sends the API result to the client.
  */
+
 function sitesbyid (req, res, next) {
   var goodstid = !!req.params.siteid;
 
