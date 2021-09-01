@@ -4,30 +4,21 @@ const path = require('path');
 // get global database object
 var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
-var validate = require('../validateOut').validateOut
 
-// Helper for linking to external query files:
-function sql (file) {
-  const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath, {minify: true});
-}
+const { sql, commaSep, ifUndef, removeEmpty, validateOut } = require('../../../src/neotomaapi.js');
 
 var Terraformer = require('terraformer');
 var WKT = require('terraformer-wkt-parser');
 
-const datasetquerysql = sql('./datasetquery.sql');
-const datasetbyidsql = sql('./datasetbyid.sql');
-const datasetbysite = sql('./datasetbysite.sql');
+const datasetquerysql = sql('../v2.0/helpers/dataset_elc/datasetquery.sql');
+const datasetbyidsql = sql('../v2.0/helpers/dataset_elc/datasetbyid.sql');
+const datasetbysite = sql('../v2.0/helpers/dataset_elc/datasetbysite.sql');
 
 function datasetbyid (req, res, next) {
   var dsIdUsed = !!req.params.datasetid;
 
   if (dsIdUsed) {
-    var datasetid = String(req.params.datasetid)
-      .split(',')
-      .map(function (item) {
-        return parseInt(item, 10);
-      });
+    var datasetid = commaSep(req.params.datasetid);
   } else {
     res.status(500)
       .json({
@@ -61,8 +52,7 @@ function datasetbysiteid (req, res, next) {
   var stIdUsed = !!req.params.siteid;
 
   if (stIdUsed) {
-    var siteid = String(req.params.siteid).split(',').map(function (item) {
-      return parseInt(item, 10);
+    var siteid = commaSep(req.params.siteid);
     });
   } else {
     res.status(500)
@@ -96,12 +86,9 @@ function datasetbysiteid (req, res, next) {
 function datasetquery (req, res, next) {
   // First get all the inputs and parse them:
   var outobj = {
-    'datasetid': String(req.query.datasetid).split(',')
-      .map(function (item) { return parseInt(item, 10); }),
-    'siteid': String(req.query.siteid).split(',')
-      .map(function (item) { return parseInt(item, 10); }),
-    'piid': String(req.query.piid).split(',')
-      .map(function (item) { return parseInt(item, 10); }),
+    'datasetid': commaSep(req.query.datasetid),
+    'siteid': commaSep(req.query.siteid),
+    'piid': CommaSep(req.query.piid),
     'datasettype': String(req.query.sitename),
     'altmin': parseInt(String(req.query.altmin)),
     'altmax': parseInt(String(req.query.altmax)),
@@ -114,7 +101,7 @@ function datasetquery (req, res, next) {
     'offset':parseInt(req.query.offset)
   };
 
-  outobj = validate(outobj);
+  outobj = validateOut(outobj);
 
   if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
     res.status(500)

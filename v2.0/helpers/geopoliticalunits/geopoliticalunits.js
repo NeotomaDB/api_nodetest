@@ -6,23 +6,18 @@ const path = require('path');
 var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
-// Helper for linking to external query files:
-function sql (file) {
-  const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath, { minify: true });
-}
+const { sql, commaSep, ifUndef, removeEmpty, validateOut } = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
-const gpuQuery = sql('./gpuQuery.sql');
-const gpuid = sql('./gpubyid.sql');
-const gpsiteid = sql('./geopolbysiteid.sql');
+const gpuQuery = sql('../v2.0/helpers/geopoliticalunits/gpuQuery.sql');
+const gpuid = sql('../v2.0/helpers/geopoliticalunits/gpubyid.sql');
+const gpsiteid = sql('../v2.0/helpers/geopoliticalunits/geopolbysiteid.sql');
 
 function geopoliticalbyid (req, res, next) {
   var gpIdUsed = !!req.params.gpid;
 
   if (gpIdUsed) {
-    var gpid = String(req.params.gpid).split(',').map(function (item) {
-      return parseInt(item, 10);
+    var gpid = commaSep(req.params.gpid);
     });
   } else {
     res.status(500)
@@ -118,8 +113,7 @@ function geopolbysite (req, res, next) {
   */
 
   if (req.params.siteid) {
-    var siteid = String(req.params.siteid).split(',').map(function (item) {
-      return parseInt(item, 10);
+    var siteid = commaSep(req.params.siteid);
     });
     var outobj = { siteid: siteid }
 
@@ -156,6 +150,5 @@ function geopolbysite (req, res, next) {
 }
 
 module.exports.geopolbysite = geopolbysite;
-
 module.exports.geopoliticalunits = geopoliticalunits;
 module.exports.geopoliticalbyid = geopoliticalbyid;
