@@ -1,15 +1,13 @@
-let express = require('express');
 let apicache = require('apicache');
-let cors = require('cors');
-let path = require('path');
-let logger = require('morgan');
-let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
+let cookieParser = require('cookie-parser');
+let cors = require('cors');
+let express = require('express');
+let morgan = require('morgan');
+let rfs = require('rotating-file-stream') // version 2.x
+let path = require('path');
 let YAML = require('yamljs');
 let swaggerUi = require('swagger-ui-express');
-let swaggerDocument = YAML.load('./swagger.yaml');
-let morgan = require('morgan');
-let fs = require('fs');
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -25,7 +23,23 @@ app.use(express.static('mochawesome-report'));
 // test trigger watch restart - 09/12/20
 //
 // create a write stream (in append mode)
-var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+
+const pad = num => (num > 9 ? '' : '0') + num;
+const generator = (time, index) => {
+  if (!time) return 'access.log';
+
+  var month = time.getFullYear() + '' + pad(time.getMonth() + 1);
+  var day = pad(time.getDate());
+  var hour = pad(time.getHours());
+  var minute = pad(time.getMinutes());
+
+  return `${month}/${month}${day}-${hour}${minute}-${index}-access.log`;
+};
+
+var accessLogStream = rfs.createStream(generator,
+  { interval: '1d', // rotate daily
+    path: path.join(__dirname, 'logs'),
+    compress: true });
 
 // setup the logger
 app.enable('trust proxy');
@@ -36,24 +50,19 @@ var options = {
   customCssUrl: '/custom.css'
 }
 
+let swaggerDocument = YAML.load('./swagger.yaml');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 
-// Locations of files:
+// Locations for v1.5 files:
 var v15index = require('./v1.5/routes/index'); // default route
 var v15data = require('./v1.5/routes/data'); // data API routes
 var v15apps = require('./v1.5/routes/apps'); // apps API routes
 var v15dbtables = require('./v1.5/routes/dbtables'); // dbtables API routes
 
-// v2 routes
+// Locations for v2.0 files
 var v2index = require('./v2.0/routes/index');
-
-// data API routes
 var v2data = require('./v2.0/routes/data');
-
-// apps API routes
 var v2apps = require('./v2.0/routes/apps');
-
-// dbtables API routes
 var v2dbtables = require('./v2.0/routes/dbtables');
 
 // view engine setup
@@ -64,7 +73,6 @@ app.set('view engine', 'jade');
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 app.use(express.static('public'));
-app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -88,7 +96,7 @@ app.get('/v1/*', (req, res) => {
 })
 
 app.get('/tests/*', (req, res) => {
-  express.static(path.join(__dirname + '/mochawesome-report/mochawesome.html'))
+  express.static(path.join(`${__dirname}/mochawesome-report/mochawesome.html`))
 })
 
 // use the v1.5 endpoints:

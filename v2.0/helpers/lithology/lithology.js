@@ -3,26 +3,17 @@ const path = require('path');
 // get global database object
 var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
-var validate = require('../validateOut').validateOut
 
-// Helper for linking to external query files:
-function sql (file) {
-  const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath, { minify: true });
-}
+const { sql, commaSep, ifUndef, removeEmpty, validateOut } = require('../../../src/neotomaapi.js');
 
-const lithologybyds = sql('./lithologybyds.sql');
+const lithologybyds = sql('../v2.0/helpers/lithology/lithologybyds.sql');
 
 function lithologybydsid (req, res, next) {
 
   var dsIdUsed = !!req.params.datasetid;
 
   if (dsIdUsed) {
-    var datasetid = String(req.params.datasetid)
-      .split(',')
-      .map(function (item) {
-        return parseInt(item, 10);
-      });
+    var datasetid = commaSep(req.params.datasetid);
   } else {
     res.status(500)
       .json({

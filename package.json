@@ -27,6 +27,7 @@
     "node-postgres": "^0.6.2",
     "pg-promise": "^10.10.2",
     "request": "^2.88.2",
+    "rotating-file-stream": "^2.1.5",
     "swagger-ui-express": "^4.1.6",
     "terraformer": "^1.0.12",
     "terraformer-wkt-parser": "^1.2.1",

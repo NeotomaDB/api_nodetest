@@ -4,10 +4,10 @@ var chakram = require('chakram');
 var request = chakram.request;
 var expect = chakram.expect;
 
-describe('tests for /v2.0/apps/collectionTypes', function () {
+describe('tests for /v2.0/data/oxcal/calibrate', function () {
   describe('tests for get', function () {
     it('should respond 200 for "A table of Neotoma collection types."', function () {
-      var response = request('get', 'http://localhost:3005/v2.0/apps/collectionTypes', {
+      var response = request('get', 'http://localhost:3005/v2.0/data/oxcal/calibrate', {
         'time': true
       });
 
