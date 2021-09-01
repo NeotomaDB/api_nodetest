@@ -1,4 +1,6 @@
-const path = require('path'); 
+const path = require('path');
+var db = require('../database/pgp_db');
+var pgp = db.$config.pgp;
 
 // Goes through an object tree and clears out NULL elements (not sure this is the best).
 function removeEmpty (obj) {
@@ -74,23 +76,23 @@ function validateOut (outobj) {
 }
 
 function failure (query, msg) {
-  failobj = {'status': 0,
-             'data': null,
-             'query': query,
-             'message': msg}
+  let failobj = { 'status': 0,
+    'data': null,
+    'query': query,
+    'message': msg }
   return failobj;
 }
 
-
-function success (query, datam msg) {
-  success = {'status': 1,
-             'data': data,
-             'query': query,
-             'message': msg}
+function success (query, data, msg) {
+  let success = { 'status': 1,
+    'data': data,
+    'query': query,
+    'message': msg }
   return success;
 }
 
-module.exports.failobj = failobj;
+module.exports.failure = failure;
+module.exports.success = success;
 module.exports.validateOut = validateOut;
 module.exports.sql = sql;
 module.exports.ifUndef = ifUndef;
