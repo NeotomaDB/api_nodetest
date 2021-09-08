@@ -1,11 +1,8 @@
-// Sites query:
-const path = require('path');
 // get global database object
 const he = require('he')
 const db = require('../../../database/pgp_db');
-const pgp = db.$config.pgp;
 
-const { sql, commaSep, ifUndef, removeEmpty, validateOut } = require('../../../src/neotomaapi.js');
+const { sql, validateOut } = require('../../../src/neotomaapi.js');
 
 var Terraformer = require('terraformer');
 var WKT = require('terraformer-wkt-parser');
@@ -54,6 +51,7 @@ function datasetbyid (req, res, next) {
 }
 
 function datasetbydb (req, res, next) {
+  console.log('hey')
   var dbUsed = !!req.query.database;
 
   if (dbUsed) {

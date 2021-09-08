@@ -4,7 +4,7 @@
 
 // Defining the query functions:
 module.exports = {
-  oxcalibrate:  function (req, res, next) {
+  oxcalibrate: function (req, res, next) {
     const oxcal = require('../oxcal/oxcal.js');
     oxcal.calibrate(req, res, next);
   },
