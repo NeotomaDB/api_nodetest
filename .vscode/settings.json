@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "128.118.53.12",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "neotoma_remote",
+            "database": "neotoma",
+            "username": "sug335",
+            "password": "northCountry2020"
+        }
+    ]
+}

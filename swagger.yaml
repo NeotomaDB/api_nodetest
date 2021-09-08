@@ -391,7 +391,19 @@ components:
       minimum: -500
       type: integer
     authorpiresponse:
-      type: string
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/status'
+        message:
+          $ref: '#/components/schemas/message'
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              getpeople:
+                type: string
     chronology:
       properties:
         agetype:
@@ -756,6 +768,20 @@ components:
             $ref: '#/components/schemas/datasettype'
         type: object
       type: array
+    datasettyperesponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/status'
+        message:
+          $ref: '#/components/schemas/message'
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              getdatasettypes:
+                type: string
     datasettype:
       example: geochemistry
       type: string
@@ -833,6 +859,12 @@ components:
         status:
           $ref: '#/components/schemas/status'
       type: object
+    dbtablesv1_5:
+      properties:
+        data:
+          items:
+            type: object
+          type: array    
     dbtables:
       properties:
         data:
@@ -1491,9 +1523,7 @@ paths:
                   message:
                     $ref: '#/components/schemas/message'
                   data:
-                    items:
-                      $ref: '#/components/schemas/dbtables'
-                    type: array
+                    $ref: '#/components/schemas/dbtablesv1_5'
           description: Returned table.
       summary: Returns the named Neotoma Database table.
       tags:
