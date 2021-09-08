@@ -21,7 +21,6 @@ function occurrencebyid (req, res, next) {
 
   if (occid) {
     var occurrenceid = commaSep(req.params.occurrenceid);
-    });
   } else {
     res.status(500)
       .json({

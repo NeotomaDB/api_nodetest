@@ -4,7 +4,6 @@ slow: 1000
 timeout: 30000
 recursive: true
 color: true
-parallel: true
 ui: 'bdd'
 sort: true
 reporter: 'mochawesome'

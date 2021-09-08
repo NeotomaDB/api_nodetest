@@ -5,7 +5,7 @@ const path = require('path');
 var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
-const { sql, commaSep, ifUndef, removeEmpty, validateOut } = require('../../../src/neotomaapi.js');
+const { sql, commaSep, validateOut } = require('../../../src/neotomaapi.js');
 
 var Terraformer = require('terraformer');
 var WKT = require('terraformer-wkt-parser');
@@ -53,7 +53,6 @@ function datasetbysiteid (req, res, next) {
 
   if (stIdUsed) {
     var siteid = commaSep(req.params.siteid);
-    });
   } else {
     res.status(500)
       .json({
