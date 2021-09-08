@@ -1,24 +1,14 @@
-// Sites query:
+const db = require('../../../database/pgp_db');
 
-const path = require('path');
+const { sql, validateOut } = require('../../../src/neotomaapi.js');
+
 const bib = require('../bib_format');
 
-//  get global database object
-var db = require('../../../database/pgp_db');
-var pgp = db.$config.pgp;
-var validate = require('../validateOut').validateOut
-
-// Helper for linking to external query files:
-function sql (file) {
-  const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath, { minify: true });
-}
-
 // Create a QueryFile globally, once per file:
-const pubbydsid = sql('./pubdsidquery.sql');
-const pubbystid = sql('./pubstidquery.sql');
-const pubquery = sql('./pubquery.sql');
-const rawpub = sql('./raw_pubid.sql');
+const pubbydsid = sql('../v2.0/helpers/publications/pubdsidquery.sql');
+const pubbystid = sql('../v2.0/helpers/publications/pubstidquery.sql');
+const pubquery = sql('../v2.0/helpers/publications/pubquery.sql');
+const rawpub = sql('../v2.0/helpers/publications/raw_pubid.sql');
 
 /* By publication ID directly: .../v2.0/data/publications/1001 */
 
@@ -82,7 +72,7 @@ function publicationquery (req, res, next) {
   if (outobj.doi[0] === 'undefined') {
     outobj.doi = null;
   }
-  outobj = validate(outobj);
+  outobj = validateOut(outobj);
 
   var novalues = Object.keys(outobj).every(function (x) {
     return typeof outobj[x] === 'undefined' || !outobj[x];
@@ -97,13 +87,13 @@ function publicationquery (req, res, next) {
   } else {
     db.any(pubquery, outobj)
       .then(function (data) {
-        // var returner = bib.formatpublbib(data);
         var returner = data;
 
         res.status(200)
           .json({
             status: 'success',
-            data: { query: outobj, result: returner }
+            data: { query: outobj, result: returner },
+            message: 'Publications returned'
           });
       })
       .catch(function (err) {

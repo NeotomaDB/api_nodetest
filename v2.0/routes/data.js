@@ -14,6 +14,7 @@ router.get('/contacts/:contactid/sites', handlers.sitesbycontact);
 router.get('/contacts/', handlers.contactquery);
 router.get('/datasets_elc/:datasetid', handlers.datasetbyid_elc);
 router.get('/datasets_elc/', handlers.datasetquery_elc);
+router.get('/datasets/db', handlers.datasetsbydb);  // Take database names
 router.get('/datasets/:datasetid', handlers.datasetbyid);
 router.get('/datasets/:datasetid/chronologies', handlers.chronologiesbydsid);
 router.get('/datasets/:datasetid/contacts', handlers.contactsbydataid);
@@ -23,7 +24,6 @@ router.get('/datasets/:datasetid/publications', handlers.publicationbydataset);
 router.get('/datasets/:datasetid/sites', handlers.sitesbydataset); // Takes a dataset ID.
 router.get('/datasets/:datasetid/taxa/', handlers.taxonbydsid);
 router.get('/datasets/', handlers.datasetquery);
-router.get('/datasets/db', handlers.datasetsbydb);  // Take database names
 router.get('/dbtables', handlers.dbtables);
 router.get('/dbtables/:table', handlers.dbtables);
 router.get('/downloads/:datasetid', handlers.downloadbyid);

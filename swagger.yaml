@@ -549,6 +549,20 @@ components:
               type: integer
           type: object
       type: object
+    chronologyv2response:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/success'
+        message:
+          $ref: '#/components/schemas/message'
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              chronology:
+                $ref: '#/components/schemas/chronologyv2_0'
     collectiontyperesponse:
       properties:
         data:
@@ -1144,7 +1158,7 @@ components:
     sitesv1point5:
       properties:
         data:
-          type array:
+          type: array
           items:
             properties:
               altitude:
@@ -1468,9 +1482,18 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/dbtables'
-                type: array
+                type: object
+                properties:
+                  success:
+                    $ref: '#/components/schemas/success'
+                  status:
+                    $ref: '#/components/schemas/status'
+                  message:
+                    $ref: '#/components/schemas/message'
+                  data:
+                    items:
+                      $ref: '#/components/schemas/dbtables'
+                    type: array
           description: Returned table.
       summary: Returns the named Neotoma Database table.
       tags:
@@ -1831,7 +1854,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/taxonresponse'
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/status'
+                  message:
+                    $ref: '#/components/schemas/message'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/taxa'
           description: Taxa
       summary: Taxon metadata for a dataset.
       tags:
@@ -2172,7 +2204,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/chronologyresponse'
+                $ref: '#/components/schemas/chronologyv2response'
           description: chronology
       summary: Chronology information for Neotoma sites.
       tags:
@@ -2419,11 +2451,25 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/dbtables'
-                type: array
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/status'
+                  message:
+                    $ref: '#/components/schemas/message'
+                  data:
+                    type: object
+                    properties:
+                      limit:
+                        type: integer
+                      offset:
+                        type: integer
+                      data:
+                        items:
+                          $ref: '#/components/schemas/dbtables'
+                        type: array
           description: Returned table.
-      summary: Returns the named Neotoma Database table.
+      summary: Returns the named Neotoma Database table with limits & offsets.
       tags:
         - Database tables
         - v1.5

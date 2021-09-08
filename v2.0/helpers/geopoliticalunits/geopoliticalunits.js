@@ -1,12 +1,9 @@
 // geopoliticalunits query:
 
-const path = require('path');
-
 // get global database object
 var db = require('../../../database/pgp_db');
-var pgp = db.$config.pgp;
 
-const { sql, commaSep, ifUndef, removeEmpty, validateOut } = require('../../../src/neotomaapi.js');
+const { sql, commaSep } = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
 const gpuQuery = sql('../v2.0/helpers/geopoliticalunits/gpuQuery.sql');
@@ -18,7 +15,6 @@ function geopoliticalbyid (req, res, next) {
 
   if (gpIdUsed) {
     var gpid = commaSep(req.params.gpid);
-    });
   } else {
     res.status(500)
       .json({
@@ -114,7 +110,6 @@ function geopolbysite (req, res, next) {
 
   if (req.params.siteid) {
     var siteid = commaSep(req.params.siteid);
-    });
     var outobj = { siteid: siteid }
 
     if (req.query.limit) { 
