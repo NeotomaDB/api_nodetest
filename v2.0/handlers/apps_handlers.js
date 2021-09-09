@@ -35,8 +35,6 @@ function collectiontypes (req, res, next) {
 }
 
 function datasettypes (req, res, next) {
-  // Get the query string:
-  var query = {};
 
   db.query('select ap.getdatasettypes();')
     .then(function (data) {
@@ -53,47 +51,23 @@ function datasettypes (req, res, next) {
 }
 
 function taxaindatasets (req, res, next) {
-  db.query('select ap.gettaxaindatasets()')
+  db.query('SELECT * FROM ap.gettaxaindatasets()')
     .then(function (data) {
-      // process text records
-      var test = [data[0]];
-
-      var arrMs = test.map(function (elem) {
-        var strLen = elem.gettaxaindatasets.length;
-        var d = elem;
-        var str = d.gettaxaindatasets.slice(1, strLen - 1);
-        var a = str.split(',');
-        var obj = {};
-        obj.TaxonName = a[1];
-        obj.TaxonID = +a[0];
-        obj.TaxaGroupID = a[2];
-        obj.DatasetTypesIDs = [+a[3]];
-
-        return obj;
-      });
-
-      var aggF = arrMs.map(function (d, i) {
-        var tmpIDset = arrMs.filter(function (e) {
-          return e.TaxonID == 28461// d.TaxonID;
-        });
-
-        var tmpArr = [];
-
-        var tmpAgg = tmpIDset.reduce(function (j, k, l, tmpArr) {
-          return j.DatasetTypesIDs.concat(k.DatasetTypesIDs);
-        });
-
-        var aggObj = d;// d.DatasetTypesIDs;
-        aggObj.DatasetTypesIDs = tmpAgg;// tmpAgg.DatasetTypesIDs;
-
-        return aggObj;
-      });
+      var agg = []
+      for (let k = 0; k < data.length; k++) {
+        var indexer = agg.map(x => x.taxonid).indexOf(data[k].taxonid)
+        if (indexer > -1) {
+          agg[indexer]['datasettypeid'] = [agg[indexer]['datasettypeid'], data[k]['datasettypeid']].flat()
+        } else {
+          agg.push(data[k])
+        }
+      }
 
       res.status(200)
         .type('application/json')
         .jsonp({
           status: 'success',
-          data: JSON.stringify(aggF),
+          data: agg,
           message: 'Retrieved all taxa in datasets'
         })
     }).catch(function (err) {
@@ -102,8 +76,6 @@ function taxaindatasets (req, res, next) {
 }
 
 function taxagrouptypes (req, res, next) {
-  // Get the query string:
-  var query = {};
 
   db.query('select ap.gettaxagrouptypes();')
     .then(function (data) {
@@ -120,8 +92,6 @@ function taxagrouptypes (req, res, next) {
 }
 
 function keywords (req, res, next) {
-  // Get the query string:
-  var query = {};
 
   db.query('select ap.getkeywords();')
     .then(function (data) {
@@ -138,8 +108,6 @@ function keywords (req, res, next) {
 }
 
 function authorpis (req, res, next) {
-  // Get the query string:
-  var query = {};
 
   db.query('select ap.getpeople();')
     .then(function (data) {
@@ -183,8 +151,6 @@ function taphonomysystems (req, res, next) {
 }
 
 function depositionalenvironments (req, res, next) {
-  // Get the query string:
-  var query = {};
 
   db.query('select ap.getdeptenvtypesroot();')
     .then(function (data) {

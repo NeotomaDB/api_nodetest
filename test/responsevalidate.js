@@ -40,5 +40,10 @@ for (let step = 0; step < paths.length; step++) {
   apipath = paths[step];
   description = 'GET ' + apipath
 
-  runTest(description, apipath.replace(/{.*}/, 1));
+  if (apipath.includes('dbtables')) {
+    apipath = apipath.replace(/{.*}/, 'agetypes')
+  } else {
+    apipath = apipath.replace(/{.*}/, 1)
+  }
+  runTest(description, apipath);
 }

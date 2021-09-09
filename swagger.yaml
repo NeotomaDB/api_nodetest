@@ -1509,6 +1509,7 @@ paths:
           required: true
           schema:
             type: string
+            example: agetypes
       responses:
         '200':
           content:
@@ -2471,9 +2472,8 @@ paths:
       parameters:
         - description: Neotoma database table name.
           example: geochrontypes
-          in: path
+          in: query
           name: table
-          required: true
           schema:
             type: string
       responses:
