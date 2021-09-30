@@ -8,7 +8,7 @@ describe('tests for /v2.0/data/datasets/db', function () {
   describe('tests for get', function () {
     it('should respond 200 for "Datasets"', function () {
       var response = request('get', 'http://localhost:3005/v2.0/data/datasets/db', {
-        'qs': { 'limit': 77248999, 'offset': 33214046 },
+        'qs': { 'limit': 10, 'offset': 0, 'database': 'Neotoma' },
         'time': true
       });
 

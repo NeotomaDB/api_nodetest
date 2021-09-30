@@ -1,6 +1,3 @@
 #!/bin/bash
 
-for i in {1..2}
-do
-  mocha test
-done
+mocha --config=test/.mocharc.yml --reporter-options reportDir=public,reportFilename=tests

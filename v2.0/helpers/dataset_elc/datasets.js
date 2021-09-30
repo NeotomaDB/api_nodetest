@@ -87,7 +87,7 @@ function datasetquery (req, res, next) {
   var outobj = {
     'datasetid': commaSep(req.query.datasetid),
     'siteid': commaSep(req.query.siteid),
-    'piid': CommaSep(req.query.piid),
+    'piid': commaSep(req.query.piid),
     'datasettype': String(req.query.sitename),
     'altmin': parseInt(String(req.query.altmin)),
     'altmax': parseInt(String(req.query.altmax)),

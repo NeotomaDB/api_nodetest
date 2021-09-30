@@ -4,7 +4,7 @@ const path = require('path');
 var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
-const { sql, commaSep, ifUndef, removeEmpty, validateOut } = require('../../../src/neotomaapi.js');
+const { sql, commaSep } = require('../../../src/neotomaapi.js');
 
 const downloadsql = sql('../v2.0/helpers/download/downloadbydsid.sql');
 
@@ -13,7 +13,6 @@ function downloadbyid (req, res, next) {
 
   if (dsIdUsed) {
     var datasetid = commaSep(req.params.datasetid);
-      });
   } else {
     res.status(500)
       .json({
@@ -30,6 +29,8 @@ function downloadbyid (req, res, next) {
         var returner = [];
       } else {
         returner = data;
+        // TODO: Here we need to add the default chronology:
+
       };
       res.status(200)
         .json({

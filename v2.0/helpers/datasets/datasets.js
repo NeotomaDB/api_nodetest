@@ -51,7 +51,7 @@ function datasetbyid (req, res, next) {
 }
 
 function datasetbydb (req, res, next) {
-  console.log('hey')
+
   var dbUsed = !!req.query.database;
 
   if (dbUsed) {

@@ -7,8 +7,8 @@ var expect = chakram.expect;
 describe('tests for /v2.0/data/sites/{siteid}/sites', function () {
   describe('tests for get', function () {
     it('should respond 200 for "An array of sites."', function () {
-      var response = request('get', 'http://localhost:3005/v2.0/data/sites/4519/sites', {
-        'qs': { 'limit': 74003880, 'offset': 75752215 },
+      var response = request('get', 'http://localhost:3005/v2.0/data/sites/500/sites', {
+        'qs': { 'limit': 10, 'offset': 0 },
         'time': true
       });
 

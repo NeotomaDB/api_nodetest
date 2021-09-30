@@ -125,9 +125,9 @@ function authorpis (req, res, next) {
 
 function taphonomysystems (req, res, next) {
   // Get the query string:
-  var datasetTypeId = req.query.datasetTypeId;
+  var datasettypeid = req.query.datasettypeid;
 
-  if (!datasetTypeId) {
+  if (!datasettypeid) {
     res.status(200)
       .jsonp({
         status: 'failure',
@@ -135,7 +135,7 @@ function taphonomysystems (req, res, next) {
         message: 'No datasetTypeId provided.'
       })
   } else {
-    db.query('select ap.gettaphonomicsystems(' + datasetTypeId + ');')
+    db.query('select ap.gettaphonomicsystems(' + datasettypeid + ');')
       .then(function (data) {
         res.status(200)
           .jsonp({
