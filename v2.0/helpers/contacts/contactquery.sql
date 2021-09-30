@@ -13,6 +13,7 @@ FROM
   INNER JOIN tightnames AS tn ON tn.contactid = cnt.contactid
 WHERE
   (${familyname} IS NULL OR LOWER(cnt.familyname) LIKE LOWER(${familyname}))
+  AND (${contactid} IS NULL OR cnt.contactid = ANY(${contactid}))
   AND (${contactname} IS NULL OR LOWER(cnt.contactname) LIKE LOWER(${contactname}))
   AND (${contactstatus} IS NULL OR LOWER(cst.contactstatus) LIKE LOWER(${contactstatus}))
   AND (${name} IS NULL OR SIMILARITY(fullnames,${name}) > (CASE WHEN ${similarity} IS NULL THEN 0.5 ELSE ${similarity} END))

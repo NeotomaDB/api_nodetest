@@ -7,8 +7,8 @@ var expect = chakram.expect;
 describe('tests for /v2.0/data/geopoliticalunits/{gpid}/sites', function () {
   describe('tests for get', function () {
     it('should respond 200 for "An array of sites."', function () {
-      var response = request('get', 'http://localhost:3005/v2.0/data/geopoliticalunits/97805836/sites', {
-        'qs': { 'limit': 33341011, 'offset': 20159633 },
+      var response = request('get', 'http://localhost:3005/v2.0/data/geopoliticalunits/2286/sites', {
+        'qs': { 'limit': 10, 'offset': 0 },
         'time': true
       });
 
