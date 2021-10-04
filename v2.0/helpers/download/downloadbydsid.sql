@@ -1,1 +1,1 @@
-SELECT * FROM doi.doifreeze($1)
+SELECT doi.doiapi($1) AS data;

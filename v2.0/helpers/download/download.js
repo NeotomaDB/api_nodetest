@@ -4,11 +4,43 @@ const path = require('path');
 var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
-const { sql, commaSep } = require('../../../src/neotomaapi.js');
+const {
+  sql,
+  commaSep
+} = require('../../../src/neotomaapi.js');
 
 const downloadsql = sql('../v2.0/helpers/download/downloadbydsid.sql');
 
-function downloadbyid (req, res, next) {
+function getdefault(chron) {
+  
+  function quickrank(chronrank) {
+    let chronorder = [{ 'order': 1, 'agetype': 'Calendar years BP' },
+      { 'order': 2, 'agetype': 'Calibrated radiocarbon years BP' },
+      { 'order': 3, 'agetype': 'Varve years BP' },
+      { 'order': 4, 'agetype': 'Radiocarbon years BP' }]
+
+    const rank = chronorder.map(x=> x['agetype']).indexOf(chronrank['chronology']['chronology']['modelagetype'])
+    return chronorder[rank]['order']
+  }
+
+  var chrons = chron
+    .filter(x => {
+      try { 
+        return x['chronology']['chronology']['isdefault']
+      } catch (error) {
+        return false
+      }
+    })
+    .sort((ela, elb) => quickrank(ela) > quickrank(elb))
+
+  if (chrons.length === 0) {
+    return null;
+  } else {
+    return chrons[0]['chronology']['chronologyid'];
+  }
+}
+
+function downloadbyid(req, res, next) {
   var dsIdUsed = !!req.params.datasetid;
 
   if (dsIdUsed) {
@@ -24,14 +56,22 @@ function downloadbyid (req, res, next) {
 
   db.any(downloadsql, [datasetid])
     .then(function (data) {
-      if (data.length === 0) {
-        // We're returning the structure, but nothing inside it:
-        var returner = [];
-      } else {
-        returner = data;
-        // TODO: Here we need to add the default chronology:
-
-      };
+      var returner = data.map(x => {
+        if (x.length === 0) {
+          // We're returning the structure, but nothing inside it:
+          var returner = [];
+        } else {
+          console.log(data)
+          returner = {
+            'site': x.data.data.dataset.site,
+            'samples': x.data.data.samples
+          };
+          returner['chronologies'] = x.data.chronologies
+          var defaultchron = getdefault(returner['chronologies'])
+          returner['site']['collectionunit']['defaultchronology'] = defaultchron
+        }
+        return returner;
+      })
       res.status(200)
         .json({
           status: 'success',
