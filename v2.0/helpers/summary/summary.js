@@ -1,42 +1,24 @@
-// Sites query:
-const path = require('path');
 // get global database object
 var db = require('../../../database/pgp_db');
-var pgp = db.$config.pgp;
-var validate = require('../validateOut').validateOut
 
-// Helper for linking to external query files:
-function sql (file) {
-  const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath,
-    {
-      minify: true
-    });
-}
+const { validateOut } = require('../../../src/neotomaapi.js');
 
 function datasettypesbymonths (req, res, next) {
-  var start = parseInt(req.query.start);
-  var end = parseInt(req.query.end);
+  var outobj = { 'start': parseInt(req.query.start ?? 0),
+  'end': parseInt(req.query.end ?? 1) }
 
-  var query = 'SELECT * FROM ndb.datasettypecontrib(${start}::int, ${end}::int)'
+  outobj = validateOut(outobj);
 
-  db.any(query,
-    {
-      start: start,
-      end: end
-    })
+  var query = `SELECT * FROM ndb.datasettypecontrib(${outobj.start}::int, ${outobj.end}::int)`
+
+  db.any(query, outobj)
     .then(function (data) {
       if (data.length === 0) {
         // We're returning the structure, but nothing inside it:
         var returner = [];
       } else {
         returner = {
-          query:
-                    {
-                      call: 'dataset types',
-                      start: start,
-                      end: end
-                    },
+          query: outobj,
           data: data
         };
       };
@@ -54,28 +36,21 @@ function datasettypesbymonths (req, res, next) {
 }
 
 function rawbymonth (req, res, next) {
-  var start = parseInt(req.query.start);
-  var end = parseInt(req.query.end);
+  var outobj = { 'start': parseInt(req.query.start ?? 0),
+  'end': parseInt(req.query.end ?? 1) }
 
-  var query = 'SELECT * FROM ndb.rawbymonth(${start}::int, ${end}::int)'
+  outobj = validateOut(outobj);
 
-  db.any(query,
-    {
-      start: start,
-      end: end
-    })
+  var query = `SELECT * FROM ndb.rawbymonth(${outobj.start}::int, ${outobj.end}::int)`
+
+  db.any(query, outobj)
     .then(function (data) {
       if (data.length === 0) {
         // We're returning the structure, but nothing inside it:
         var returner = [];
       } else {
         returner = {
-          query:
-                    {
-                      call: 'summary',
-                      start: start,
-                      end: end
-                    },
+          query: outobj,
           data: data
         };
       };
@@ -93,28 +68,21 @@ function rawbymonth (req, res, next) {
 }
 
 function datasetdbsbymonths (req, res, next) {
-  var start = parseInt(req.query.start);
-  var end = parseInt(req.query.end);
+  var outobj = { 'start': parseInt(req.query.start ?? 0),
+    'end': parseInt(req.query.end ?? 1) }
 
-  var query = 'SELECT * FROM ndb.datasetconstitdb(${start}::int, ${end}::int)'
+  outobj = validateOut(outobj);
 
-  db.any(query,
-    {
-      start: start,
-      end: end
-    })
+  var query = `SELECT * FROM ndb.datasetconstitdb(${outobj.start}::int,${outobj.end}::int)`
+
+  db.any(query, outobj)
     .then(function (data) {
       if (data.length === 0) {
         // We're returning the structure, but nothing inside it:
         var returner = [];
       } else {
         returner = {
-          query:
-                    {
-                      call: 'dataset types',
-                      start: start,
-                      end: end
-                    },
+          query: outobj,
           data: data
         };
       };

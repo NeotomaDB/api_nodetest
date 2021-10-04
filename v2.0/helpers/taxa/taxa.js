@@ -1,21 +1,15 @@
 // Taxa query:
 
-const path = require('path');
-
 // get global database object
 var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
-// Helper for linking to external query files:
-function sql (file) {
-  const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath, {minify: true});
-}
+const { sql } = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
-const taxonquerylower = sql('./taxonquerylower.sql');
-const taxonquerystatic = sql('./taxonquerystatic.sql');
-const taxonbyds = sql('./taxonquerydsid.sql');
+const taxonquerylower = sql('../v2.0/helpers/taxa/taxonquerylower.sql');
+const taxonquerystatic = sql('../v2.0/helpers/taxa/taxonquerystatic.sql');
+const taxonbyds = sql('../v2.0/helpers/taxa/taxonquerydsid.sql');
 
 // Actual functions:
 

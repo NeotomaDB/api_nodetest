@@ -1,5 +1,5 @@
 WITH dssites AS (
-  SELECT
+  SELECT 
     dts.datasetid AS datasetid,
     sts.siteid AS siteid,
     clu.collectionunitid AS collectionunitid,
@@ -36,15 +36,7 @@ WITH dssites AS (
            (${ageold} IS NULL OR       ${ageold} < agerange.older)    AND
             (${ageof} IS NULL OR        ${ageof} BETWEEN agerange.younger AND agerange.older) AND
             ((${datasetid}) IS NULL OR dts.datasetid = ANY (${datasetid}))
-
     GROUP BY sts.siteid, clu.collectionunitid, cts.colltype, dts.datasetid
-
-    OFFSET (CASE WHEN ${offset} IS NULL THEN 0
-                 ELSE ${offset}
-            END)
-    LIMIT (CASE WHEN ${limit} IS NULL THEN 25
-                ELSE ${limit}
-           END)
 ),
 dspiagg AS (
     SELECT
@@ -53,6 +45,7 @@ dspiagg AS (
   	dssites.collectionunitid AS collectionunitid,
     jsonb_build_object('datasetid', dssites.datasetid,
                        'datasettype', dst.datasettype,
+
                        'datasetnotes', dts.notes,
                        'database', cstdb.databasename,
                        'doi', json_agg(DISTINCT doi.doi),
@@ -92,4 +85,10 @@ FROM
   (SELECT * FROM dssites) AS dssites
   LEFT OUTER JOIN (SELECT * FROM dspiagg) AS dspiagg ON dssites.datasetid = dspiagg.datasetid
 GROUP BY
-  dssites.sites;
+  dssites.sites
+    OFFSET (CASE WHEN ${offset} IS NULL THEN 0
+                 ELSE ${offset}
+            END)
+    LIMIT (CASE WHEN ${limit} IS NULL THEN 25
+                ELSE ${limit}
+           END);

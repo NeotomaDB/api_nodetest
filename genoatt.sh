@@ -32,6 +32,12 @@ run_oatt() {
     find ./test -type f -exec sed -i -E "s/'altmax':\ [0-9]+/'altmax':\ 100/g" {} \;
     find ./test -type f -exec sed -i -E "s/'ageold':\ [0-9]+/'ageold':\ 10000/g" {} \;
     find ./test -type f -exec sed -i -E "s/'ageyoung':\ [0-9]+/'ageyoung':\ 1000/g" {} \;
+    find ./test -type f -exec sed -i -E "s/'start':\ [0-9]+/'start':\ 1/g" {} \;
+    find ./test -type f -exec sed -i -E "s/'end':\ [0-9]+/'end':\ 10/g" {} \;
+    # Cleaning up the limits & offset:
+    find ./test -type f -exec sed -i -E "s/'limit':\ [0-9]+/'limit':\ 10/g" {} \;
+    find ./test -type f -exec sed -i -E "s/'offset':\ [0-9]+/'offset':\ 0/g" {} \;
+    find ./test -type f -exec sed -i "s/\/[0-9]\{5,\}/\/500/g" {} \;
 }
 
  OPTIND=1

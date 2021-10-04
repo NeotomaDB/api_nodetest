@@ -1,6 +1,48 @@
 ---
 components:
   parameters:
+    databaseQuery:
+      description: One of the constituent databases within Neotoma
+      in: query
+      name: database
+      required: true
+      schema:
+        type: string
+        enum:
+          - Cooperative Holocene Mapping Project
+          - African Pollen Database
+          - European Pollen Database
+          - Indo-Pacific Pollen Database
+          - Latin American Pollen Database
+          - North American Pollen Database
+          - Pollen Database of Siberia and the Russian Far East
+          - Canadian Pollen Database
+          - FAUNMAP
+          - Neotoma
+          - North American Plant Macrofossil Database
+          - Academy of Natural Sciences of Drexel University
+          - NDSU Insect Database
+          - North American Non-Marine Ostracode Database Project (NANODe)
+          - MioMap
+          - Alaskan Archaeofaunas
+          - French Institute of Pondicherry Palynology and Paleoecology Database
+          - Japanese Pollen Database
+          - Neotoma Midden Database
+          - Chinese Pollen Database
+          - Holocene Perspective on Peatland Biogeochemistry
+          - ANTIGUA
+          - Neotoma Testate Amoebae Database
+          - Deep-Time Palynology Database
+          - Neotoma Biomarker Database
+          - Alpine Pollen Database
+          - Canadian Museum of Nature-Delorme Ostracoda-Surface Samples
+          - Diatom Paleolimnology Data Cooperative (DPDC)
+          - Neotoma Ostracode Database
+          - Faunal Isotope Database
+          - Neotoma Charcoal Data
+          - Pollen Monitoring Programme
+          - PaleoVertebrates of Latin America
+          - St. Croix Watershed Research Station of the Science Museum of Minnesota
     ageOfQuery:
       description: Dataset age ranges must contain this age (in calibrated years before present, with 0 at 1950CE)
       in: query
@@ -64,6 +106,7 @@ components:
       schema:
         format: int64
         minimum: 0
+        maximum: 40000
         type: integer
     contactNameQuery:
       description: Last name of the researcher (may use the % wildcard)
@@ -98,6 +141,7 @@ components:
         example: 44
         format: int64
         minimum: 1
+        maximum: 20000
         type: integer
     contactidQuery:
       description: Unique contact identifier within the Neotoma Database, alone or comma separated.
@@ -108,6 +152,7 @@ components:
         example: 44
         format: int64
         minimum: 1
+        maximum: 20000
         type: integer
     datasetidPath:
       description: Valid Neotoma dataset identifier (integer), either singly or in a comma separated list.
@@ -117,7 +162,8 @@ components:
       schema:
         example: 100
         format: int32
-        minimum: 0
+        minimum: 1
+        maximum: 60000
         type: integer
     datasetidQuery:
       description: Valid Neotoma dataset identifier (integer), either singly or in a comma separated list.
@@ -150,7 +196,8 @@ components:
       required: true
       schema:
         format: int32
-        minimum: 0
+        minimum: 1
+        maximum: 11000
         type: integer
     gpidQuery:
       description: Numeric ID for the geopolitical unit.
@@ -159,7 +206,8 @@ components:
       required: false
       schema:
         format: int32
-        minimum: 0
+        minimum: 1
+        maximum: 11000
         type: integer
     gpnameQuery:
       description: Name for a geopolitical unit.
@@ -178,6 +226,7 @@ components:
         default: 25
         format: int32
         minimum: 1
+        maximum: 10000
         type: integer
     locQuery:
       description: |
@@ -214,6 +263,7 @@ components:
       schema:
         format: int32
         minimum: 0
+        maximum: 10000000
         type: integer
     offsetParam:
       description: The offset for returned records when a limit is present.  Default is 0.
@@ -225,6 +275,17 @@ components:
         format: int32
         minimum: 0
         type: integer
+    publicationidPath:
+      description: |
+        Unique publication identifier (from the Neotoma publication table).
+      in: query
+      name: publicationid
+      required: false
+      schema:
+        format: int32
+        minimum: 1
+        maximum: 20000
+        type: integer
     publicationidQuery:
       description: |
         Unique publication identifier (from the Neotoma publication table).
@@ -234,6 +295,7 @@ components:
       schema:
         format: int32
         minimum: 0
+        maximum: 20000
         type: integer
     pubsearchQuery:
       description: A fulltext search string.  Either a literal portion of the article name, or keywords.
@@ -354,6 +416,51 @@ components:
       schema:
         type: string
   schemas:
+    taxagroupresponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/status'
+        message:
+          $ref: '#/components/schemas/message'
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              gettaxagrouptypes:
+                type: string
+    taphonomyresponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/status'
+        message:
+          $ref: '#/components/schemas/message'
+        data:
+          nullable: true
+          type: array
+          minItems: 0
+          items:
+            type: object
+            nullable: true
+            properties:
+              gettaphonomicsystems:
+                type: string
+    depositionalresponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/status'
+        message:
+          $ref: '#/components/schemas/message'
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              getdeptenvtypesroot:
+                type: string
     address:
       example: 550 N Park St, Madison WI, USA
       type: string
@@ -565,7 +672,7 @@ components:
       type: object
       properties:
         status:
-          $ref: '#/components/schemas/success'
+          $ref: '#/components/schemas/status'
         message:
           $ref: '#/components/schemas/message'
         data:
@@ -649,12 +756,15 @@ components:
       type: string
     contactresponse:
       properties:
+        query:
+          type: object
         contacts:
           items:
             properties:
               contact:
                 $ref: '#/components/schemas/contact'
           type: array
+          minItems: 0
         message:
           $ref: '#/components/schemas/message'
         status:
@@ -721,7 +831,7 @@ components:
                   sitename:
                     $ref: '#/components/schemas/sitename'
                   sitenotes:
-                    type: string
+                    $ref: '#/components/schemas/sitenotes'
                   unittype:
                     type: string
                 type: object
@@ -755,7 +865,45 @@ components:
       example: 666
       format: int64
       minimum: 1
+      maximum: 60000
       type: integer
+    datasetselcresponse:
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              site:
+                type: object
+                properties:
+                  siteid:
+                    $ref: '#/components/schemas/siteid'
+                  sitedescription:
+                    $ref: '#/components/schemas/sitedescription'
+                  sitename:
+                    $ref: '#/components/schemas/sitename'
+                  sitenotes:
+                    $ref: '#/components/schemas/sitenotes'
+                  geography:
+                    $ref: '#/components/schemas/geography'
+                  altitude:
+                    $ref: '#/components/schemas/altitude'
+                  collectionunitid:
+                    $ref: '#/components/schemas/collectionunitid'
+                  collectionunit:
+                    $ref: '#/components/schemas/collectionunit'
+                  handle:
+                    $ref: '#/components/schemas/handle'
+                  unittype:
+                    $ref: '#/components/schemas/unittype'
+                  datasets:
+                    type: object
+        message:
+          $ref: '#/components/schemas/message'
+        status:
+          $ref: '#/components/schemas/status'
+      type: object
     datasetnotes:
       example: This dataset was digitized from an original publication in Finnish.
       type: string
@@ -785,6 +933,15 @@ components:
     datasettype:
       example: geochemistry
       type: string
+    datasetresponsev2_0:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/status'
+        message:
+          $ref: '#/components/schemas/message'
+        data:
+          $ref: '#/components/schemas/datasetv2'
     datasetv2:
       properties:
         data:
@@ -885,6 +1042,58 @@ components:
     doi:
       example: 10.2157/abba1234
       type: string
+    lithology:
+      type: object
+      properties:
+        lithologyid:
+          type: integer
+          minimum: 1
+        depth:
+          type: object
+          properties:
+            top:
+              type: number
+            bottom:
+              type: number
+        lowerboundary:
+          type: string
+          nullable: true
+          example: gradational over 10 cm
+        description:
+          type: string
+    lithologyresponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/status'
+        message:
+          $ref: '#/components/schemas/message'
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              datasetid:
+                $ref: '#/components/schemas/datasetid'
+              lithology:
+                $ref: '#/components/schemas/lithology'
+    doiresponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/status'
+        message:
+          $ref: '#/components/schemas/message'
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              datasetid:
+                $ref: '#/components/schemas/datasetid'
+              dois:
+                type: string
+                nullable: true
     downloadv1point5:
       properties:
         data:
@@ -976,7 +1185,7 @@ components:
           $ref: '#/components/schemas/success'
       type: object
     handle:
-      example: HORSEHEAD
+      example: HOSEHEAD
       nullable: true
       type: string
     highergeopoliticalid:
@@ -1176,6 +1385,7 @@ components:
     sitedescription:
       example: Lake is located in a pre-glacial gorge of the Wisconsin river cut through the Baraboo Hills, a bedrock high. The valley is dammed at both ends by terminal moraines deposited by the Green Bay lobe, which flowed around the Baraboo Hills. Lake is fed by groundwater. Surrounding vegetation, white-black-bur oak.
       type: string
+      nullable: true
     siteid:
       example: 666
       format: int64
@@ -1187,6 +1397,7 @@ components:
     sitenotes:
       example: This record has some little things that seem funny about it.
       type: string
+      nullable: true
     sitesv1point5:
       properties:
         data:
@@ -1270,6 +1481,59 @@ components:
         - 0
         - 1
       type: integer
+    summarydatabase:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/status'
+        message:
+          $ref: '#/components/schemas/message'
+        data:
+          type: object
+          properties:
+            query:
+              type: object
+            data:
+              type: array
+    summarydatatype:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/status'
+        message:
+          $ref: '#/components/schemas/message'
+        data:
+          type: object
+          properties:
+            query:
+              type: object
+            data:
+              type: array
+    summaryalldata:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/status'
+        message:
+          $ref: '#/components/schemas/message'
+        data:
+          type: object
+          properties:
+            query:
+              type: object
+            data:
+              type: array
+    taxonresponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/status'
+        message:
+          $ref: '#/components/schemas/message'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/taxa'
     taxa:
       properties:
         author:
@@ -1509,6 +1773,7 @@ paths:
           required: true
           schema:
             type: string
+            example: agetypes
       responses:
         '200':
           content:
@@ -1591,6 +1856,16 @@ paths:
         - v2.0
   /v2.0/apps/taphonomysystems:
     get:
+      parameters:
+        - description: Unique dataset type identifier.
+          in: query
+          name: datasettypeid
+          required: true
+          schema:
+            format: int64
+            type: integer
+            minimum: 1
+            maximum: 26
       responses:
         '200':
           content:
@@ -1754,9 +2029,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/datasetv2'
-                type: array
+                $ref: '#/components/schemas/datasetv2'
           description: An array of datasets.
       summary: Dataset information.
       tags:
@@ -1788,7 +2061,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/chronologiesresponse'
+                $ref: '#/components/schemas/chronologyv2response'
           description: chronology
       summary: Chronology information for a record
       tags:
@@ -1884,16 +2157,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    $ref: '#/components/schemas/status'
-                  message:
-                    $ref: '#/components/schemas/message'
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/taxa'
+                $ref: '#/components/schemas/taxonresponse'
           description: Taxa
       summary: Taxon metadata for a dataset.
       tags:
@@ -2029,7 +2293,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/datasetresponse'
+                $ref: '#/components/schemas/datasetresponsev2_0'
           description: An array of datasets.
       summary: Returns information about datasets based on the geopolitical unit in which they occur.
       tags:
@@ -2352,6 +2616,8 @@ paths:
           schema:
             type: integer
             default: 0
+            minimum: 0
+            maximum: 9999
         - description: The ending month (from present == 0) for which to generate the summary.
           example: 1
           in: query
@@ -2360,6 +2626,8 @@ paths:
           schema:
             type: integer
             default: 1
+            minimum: 0
+            maximum: 9999
       responses:
         '200':
           content:
@@ -2443,7 +2711,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/taxa'
+                $ref: '#/components/schemas/taxonresponse'
           description: A taxon or array of taxa.
       summary: Taxonomic information.
       tags:
@@ -2471,9 +2739,8 @@ paths:
       parameters:
         - description: Neotoma database table name.
           example: geochrontypes
-          in: path
+          in: query
           name: table
-          required: true
           schema:
             type: string
       responses:
