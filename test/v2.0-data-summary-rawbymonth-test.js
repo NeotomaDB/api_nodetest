@@ -8,7 +8,7 @@ describe('tests for /v2.0/data/summary/rawbymonth', function () {
   describe('tests for get', function () {
     it('should respond 200 for "A count of the data objects added to Neotoma."', function () {
       var response = request('get', 'http://localhost:3005/v2.0/data/summary/rawbymonth', {
-        'qs': { 'start': 0, 'end': 1 },
+        'qs': { 'start': 1, 'end': 10 },
         'time': true
       });
 

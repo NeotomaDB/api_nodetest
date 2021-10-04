@@ -1,7 +1,7 @@
 exit: false
 bail: false
 slow: 1000
-timeout: 30000
+timeout: 300000
 recursive: true
 color: true
 ui: 'bdd'
