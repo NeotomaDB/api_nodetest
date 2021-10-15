@@ -38,7 +38,7 @@ const generator = (time, index) => {
 
 var accessLogStream = rfs.createStream(generator,
   { interval: '1d', // rotate daily
-    path: path.join(__dirname, 'logs'),
+//    path: path.join(__dirname, 'logs'),
     compress: true });
 
 // setup the logger
