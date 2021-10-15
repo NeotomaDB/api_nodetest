@@ -1,8 +1,5 @@
-// Sites query:
-const path = require('path');
-// get global database object
-var db = require('../../../database/pgp_db');
-var pgp = db.$config.pgp;
+// Building and returning the downloads objects.
+// Currently returns only for download selection using dataset IDs.
 
 const {
   sql,
@@ -11,21 +8,20 @@ const {
 
 const downloadsql = sql('../v2.0/helpers/download/downloadbydsid.sql');
 
-function getdefault(chron) {
-  
-  function quickrank(chronrank) {
+function getdefault (chron) {
+  function quickrank (chronrank) {
     let chronorder = [{ 'order': 1, 'agetype': 'Calendar years BP' },
       { 'order': 2, 'agetype': 'Calibrated radiocarbon years BP' },
       { 'order': 3, 'agetype': 'Varve years BP' },
       { 'order': 4, 'agetype': 'Radiocarbon years BP' }]
 
-    const rank = chronorder.map(x=> x['agetype']).indexOf(chronrank['chronology']['chronology']['modelagetype'])
+    const rank = chronorder.map(x => x['agetype']).indexOf(chronrank['chronology']['chronology']['modelagetype'])
     return chronorder[rank]['order']
   }
 
   var chrons = chron
     .filter(x => {
-      try { 
+      try {
         return x['chronology']['chronology']['isdefault']
       } catch (error) {
         return false
@@ -40,7 +36,7 @@ function getdefault(chron) {
   }
 }
 
-function downloadbyid(req, res, next) {
+function downloadbyid (req, res, next) {
   var dsIdUsed = !!req.params.datasetid;
 
   if (dsIdUsed) {
@@ -61,7 +57,6 @@ function downloadbyid(req, res, next) {
           // We're returning the structure, but nothing inside it:
           var returner = [];
         } else {
-          console.log(data)
           returner = {
             'site': x.data.data.dataset.site,
             'samples': x.data.data.samples
