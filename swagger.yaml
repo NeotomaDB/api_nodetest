@@ -183,7 +183,7 @@ components:
         example: pollen
         type: string
     familyNameQuery:
-      description: Full name of the the researcher (may use the % wildcard)
+      description: Family name (last name) of the the researcher (may use the % wildcard)
       in: query
       name: familyname
       required: false
@@ -1624,6 +1624,7 @@ paths:
           description: An array of taxon identities with associated dataset IDs.
       summary: Lists all Neotoma taxa (alphebetically) and the dataset types in which the taxa appear.
       tags:
+        - Taxonomic metadata
         - v1.5
   /v1.5/apps/collectionTypes:
     get:
@@ -1828,7 +1829,7 @@ paths:
                 $ref: '#/components/schemas/datasettyperesponse'
           description: A table of Neotoma collection types.
       tags:
-        - Datasets
+        - Dataset metadata
         - v2.0
   /v2.0/apps/depositionalenvironments/root:
     get:
@@ -1840,7 +1841,7 @@ paths:
                 $ref: '#/components/schemas/depositionalresponse'
           description: A table of Neotoma collection types.
       tags:
-        - Datasets
+        - Dataset metadata
         - v2.0
   /v2.0/apps/keywords:
     get:
@@ -1852,7 +1853,7 @@ paths:
                 $ref: '#/components/schemas/keywordresponse'
           description: A list of all keywords used for analysis units in the database.
       tags:
-        - keywords
+        - Analysis Unit Keywords
         - v2.0
   /v2.0/apps/taphonomysystems:
     get:
@@ -1874,7 +1875,7 @@ paths:
                 $ref: '#/components/schemas/taphonomyresponse'
           description: A table of Neotoma collection types.
       tags:
-        - Datasets
+        - Dataset metadata
         - v2.0
   /v2.0/apps/taxagrouptypes:
     get:
@@ -1886,7 +1887,7 @@ paths:
                 $ref: '#/components/schemas/taxagroupresponse'
           description: A table of Neotoma collection types.
       tags:
-        - Datasets
+        - Dataset metadata
         - v2.0
   /v2.0/apps/taxaindatasets:
     get:
@@ -1898,7 +1899,7 @@ paths:
                 $ref: '#/components/schemas/taxaInDatasets'
           description: A list of all taxa in neotoma and the datasets in which they are found.
       tags:
-        - Taxa
+        - Taxonomic metadata
         - v2.0
   /v2.0/data/chronology/{chronid}:
     get:
@@ -2113,7 +2114,7 @@ paths:
           description: Lithology
       summary: Lithology metadata for a dataset.
       tags:
-        - lithology metadata
+        - Lithology metadata
         - v2.0
   /v2.0/data/datasets/{datasetid}/publications:
     get:
@@ -2161,7 +2162,7 @@ paths:
           description: Taxa
       summary: Taxon metadata for a dataset.
       tags:
-        - Taxa metadata
+        - Taxonomic metadata
         - v2.0
   /v2.0/data/datasets/db:
     get:
@@ -2370,7 +2371,7 @@ paths:
                 $ref: '#/components/schemas/taxagroupresponse'
           description: A table of Neotoma collection types.
       tags:
-        - Datasets
+        - Dataset metadata
         - v2.0
   /v2.0/data/pollen:
     get:
@@ -2637,7 +2638,7 @@ paths:
           description: A count of the datasets added by database for the requested period.
       summary: Summary information
       tags:
-        - Summary info
+        - Summary Info
         - v2.0
   /v2.0/data/summary/dstypemonth:
     get:
@@ -2668,7 +2669,7 @@ paths:
           description: A count of the datasets added by datasettype for the requested period.
       summary: Summary information
       tags:
-        - Summary info
+        - Summary Info
         - v2.0
   /v2.0/data/summary/rawbymonth:
     get:
@@ -2699,7 +2700,7 @@ paths:
           description: A count of the data objects added to Neotoma.
       summary: Summary information
       tags:
-        - Summary info
+        - Summary Info
         - v2.0
   /v2.0/data/taxa/{taxonid}:
     get:
@@ -2780,7 +2781,7 @@ paths:
                 $ref: '#/components/schemas/dbtablenameresponse'
           description: A list of all the tables in the Neotoma database.
       tags:
-        - Tables
+        - Database tables
         - v2.0
 servers:
   - description: Neotoma production server.
@@ -2810,6 +2811,8 @@ tags:
     name: Data download
   - description: Information about the geopolitical units in which a site is located.
     name: Geopolitical metadata
+    externalDocs:
+      url: https://neotoma-manual.readthedocs.io/en/latest/tables_site.html#geopoliticalunits
   - description: A simplified data return, similar to the data download, but specific to a particular taxon, time or location.
     name: Occurrence metadata
   - description: For ease of use in online applications, pre-calculated pollen percentages for taxa, location or temporal bins.
@@ -2826,6 +2829,8 @@ tags:
     externalDocs:
       url: https://neotoma-manual.readthedocs.io/en/latest/tables_taxa.html
     name: Taxonomic metadata
+  - description: Summary statistics for the database as a whole.
+    name: Summary Info
   - description: All API endpoints associated with v1.5 of the Neotoma API.
     externalDocs:
       url: http://github.com/NeotomaDB/api_nodetest
