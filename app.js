@@ -17,7 +17,7 @@ let cache = apicache.middleware;
 
 app.engine('html', require('ejs').renderFile);
 app.use(cors());
-app.use(cache('15 minutes'));
+app.use(cache('5 minutes'));
 app.use(express.static('mochawesome-report'));
 
 // test trigger watch restart - 09/12/20
@@ -36,14 +36,17 @@ const generator = (time, index) => {
   return `${month}/${month}${day}-${hour}${minute}-${index}-access.log`;
 };
 
-var accessLogStream = rfs.createStream(generator,
-  { interval: '1d', // rotate daily
-//    path: path.join(__dirname, 'logs'),
-    compress: true });
+var accessLogStream = rfs.createStream(generator, {
+  interval: '1d', // rotate daily
+  //    path: path.join(__dirname, 'logs'),
+  compress: true
+});
 
 // setup the logger
 app.enable('trust proxy');
-app.use(morgan(':date[iso]\t:remote-addr\t:method\t:url\t:status\t:res[content-length]\t:response-time[0]\t:user-agent', { stream: accessLogStream }))
+app.use(morgan(':date[iso]\t:remote-addr\t:method\t:url\t:status\t:res[content-length]\t:response-time[0]\t:user-agent', {
+  stream: accessLogStream
+}))
 
 var options = {
   swaggerUrl: 'http://localhost:3005/api-docs',
@@ -73,7 +76,9 @@ app.set('view engine', 'jade');
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 app.use(express.static('public'));
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
