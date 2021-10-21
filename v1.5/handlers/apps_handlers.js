@@ -1,42 +1,39 @@
-const bib   = require('../helpers/bib_format');
+const bib = require('../helpers/bib_format');
 
-//get global database object
+// get global database object
 var db = require('../../database/pgp_db');
 var pgp = db.$config.pgp;
 
 module.exports = {
-    datasettypes: datasettypes,
-    collectiontypes: collectiontypes,
-    elementtypes: elementtypes,
-    geochronologies: function (req, res, next) {
-      var geochronologies = require('../helpers/geochronologies/geochronologies.js');
-      geochronologies.geochronologies(req, res, next);
-    },
-    taxaindatasets: taxaindatasets,
-    taxagrouptypes: taxagrouptypes,
-    keywords: keywords,
-    authorpis: authorpis,
-    authors: authors,
-    taphonomysystems: taphonomysystems,
-    depositionalenvironments: depositionalenvironments,
-    depositionalenvironmentsbyid: depositionalenvironmentsbyid,
-    relativeages: relativeages,
-    search: function (req, res, next) {
-      console.log("calling search helper");
-      var exsearch = require('../helpers/search/search.js');
-      exsearch.explorersearch(req, res, next);
-    }
-    //search: exsearch
+  datasettypes: datasettypes,
+  collectiontypes: collectiontypes,
+  elementtypes: elementtypes,
+  geochronologies: function (req, res, next) {
+    var geochronologies = require('../helpers/geochronologies/geochronologies.js');
+    geochronologies.geochronologies(req, res, next);
+  },
+  taxaindatasets: taxaindatasets,
+  taxagrouptypes: taxagrouptypes,
+  keywords: keywords,
+  authorpis: authorpis,
+  authors: authors,
+  taphonomysystems: taphonomysystems,
+  depositionalenvironments: depositionalenvironments,
+  depositionalenvironmentsbyid: depositionalenvironmentsbyid,
+  relativeages: relativeages,
+  search: function (req, res, next) {
+    console.log('calling search helper');
+    var exsearch = require('../helpers/search/search.js');
+    exsearch.explorersearch(req, res, next);
+  }
 };
-
-
 
 // Defining the query functions:
 
 /* All the Endpoint functions */
-function collectiontypes(req, res, next){
+function collectiontypes (req, res, next) {
   db.query('select * from ap.getcollectiontypes()')
-    .then(function(data){
+    .then(function (data) {
       res.status(200)
         .type('application/json')
         .jsonp({
@@ -46,17 +43,15 @@ function collectiontypes(req, res, next){
           message: 'Retrieved all collectiontypes'
         })
     })
-    .catch(function(err){
+    .catch(function (err) {
       return next(err);
     })
 }
 
-
-function datasettypes(req, res, next) {
+function datasettypes (req, res, next) {
   // Get the query string:
-  var query = {};
 
-   db.query('select * from ap.getdatasettypes();')
+  db.query('select * from ap.getdatasettypes();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -71,10 +66,7 @@ function datasettypes(req, res, next) {
     });
 }
 
-
-
-
-/**** deprecated seach handler ****
+/** ** deprecated seach handler ****
 
 function exsearch(req, res, next) {
   console.log("hitting app/search handler");
@@ -129,8 +121,6 @@ if (inputParamObj.abundance){
 if (inputParamObj.space){
 
 }
-
-
 
 //parse search parameters
   Object.keys(inputParamObj).every(function(x) {
@@ -191,14 +181,14 @@ if (inputParamObj.space){
         });
 }
 
-*** end deprecated search handler*/
+*** end deprecated search handler */
 
-function elementtypes(req, res, next){
+function elementtypes (req, res, next) {
   var taxonid, taxagroupid;
   taxonid = req.query.taxonid;
   taxagroupid = req.query.taxagroupid;
 
-  if( !parseInt(taxonid) && !taxagroupid ){
+  if (!parseInt(taxonid) && !taxagroupid) {
     res.status(200)
       .jsonp({
         success: 0,
@@ -207,10 +197,10 @@ function elementtypes(req, res, next){
         message: 'No taxagroupid or taxonid provided. Query requires one.'
       })
   } else {
-    if(!taxagroupid){
-      console.log("calling ap.getelementtypesbytaxonid($1)");
+    if (!taxagroupid) {
+      console.log('calling ap.getelementtypesbytaxonid($1)');
       db.query('select * from ap.getelementtypesbytaxonid($1)', [taxonid])
-        .then(function(data){
+        .then(function (data) {
           res.status(200)
             .type('application/json')
             .jsonp({
@@ -220,13 +210,13 @@ function elementtypes(req, res, next){
               message: 'Retrieved all elementtypes for taxonid'
             })
         })
-        .catch(function(err){
+        .catch(function (err) {
           return next(err);
         })
     } else {
-        console.log("calling ap.getelementtypes($1)")
-         db.query('select * from ap.getelementtypes($1)', [taxagroupid])
-        .then(function(data){
+      console.log('calling ap.getelementtypes($1)')
+      db.query('select * from ap.getelementtypes($1)', [taxagroupid])
+        .then(function (data) {
           res.status(200)
             .type('application/json')
             .jsonp({
@@ -236,33 +226,32 @@ function elementtypes(req, res, next){
               message: 'Retrieved all elementtypes for taxagroupid'
             })
         })
-        .catch(function(err){
+        .catch(function (err) {
           return next(err);
         })
     }
   }
 }
 
-function taxaindatasets(req, res, next){
-
+function taxaindatasets (req, res, next) {
   db.query('select * from ap.gettaxaindatasets()')
-    .then(function(data){
-      //data are records of (taxonid, taxonname, taxagroupid, datasettypeid)
-      //example record: {"gettaxaindatasets":"(27739,albite,CHM,28)"}
-      //desired output:  [...,{"TaxonName":"Acalypha-type","TaxonID":27017,"TaxaGroupID":"VPL","DatasetTypeIDs":[3,4,7,23]},...]
+    .then(function (data) {
+      // data are records of (taxonid, taxonname, taxagroupid, datasettypeid)
+      // example record: {"gettaxaindatasets":"(27739,albite,CHM,28)"}
+      // desired output:  [...,{"TaxonName":"Acalypha-type","TaxonID":27017,"TaxaGroupID":"VPL","DatasetTypeIDs":[3,4,7,23]},...]
 
       var rawTaxa = data;
       var datasettypesByTaxon = [];
       var currentTaxonID = -1;
       var dtbytxnObj = {};
 
-      rawTaxa.forEach(function(d,i){
-        if ( currentTaxonID == d.taxonid ){
-          //found additional records for taxonid, add datasettype to array
+      rawTaxa.forEach(function (d, i) {
+        if (currentTaxonID == d.taxonid) {
+          // found additional records for taxonid, add datasettype to array
           dtbytxnObj.datasettypeids.push(+d.datasettypeid);
         } else {
-          //if dtbytxnObj not empty object, add to results before creating new instance for next taxon
-          if ( dtbytxnObj.hasOwnProperty("taxonid") ){
+          // if dtbytxnObj not empty object, add to results before creating new instance for next taxon
+          if (dtbytxnObj.hasOwnProperty('taxonid')) {
             datasettypesByTaxon.push(dtbytxnObj);
           }
           currentTaxonID = d.taxonid;
@@ -275,13 +264,12 @@ function taxaindatasets(req, res, next){
         }
       })
 
-      //add last taxon object to results
-      if (dtbytxnObj.hasOwnProperty("taxonid")){
+      // add last taxon object to results
+      if (dtbytxnObj.hasOwnProperty('taxonid')) {
         datasettypesByTaxon.push(dtbytxnObj);
       }
 
-
-       res.status(200)
+      res.status(200)
         .type('application/json')
         .jsonp({
           success: 1,
@@ -289,18 +277,16 @@ function taxaindatasets(req, res, next){
           data: datasettypesByTaxon,
           message: 'Retrieved all taxa in datasets'
         })
-
-
-    }).catch(function(err){
+    }).catch(function (err) {
       return next(err);
     })
 }
 
-function taxagrouptypes(req, res, next) {
+function taxagrouptypes (req, res, next) {
   // Get the query string:
   var query = {};
 
-   db.query('select * from ap.gettaxagrouptypes();')
+  db.query('select * from ap.gettaxagrouptypes();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -313,15 +299,13 @@ function taxagrouptypes(req, res, next) {
     .catch(function (err) {
       return next(err);
     });
-
-
 }
 
-function keywords(req, res, next) {
+function keywords (req, res, next) {
   // Get the query string:
   var query = {};
 
-   db.query('select * from ap.getkeywords();')
+  db.query('select * from ap.getkeywords();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -334,15 +318,13 @@ function keywords(req, res, next) {
     .catch(function (err) {
       return next(err);
     });
-
-
 }
 
-function authorpis(req, res, next) {
+function authorpis (req, res, next) {
   // Get the query string:
   var query = {};
 
-   db.query('select * from ap.getpeople();')
+  db.query('select * from ap.getpeople();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -355,13 +337,13 @@ function authorpis(req, res, next) {
     .catch(function (err) {
       return next(err);
     });
-  }
+}
 
-function authors(req, res, next) {
+function authors (req, res, next) {
   // Get the query string:
   var query = {};
 
-   db.query('select * from ap.getauthors();')
+  db.query('select * from ap.getauthors();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -374,13 +356,13 @@ function authors(req, res, next) {
     .catch(function (err) {
       return next(err);
     });
-  }
+}
 
-function taphonomysystems(req, res, next) {
+function taphonomysystems (req, res, next) {
   // Get the query string:
   var datasetTypeId = req.query.datasetTypeId;
 
-  if(!datasetTypeId){
+  if (!datasetTypeId) {
     res.status(200)
       .jsonp({
         success: 0,
@@ -389,7 +371,7 @@ function taphonomysystems(req, res, next) {
         message: 'No datasetTypeId provided.'
       })
   } else {
-    db.query('select * from ap.gettaphonomicsystems('+datasetTypeId+');')
+    db.query('select * from ap.gettaphonomicsystems(' + datasetTypeId + ');')
       .then(function (data) {
         res.status(200)
           .jsonp({
@@ -397,20 +379,19 @@ function taphonomysystems(req, res, next) {
             status: 'success',
             data: data,
             message: 'Retrieved taphonomic system for dataset type id'
+          })
       })
-    })
-    .catch(function (err) {
-      return next(err);
-    });
+      .catch(function (err) {
+        return next(err);
+      });
   }
-
 }
 
-function depositionalenvironments(req, res, next) {
+function depositionalenvironments (req, res, next) {
   // Get the query string:
   var query = {};
 
-   db.query('select * from ap.getdeptenvtypesroot();')
+  db.query('select * from ap.getdeptenvtypesroot();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -423,14 +404,14 @@ function depositionalenvironments(req, res, next) {
     .catch(function (err) {
       return next(err);
     });
-  }
+}
 
-function depositionalenvironmentsbyid(req, res, next) {
+function depositionalenvironmentsbyid (req, res, next) {
   // Get the query string:
   var depenvtid = req.params.id;
-  console.log("depenvtid is: "+depenvtid);
+  console.log('depenvtid is: ' + depenvtid);
 
-  if(isNaN(depenvtid)){
+  if (isNaN(depenvtid)) {
     res.status(200)
       .jsonp({
         success: 0,
@@ -439,32 +420,33 @@ function depositionalenvironmentsbyid(req, res, next) {
         message: 'No depenvtid provided.'
       })
   } else {
-   db.query('select * from ap.getdeptenvtypes($1);', [depenvtid])
-    .then(function (data) {
-      res.status(200)
-        .jsonp({
-          success: 1,
-          status: 'success',
-          data: data,
-          message: 'Retrieved depositional environment types'
-        })
-    })
-    .catch(function (err) {
-      return next(err);
-    });
+    db.query('select * from ap.getdeptenvtypes($1);', [depenvtid])
+      .then(function (data) {
+        res.status(200)
+          .jsonp({
+            success: 1,
+            status: 'success',
+            data: data,
+            message: 'Retrieved depositional environment types'
+          })
+      })
+      .catch(function (err) {
+        return next(err);
+      });
   }
 }
-function relativeages(req, res, next) {
+
+function relativeages (req, res, next) {
   // Get the query string:
   var ageScaleID = req.query.agescaleid;
-  if (!req.query.agescaleid || !parseInt(req.query.agescaleid)){
+  if (!req.query.agescaleid || !parseInt(req.query.agescaleid)) {
     res.status(200)
       .jsonp({
         success: 0,
         status: 'failure',
         data: null,
         message: 'No agescaleid provided.'
-    })
+      })
   }
 
   db.query('SELECT * FROM ndb.relativeages where relativeagescaleid = $1;', [ageScaleID])
@@ -480,4 +462,4 @@ function relativeages(req, res, next) {
     .catch(function (err) {
       return next(err);
     });
-  }
+}
