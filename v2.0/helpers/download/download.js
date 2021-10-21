@@ -1,5 +1,7 @@
 // Building and returning the downloads objects.
 // Currently returns only for download selection using dataset IDs.
+var db = require('../../../database/pgp_db');
+var pgp = db.$config.pgp;
 
 const {
   sql,
