@@ -17,6 +17,7 @@ db_connect_remote.json
 
 ### Node ###
 # Logs
+*.tmp
 logs
 *.log
 npm-debug.log*
