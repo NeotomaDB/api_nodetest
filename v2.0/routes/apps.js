@@ -32,5 +32,4 @@ router.get('/taxaindatasets', handlers.taxaindatasets);
 
 router.get('/taxagrouptypes', handlers.taxagrouptypes);
 
-
 module.exports = router;
