@@ -191,5 +191,9 @@ module.exports = {
   lithologybydsid: function (req, res, next) {
     const lithologies = require('../helpers/lithology/lithology.js');
     lithologies.lithologybydsid(req, res, next);
+  },
+  specimensbydsid: function (req, res, next) {
+    const specimens = require('../helpers/specimens/specimens.js');
+    specimens.specimenbyid(req, res, next);
   }
 };
