@@ -60,12 +60,12 @@ function downloadbyid (req, res, next) {
           var returner = [];
         } else {
           returner = {
-            'site': x.data.data.dataset.site,
-            'samples': x.data.data.samples
+            'site': x.data.data.dataset.site
           };
-          returner['chronologies'] = x.data.chronologies
-          var defaultchron = getdefault(returner['chronologies'])
+          returner['site']['collectionunit']['chronologies'] = x.data.chronologies
+          var defaultchron = getdefault(returner['site']['collectionunit']['chronologies'])
           returner['site']['collectionunit']['defaultchronology'] = defaultchron
+          returner['site']['collectionunit']['dataset']['samples'] = x.data.data.samples
         }
         return returner;
       })
