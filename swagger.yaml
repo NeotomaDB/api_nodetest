@@ -1,48 +1,6 @@
 ---
 components:
   parameters:
-    databaseQuery:
-      description: One of the constituent databases within Neotoma
-      in: query
-      name: database
-      required: true
-      schema:
-        type: string
-        enum:
-          - Cooperative Holocene Mapping Project
-          - African Pollen Database
-          - European Pollen Database
-          - Indo-Pacific Pollen Database
-          - Latin American Pollen Database
-          - North American Pollen Database
-          - Pollen Database of Siberia and the Russian Far East
-          - Canadian Pollen Database
-          - FAUNMAP
-          - Neotoma
-          - North American Plant Macrofossil Database
-          - Academy of Natural Sciences of Drexel University
-          - NDSU Insect Database
-          - North American Non-Marine Ostracode Database Project (NANODe)
-          - MioMap
-          - Alaskan Archaeofaunas
-          - French Institute of Pondicherry Palynology and Paleoecology Database
-          - Japanese Pollen Database
-          - Neotoma Midden Database
-          - Chinese Pollen Database
-          - Holocene Perspective on Peatland Biogeochemistry
-          - ANTIGUA
-          - Neotoma Testate Amoebae Database
-          - Deep-Time Palynology Database
-          - Neotoma Biomarker Database
-          - Alpine Pollen Database
-          - Canadian Museum of Nature-Delorme Ostracoda-Surface Samples
-          - Diatom Paleolimnology Data Cooperative (DPDC)
-          - Neotoma Ostracode Database
-          - Faunal Isotope Database
-          - Neotoma Charcoal Data
-          - Pollen Monitoring Programme
-          - PaleoVertebrates of Latin America
-          - St. Croix Watershed Research Station of the Science Museum of Minnesota
     ageOfQuery:
       description: Dataset age ranges must contain this age (in calibrated years before present, with 0 at 1950CE)
       in: query
@@ -105,8 +63,8 @@ components:
       required: true
       schema:
         format: int64
-        minimum: 0
         maximum: 40000
+        minimum: 0
         type: integer
     contactNameQuery:
       description: Last name of the researcher (may use the % wildcard)
@@ -140,8 +98,8 @@ components:
       schema:
         example: 44
         format: int64
-        minimum: 1
         maximum: 20000
+        minimum: 1
         type: integer
     contactidQuery:
       description: Unique contact identifier within the Neotoma Database, alone or comma separated.
@@ -151,9 +109,51 @@ components:
       schema:
         example: 44
         format: int64
-        minimum: 1
         maximum: 20000
+        minimum: 1
         type: integer
+    databaseQuery:
+      description: One of the constituent databases within Neotoma
+      in: query
+      name: database
+      required: true
+      schema:
+        enum:
+          - Cooperative Holocene Mapping Project
+          - African Pollen Database
+          - European Pollen Database
+          - Indo-Pacific Pollen Database
+          - Latin American Pollen Database
+          - North American Pollen Database
+          - Pollen Database of Siberia and the Russian Far East
+          - Canadian Pollen Database
+          - FAUNMAP
+          - Neotoma
+          - North American Plant Macrofossil Database
+          - Academy of Natural Sciences of Drexel University
+          - NDSU Insect Database
+          - North American Non-Marine Ostracode Database Project (NANODe)
+          - MioMap
+          - Alaskan Archaeofaunas
+          - French Institute of Pondicherry Palynology and Paleoecology Database
+          - Japanese Pollen Database
+          - Neotoma Midden Database
+          - Chinese Pollen Database
+          - Holocene Perspective on Peatland Biogeochemistry
+          - ANTIGUA
+          - Neotoma Testate Amoebae Database
+          - Deep-Time Palynology Database
+          - Neotoma Biomarker Database
+          - Alpine Pollen Database
+          - Canadian Museum of Nature-Delorme Ostracoda-Surface Samples
+          - Diatom Paleolimnology Data Cooperative (DPDC)
+          - Neotoma Ostracode Database
+          - Faunal Isotope Database
+          - Neotoma Charcoal Data
+          - Pollen Monitoring Programme
+          - PaleoVertebrates of Latin America
+          - St. Croix Watershed Research Station of the Science Museum of Minnesota
+        type: string
     datasetidPath:
       description: Valid Neotoma dataset identifier (integer), either singly or in a comma separated list.
       in: path
@@ -162,8 +162,8 @@ components:
       schema:
         example: 100
         format: int32
-        minimum: 1
         maximum: 60000
+        minimum: 1
         type: integer
     datasetidQuery:
       description: Valid Neotoma dataset identifier (integer), either singly or in a comma separated list.
@@ -196,8 +196,8 @@ components:
       required: true
       schema:
         format: int32
-        minimum: 1
         maximum: 11000
+        minimum: 1
         type: integer
     gpidQuery:
       description: Numeric ID for the geopolitical unit.
@@ -206,8 +206,8 @@ components:
       required: false
       schema:
         format: int32
-        minimum: 1
         maximum: 11000
+        minimum: 1
         type: integer
     gpnameQuery:
       description: Name for a geopolitical unit.
@@ -225,8 +225,8 @@ components:
       schema:
         default: 25
         format: int32
-        minimum: 1
         maximum: 10000
+        minimum: 1
         type: integer
     locQuery:
       description: |
@@ -262,8 +262,8 @@ components:
       required: false
       schema:
         format: int32
-        minimum: 0
         maximum: 10000000
+        minimum: 0
         type: integer
     offsetParam:
       description: The offset for returned records when a limit is present.  Default is 0.
@@ -283,8 +283,8 @@ components:
       required: false
       schema:
         format: int32
-        minimum: 1
         maximum: 20000
+        minimum: 1
         type: integer
     publicationidQuery:
       description: |
@@ -294,8 +294,8 @@ components:
       required: false
       schema:
         format: int32
-        minimum: 0
         maximum: 20000
+        minimum: 0
         type: integer
     pubsearchQuery:
       description: A fulltext search string.  Either a literal portion of the article name, or keywords.
@@ -416,51 +416,6 @@ components:
       schema:
         type: string
   schemas:
-    taxagroupresponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/status'
-        message:
-          $ref: '#/components/schemas/message'
-        data:
-          type: array
-          items:
-            type: object
-            properties:
-              gettaxagrouptypes:
-                type: string
-    taphonomyresponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/status'
-        message:
-          $ref: '#/components/schemas/message'
-        data:
-          nullable: true
-          type: array
-          minItems: 0
-          items:
-            type: object
-            nullable: true
-            properties:
-              gettaphonomicsystems:
-                type: string
-    depositionalresponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/status'
-        message:
-          $ref: '#/components/schemas/message'
-        data:
-          type: array
-          items:
-            type: object
-            properties:
-              getdeptenvtypesroot:
-                type: string
     address:
       example: 550 N Park St, Madison WI, USA
       type: string
@@ -498,19 +453,19 @@ components:
       minimum: -500
       type: integer
     authorpiresponse:
-      type: object
       properties:
-        status:
-          $ref: '#/components/schemas/status'
-        message:
-          $ref: '#/components/schemas/message'
         data:
-          type: array
           items:
-            type: object
             properties:
               getpeople:
                 type: string
+            type: object
+          type: array
+        message:
+          $ref: '#/components/schemas/message'
+        status:
+          $ref: '#/components/schemas/status'
+      type: object
     chronology:
       properties:
         agetype:
@@ -669,19 +624,19 @@ components:
           type: object
       type: object
     chronologyv2response:
-      type: object
       properties:
-        status:
-          $ref: '#/components/schemas/status'
-        message:
-          $ref: '#/components/schemas/message'
         data:
-          type: array
           items:
-            type: object
             properties:
               chronology:
                 $ref: '#/components/schemas/chronologyv2_0'
+            type: object
+          type: array
+        message:
+          $ref: '#/components/schemas/message'
+        status:
+          $ref: '#/components/schemas/status'
+      type: object
     collectiontyperesponse:
       properties:
         data:
@@ -756,21 +711,20 @@ components:
       type: string
     contactresponse:
       properties:
-        query:
+        data:
           type: object
-        contacts:
-          items:
-            properties:
-              contact:
-                $ref: '#/components/schemas/contact'
-          type: array
-          minItems: 0
-        message:
-          $ref: '#/components/schemas/message'
+          properties:
+            query:
+              type: object
+            result:
+              items:
+                properties:
+                  contact:
+                    $ref: '#/components/schemas/contact'
+              minItems: 0
+              type: array
         status:
           $ref: '#/components/schemas/status'
-        success:
-          $ref: '#/components/schemas/success'
       type: object
     contactstatus:
       enum:
@@ -864,49 +818,58 @@ components:
     datasetid:
       example: 666
       format: int64
-      minimum: 1
       maximum: 60000
+      minimum: 1
       type: integer
-    datasetselcresponse:
+    datasetnotes:
+      example: This dataset was digitized from an original publication in Finnish.
+      type: string
+    datasetresponsev2_0:
       properties:
         data:
-          type: array
-          items:
-            type: object
-            properties:
-              site:
-                type: object
-                properties:
-                  siteid:
-                    $ref: '#/components/schemas/siteid'
-                  sitedescription:
-                    $ref: '#/components/schemas/sitedescription'
-                  sitename:
-                    $ref: '#/components/schemas/sitename'
-                  sitenotes:
-                    $ref: '#/components/schemas/sitenotes'
-                  geography:
-                    $ref: '#/components/schemas/geography'
-                  altitude:
-                    $ref: '#/components/schemas/altitude'
-                  collectionunitid:
-                    $ref: '#/components/schemas/collectionunitid'
-                  collectionunit:
-                    $ref: '#/components/schemas/collectionunit'
-                  handle:
-                    $ref: '#/components/schemas/handle'
-                  unittype:
-                    $ref: '#/components/schemas/unittype'
-                  datasets:
-                    type: object
+          $ref: '#/components/schemas/datasetv2'
         message:
           $ref: '#/components/schemas/message'
         status:
           $ref: '#/components/schemas/status'
       type: object
-    datasetnotes:
-      example: This dataset was digitized from an original publication in Finnish.
-      type: string
+    datasetselcresponse:
+      properties:
+        data:
+          items:
+            properties:
+              site:
+                properties:
+                  altitude:
+                    $ref: '#/components/schemas/altitude'
+                  collectionunit:
+                    $ref: '#/components/schemas/collectionunit'
+                  collectionunitid:
+                    $ref: '#/components/schemas/collectionunitid'
+                  datasets:
+                    type: object
+                  geography:
+                    $ref: '#/components/schemas/geography'
+                  handle:
+                    $ref: '#/components/schemas/handle'
+                  sitedescription:
+                    $ref: '#/components/schemas/sitedescription'
+                  siteid:
+                    $ref: '#/components/schemas/siteid'
+                  sitename:
+                    $ref: '#/components/schemas/sitename'
+                  sitenotes:
+                    $ref: '#/components/schemas/sitenotes'
+                  unittype:
+                    $ref: '#/components/schemas/unittype'
+                type: object
+            type: object
+          type: array
+        message:
+          $ref: '#/components/schemas/message'
+        status:
+          $ref: '#/components/schemas/status'
+      type: object
     datasetshort:
       items:
         properties:
@@ -916,32 +879,23 @@ components:
             $ref: '#/components/schemas/datasettype'
         type: object
       type: array
-    datasettyperesponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/status'
-        message:
-          $ref: '#/components/schemas/message'
-        data:
-          type: array
-          items:
-            type: object
-            properties:
-              getdatasettypes:
-                type: string
     datasettype:
       example: geochemistry
       type: string
-    datasetresponsev2_0:
-      type: object
+    datasettyperesponse:
       properties:
-        status:
-          $ref: '#/components/schemas/status'
+        data:
+          items:
+            properties:
+              getdatasettypes:
+                type: string
+            type: object
+          type: array
         message:
           $ref: '#/components/schemas/message'
-        data:
-          $ref: '#/components/schemas/datasetv2'
+        status:
+          $ref: '#/components/schemas/status'
+      type: object
     datasetv2:
       properties:
         data:
@@ -1016,12 +970,6 @@ components:
         status:
           $ref: '#/components/schemas/status'
       type: object
-    dbtablesv1_5:
-      properties:
-        data:
-          items:
-            type: object
-          type: array    
     dbtables:
       properties:
         data:
@@ -1039,61 +987,46 @@ components:
         status:
           $ref: '#/components/schemas/status'
       type: object
+    dbtablesv1_5:
+      properties:
+        data:
+          items:
+            type: object
+          type: array
+    depositionalresponse:
+      properties:
+        data:
+          items:
+            properties:
+              getdeptenvtypesroot:
+                type: string
+            type: object
+          type: array
+        message:
+          $ref: '#/components/schemas/message'
+        status:
+          $ref: '#/components/schemas/status'
+      type: object
     doi:
       example: 10.2157/abba1234
       type: string
-    lithology:
-      type: object
-      properties:
-        lithologyid:
-          type: integer
-          minimum: 1
-        depth:
-          type: object
-          properties:
-            top:
-              type: number
-            bottom:
-              type: number
-        lowerboundary:
-          type: string
-          nullable: true
-          example: gradational over 10 cm
-        description:
-          type: string
-    lithologyresponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/status'
-        message:
-          $ref: '#/components/schemas/message'
-        data:
-          type: array
-          items:
-            type: object
-            properties:
-              datasetid:
-                $ref: '#/components/schemas/datasetid'
-              lithology:
-                $ref: '#/components/schemas/lithology'
     doiresponse:
-      type: object
       properties:
-        status:
-          $ref: '#/components/schemas/status'
-        message:
-          $ref: '#/components/schemas/message'
         data:
-          type: array
           items:
-            type: object
             properties:
               datasetid:
                 $ref: '#/components/schemas/datasetid'
               dois:
-                type: string
                 nullable: true
+                type: string
+            type: object
+          type: array
+        message:
+          $ref: '#/components/schemas/message'
+        status:
+          $ref: '#/components/schemas/status'
+      type: object
     downloadv1point5:
       properties:
         data:
@@ -1209,6 +1142,41 @@ components:
       default: 25
       minimum: 1
       type: integer
+    lithology:
+      properties:
+        depth:
+          properties:
+            bottom:
+              type: number
+            top:
+              type: number
+          type: object
+        description:
+          type: string
+        lithologyid:
+          minimum: 1
+          type: integer
+        lowerboundary:
+          example: gradational over 10 cm
+          nullable: true
+          type: string
+      type: object
+    lithologyresponse:
+      properties:
+        data:
+          items:
+            properties:
+              datasetid:
+                $ref: '#/components/schemas/datasetid'
+              lithology:
+                $ref: '#/components/schemas/lithology'
+            type: object
+          type: array
+        message:
+          $ref: '#/components/schemas/message'
+        status:
+          $ref: '#/components/schemas/status'
+      type: object
     message:
       example: Returned a vaild response.
       type: string
@@ -1384,8 +1352,8 @@ components:
           type: string
     sitedescription:
       example: Lake is located in a pre-glacial gorge of the Wisconsin river cut through the Baraboo Hills, a bedrock high. The valley is dammed at both ends by terminal moraines deposited by the Green Bay lobe, which flowed around the Baraboo Hills. Lake is fed by groundwater. Surrounding vegetation, white-black-bur oak.
-      type: string
       nullable: true
+      type: string
     siteid:
       example: 666
       format: int64
@@ -1396,12 +1364,11 @@ components:
       type: string
     sitenotes:
       example: This record has some little things that seem funny about it.
-      type: string
       nullable: true
+      type: string
     sitesv1point5:
       properties:
         data:
-          type: array
           items:
             properties:
               altitude:
@@ -1427,24 +1394,13 @@ components:
               unittype:
                 $ref: '#/components/schemas/unittype'
             type: object
-        message:
-          $ref: '#/components/schemas/message'
-        status:
-          $ref: '#/components/schemas/status'
-        success:
-          $ref: '#/components/schemas/success'
-    sitesv2response:
-      properties:
-        success:
-          $ref: '#/components/schemas/success'
-        message:
-          $ref: '#/components/schemas/message'
-        status:
-          $ref: '#/components/schemas/status'
-        data:
           type: array
-          items:
-            $ref: '#/components/schemas/sitesv2'
+        message:
+          $ref: '#/components/schemas/message'
+        status:
+          $ref: '#/components/schemas/status'
+        success:
+          $ref: '#/components/schemas/success'
     sitesv2:
       properties:
         altitude:
@@ -1473,6 +1429,18 @@ components:
           $ref: '#/components/schemas/siteid'
         sitename:
           $ref: '#/components/schemas/sitename'
+    sitesv2response:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/sitesv2'
+          type: array
+        message:
+          $ref: '#/components/schemas/message'
+        status:
+          $ref: '#/components/schemas/status'
+        success:
+          $ref: '#/components/schemas/success'
     status:
       example: success
       type: string
@@ -1481,59 +1449,65 @@ components:
         - 0
         - 1
       type: integer
-    summarydatabase:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/status'
-        message:
-          $ref: '#/components/schemas/message'
-        data:
-          type: object
-          properties:
-            query:
-              type: object
-            data:
-              type: array
-    summarydatatype:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/status'
-        message:
-          $ref: '#/components/schemas/message'
-        data:
-          type: object
-          properties:
-            query:
-              type: object
-            data:
-              type: array
     summaryalldata:
-      type: object
       properties:
-        status:
-          $ref: '#/components/schemas/status'
-        message:
-          $ref: '#/components/schemas/message'
         data:
-          type: object
           properties:
-            query:
-              type: object
             data:
               type: array
-    taxonresponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/status'
+            query:
+              type: object
+          type: object
         message:
           $ref: '#/components/schemas/message'
+        status:
+          $ref: '#/components/schemas/status'
+      type: object
+    summarydatabase:
+      properties:
         data:
-          type: array
+          properties:
+            data:
+              type: array
+            query:
+              type: object
+          type: object
+        message:
+          $ref: '#/components/schemas/message'
+        status:
+          $ref: '#/components/schemas/status'
+      type: object
+    summarydatatype:
+      properties:
+        data:
+          properties:
+            data:
+              type: array
+            query:
+              type: object
+          type: object
+        message:
+          $ref: '#/components/schemas/message'
+        status:
+          $ref: '#/components/schemas/status'
+      type: object
+    taphonomyresponse:
+      properties:
+        data:
           items:
-            $ref: '#/components/schemas/taxa'
+            nullable: true
+            properties:
+              gettaphonomicsystems:
+                type: string
+            type: object
+          minItems: 0
+          nullable: true
+          type: array
+        message:
+          $ref: '#/components/schemas/message'
+        status:
+          $ref: '#/components/schemas/status'
+      type: object
     taxa:
       properties:
         author:
@@ -1578,6 +1552,31 @@ components:
           type: string
         success:
           type: integer
+      type: object
+    taxagroupresponse:
+      properties:
+        data:
+          items:
+            properties:
+              gettaxagrouptypes:
+                type: string
+            type: object
+          type: array
+        message:
+          $ref: '#/components/schemas/message'
+        status:
+          $ref: '#/components/schemas/status'
+      type: object
+    taxonresponse:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/taxa'
+          type: array
+        message:
+          $ref: '#/components/schemas/message'
+        status:
+          $ref: '#/components/schemas/status'
       type: object
     unittype:
       example: Modern
@@ -1773,23 +1772,23 @@ paths:
           name: table
           required: true
           schema:
-            type: string
             example: agetypes
+            type: string
       responses:
         '200':
           content:
             application/json:
               schema:
-                type: object
                 properties:
-                  success:
-                    $ref: '#/components/schemas/success'
-                  status:
-                    $ref: '#/components/schemas/status'
-                  message:
-                    $ref: '#/components/schemas/message'
                   data:
                     $ref: '#/components/schemas/dbtablesv1_5'
+                  message:
+                    $ref: '#/components/schemas/message'
+                  status:
+                    $ref: '#/components/schemas/status'
+                  success:
+                    $ref: '#/components/schemas/success'
+                type: object
           description: Returned table.
       summary: Returns the named Neotoma Database table.
       tags:
@@ -1864,9 +1863,9 @@ paths:
           required: true
           schema:
             format: int64
-            type: integer
-            minimum: 1
             maximum: 26
+            minimum: 1
+            type: integer
       responses:
         '200':
           content:
@@ -1901,9 +1900,9 @@ paths:
       tags:
         - Taxonomic metadata
         - v2.0
-  /v2.0/data/chronology/{chronid}:
+  /v2.0/data/chronologies/{chronid}:
     get:
-      description: Returns the chronology and chronological controls used for a dataset age model.
+      description: Returns the chronology and chronological controls used for a dataset age model associated with a particular chronology ID.
       parameters:
         - $ref: '#/components/parameters/chronidPath'
       responses:
@@ -1913,7 +1912,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/chronologyv2_0'
           description: A Neotoma chronology object.
-      summary: Chronology metadata for a dataset.
+      summary: Chronology metadata.
       tags:
         - Chronology metadata
         - v2.0
@@ -1972,46 +1971,6 @@ paths:
       tags:
         - Site metadata
         - v2.0
-  /v2.0/data/datasets_elc/{datasetid}:
-    get:
-      description: Returns the dataset information based on a dataset ID for the ELC API.
-      parameters:
-        - $ref: '#/components/parameters/datasetidPath'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/datasetselcresponse'
-          description: A Neotoma datasets object suitable for the EarthLife Consortium API.
-      summary: Site information for all sites by an individual
-      tags:
-        - Dataset metadata
-        - v2.0
-  /v2.0/data/datasets_elc:
-    get:
-      description: Returns the dataset information based on a dataset ID for the ELC API.
-      parameters:
-        - $ref: '#/components/parameters/siteidQuery'
-        - $ref: '#/components/parameters/contactidQuery'
-        - $ref: '#/components/parameters/datasettypeQuery'
-        - $ref: '#/components/parameters/altMinQuery'
-        - $ref: '#/components/parameters/altMaxQuery'
-        - $ref: '#/components/parameters/locQuery'
-        - $ref: '#/components/parameters/ageYoungQuery'
-        - $ref: '#/components/parameters/ageOldQuery'
-        - $ref: '#/components/parameters/ageOfQuery'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/datasetselcresponse'
-          description: A Neotoma datasets object suitable for the EarthLife Consortium API.
-      summary: Site information for all sites by an individual
-      tags:
-        - Dataset metadata
-        - v2.0
   /v2.0/data/datasets:
     get:
       description: Returns information about Neotoma dataset
@@ -2033,6 +1992,24 @@ paths:
                 $ref: '#/components/schemas/datasetv2'
           description: An array of datasets.
       summary: Dataset information.
+      tags:
+        - Dataset metadata
+        - v2.0
+  /v2.0/data/datasets/db:
+    get:
+      description: Returns datasets associated with a specific constituent database in Neotoma.
+      parameters:
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/offsetParam'
+        - $ref: '#/components/parameters/databaseQuery'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/datasetresponsev2_0'
+          description: Datasets
+      summary: Datasets associated with a Neotoma database.
       tags:
         - Dataset metadata
         - v2.0
@@ -2164,21 +2141,43 @@ paths:
       tags:
         - Taxonomic metadata
         - v2.0
-  /v2.0/data/datasets/db:
+  /v2.0/data/datasets_elc:
     get:
-      description: Returns datasets associated with a specific constituent database in Neotoma.
+      description: Returns the dataset information based on a dataset ID for the ELC API.
       parameters:
-        - $ref: '#/components/parameters/limitParam'
-        - $ref: '#/components/parameters/offsetParam'
-        - $ref: '#/components/parameters/databaseQuery'
+        - $ref: '#/components/parameters/siteidQuery'
+        - $ref: '#/components/parameters/contactidQuery'
+        - $ref: '#/components/parameters/datasettypeQuery'
+        - $ref: '#/components/parameters/altMinQuery'
+        - $ref: '#/components/parameters/altMaxQuery'
+        - $ref: '#/components/parameters/locQuery'
+        - $ref: '#/components/parameters/ageYoungQuery'
+        - $ref: '#/components/parameters/ageOldQuery'
+        - $ref: '#/components/parameters/ageOfQuery'
       responses:
         '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/datasetresponsev2_0'
-          description: Datasets
-      summary: Datasets associated with a Neotoma database.
+                $ref: '#/components/schemas/datasetselcresponse'
+          description: A Neotoma datasets object suitable for the EarthLife Consortium API.
+      summary: Site information for all sites by an individual
+      tags:
+        - Dataset metadata
+        - v2.0
+  /v2.0/data/datasets_elc/{datasetid}:
+    get:
+      description: Returns the dataset information based on a dataset ID for the ELC API.
+      parameters:
+        - $ref: '#/components/parameters/datasetidPath'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/datasetselcresponse'
+          description: A Neotoma datasets object suitable for the EarthLife Consortium API.
+      summary: Site information for all sites by an individual
       tags:
         - Dataset metadata
         - v2.0
@@ -2587,24 +2586,6 @@ paths:
       tags:
         - Site metadata
         - v2.0
-  /v2.0/data/taxa:
-    get:
-      description: Returns information about a taxon and (if requested) related taxa.
-      parameters:
-        - $ref: '#/components/parameters/taxonNameQuery'
-        - $ref: '#/components/parameters/datasetidQuery'
-        - $ref: '#/components/parameters/siteidQuery'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/taxa'
-          description: A taxon or array of taxa.
-      summary: Taxonomic information.
-      tags:
-        - Taxonomic metadata
-        - v2.0
   /v2.0/data/summary/dsdbmonth:
     get:
       description: Returns summary statistics for the database as a whole, broken down by constituent database.
@@ -2615,20 +2596,20 @@ paths:
           name: start
           required: true
           schema:
-            type: integer
             default: 0
-            minimum: 0
             maximum: 9999
+            minimum: 0
+            type: integer
         - description: The ending month (from present == 0) for which to generate the summary.
           example: 1
           in: query
           name: end
           required: true
           schema:
-            type: integer
             default: 1
-            minimum: 0
             maximum: 9999
+            minimum: 0
+            type: integer
       responses:
         '200':
           content:
@@ -2650,16 +2631,16 @@ paths:
           name: start
           required: true
           schema:
-            type: integer
             default: 0
+            type: integer
         - description: The ending month (from present == 0) for which to generate the summary.
           example: 1
           in: query
           name: end
           required: true
           schema:
-            type: integer
             default: 1
+            type: integer
       responses:
         '200':
           content:
@@ -2681,16 +2662,16 @@ paths:
           name: start
           required: true
           schema:
-            type: integer
             default: 0
+            type: integer
         - description: The ending month (from present == 0) for which to generate the summary.
           example: 1
           in: query
           name: end
           required: true
           schema:
-            type: integer
             default: 1
+            type: integer
       responses:
         '200':
           content:
@@ -2701,6 +2682,24 @@ paths:
       summary: Summary information
       tags:
         - Summary Info
+        - v2.0
+  /v2.0/data/taxa:
+    get:
+      description: Returns information about a taxon and (if requested) related taxa.
+      parameters:
+        - $ref: '#/components/parameters/taxonNameQuery'
+        - $ref: '#/components/parameters/datasetidQuery'
+        - $ref: '#/components/parameters/siteidQuery'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/taxa'
+          description: A taxon or array of taxa.
+      summary: Taxonomic information.
+      tags:
+        - Taxonomic metadata
         - v2.0
   /v2.0/data/taxa/{taxonid}:
     get:
@@ -2749,23 +2748,23 @@ paths:
           content:
             application/json:
               schema:
-                type: object
                 properties:
-                  status:
-                    $ref: '#/components/schemas/status'
-                  message:
-                    $ref: '#/components/schemas/message'
                   data:
-                    type: object
                     properties:
-                      limit:
-                        type: integer
-                      offset:
-                        type: integer
                       data:
                         items:
                           $ref: '#/components/schemas/dbtables'
                         type: array
+                      limit:
+                        type: integer
+                      offset:
+                        type: integer
+                    type: object
+                  message:
+                    $ref: '#/components/schemas/message'
+                  status:
+                    $ref: '#/components/schemas/status'
+                type: object
           description: Returned table.
       summary: Returns the named Neotoma Database table with limits & offsets.
       tags:
@@ -2810,9 +2809,9 @@ tags:
       url: https://neotoma-manual.readthedocs.io/en/latest/tables_samples.html
     name: Data download
   - description: Information about the geopolitical units in which a site is located.
-    name: Geopolitical metadata
     externalDocs:
       url: https://neotoma-manual.readthedocs.io/en/latest/tables_site.html#geopoliticalunits
+    name: Geopolitical metadata
   - description: A simplified data return, similar to the data download, but specific to a particular taxon, time or location.
     name: Occurrence metadata
   - description: For ease of use in online applications, pre-calculated pollen percentages for taxa, location or temporal bins.
