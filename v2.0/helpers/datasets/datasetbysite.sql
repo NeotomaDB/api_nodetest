@@ -57,5 +57,4 @@ WHERE sts.siteid = ANY ($1)
 GROUP BY
   sts.siteid,
   clu.collectionunitid,
-  cts.colltype,
-  dspi.dataset;
+  cts.colltype;
