@@ -709,6 +709,36 @@ components:
     contactname:
       example: Goring, Simon J
       type: string
+    contactresponsev15:
+      properties:
+        data:
+          type: object
+          properties:
+            items:
+              properties:
+                address:
+                  $ref: '#/components/schemas/address'
+                contactid:
+                  $ref: '#/components/schemas/contactid'
+                contactname:
+                  $ref: '#/components/schemas/contactname'
+                familyname:
+                  example: Goring
+                  type: string
+                givennames:
+                  example: Simon
+                  type: string
+                url:
+                  $ref: '#/components/schemas/url'
+              minItems: 0
+              type: array
+        status:
+          $ref: '#/components/schemas/status'
+        success:
+          $ref: '#/components/schemas/success'
+        message:
+          $ref: '#/components/schemas/message'
+      type: object
     contactresponse:
       properties:
         data:

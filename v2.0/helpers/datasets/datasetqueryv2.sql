@@ -29,14 +29,24 @@ WITH dspiagg AS (
   	LEFT OUTER JOIN ndb.agetypes             AS agetypes ON agetypes.agetypeid = agerange.agetypeid
   	LEFT OUTER JOIN ndb.constituentdatabases AS cstdb    ON dsdb.databaseid = cstdb.databaseid
   	LEFT OUTER JOIN ndb.sites                AS sts      ON sts.siteid = clu.siteid
-  WHERE dts.datasetid = ANY ($1)
-  GROUP BY
-    clu.collectionunitid,
-    dts.datasetid,
-    dst.datasettype,
-    dts.notes,
-    cstdb.databasename,
-    sts.siteid
+   WHERE
+           (${siteid} IS NULL OR      sts.siteid = ANY (${siteid}))   AND
+      (${datasettype} IS NULL OR dst.datasettype LIKE ${datasettype}) AND
+             (${piid} IS NULL OR   cnt.contactid = ANY (${piid}))     AND
+           (${altmin} IS NULL OR    sts.altitude > ${altmin})         AND
+           (${altmax} IS NULL OR    sts.altitude < ${altmax})         AND
+              (${loc} IS NULL OR ST_Intersects(ST_GeogFromText(${loc}), sts.geog)) AND
+         (${ageyoung} IS NULL OR     ${ageyoung} > agerange.younger)  AND
+           (${ageold} IS NULL OR       ${ageold} < agerange.older)    AND
+            (${ageof} IS NULL OR        ${ageof} BETWEEN agerange.younger AND agerange.older) AND
+            ((${datasetid}) IS NULL OR dts.datasetid = ANY (${datasetid}))
+    GROUP BY
+        clu.collectionunitid,
+        dts.datasetid,
+        dst.datasettype,
+        dts.notes,
+        cstdb.databasename,
+        sts.siteid
  )
 SELECT json_build_object(       'siteid', sts.siteid,
                               'sitename', sts.sitename,
@@ -49,13 +59,9 @@ SELECT json_build_object(       'siteid', sts.siteid,
                                 'handle', clu.handle,
                               'unittype', cts.colltype,
 						'datasets', json_agg(dspi.dataset)) as site
-FROM ndb.datasets AS dts
-  LEFT OUTER JOIN dspiagg             AS dspi ON dspi.datasetid = dts.datasetid
+FROM dspiagg             AS dspi
+  LEFT OUTER JOIN ndb.datasets AS dts ON dspi.datasetid = dts.datasetid
   LEFT OUTER JOIN ndb.collectionunits AS clu  ON clu.collectionunitid = dts.collectionunitid
   LEFT OUTER JOIN ndb.sites           AS sts  ON sts.siteid = clu.siteid
   LEFT OUTER JOIN ndb.collectiontypes as cts  ON clu.colltypeid = cts.colltypeid
-WHERE dts.datasetid = ANY ($1)
-GROUP BY
-  sts.siteid,
-  clu.collectionunitid,
-  cts.colltype;
+GROUP BY sts.siteid, clu.collectionunitid, cts.colltype;
