@@ -7,7 +7,7 @@ const { sql, validateOut } = require('../../../src/neotomaapi.js');
 var Terraformer = require('terraformer');
 var WKT = require('terraformer-wkt-parser');
 
-const datasetquerysql = sql('../v2.0/helpers/datasets/datasetquery.sql');
+const datasetquerysql = sql('../v2.0/helpers/datasets/datasetqueryv2.sql');
 const datasetbyidsql = sql('../v2.0/helpers/datasets/datasetbyid.sql');
 const datasetbydbsql = sql('../v2.0/helpers/datasets/datasetbydb.sql');
 const datasetbysite = sql('../v2.0/helpers/datasets/datasetbysite.sql');
@@ -51,7 +51,6 @@ function datasetbyid (req, res, next) {
 }
 
 function datasetbydb (req, res, next) {
-
   var dbUsed = !!req.query.database;
 
   if (dbUsed) {
@@ -152,6 +151,7 @@ function datasetquery (req, res, next) {
     res.status(500)
       .json({
         status: 'failure',
+        title: 'Oh man.',
         message: 'The altmin is greater than altmax.  Please fix this!'
       });
   }
