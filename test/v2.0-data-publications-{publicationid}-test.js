@@ -8,7 +8,7 @@ describe('tests for /v2.0/data/publications/{publicationid}', function () {
   describe('tests for get', function () {
     it('should respond 200 for "A list of publications."', function () {
       var response = request('get', 'http://localhost:3005/v2.0/data/publications/{publicationid}', {
-        'qs': { 'publicationid': 4543 },
+        'qs': { 'publicationid': 2721 },
         'time': true
       });
 
