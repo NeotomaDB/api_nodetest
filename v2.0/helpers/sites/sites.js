@@ -2,6 +2,7 @@
 const he = require('he');
 const Terraformer = require('terraformer');
 const WKT = require('terraformer-wkt-parser');
+const { stream } = require('../../../database/pgp_db');
 
 // get global database object
 const db = require('../../../database/pgp_db');
@@ -11,7 +12,7 @@ const pgp = db.$config.pgp;
 const { sql, commaSep, ifUndef } = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
-const siteQuery = sql('../v2.0/helpers/sites/sitequeryfaster.sql');
+const siteQuery = sql('../v2.0/helpers/sites/sitequery.sql');
 const sitebydsid = sql('../v2.0/helpers/sites/sitebydsid.sql');
 const sitebyid = sql('../v2.0/helpers/sites/sitebyid.sql');
 const sitebygpid = sql('../v2.0/helpers/sites/sitebygpid.sql');
@@ -49,7 +50,12 @@ function sitesbyid (req, res, next) {
         });
     })
     .catch(function (err) {
-      return next(err);
+      return res.status(500)
+        .json({
+          status: 'failure',
+          message: err.message,
+          query: [siteid]
+        });
     })
 }
 
@@ -73,7 +79,7 @@ function sitesquery (req, res, next) {
     'limit': ifUndef(req.query.limit, 'int')
   };
 
-  if(!!outobj.loc) {
+  if (!!outobj.loc) {
     outobj.loc = he.decode(outobj.loc);
   }
   if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
@@ -106,7 +112,12 @@ function sitesquery (req, res, next) {
         });
     })
     .catch(function (err) {
-      return next(err);
+      return res.status(500)
+        .json({
+          status: 'failure',
+          message: err.message,
+          query: outobj
+        });
     });
 }
 
@@ -136,7 +147,12 @@ function sitesbydataset (req, res, next) {
         });
     })
     .catch(function (err) {
-      return next(err);
+      return res.status(500)
+        .json({
+          status: 'failure',
+          message: err.message,
+          query: datasetid
+        });
     });
 }
 
@@ -177,7 +193,12 @@ function sitesbygeopol (req, res, next) {
         });
     })
     .catch(function (err) {
-      return next(err);
+      return res.status(500)
+        .json({
+          status: 'failure',
+          message: err.message,
+          query: gpid
+        });
     });
 }
 
@@ -207,7 +228,12 @@ function sitesbycontact (req, res, next) {
         });
     })
     .catch(function (err) {
-      return next(err);
+      return res.status(500)
+        .json({
+          status: 'failure',
+          message: err.message,
+          query: [contactid]
+        });
     });
 }
 

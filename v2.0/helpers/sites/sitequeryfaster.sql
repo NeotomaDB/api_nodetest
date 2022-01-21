@@ -8,8 +8,8 @@ WITH collunit AS (
 	  AND (${altmin} IS NULL OR bigq.altitude >= ${altmin})
 	  AND (${altmax} IS NULL OR bigq.altitude <= ${altmax})
 	  AND (${loc}    IS NULL OR ST_Intersects(ST_GeogFromText(${loc}), bigq.geog))
-	  AND (${siteid} IS NULL OR bigq.siteid = ${siteid})
-	  AND ${gpid} IS NULL OR bigq.geopol = ${gpid}
+	  AND (${siteid} IS NULL OR bigq.siteid = ANY(${siteid}))
+	  AND ${gpid} IS NULL OR bigq.geopol = ANY(${gpid})
 )
 SELECT sts.siteid,
        sts.sitename as sitename,

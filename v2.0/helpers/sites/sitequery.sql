@@ -25,7 +25,7 @@ collunit AS (
 	  AND (${altmax} IS NULL OR sts.altitude <= ${altmax})
 	  AND (${loc}    IS NULL OR ST_Intersects(ST_GeogFromText(${loc}), sts.geog))
 	  AND (${siteid} IS NULL OR sts.siteid = ANY(${siteid}))
-	  AND sts.siteid IN (SELECT siteid FROM sitid)
+	  AND sts.siteid = ANY(SELECT siteid FROM sitid)
 	GROUP BY sts.siteid, clu.collectionunitid, cts.colltype
 )
 SELECT sts.siteid,
@@ -43,4 +43,4 @@ OFFSET (CASE WHEN ${offset} IS NULL THEN 0
             END)
 LIMIT (CASE WHEN ${limit} IS NULL THEN 25
 			ELSE ${limit}
-		END)
+		END);

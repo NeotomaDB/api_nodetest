@@ -64,4 +64,10 @@ FROM dspiagg             AS dspi
   LEFT OUTER JOIN ndb.collectionunits AS clu  ON clu.collectionunitid = dts.collectionunitid
   LEFT OUTER JOIN ndb.sites           AS sts  ON sts.siteid = clu.siteid
   LEFT OUTER JOIN ndb.collectiontypes as cts  ON clu.colltypeid = cts.colltypeid
-GROUP BY sts.siteid, clu.collectionunitid, cts.colltype;
+GROUP BY sts.siteid, clu.collectionunitid, cts.colltype
+OFFSET (CASE WHEN ${offset} IS NULL THEN 0
+                 ELSE ${offset}
+            END)
+LIMIT (CASE WHEN ${limit} IS NULL THEN 25
+			ELSE ${limit}
+		END);
