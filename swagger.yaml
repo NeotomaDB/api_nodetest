@@ -452,6 +452,12 @@ components:
       maximum: 9000
       minimum: -500
       type: integer
+    pollenresponse:
+      type: object
+    datasetelcresponse:
+      type: object
+    publicationsresponse:
+      type: object
     authorpiresponse:
       properties:
         data:
@@ -669,17 +675,21 @@ components:
         address:
           $ref: '#/components/schemas/address'
         aliasid:
-          example: 123
-          format: int64
-          type: integer
+          $ref: '#/components/schemas/aliasid'
         contactid:
           $ref: '#/components/schemas/contactid'
         contactname:
           $ref: '#/components/schemas/contactname'
+        contactstatusid:
+          $ref: '#/components/schemas/contactstatusid'
         contactstatus:
           $ref: '#/components/schemas/contactstatus'
         email:
           $ref: '#/components/schemas/email'
+        phone:
+          type: string
+        fax:
+          type: string
         familyname:
           example: Goring
           type: string
@@ -700,7 +710,19 @@ components:
           type: string
         url:
           $ref: '#/components/schemas/url'
+        recdatecreated:
+          $ref: '#/components/schemas/recdatecreated'
+        recdatemodified:
+          $ref: '#/components/schemas/recdatemodified'
       type: object
+    recdatemodified:
+      type: string
+    recdatecreated:
+      type: string
+    aliasid:
+      example: 123
+      format: int64
+      type: integer
     contactid:
       example: 123
       format: int64
@@ -712,26 +734,25 @@ components:
     contactresponsev15:
       properties:
         data:
-          type: object
-          properties:
-            items:
-              properties:
-                address:
-                  $ref: '#/components/schemas/address'
-                contactid:
-                  $ref: '#/components/schemas/contactid'
-                contactname:
-                  $ref: '#/components/schemas/contactname'
-                familyname:
-                  example: Goring
-                  type: string
-                givennames:
-                  example: Simon
-                  type: string
-                url:
-                  $ref: '#/components/schemas/url'
-              minItems: 0
-              type: array
+          type: array
+          items:
+            properties:
+              address:
+                $ref: '#/components/schemas/address'
+              contactid:
+                $ref: '#/components/schemas/contactid'
+              contactname:
+                $ref: '#/components/schemas/contactname'
+              familyname:
+                example: Goring
+                type: string
+              givennames:
+                example: Simon
+                type: string
+                nullable: true
+              url:
+                $ref: '#/components/schemas/url'
+            minItems: 0
         status:
           $ref: '#/components/schemas/status'
         success:
@@ -742,20 +763,15 @@ components:
     contactresponse:
       properties:
         data:
-          type: object
-          properties:
-            query:
-              type: object
-            result:
-              items:
-                properties:
-                  contact:
-                    $ref: '#/components/schemas/contact'
-              minItems: 0
-              type: array
+          type: array
+          items:
+            $ref: '#/components/schemas/contact'
+          minItems: 0
         status:
           $ref: '#/components/schemas/status'
       type: object
+    ontactstatus:
+      type: integer
     contactstatus:
       enum:
         - active
@@ -854,6 +870,8 @@ components:
     datasetnotes:
       example: This dataset was digitized from an original publication in Finnish.
       type: string
+    siteresponse:
+      type: object
     datasetresponsev2_0:
       properties:
         data:
@@ -1001,8 +1019,10 @@ components:
           $ref: '#/components/schemas/status'
       type: object
     dbtables:
+      type: object
       properties:
         data:
+          type: object
           properties:
             data:
               items:
@@ -1016,7 +1036,6 @@ components:
           $ref: '#/components/schemas/message'
         status:
           $ref: '#/components/schemas/status'
-      type: object
     dbtablesv1_5:
       properties:
         data:
@@ -1583,6 +1602,30 @@ components:
         success:
           type: integer
       type: object
+    taxaInDatasetsv1_5:
+      properties:
+        data:
+          items:
+            properties:
+              datasettypeids:
+                items:
+                  type: integer
+                type: array
+              taxongroupid:
+                type: string
+              taxonid:
+                type: integer
+              taxonname:
+                type: string
+            type: object
+          type: array
+        message:
+          $ref: '#/components/schemas/message'
+        status:
+          $ref: '#/components/schemas/status'
+        success:
+          $ref: '#/components/schemas/success'
+      type: object
     taxagroupresponse:
       properties:
         data:
@@ -1649,7 +1692,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/taxaInDatasets'
+                $ref: '#/components/schemas/taxaInDatasetsv1_5'
           description: An array of taxon identities with associated dataset IDs.
       summary: Lists all Neotoma taxa (alphebetically) and the dataset types in which the taxa appear.
       tags:
@@ -1685,7 +1728,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/contactresponse'
+                $ref: '#/components/schemas/contactresponsev15'
           description: Contact
       summary: Contact information for Neotoma contributors.
       tags:
@@ -2014,6 +2057,8 @@ paths:
         - $ref: '#/components/parameters/ageYoungQuery'
         - $ref: '#/components/parameters/ageOldQuery'
         - $ref: '#/components/parameters/ageOfQuery'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/offsetParam'
       responses:
         '200':
           content:
@@ -2224,7 +2269,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/dbtables'
+                $ref: '#/components/schemas/dbtable'
           description: Returned table.
       summary: Returns the full content of a named Neotoma Database table.
       tags:
@@ -2235,7 +2280,7 @@ paths:
       description: |
         Returns the named Neotoma Database table.  An empty query will return a list of tables.
       parameters:
-        - $ref: '#/components/parameters/tableParam'
+        - $ref: '#/components/parameters/tableQuery'
       responses:
         '200':
           content:
@@ -2778,23 +2823,7 @@ paths:
           content:
             application/json:
               schema:
-                properties:
-                  data:
-                    properties:
-                      data:
-                        items:
-                          $ref: '#/components/schemas/dbtables'
-                        type: array
-                      limit:
-                        type: integer
-                      offset:
-                        type: integer
-                    type: object
-                  message:
-                    $ref: '#/components/schemas/message'
-                  status:
-                    $ref: '#/components/schemas/status'
-                type: object
+                $ref: '#/components/schemas/dbtables'
           description: Returned table.
       summary: Returns the named Neotoma Database table with limits & offsets.
       tags:
