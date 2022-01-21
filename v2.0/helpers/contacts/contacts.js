@@ -6,14 +6,13 @@ const path = require('path');
 var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
-const { sql, commaSep, ifUndef, removeEmpty ,validateOut } = require('../../../src/neotomaapi.js');
+const { sql, commaSep, ifUndef, removeEmpty, validateOut } = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
 const contactbyid = sql('../v2.0/helpers/contacts/contactbyid.sql');
 const contactquery = sql('../v2.0/helpers/contacts/contactquery.sql');
 const contactbydsid = sql('../v2.0/helpers/contacts/contactbydsid.sql');
 const contactbystid = sql('../v2.0/helpers/contacts/contactbysiteid.sql');
-
 
 function contacts (req, res, next) {
   var contactIdUsed = !!req.query.contactid;
@@ -36,37 +35,25 @@ function contacts (req, res, next) {
 
   outobj = validateOut(outobj);
 
-  var novalues = Object.keys(outobj).every(function (x) {
-    return typeof outobj[x] === 'undefined' || !outobj[x];
-  });
+  if (Object.keys(outobj).every(function (x) { return typeof outobj[x] === 'undefined'; }) === false) {
+    db.any(contactquery, outobj)
+      .then(function (data) {
+        if (data.length === 0) {
+          // We're returning the structure, but nothing inside it:
+          var returner = [];
+        } else {
+          returner = data;
+        };
 
-  if (novalues === true) {
-    if (!!req.accepts('json') & !req.accepts('html')) {
-      res.redirect('/swagger.json');
-    } else {
-      res.redirect('/api-docs');
-    };
-  } else {
-    if (Object.keys(outobj).every(function (x) { return typeof outobj[x] === 'undefined'; }) === false) {
-      db.any(contactquery, outobj)
-        .then(function (data) {
-          if (data.length === 0) {
-            // We're returning the structure, but nothing inside it:
-            var returner = [];
-          } else {
-            returner = data;
-          };
-
-          res.status(200)
-            .json({
-              status: 'success',
-              data: {query: outobj, result: returner}
-            });
-        })
-        .catch(function (err) {
-          return next(err);
-        });
-    };
+        res.status(200)
+          .json({
+            status: 'success',
+            data: { query: outobj, result: returner }
+          });
+      })
+      .catch(function (err) {
+        return next(err);
+      });
   };
 }
 
