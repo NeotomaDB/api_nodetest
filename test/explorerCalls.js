@@ -98,7 +98,7 @@ describe('Tests for Explorer App Services', function () {
     });
     it('should respond 200 for Search', function () {
       var response = request('get', appServicesLocation + '/Search', {
-        'qs': { idPropertysitename: 'Marion' },
+        'qs': { sitename: 'Marion' },
         'time': true
       });
 
