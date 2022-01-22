@@ -15,16 +15,6 @@ var api = supertest('http://localhost:' + process.env.APIPORT + '/');
 describe('Get contact data:', function () {
   // takes a while to run.
   this.timeout(5000);
-  it('An empty query redirects to the api documentation.', function (done) {
-    api.get('v2.0/data/contacts/')
-      .set('Accept', 'application/json')
-      .expect(302)
-      .end(function (err, res) {
-        if (err) return done(err);
-        expect(500, done);
-        done();
-      });
-  });
 
   it('The default limit of 25 should be reached for contact data:', function (done) {
     api.get('v2.0/data/contacts/?contactstatus=retired')

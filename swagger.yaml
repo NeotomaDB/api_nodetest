@@ -763,9 +763,14 @@ components:
     contactresponse:
       properties:
         data:
-          type: array
-          items:
-            $ref: '#/components/schemas/contact'
+          type: object
+          properties:
+            query: 
+              type: object
+            result:
+              type: array
+              items:
+                $ref: '#/components/schemas/contact'
           minItems: 0
         status:
           $ref: '#/components/schemas/status'
@@ -1562,17 +1567,18 @@ components:
         author:
           type: string
         ecolgroup:
-          items:
-            type: string
-          type: array
+          type: string
         highertaxonid:
           format: int32
           type: integer
         publicationid:
           format: int32
           type: integer
+        publication:
+          type: string
+          nullable: true
         status:
-          type: boolean
+          type: string
         taxonid:
           format: int32
           type: integer
@@ -2269,7 +2275,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/dbtable'
+                $ref: '#/components/schemas/dbtablenameresponse'
           description: Returned table.
       summary: Returns the full content of a named Neotoma Database table.
       tags:
