@@ -103,6 +103,12 @@ function gettaxonquery (req, res, next) {
     'offset': req.query.offset
   }
 
+  if (typeof outobj.limit === 'undefined') {
+    outobj.limit = 15
+  }
+  if (typeof outobj.offset === 'undefined') {
+    outobj.offset = 0
+  }
   if (typeof outobj.taxonid === 'undefined') {
     outobj.taxonid = null;
   };
@@ -113,7 +119,9 @@ function gettaxonquery (req, res, next) {
       return x.replace(/\*/g, '%')
     });
   }
+  console.log('at the head')
   if (outobj.lower === 'true') {
+    console.log('there')
     db.any(taxonquerylower, outobj)
       .then(function (data) {
         res.status(200)
@@ -126,21 +134,26 @@ function gettaxonquery (req, res, next) {
       .catch(function (err) {
         return next(err);
       });
+  };
 
-    if (typeof outobj.lower === 'undefined') {
-      db.any(taxonquerystatic, outobj)
-        .then(function (data) {
-          res.status(200)
-            .json({
-              status: 'success',
-              data: data,
-              message: 'Retrieved all tables'
-            });
-        })
-        .catch(function (err) {
-          return next(err);
-        });
-    };
+  if (typeof outobj.lower === 'undefined') {
+    console.log('here')
+    db.any(taxonquerystatic, outobj)
+      .then(function (data) {
+        res.status(200)
+          .json({
+            status: 'success',
+            data: data,
+            message: 'Retrieved all tables'
+          });
+      })
+      .catch(function (err) {
+        res.status(500)
+          .json({
+            status: 'error',
+            error: err.message
+          });
+      });
   };
 }
 
