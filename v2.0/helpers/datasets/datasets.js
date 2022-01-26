@@ -60,12 +60,11 @@ function datasetbydb (req, res, next) {
     }
     database = validateOut(database)
   } else {
-    res.status(500)
-      .json({
-        status: 'failure',
-        data: null,
-        message: 'Must pass either queries or a comma separated list.'
-      });
+    var database = { 'database': '',
+      'limit': parseInt(req.query.limit),
+      'offset': parseInt(req.query.offset)
+    }
+    database = validateOut(database)
   }
 
   db.any(datasetbydbsql, database)
