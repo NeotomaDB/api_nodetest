@@ -14,10 +14,6 @@ function sql (file) {
 
 const explorersearchQry = sql('./explorersearchQuery.sql');
 
-module.exports = {
-  explorersearch: explorersearch
-};
-
 // see link for need of custom function
 // https://stackoverflow.com/questions/15762768/javascript-math-round-to-two-decimal-places#15762794
 const roundTo = function (n, digits) {
@@ -129,11 +125,20 @@ function explorersearch (req, res, next) {
   // Get the query string:
 
   // search input param is stringified JSON object, thus parse first
-  var inputParamObj = JSON.parse(req.query.search);
+  try {
+    var inputParamObj = JSON.parse(req.query.search);
+  } catch (err) {
+    res.status(500)
+        .type('application/json')
+        .json({
+          status: 'failure',
+          data: err.message,
+          query: req.query,
+          message: 'The Search enpoint expects structured JSON through the search parameter.'
+        })
+  }
 
-  console.dir('req.query.search object: ' + inputParamObj);
-
-  // console.log("Object.entries: "+Object.entries(inputParamObj));
+  console.log('req.query.search object: ' + inputParamObj);
 
   var qryParams = {
     '_taxonids': null,
@@ -310,3 +315,7 @@ function explorersearch (req, res, next) {
       return next(err);
     });
 }
+
+module.exports = {
+  explorersearch: explorersearch
+};

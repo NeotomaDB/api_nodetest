@@ -6,7 +6,7 @@ var expect = chakram.expect;
 const dotenv = require('dotenv');
 dotenv.config();
 
-let appServicesLocation = 'https://api.neotomadb.org/v1.5/apps'
+let appServicesLocation = 'http://localhost:' + process.env.APIPORT + '/v1.5/apps';
 
 describe('Tests for Explorer App Services', function () {
   describe('tests for get', function () {
@@ -98,7 +98,7 @@ describe('Tests for Explorer App Services', function () {
     });
     it('should respond 200 for Search', function () {
       var response = request('get', appServicesLocation + '/Search', {
-        'qs': { sitename: 'Marion' },
+        'qs': { search: encodeURI('{"metadata":{"siteName":"Marion%"}}'),
         'time': true
       });
 
