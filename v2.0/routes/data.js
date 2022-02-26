@@ -31,7 +31,7 @@ router.get('/downloads/', handlers.downloadbyid);
 router.get('/frozen/:datasetid', handlers.frozen);
 router.get('/geopoliticalunits', handlers.geopoliticalunits);
 router.get('/geopoliticalunits/:gpid', handlers.geopoliticalbyid);
-router.get('/geopoliticalunits/:gpid/datasets', handlers.sitesbygeopol);
+router.get('/geopoliticalunits/:gpid/datasets', handlers.datasetsbygeopol);
 router.get('/geopoliticalunits/:gpid/sites', handlers.sitesbygeopol);
 router.get('/occurrences', handlers.occurrencequery);
 router.get('/occurrences/:occurrenceid', handlers.occurrencebyid);

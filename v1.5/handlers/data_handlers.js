@@ -312,8 +312,12 @@ function publicationquery (req, res, next) {
           });
       })
       .catch(function (err) {
-        console.log('ERROR:', err.message || err);
-        next(err);
+        res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message,
+          message: 'Ran into an error.'
+        });
       });
   }
 };

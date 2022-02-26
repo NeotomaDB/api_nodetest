@@ -1,35 +1,42 @@
 WITH allgpu AS (
-  SELECT DISTINCT siteid, geopoliticalid
+  SELECT DISTINCT ON (sgp.siteid) sgp.siteid, sgp.geopoliticalid
   FROM
     ndb.geopaths AS gp
     INNER JOIN ndb.sitegeopolitical AS sgp ON sgp.geopoliticalid = gp.geoin
     WHERE ${gpid} && gp.geoout OR sgp.geopoliticalid = ANY(${gpid})
-    OFFSET (CASE WHEN ${offset} IS NULL THEN 0
-                 ELSE ${offset}
-            END)
-    LIMIT (CASE WHEN ${limit} IS NULL THEN 25
+    GROUP BY sgp.siteid, sgp.geopoliticalid, gp.geoout
+	  ORDER BY sgp.siteid, array_length(gp.geoout,1) DESC
+    OFFSET (CASE WHEN ${offset} IS NULL
+               THEN 0
+             ELSE ${offset}
+             END)
+    LIMIT (CASE WHEN ${limit} IS NULL
+                  THEN 25
                 ELSE ${limit}
-           END)
+                END)
  ),
  collu AS (
-   SELECT sts.siteid,
-    json_build_object('collectionunitid', clu.collectionunitid,
+   SELECT DISTINCT
+    jsonb_build_object('collectionunitid', clu.collectionunitid,
                       'collectionunit', clu.collunitname,
                       'handle', clu.handle,
                       'collectionunittype', cts.colltype,
-                      'datasets', json_agg(json_build_object('datasetid', dts.datasetid,
-                                                             'datasettype', dst.datasettype))) AS collectionunit
+                      'datasets', json_agg(DISTINCT jsonb_build_object('datasetid', dts.datasetid,
+                                                             'datasettype', dst.datasettype))) AS collectionunit,
+                                                             sts.siteid
  	FROM
- 	  ndb.datasets AS dts
- 	  LEFT JOIN ndb.collectionunits AS clu ON clu.collectionunitid = dts.collectionunitid
- 	  LEFT JOIN ndb.sites AS sts ON sts.siteid = clu.siteid
+ 	  allgpu
+    LEFT JOIN ndb.sites AS sts ON sts.siteid = allgpu.siteid
+    LEFT JOIN ndb.sitegeopolitical AS sgp ON sgp.geopoliticalid IN (allgpu.geopoliticalid)
+ 	  LEFT JOIN ndb.collectionunits AS clu ON clu.siteid = sts.siteid
+ 	  LEFT JOIN ndb.datasets AS dts ON dts.collectionunitid = clu.collectionunitid
  	  LEFT JOIN ndb.datasettypes AS dst ON dst.datasettypeid = dts.datasettypeid
  	  LEFT OUTER JOIN ndb.collectiontypes as cts ON clu.colltypeid = cts.colltypeid
  	GROUP BY sts.siteid, clu.collectionunitid, cts.colltype
  ),
  sites AS (
 SELECT 'siteid', sts.siteid AS siteid,
-	 json_build_object('siteid', sts.siteid,
+	 jsonb_build_object('siteid', sts.siteid,
               'sitename', sts.sitename,
               'sitedescription', sts.sitedescription,
               'geography', ST_AsGeoJSON(sts.geog,5,2),

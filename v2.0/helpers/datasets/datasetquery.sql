@@ -79,11 +79,23 @@ dspiagg AS (
       dts.notes,
       cstdb.databasename
   )
-SELECT  json_build_object('site', dssites.sites,
-                          'datasets', json_agg(dspiagg.dataset)) AS sites
-FROM
-  (SELECT * FROM dssites) AS dssites
-  LEFT OUTER JOIN (SELECT * FROM dspiagg) AS dspiagg ON dssites.datasetid = dspiagg.datasetid
+SELECT json_build_object(       'siteid', sts.siteid,
+                              'sitename', sts.sitename,
+                       'sitedescription', sts.sitedescription,
+                             'sitenotes', sts.notes,
+                             'geography', ST_AsGeoJSON(sts.geog,5,2),
+                              'altitude', sts.altitude,
+                      'collectionunitid', clu.collectionunitid,
+                        'collectionunit', clu.collunitname,
+                                'handle', clu.handle,
+                              'unittype', cts.colltype,
+						'datasets', json_agg(dspi.dataset)) as site
+FROM ndb.datasets AS dts
+  LEFT OUTER JOIN dspiagg             AS dspi ON dspi.datasetid = dts.datasetid
+  LEFT OUTER JOIN ndb.collectionunits AS clu  ON clu.collectionunitid = dts.collectionunitid
+  LEFT OUTER JOIN ndb.sites           AS sts  ON sts.siteid = clu.siteid
+  LEFT OUTER JOIN ndb.collectiontypes as cts  ON clu.colltypeid = cts.colltypeid
+WHERE dts.datasetid = ANY ($1)
 GROUP BY
   dssites.sites
     OFFSET (CASE WHEN ${offset} IS NULL THEN 0

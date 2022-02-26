@@ -1,11 +1,11 @@
 // Sites query:
 const path = require('path');
-//get global database object
+// get global database object
 var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
 // Helper for linking to external query files:
-function sql(file) {
+function sql (file) {
   const fullPath = path.join(__dirname, file);
   return new pgp.QueryFile(fullPath, {
     minify: true
@@ -14,13 +14,9 @@ function sql(file) {
 
 const explorersearchQry = sql('./explorersearchQuery.sql');
 
-module.exports = {
-  explorersearch: explorersearch
-};
-
 // see link for need of custom function
 // https://stackoverflow.com/questions/15762768/javascript-math-round-to-two-decimal-places#15762794
-const roundTo = function(n, digits) {
+const roundTo = function (n, digits) {
   var negative = false;
   if (digits === undefined) {
     digits = 0;
@@ -39,8 +35,8 @@ const roundTo = function(n, digits) {
   return n;
 };
 
-const rollupSites = function(data) {
-  var sortSiteID = function(a, b) {
+const rollupSites = function (data) {
+  var sortSiteID = function (a, b) {
     return a.siteid - b.siteid;
   }
   data.sort(sortSiteID);
@@ -66,9 +62,9 @@ const rollupSites = function(data) {
   var currentID = null;
   var currentSite;
 
-  data.forEach(function(d) {
+  data.forEach(function (d) {
     if (siteData.length == 0 || currentID != d.siteid) {
-      //console.log("rollup- adding new site");
+      // console.log("rollup- adding new site");
       var newSite = {};
       currentSite = newSite;
       currentID = d.siteid;
@@ -77,22 +73,22 @@ const rollupSites = function(data) {
           newSite[p] = d[p];
         }
       }
-      //console.log("add latitude");
-      //add latitude
+      // console.log("add latitude");
+      // add latitude
       if (newSite.latitudenorth != null && newSite.latitudesouth != null) {
         newSite.latitude = +roundTo((newSite.latitudenorth + newSite.latitudesouth) / 2, 6)
       } else {
         newSite.latitude = null;
       }
-      //add longitude
+      // add longitude
       if (newSite.longitudeeast != null && newSite.longitudewest != null) {
         newSite.longitude = +roundTo((newSite.longitudeeast + newSite.longitudewest) / 2, 6)
       } else {
         newSite.longitude = null;
       }
-      //console.log("newSite obj "+ JSON.stringify(newSite))
+      // console.log("newSite obj "+ JSON.stringify(newSite))
       newSite.datasets = [];
-      //add dataset
+      // add dataset
       var newDataset = {};
       newDataset.ageoldest = d.ageoldest;
       newDataset.ageyoungest = d.ageyoungest;
@@ -104,9 +100,8 @@ const rollupSites = function(data) {
       newDataset.minage = d.minage;
       newSite.datasets.push(newDataset);
       siteData.push(newSite);
-
     } else {
-      //add dataset
+      // add dataset
       var newDataset = {};
       newDataset.ageoldest = d.ageoldest;
       newDataset.ageyoungest = d.ageyoungest;
@@ -116,27 +111,34 @@ const rollupSites = function(data) {
       newDataset.datasettype = d.datasettype;
       newDataset.maxage = d.maxage;
       newDataset.minage = d.minage;
-      //console.log("currentSite: "+JSON.stringify(currentSite));
-      //console.log("newDataset: "+JSON.stringify(newDataset));
+      // console.log("currentSite: "+JSON.stringify(currentSite));
+      // console.log("newDataset: "+JSON.stringify(newDataset));
       currentSite.datasets.push(newDataset);
     }
-
   })
-  //console.log("siterollup result: "+JSON.stringify(siteData));
+  // console.log("siterollup result: "+JSON.stringify(siteData));
   return siteData;
 }
 
-
-function explorersearch(req, res, next) {
+function explorersearch (req, res, next) {
   var data = [];
   // Get the query string:
 
-  //search input param is stringified JSON object, thus parse first
-  var inputParamObj = JSON.parse(req.query.search);
+  // search input param is stringified JSON object, thus parse first
+  try {
+    var inputParamObj = JSON.parse(req.query.search);
+  } catch (err) {
+    res.status(500)
+        .type('application/json')
+        .json({
+          status: 'failure',
+          data: err.message,
+          query: req.query,
+          message: 'The Search enpoint expects structured JSON through the search parameter.'
+        })
+  }
 
-  console.dir("req.query.search object: " + inputParamObj);
-
-  //console.log("Object.entries: "+Object.entries(inputParamObj));
+  console.log('req.query.search object: ' + inputParamObj);
 
   var qryParams = {
     '_taxonids': null,
@@ -156,17 +158,17 @@ function explorersearch(req, res, next) {
     '_contactid': null,
     '_ageold': null,
     '_ageyoung': null,
-    '_agedocontain': true, //function default true
-    '_agedirectdate': false, //function default false
+    '_agedocontain': true, // function default true
+    '_agedirectdate': false, // function default false
     '_subdate': null,
     '_debug': null
   }
 
   if (inputParamObj.taxa) {
-    //qryParams._taxonids = inputParamObj.taxa.taxonIds;
+    // qryParams._taxonids = inputParamObj.taxa.taxonIds;
     qryParams._taxonids = String(inputParamObj.taxa.taxonIds)
       .split(',')
-      .map(function(item) {
+      .map(function (item) {
         return parseInt(item, 10);
       });
     if (inputParamObj.taxa.abundance) {
@@ -177,10 +179,10 @@ function explorersearch(req, res, next) {
   if (inputParamObj.elementTypes) {
     qryParams._elemtypeids = String(inputParamObj.elementTypes)
       .split(',')
-      .map(function(item) {
+      .map(function (item) {
         return parseInt(item, 10);
       });
-    console.dir("qryParams._elementtypeids: " + qryParams._elemtypeids);
+    console.dir('qryParams._elementtypeids: ' + qryParams._elemtypeids);
   }
 
   /* time options
@@ -199,7 +201,7 @@ function explorersearch(req, res, next) {
     if (inputParamObj.time.ageYounger) {
       qryParams._ageyoung = parseInt(inputParamObj.time.ageYounger, 10);
     }
-    inputParamObj.time.resultType == "intersects" ? qryParams._agedocontain = false : qryParams._agedocontain = true;
+    inputParamObj.time.resultType == 'intersects' ? qryParams._agedocontain = false : qryParams._agedocontain = true;
     inputParamObj.time.exactlyDated == true ? qryParams._agedirectdate = true : qryParams._agedirectdate = false;
   }
 
@@ -217,7 +219,7 @@ function explorersearch(req, res, next) {
   */
 
   if (inputParamObj.metadata) {
-    console.log("metadata are:" + JSON.stringify(inputParamObj.metadata));
+    console.log('metadata are:' + JSON.stringify(inputParamObj.metadata));
     if (inputParamObj.metadata.siteName) {
       qryParams._sitename = String(inputParamObj.metadata.siteName);
     }
@@ -237,14 +239,13 @@ function explorersearch(req, res, next) {
     if (inputParamObj.metadata.depositionalEnviromentIds) {
       qryParams._depenvids = String(inputParamObj.metadata.depositionalEnviromentIds)
         .split(',')
-        .map(function(item) {
+        .map(function (item) {
           return parseInt(item, 10);
         });
     }
     if (inputParamObj.metadata.databaseId) {
       qryParams._dbid = parseInt(inputParamObj.metadata.databaseId, 10);
     }
-
   }
 
   if (inputParamObj.datasetTypeId) {
@@ -257,18 +258,17 @@ function explorersearch(req, res, next) {
       "gpId": "9283"
     },
   */
-  console.dir("have inputParamObj.space" + inputParamObj.space);
+  console.dir('have inputParamObj.space' + inputParamObj.space);
 
   if (inputParamObj.space) {
-
-    console.log("parsing inputParamObj.space");
-    //check for geopolitical unit
+    console.log('parsing inputParamObj.space');
+    // check for geopolitical unit
     if (inputParamObj.space.gpId) {
       qryParams._gpid = parseInt(inputParamObj.space.gpId, 10);
     }
-    //check for wkt
-    console.log("inputParamObj.space.wkt " + inputParamObj.space.wkt);
-    console.log("qryParams._coords before assignment: " + qryParams._coords);
+    // check for wkt
+    console.log('inputParamObj.space.wkt ' + inputParamObj.space.wkt);
+    console.log('qryParams._coords before assignment: ' + qryParams._coords);
     if (inputParamObj.space.wkt) {
       qryParams._coords = String(inputParamObj.space.wkt);
     } else if (inputParamObj.space.bbox) {
@@ -277,21 +277,19 @@ function explorersearch(req, res, next) {
       qryParams._coords = null;
     }
 
-    console.log("qryParams._coords after assignment: " + qryParams._coords);
+    console.log('qryParams._coords after assignment: ' + qryParams._coords);
 
-    //check for maxAltitude
+    // check for maxAltitude
     inputParamObj.space.maxAltitude ? qryParams._altmax = parseInt(inputParamObj.space.maxAltitude, 10) : qryParams._altmax = null;
-    //check for minAltitude
+    // check for minAltitude
     inputParamObj.space.minAltitude ? qryParams._altmin = parseInt(inputParamObj.space.minAltitude, 10) : qryParams._altmin = null;
-
   }
 
-
-  console.log("qryParams is: " + JSON.stringify(qryParams, null, 2));
-  console.log("inputParamObj is: " + JSON.stringify(inputParamObj, null, 2));
+  console.log('qryParams is: ' + JSON.stringify(qryParams, null, 2));
+  console.log('inputParamObj is: ' + JSON.stringify(inputParamObj, null, 2));
 
   db.any(explorersearchQry, qryParams)
-    .then(function(data) {
+    .then(function (data) {
       if (data.length > 0) {
         data = rollupSites(data);
       }
@@ -305,8 +303,19 @@ function explorersearch(req, res, next) {
           message: 'Retrieved Explorer search results'
         })
     })
-    .catch(function(err) {
+    .catch(function (err) {
       console.log(err);
+      res.status(500)
+        .type('application/json')
+        .json({
+          status: 'failure',
+          data: err.message,
+          message: 'Ran into an error.'
+        })
       return next(err);
     });
 }
+
+module.exports = {
+  explorersearch: explorersearch
+};

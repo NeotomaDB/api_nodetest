@@ -7,10 +7,49 @@ const { sql, validateOut } = require('../../../src/neotomaapi.js');
 var Terraformer = require('terraformer');
 var WKT = require('terraformer-wkt-parser');
 
-const datasetquerysql = sql('../v2.0/helpers/datasets/datasetquery.sql');
+const datasetquerysql = sql('../v2.0/helpers/datasets/datasetqueryv2.sql');
 const datasetbyidsql = sql('../v2.0/helpers/datasets/datasetbyid.sql');
 const datasetbydbsql = sql('../v2.0/helpers/datasets/datasetbydb.sql');
 const datasetbysite = sql('../v2.0/helpers/datasets/datasetbysite.sql');
+const datasetbygpidsql = sql('../v2.0/helpers/datasets/datasetbygpid.sql');
+
+function datasetsbygeopol (req, res, next) {
+  var gpIdUsed = !!req.params.gpid;
+
+  if (gpIdUsed) {
+    var gpid = String(req.params.gpid)
+      .split(',')
+      .map(function (item) {
+        return parseInt(item, 10);
+      });
+  } else {
+    res.status(500)
+      .json({
+        status: 'failure',
+        data: null,
+        message: 'Must pass either queries or a comma separated integer sequence.'
+      });
+  }
+
+  db.any(datasetbygpidsql, [gpid])
+    .then(function (data) {
+      if (data.length === 0) {
+        // We're returning the structure, but nothing inside it:
+        var returner = [];
+      } else {
+        returner = data;
+      };
+      res.status(200)
+        .json({
+          status: 'success',
+          data: returner,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+      next(err);
+    });
+}
 
 function datasetbyid (req, res, next) {
   var dsIdUsed = !!req.params.datasetid;
@@ -51,7 +90,6 @@ function datasetbyid (req, res, next) {
 }
 
 function datasetbydb (req, res, next) {
-
   var dbUsed = !!req.query.database;
 
   if (dbUsed) {
@@ -61,12 +99,11 @@ function datasetbydb (req, res, next) {
     }
     database = validateOut(database)
   } else {
-    res.status(500)
-      .json({
-        status: 'failure',
-        data: null,
-        message: 'Must pass either queries or a comma separated list.'
-      });
+    var database = { 'database': '',
+      'limit': parseInt(req.query.limit),
+      'offset': parseInt(req.query.offset)
+    }
+    database = validateOut(database)
   }
 
   db.any(datasetbydbsql, database)
@@ -152,6 +189,7 @@ function datasetquery (req, res, next) {
     res.status(500)
       .json({
         status: 'failure',
+        title: 'Oh man.',
         message: 'The altmin is greater than altmax.  Please fix this!'
       });
   }
@@ -200,3 +238,4 @@ module.exports.datasetbyid = datasetbyid;
 module.exports.datasetbysiteid = datasetbysiteid;
 module.exports.datasetquery = datasetquery;
 module.exports.datasetbydb = datasetbydb;
+module.exports.datasetsbygeopol = datasetsbygeopol;
