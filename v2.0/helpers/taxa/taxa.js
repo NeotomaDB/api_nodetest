@@ -104,7 +104,7 @@ function gettaxonquery (req, res, next) {
   }
 
   if (typeof outobj.limit === 'undefined') {
-    outobj.limit = 15
+    outobj.limit = 25
   }
   if (typeof outobj.offset === 'undefined') {
     outobj.offset = 0

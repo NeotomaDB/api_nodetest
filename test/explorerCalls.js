@@ -99,7 +99,7 @@ describe('Tests for Explorer App Services', function () {
     it('should respond 200 for Search', function () {
       var response = request('get', appServicesLocation + '/Search', {
         'qs': { search: encodeURI('{"metadata":{"siteName":"Marion%"}}'),
-        'time': true
+          'time': true }
       });
 
       expect(response).to.have.status(200);
