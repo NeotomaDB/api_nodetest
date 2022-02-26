@@ -1,10 +1,11 @@
 WITH allgpu AS (
-  SELECT DISTINCT siteid, geopoliticalid
+  SELECT DISTINCT ON (sgp.siteid) sgp.siteid, sgp.geopoliticalid
   FROM
     ndb.geopaths AS gp
     INNER JOIN ndb.sitegeopolitical AS sgp ON sgp.geopoliticalid = gp.geoin
     WHERE ${gpid} && gp.geoout OR sgp.geopoliticalid = ANY(${gpid})
-    GROUP BY sgp.geopoliticalid
+    GROUP BY sgp.siteid, sgp.geopoliticalid, gp.geoout
+	  ORDER BY sgp.siteid, array_length(gp.geoout,1) DESC
     OFFSET (CASE WHEN ${offset} IS NULL
                THEN 0
              ELSE ${offset}
