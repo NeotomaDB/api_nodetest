@@ -13,11 +13,13 @@ const downloadsql = sql('../v2.0/helpers/download/downloadbydsid.sql');
 function getdefault (chron) {
   function quickrank (chronrank) {
     let chronorder = [{ 'order': 1, 'agetype': 'Calendar years BP' },
-      { 'order': 2, 'agetype': 'Calibrated radiocarbon years BP' },
-      { 'order': 3, 'agetype': 'Varve years BP' },
-      { 'order': 4, 'agetype': 'Radiocarbon years BP' }]
+      { 'order': 2, 'agetype': 'Calendar years AD/BC' },
+      { 'order': 3, 'agetype': 'Calibrated radiocarbon years BP' },
+      { 'order': 4, 'agetype': 'Varve years BP' },
+      { 'order': 5, 'agetype': 'Radiocarbon years BP' }]
 
     const rank = chronorder.map(x => x['agetype']).indexOf(chronrank['chronology']['chronology']['modelagetype'])
+
     return chronorder[rank]['order']
   }
 
@@ -82,7 +84,12 @@ function downloadbyid (req, res, next) {
         });
     })
     .catch(function (err) {
-      next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message,
+          message: 'SQL Error.'
+        });
     });
 }
 

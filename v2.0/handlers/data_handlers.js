@@ -125,6 +125,10 @@ module.exports = {
     const dataset = require('../helpers/datasets/datasets.js');
     dataset.datasetbysiteid(req, res, next);
   },
+  datasetsbygeopol: function (req, res, next) {
+    const dataset = require('../helpers/datasets/datasets.js');
+    dataset.datasetbygeopol(req, res, next);
+  },
   datasetsbydb: function (req, res, next) {
     const dataset = require('../helpers/datasets/datasets.js');
     dataset.datasetbydb(req, res, next);

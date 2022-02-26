@@ -47,7 +47,7 @@ function occurrencebyid (req, res, next) {
 function occurrencequery (req, res, next) {
   // The broader query:
 
-  if (!!req.query.taxonname) {
+  if (req.query.taxonname) {
     // Split up the name into the accepts and the drops.
     var name = parseTaxa(req.query.taxonname)
   } else {
@@ -118,51 +118,38 @@ function occurrencequery (req, res, next) {
     outobj.loc = newloc;
   }
 
-  var novalues = Object.keys(outobj).every(function (x) {
-    return typeof outobj[x] === 'undefined' || !outobj[x];
-  });
-
-  if (novalues === true) {
-    if (!!req.accepts('json') & !req.accepts('html')) {
-      res.redirect('/swagger.json');
-    } else {
-      res.redirect('/api-docs');
-    };
+  var goodlower = !!outobj.lower;
+  var goodtaxa = !!outobj.taxonname || !!outobj.taxonid;
+  if (goodtaxa & goodlower & outobj.lower === 'true') {
+    db.any(occurrencerecursquerysql, outobj)
+      .then(function (data) {
+        res.status(200)
+          .json({
+            status: 'success',
+            data: data,
+            message: 'Retrieved all tables'
+          });
+      })
+      .catch(function (err) {
+        return next(err);
+      });
   } else {
-    var goodlower = !!outobj.lower;
-    var goodtaxa = !!outobj.taxonname || !!outobj.taxonid;
-    if (goodtaxa & goodlower & outobj.lower === 'true') {
-      db.any(occurrencerecursquerysql, outobj)
-        .then(function (data) {
-
-          res.status(200)
-            .json({
-              status: 'success',
-              data: data,
-              message: 'Retrieved all tables'
-            });
-        })
-        .catch(function (err) {
-          return next(err);
-        });
-    } else {
-      db.any(occurrencequerysql, outobj)
-        .then(function (data) {
-          res.status(200)
-            .json({
-              status: 'success',
-              data: data,
-              message: 'Retrieved all tables'
-            });
-        })
-        .catch(function (err) {
-          return next(err);
-        });
-    }
-  };
+    db.any(occurrencequerysql, outobj)
+      .then(function (data) {
+        res.status(200)
+          .json({
+            status: 'success',
+            data: data,
+            message: 'Retrieved all tables'
+          });
+      })
+      .catch(function (err) {
+        return next(err);
+      });
+  }
 };
 
-function occurrencebytaxon(req, res, next) {
+function occurrencebytaxon (req, res, next) {
   var taxonIdUsed = !!req.params.taxonid;
   if (taxonIdUsed) {
     var taxonlist = commaSep(req.params.taxonid);

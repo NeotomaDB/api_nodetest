@@ -5,6 +5,7 @@ SELECT DISTINCT tx.taxonid,
        CASE WHEN tx.extinct = FALSE THEN 'extant'
             WHEN tx.extinct = TRUE THEN 'extinct'
        END AS status,
+       tx.highertaxonid AS highertaxonid,
        tx.publicationid AS publicationid,
        pub.citation AS publication
   FROM
