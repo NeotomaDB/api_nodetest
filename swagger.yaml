@@ -2010,9 +2010,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/contactresponse'
-                type: array
+                $ref: '#/components/schemas/contactresponse'
           description: contact
       summary: Contact information for Neotoma contributors.
       tags:

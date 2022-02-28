@@ -127,7 +127,7 @@ module.exports = {
   },
   datasetsbygeopol: function (req, res, next) {
     const dataset = require('../helpers/datasets/datasets.js');
-    dataset.datasetbygeopol(req, res, next);
+    dataset.datasetsbygeopol(req, res, next);
   },
   datasetsbydb: function (req, res, next) {
     const dataset = require('../helpers/datasets/datasets.js');

@@ -17,6 +17,26 @@ function datasetsbygeopol (req, res, next) {
   var gpIdUsed = !!req.params.gpid;
 
   if (gpIdUsed) {
+    var gpData = { 'gpid': String(req.params.gpid)
+      .split(',')
+      .map(function (item) {
+        return parseInt(item, 10);
+      }),
+    'limit': parseInt(req.query.limit),
+    'offset': parseInt(req.query.offset)
+    }
+    gpData = validateOut(gpData)
+  } else {
+    res.status(500)
+      .json({
+        status: 'failure',
+        data: null,
+        message: 'Must pass either queries or a comma separated integer sequence.'
+      });
+  }
+
+
+  /*if (gpIdUsed) {
     var gpid = String(req.params.gpid)
       .split(',')
       .map(function (item) {
@@ -30,8 +50,8 @@ function datasetsbygeopol (req, res, next) {
         message: 'Must pass either queries or a comma separated integer sequence.'
       });
   }
-
-  db.any(datasetbygpidsql, [gpid])
+*/
+  db.any(datasetbygpidsql, gpData)
     .then(function (data) {
       if (data.length === 0) {
         // We're returning the structure, but nothing inside it:
@@ -43,11 +63,16 @@ function datasetsbygeopol (req, res, next) {
         .json({
           status: 'success',
           data: returner,
-          message: 'Retrieved all tables'
+          message: 'Retrieved results'
         });
     })
     .catch(function (err) {
-      next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message,
+          message: 'Error in passing query.'
+        });
     });
 }
 
@@ -85,7 +110,13 @@ function datasetbyid (req, res, next) {
         });
     })
     .catch(function (err) {
-      next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message,
+          message: 'Must pass either queries or a comma separated integer sequence.'
+        });
+      next.err()
     });
 }
 
@@ -122,7 +153,13 @@ function datasetbydb (req, res, next) {
         });
     })
     .catch(function (err) {
-      next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message,
+          message: 'Must pass either queries or a comma separated integer sequence.'
+        });
+      next.err()
     });
 }
 
@@ -158,7 +195,13 @@ function datasetbysiteid (req, res, next) {
         });
     })
     .catch(function (err) {
-      next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message,
+          message: 'Must pass either queries or a comma separated integer sequence.'
+        });
+      next.err()
     });
 }
 
@@ -230,7 +273,13 @@ function datasetquery (req, res, next) {
         });
     })
     .catch(function (err) {
-      return next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message,
+          message: 'Must pass either queries or a comma separated integer sequence.'
+        });
+      next.err()
     });
 }
 
