@@ -34,8 +34,6 @@ function datasetsbygeopol (req, res, next) {
         message: 'Must pass either queries or a comma separated integer sequence.'
       });
   }
-
-
   /*if (gpIdUsed) {
     var gpid = String(req.params.gpid)
       .split(',')
