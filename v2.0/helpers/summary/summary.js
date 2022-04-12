@@ -31,7 +31,13 @@ function datasettypesbymonths (req, res, next) {
           });
     })
     .catch(function (err) {
-      next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message,
+          message: 'Must pass either queries or a comma separated integer sequence.'
+        });
+      next.err()
     });
 }
 
@@ -63,7 +69,13 @@ function rawbymonth (req, res, next) {
           });
     })
     .catch(function (err) {
-      next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message,
+          message: 'Must pass either queries or a comma separated integer sequence.'
+        });
+      next.err()
     });
 }
 
@@ -95,7 +107,13 @@ function datasetdbsbymonths (req, res, next) {
           });
     })
     .catch(function (err) {
-      next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message,
+          message: 'Must pass either queries or a comma separated integer sequence.'
+        });
+      next.err()
     });
 }
 
