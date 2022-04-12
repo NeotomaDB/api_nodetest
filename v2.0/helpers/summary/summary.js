@@ -4,8 +4,8 @@ var db = require('../../../database/pgp_db');
 const { validateOut } = require('../../../src/neotomaapi.js');
 
 function datasettypesbymonths (req, res, next) {
-  var outobj = { 'start': parseInt(req.query.start ?? 0),
-  'end': parseInt(req.query.end ?? 1) }
+  var outobj = { 'start': parseInt(req.query.start || 0),
+  'end': parseInt(req.query.end || 1) }
 
   outobj = validateOut(outobj);
 
@@ -42,8 +42,8 @@ function datasettypesbymonths (req, res, next) {
 }
 
 function rawbymonth (req, res, next) {
-  var outobj = { 'start': parseInt(req.query.start ?? 0),
-  'end': parseInt(req.query.end ?? 1) }
+  var outobj = { 'start': parseInt(req.query.start || 0),
+  'end': parseInt(req.query.end || 1) }
 
   outobj = validateOut(outobj);
 
@@ -80,8 +80,8 @@ function rawbymonth (req, res, next) {
 }
 
 function datasetdbsbymonths (req, res, next) {
-  var outobj = { 'start': parseInt(req.query.start ?? 0),
-    'end': parseInt(req.query.end ?? 1) }
+  var outobj = { 'start': parseInt(req.query.start || 0),
+    'end': parseInt(req.query.end || 1) }
 
   outobj = validateOut(outobj);
 
