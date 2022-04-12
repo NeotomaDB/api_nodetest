@@ -4,8 +4,8 @@ var db = require('../../../database/pgp_db');
 const { validateOut } = require('../../../src/neotomaapi.js');
 
 function datasettypesbymonths (req, res, next) {
-  var outobj = { 'start': parseInt(req.query.start ?? 0),
-  'end': parseInt(req.query.end ?? 1) }
+  var outobj = { 'start': parseInt(req.query.start || 0),
+  'end': parseInt(req.query.end || 1) }
 
   outobj = validateOut(outobj);
 
@@ -31,13 +31,19 @@ function datasettypesbymonths (req, res, next) {
           });
     })
     .catch(function (err) {
-      next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message,
+          message: 'Must pass either queries or a comma separated integer sequence.'
+        });
+      next.err()
     });
 }
 
 function rawbymonth (req, res, next) {
-  var outobj = { 'start': parseInt(req.query.start ?? 0),
-  'end': parseInt(req.query.end ?? 1) }
+  var outobj = { 'start': parseInt(req.query.start || 0),
+  'end': parseInt(req.query.end || 1) }
 
   outobj = validateOut(outobj);
 
@@ -63,13 +69,19 @@ function rawbymonth (req, res, next) {
           });
     })
     .catch(function (err) {
-      next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message,
+          message: 'Must pass either queries or a comma separated integer sequence.'
+        });
+      next.err()
     });
 }
 
 function datasetdbsbymonths (req, res, next) {
-  var outobj = { 'start': parseInt(req.query.start ?? 0),
-    'end': parseInt(req.query.end ?? 1) }
+  var outobj = { 'start': parseInt(req.query.start || 0),
+    'end': parseInt(req.query.end || 1) }
 
   outobj = validateOut(outobj);
 
@@ -95,7 +107,13 @@ function datasetdbsbymonths (req, res, next) {
           });
     })
     .catch(function (err) {
-      next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message,
+          message: 'Must pass either queries or a comma separated integer sequence.'
+        });
+      next.err()
     });
 }
 
