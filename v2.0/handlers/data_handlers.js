@@ -4,10 +4,10 @@
 
 // Defining the query functions:
 module.exports = {
-  oxcalibrate: function (req, res, next) {
+  /* oxcalibrate: function (req, res, next) {
     const oxcal = require('../oxcal/oxcal.js');
     oxcal.calibrate(req, res, next);
-  },
+  }, */
   frozen: function (req, res, next) {
     const frozen = require('../helpers/frozendata/frozen.js');
     frozen.frozenbyid(req, res, next);

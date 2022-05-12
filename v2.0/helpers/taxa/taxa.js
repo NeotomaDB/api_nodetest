@@ -119,9 +119,8 @@ function gettaxonquery (req, res, next) {
       return x.replace(/\*/g, '%')
     });
   }
-  
+
   if (outobj.lower === 'true') {
-    console.log('there')
     db.any(taxonquerylower, outobj)
       .then(function (data) {
         res.status(200)
@@ -137,7 +136,6 @@ function gettaxonquery (req, res, next) {
   };
 
   if (typeof outobj.lower === 'undefined') {
-    console.log('here')
     db.any(taxonquerystatic, outobj)
       .then(function (data) {
         res.status(200)

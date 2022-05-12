@@ -35,7 +35,7 @@ router.get('/geopoliticalunits/:gpid/datasets', handlers.datasetsbygeopol);
 router.get('/geopoliticalunits/:gpid/sites', handlers.sitesbygeopol);
 router.get('/occurrences', handlers.occurrencequery);
 router.get('/occurrences/:occurrenceid', handlers.occurrencebyid);
-router.get('/oxcal/calibrate', handlers.oxcalibrate)
+// router.get('/oxcal/calibrate', handlers.oxcalibrate)
 router.get('/pollen/:id', handlers.pollen);
 router.get('/pollen/', handlers.pollen);
 router.get('/publications', handlers.publicationquery);

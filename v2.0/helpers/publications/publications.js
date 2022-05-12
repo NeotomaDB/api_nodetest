@@ -42,7 +42,6 @@ function publicationid (req, res, next) {
 };
 
 /* To query by publication: */
-
 function publicationquery (req, res, next) {
   var outobj = {
     'publicationid': String(req.query.publicationid)
@@ -65,8 +64,8 @@ function publicationquery (req, res, next) {
     'pubtype': String(req.query.pubtype),
     'year': req.query.year,
     'search': String(req.query.search),
-    'limit': parseInt(req.query.limit),
-    'offset': parseInt(req.query.offset)
+    'limit': parseInt(req.query.limit || 25),
+    'offset': parseInt(req.query.offset || 0)
   };
 
   if (outobj.doi[0] === 'undefined') {
@@ -77,7 +76,7 @@ function publicationquery (req, res, next) {
   var novalues = Object.keys(outobj).every(function (x) {
     return typeof outobj[x] === 'undefined' || !outobj[x];
   });
-
+console.log(novalues)
   if (novalues === true) {
     if (!!req.accepts('json') & !req.accepts('html')) {
       res.redirect('/swagger.json');

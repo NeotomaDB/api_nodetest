@@ -278,9 +278,9 @@ components:
     publicationidPath:
       description: |
         Unique publication identifier (from the Neotoma publication table).
-      in: query
+      in: path
       name: publicationid
-      required: false
+      required: true
       schema:
         format: int32
         maximum: 20000
@@ -775,19 +775,8 @@ components:
         status:
           $ref: '#/components/schemas/status'
       type: object
-    ontactstatus:
-      type: integer
     contactstatus:
-      enum:
-        - active
-        - deceased
-        - defunct
-        - extant
-        - inactive
-        - retired
-        - unknown
-      example: Active
-      type: string
+      type: integer
     dataset:
       properties:
         data:
@@ -2052,12 +2041,14 @@ paths:
     get:
       description: Returns information about Neotoma dataset
       parameters:
+        - $ref: '#/components/parameters/datasetidQuery'
         - $ref: '#/components/parameters/siteidQuery'
         - $ref: '#/components/parameters/contactidQuery'
         - $ref: '#/components/parameters/datasettypeQuery'
         - $ref: '#/components/parameters/altMinQuery'
         - $ref: '#/components/parameters/altMaxQuery'
         - $ref: '#/components/parameters/locQuery'
+        - $ref: '#/components/parameters/gpidQuery'
         - $ref: '#/components/parameters/ageYoungQuery'
         - $ref: '#/components/parameters/ageOldQuery'
         - $ref: '#/components/parameters/ageOfQuery'
@@ -2647,23 +2638,6 @@ paths:
       summary: Returns information about geopolitical units.
       tags:
         - Geopolitical metadata
-        - v2.0
-  /v2.0/data/sites/{siteid}/sites:
-    get:
-      parameters:
-        - $ref: '#/components/parameters/siteidPath'
-        - $ref: '#/components/parameters/limitParam'
-        - $ref: '#/components/parameters/offsetParam'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/siteresponse'
-          description: An array of sites.
-      summary: Returns information about sites.
-      tags:
-        - Site metadata
         - v2.0
   /v2.0/data/summary/dsdbmonth:
     get:

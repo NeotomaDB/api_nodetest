@@ -22,8 +22,8 @@ function datasetsbygeopol (req, res, next) {
       .map(function (item) {
         return parseInt(item, 10);
       }),
-    'limit': parseInt(req.query.limit),
-    'offset': parseInt(req.query.offset)
+    'limit': parseInt(req.query.limit || 25),
+    'offset': parseInt(req.query.offset || 0)
     }
     gpData = validateOut(gpData)
   } else {
@@ -114,7 +114,7 @@ function datasetbyid (req, res, next) {
           data: err.message,
           message: 'Must pass either queries or a comma separated integer sequence.'
         });
-      next.err()
+      next(err)
     });
 }
 
@@ -123,14 +123,14 @@ function datasetbydb (req, res, next) {
 
   if (dbUsed) {
     var database = { 'database': req.query.database,
-      'limit': parseInt(req.query.limit),
-      'offset': parseInt(req.query.offset)
+      'limit': parseInt(req.query.limit || 25),
+      'offset': parseInt(req.query.offset || 0)
     }
     database = validateOut(database)
   } else {
     var database = { 'database': '',
-      'limit': parseInt(req.query.limit),
-      'offset': parseInt(req.query.offset)
+      'limit': parseInt(req.query.limit || 25),
+      'offset': parseInt(req.query.offset || 0)
     }
     database = validateOut(database)
   }
@@ -157,7 +157,7 @@ function datasetbydb (req, res, next) {
           data: err.message,
           message: 'Must pass either queries or a comma separated integer sequence.'
         });
-      next.err()
+      next(err)
     });
 }
 
@@ -199,7 +199,7 @@ function datasetbysiteid (req, res, next) {
           data: err.message,
           message: 'Must pass either queries or a comma separated integer sequence.'
         });
-      next.err()
+      next(err)
     });
 }
 
@@ -219,13 +219,12 @@ function datasetquery (req, res, next) {
     'gpid': parseInt(req.query.gpid),
     'ageyoung': parseInt(req.query.ageyoung),
     'ageold': parseInt(req.query.ageold),
-    'ageof': parseInt(req.query.ageold),
-    'limit': parseInt(req.query.limit),
-    'offset': parseInt(req.query.offset)
+    'ageof': parseInt(req.query.ageof),
+    'limit': parseInt(req.query.limit || 25),
+    'offset': parseInt(req.query.offset || 0)
   };
 
   outobj = validateOut(outobj);
-
   if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
     res.status(500)
       .json({
@@ -233,52 +232,51 @@ function datasetquery (req, res, next) {
         title: 'Oh man.',
         message: 'The altmin is greater than altmax.  Please fix this!'
       });
-  }
-
-  if (outobj.ageyoung > outobj.ageold & !!outobj.ageold & !!outobj.ageyoung) {
+  } else if (outobj.ageyoung > outobj.ageold & !!outobj.ageold & !!outobj.ageyoung) {
     res.status(500)
       .json({
         status: 'failure',
         message: 'The older age is smaller than the younger age.  Neotoma ages are assumed to be in calibrated radiocarbon years since 1950, decreasing to the present and increasing through the Pleistocene.'
       });
-  }
+  } else {
 
-  var goodloc = !!outobj.loc
+    var goodloc = !!outobj.loc
 
-  if (goodloc) {
-    try {
-      var newloc = JSON.parse(outobj.loc)
-      newloc = WKT.convert(JSON.parse(outobj.loc));
-    } catch (err) {
-      newloc = outobj.loc;
+    if (goodloc) {
+      try {
+        var newloc = JSON.parse(outobj.loc)
+        newloc = WKT.convert(JSON.parse(outobj.loc));
+      } catch (err) {
+        newloc = outobj.loc;
+      }
+      outobj.loc = newloc;
     }
-    outobj.loc = newloc;
-  }
 
-  db.any(datasetquerysql, outobj)
-    .then(function (data) {
-      if (data.length === 0) {
-        // We're returning the structure, but nothing inside it:
-        var returner = [];
-      } else {
-        returner = data;
-      };
-      res.status(200)
-        .json({
-          status: 'success',
-          data: returner,
-          message: 'Retrieved all tables'
-        });
-    })
-    .catch(function (err) {
-      res.status(500)
-        .json({
-          status: 'failure',
-          data: err.message,
-          message: 'Must pass either queries or a comma separated integer sequence.'
-        });
-      next.err()
-    });
+    db.any(datasetquerysql, outobj)
+      .then(function (data) {
+        if (data.length === 0) {
+          // We're returning the structure, but nothing inside it:
+          var returner = [];
+        } else {
+          returner = data;
+        };
+        res.status(200)
+          .json({
+            status: 'success',
+            data: returner,
+            message: 'Retrieved all tables'
+          });
+      })
+      .catch(function (err) {
+        res.status(500)
+          .json({
+            status: 'failure',
+            data: err.message,
+            message: 'Must pass either queries or a comma separated integer sequence.'
+          });
+        next(err)
+      });
+  }
 }
 
 module.exports.datasetbyid = datasetbyid;
