@@ -7,7 +7,7 @@ var expect = chakram.expect;
 describe('tests for /v1.5/data/sites/{siteid}', function () {
   describe('tests for get', function () {
     it('should respond 200 for "An array of site elements."', function () {
-      var response = request('get', 'http://localhost:3005/v1.5/data/sites/4331', {
+      var response = request('get', 'http://localhost:3005/v1.5/data/sites/1890', {
         'time': true
       });
 
