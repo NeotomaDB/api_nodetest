@@ -29,8 +29,8 @@ function contacts (req, res, next) {
     'contactstatus': req.query.contactstatus,
     'name': req.query.name,
     'similarity': req.query.similarity,
-    'limit': req.query.limit,
-    'offset': req.query.offset
+    'limit': req.query.limit || 25,
+    'offset': req.query.offset || 0
   };
 
   outobj = validateOut(outobj);

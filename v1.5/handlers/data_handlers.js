@@ -9,7 +9,6 @@ module.exports = {
   publicationbydataset: publicationbydataset,
   downloads: downloads,
   geopoliticalunits: function (req, res, next) {
-    console.log('calling geopoliticalunits helper');
     var geopol = require('../helpers/geopoliticalunits/geopoliticalunits.js');
     geopol.geopoliticalunits(req, res, next);
   },
@@ -71,13 +70,11 @@ module.exports = {
   },
   // RETURNING DATASETS
   datasets: function (req, res, next) {
-    console.log('datasets handler');
     var datasets = require('../helpers/datasets/datasets.js');
     // messy need for which or if conditional to check for which
     // query parameters have been passed
 
     if (req.query.hasOwnProperty('siteids')) {
-      console.log('req.query.siteid: ' + req.query.siteid);
       datasets.datasetsbysiteids(req, res, next);
     } else if (req.query.hasOwnProperty('datasetids')) {
       datasets.datasetbyids(req, res, next);
@@ -135,11 +132,9 @@ function downloads (req, res, next) {
       ])
     })
       .then(function (data) {
-        console.log('data/downloads iterate over results');
         var dataset = data[0];
         dataset['datasetpis'] = data[1];
         if (data[2]) {
-          console.log('should only be 1 site: num sites ' + data[2].length);
           // return an object, not an array
           dataset['site'] = data[2][0];
         } else {
@@ -174,7 +169,6 @@ function downloads (req, res, next) {
             sdObj.variablecontext = e.variablecontext;
             return sdObj
           })
-          // console.log("arrSampleData length"+arrSampleData.length);
           s['sampleages'] = arrSampleAges;
           s['sampledata'] = arrSampleData;
         });
@@ -197,7 +191,6 @@ function downloads (req, res, next) {
               message: 'No download exists for this datasetid'
             });
         } else {
-          console.log('ERROR:', err.message || err);
           res.status(500)
             .jsonp({
               success: 0,
