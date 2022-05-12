@@ -194,17 +194,14 @@ module.exports = {
     summaries.datasettypesbymonths(req, res, next);
   },
   dsdbmonth: function (req, res, next) {
-    console.log('hello')
     const summaries = require('../helpers/summary/summary.js');
     summaries.datasetdbsbymonths(req, res, next);
   },
   rawbymonth: function (req, res, next) {
-    console.log('hello')
     const summaries = require('../helpers/summary/summary.js');
     summaries.rawbymonth(req, res, next);
   },
   sparklines: function (req, res, next) {
-    console.log('hello')
     const summaries = require('../helpers/summary/summary.js');
     summaries.sparklines(req, res, next);
   }

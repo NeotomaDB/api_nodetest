@@ -119,7 +119,7 @@ function gettaxonquery (req, res, next) {
       return x.replace(/\*/g, '%')
     });
   }
-  console.log('at the head')
+  
   if (outobj.lower === 'true') {
     console.log('there')
     db.any(taxonquerylower, outobj)

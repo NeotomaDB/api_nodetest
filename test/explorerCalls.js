@@ -9,6 +9,7 @@ dotenv.config();
 let appServicesLocation = 'http://localhost:' + process.env.APIPORT + '/v1.5/apps';
 
 describe('Tests for Explorer App Services', function () {
+  this.timeout(8000);
   describe('tests for get', function () {
     it('should respond 200 for TaxaGroupTypes', function () {
       var response = request('get', appServicesLocation + '/TaxaGroupTypes', {
@@ -51,7 +52,7 @@ describe('Tests for Explorer App Services', function () {
       return chakram.wait();
     });
 
-    it('should respond 200 for TaxaInDatasets', function () {
+    it('should respond 200 for TaxaInDatasets (a slow service)', function () {
       var response = request('get', appServicesLocation + '/TaxaInDatasets', {
         'time': true
       });
@@ -98,7 +99,7 @@ describe('Tests for Explorer App Services', function () {
     });
     it('should respond 200 for Search', function () {
       var response = request('get', appServicesLocation + '/Search', {
-        'qs': { search: encodeURI('{"metadata":{"siteName":"Marion%"}}'),
+        'qs': { search: '{"taxa":null,"time":null,"space":null,"metadata":null,"datasetTypeId":"21"}',
           'time': true }
       });
 
