@@ -51,6 +51,7 @@ router.get('/sites/', handlers.sitesquery); // Goes to the queries.
 router.get('/summary/dsdbmonth/', handlers.dsdbmonth);
 router.get('/summary/dstypemonth/', handlers.dstypemonth);
 router.get('/summary/rawbymonth/', handlers.rawbymonth);
+router.get('/summary/sparklines/', handlers.sparklines);
 router.get('/taxa/:taxonid', handlers.taxonbyid);
 router.get('/taxa/:taxonid/occurrence', handlers.occurrencebytaxon);
 router.get('/taxa/:taxonid/occurrences', handlers.occurrencebytaxon);

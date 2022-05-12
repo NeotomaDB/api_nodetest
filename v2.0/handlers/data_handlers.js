@@ -112,6 +112,15 @@ module.exports = {
     dataset.datasetbysiteid(req, res, next);
   },
 
+  lithologybydsid: function (req, res, next) {
+    const lithologies = require('../helpers/lithology/lithology.js');
+    lithologies.lithologybydsid(req, res, next);
+  },
+  specimensbydsid: function (req, res, next) {
+    const specimens = require('../helpers/specimens/specimens.js');
+    specimens.specimenbyid(req, res, next);
+  },
+
   // RETURNING DATASETS
   datasetbyid: function (req, res, next) {
     const dataset = require('../helpers/datasets/datasets.js');
@@ -185,19 +194,18 @@ module.exports = {
     summaries.datasettypesbymonths(req, res, next);
   },
   dsdbmonth: function (req, res, next) {
+    console.log('hello')
     const summaries = require('../helpers/summary/summary.js');
     summaries.datasetdbsbymonths(req, res, next);
   },
   rawbymonth: function (req, res, next) {
+    console.log('hello')
     const summaries = require('../helpers/summary/summary.js');
     summaries.rawbymonth(req, res, next);
   },
-  lithologybydsid: function (req, res, next) {
-    const lithologies = require('../helpers/lithology/lithology.js');
-    lithologies.lithologybydsid(req, res, next);
-  },
-  specimensbydsid: function (req, res, next) {
-    const specimens = require('../helpers/specimens/specimens.js');
-    specimens.specimenbyid(req, res, next);
+  sparklines: function (req, res, next) {
+    console.log('hello')
+    const summaries = require('../helpers/summary/summary.js');
+    summaries.sparklines(req, res, next);
   }
 };
