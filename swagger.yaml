@@ -2430,18 +2430,6 @@ paths:
       tags:
         - Occurrence metadata
         - v2.0
-  /v2.0/data/oxcal/calibrate:
-    get:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/taxagroupresponse'
-          description: A table of Neotoma collection types.
-      tags:
-        - Dataset metadata
-        - v2.0
   /v2.0/data/pollen:
     get:
       parameters:
