@@ -4,10 +4,10 @@
 
 // Defining the query functions:
 module.exports = {
-  oxcalibrate: function (req, res, next) {
+  /* oxcalibrate: function (req, res, next) {
     const oxcal = require('../oxcal/oxcal.js');
     oxcal.calibrate(req, res, next);
-  },
+  }, */
   frozen: function (req, res, next) {
     const frozen = require('../helpers/frozendata/frozen.js');
     frozen.frozenbyid(req, res, next);
@@ -112,6 +112,15 @@ module.exports = {
     dataset.datasetbysiteid(req, res, next);
   },
 
+  lithologybydsid: function (req, res, next) {
+    const lithologies = require('../helpers/lithology/lithology.js');
+    lithologies.lithologybydsid(req, res, next);
+  },
+  specimensbydsid: function (req, res, next) {
+    const specimens = require('../helpers/specimens/specimens.js');
+    specimens.specimenbyid(req, res, next);
+  },
+
   // RETURNING DATASETS
   datasetbyid: function (req, res, next) {
     const dataset = require('../helpers/datasets/datasets.js');
@@ -192,12 +201,8 @@ module.exports = {
     const summaries = require('../helpers/summary/summary.js');
     summaries.rawbymonth(req, res, next);
   },
-  lithologybydsid: function (req, res, next) {
-    const lithologies = require('../helpers/lithology/lithology.js');
-    lithologies.lithologybydsid(req, res, next);
-  },
-  specimensbydsid: function (req, res, next) {
-    const specimens = require('../helpers/specimens/specimens.js');
-    specimens.specimenbyid(req, res, next);
+  sparklines: function (req, res, next) {
+    const summaries = require('../helpers/summary/summary.js');
+    summaries.sparklines(req, res, next);
   }
 };
