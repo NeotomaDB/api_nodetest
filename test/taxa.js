@@ -13,18 +13,21 @@ var api = supertest('http://localhost:' + process.env.APIPORT + '/');
 //
 
 describe('Get taxon data:', function () {
-  it('An empty query redirects to the api documentation.', function (done) {
+  it('An empty query returns the first 25 taxa.', function (done) {
     api.get('v2.0/data/taxa/')
       .set('Accept', 'application/json')
-      .expect(302, done);
+      .expect(200, done);
   });
 
   it('A single taxon should be returned by id:', function (done) {
     api.get('v2.0/data/taxa/12')
       .set('Accept', 'application/json')
       .end(function (err, res) {
-        assert.equal(res.body.data[0]['taxonid'], 12);
+        assert.strictEqual(res.body.data[0]['taxonid'], 12);
         done();
+        if (err) {
+          console.log(err.message)
+        };
       });
   });
 
@@ -32,8 +35,11 @@ describe('Get taxon data:', function () {
     api.get('v2.0/data/taxa/?taxonname=abies')
       .set('Accept', 'application/json')
       .end(function (err, res) {
-        assert.equal(res.body.data[0]['taxonid'], 1);
+        assert.strictEqual(res.body.data[0]['taxonid'], 1);
         done();
+        if (err) {
+          console.log(err.message)
+        };
       });
   });
 
@@ -41,8 +47,11 @@ describe('Get taxon data:', function () {
     api.get('v2.0/data/taxa/?taxonname=abies,picea')
       .set('Accept', 'application/json')
       .end(function (err, res) {
-        assert.equal(res.body.data[0]['taxonid'], 1);
+        assert.strictEqual(res.body.data[0]['taxonid'], 1);
         done();
+        if (err) {
+          console.log(err.message)
+        };
       });
   });
 
@@ -50,8 +59,11 @@ describe('Get taxon data:', function () {
     api.get('v2.0/data/taxa/?taxonname=abies,picea&lower=true')
       .set('Accept', 'application/json')
       .end(function (err, res) {
-        assert.equal(res.body.data[0]['taxonid'], 1);
+        assert.strictEqual(res.body.data[0]['taxonid'], 1);
         done();
+        if (err) {
+          console.log(err.message)
+        };
       });
   });
 
@@ -59,8 +71,11 @@ describe('Get taxon data:', function () {
     api.get('v2.0/data/taxa/?taxonname=abie*')
       .set('Accept', 'application/json')
       .end(function (err, res) {
-        assert.equal(res.body.data[0]['taxonid'], 1);
+        assert.strictEqual(res.body.data[0]['taxonid'], 1);
         done();
+        if (err) {
+          console.log(err.message)
+        };
       });
   });
 
@@ -68,8 +83,11 @@ describe('Get taxon data:', function () {
     api.get('v2.0/data/taxa/?taxonname=a*')
       .set('Accept', 'application/json')
       .end(function (err, res) {
-        assert.equal(res.body.data.length, 25);
+        assert.strictEqual(res.body.data.length, 25);
         done();
+        if (err) {
+          console.log(err.message)
+        };
       });
   });
 
@@ -77,8 +95,11 @@ describe('Get taxon data:', function () {
     api.get('v2.0/data/taxa/?taxonname=a*&limit=30')
       .set('Accept', 'application/json')
       .end(function (err, res) {
-        assert.equal(res.body.data.length, 30);
+        assert.strictEqual(res.body.data.length, 30);
         done();
+        if (err) {
+          console.log(err.message)
+        };
       });
   });
 });

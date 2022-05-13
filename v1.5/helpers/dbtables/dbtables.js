@@ -7,8 +7,10 @@ var pgp = db.$config.pgp;
 // references to templated SQL query files
 // Helper for linking to external query files:
 function sql(file) {
-    const fullPath = path.join(__dirname, file);
-    return new pgp.QueryFile(fullPath, {minify: true});
+  const fullPath = path.join(__dirname, file);
+  return new pgp.QueryFile(fullPath, {
+    minify: true
+  });
 }
 const dbtablesQuery = sql('./dbtablesQuery.sql');
 
@@ -28,26 +30,26 @@ function dbtables(req, res, next) {
   var query, sortField, hasSortField, sortOrder, limit, offset;
   //primitive value, thus assigned by value not by reference
   sortField = sortOrder = limit = offset = null;
-  hasSortField = false; 
+  hasSortField = false;
 
-  if (req.query){
-    if (req.query.sort){
+  if (req.query) {
+    if (req.query.sort) {
       hasSortField = true;
       sortField = req.query.sort.toLowerCase();
       sortOrder = 'ASC';
-      if (req.query.order ){
+      if (req.query.order) {
         req.query.order.toLowerCase() == 'd' ? sortOrder = 'DESC' : sortOrder = 'ASC';
       }
     }
-    if (req.query.offset){
-      var offsetVal = parseInt(req.query.offset);//returns NaN for " ", "", undefined, null
-      if (!isNaN(offsetVal) && offsetVal > 0){
+    if (req.query.offset) {
+      var offsetVal = parseInt(req.query.offset); //returns NaN for " ", "", undefined, null
+      if (!isNaN(offsetVal) && offsetVal > 0) {
         offset = offsetVal;
       }
     }
-    if (req.query.limit){
-      var limitVal = parseInt(req.query.limit);//returns NaN for " ", "", undefined, null
-      if (!isNaN(limitVal) && limitVal > 0){
+    if (req.query.limit) {
+      var limitVal = parseInt(req.query.limit); //returns NaN for " ", "", undefined, null
+      if (!isNaN(limitVal) && limitVal > 0) {
         limit = limitVal;
       }
     }
@@ -66,7 +68,7 @@ function dbtables(req, res, next) {
   //set query params
   var qryParams = {
     schemaname: 'ndb',
-    tablename: tableName, 
+    tablename: tableName,
     sortfield: sortField,
     hasSortField: hasSortField,
     order: sortOrder,
@@ -75,11 +77,11 @@ function dbtables(req, res, next) {
     spacer: ' '
   }
 
-  console.log(JSON.stringify(qryParams));
+  // console.log(JSON.stringify(qryParams));
 
   db.any(query, qryParams)
     .then(function (data) {
-      console.log('the dbtables query: '+ query);
+      // console.log('the dbtables query: ' + query);
       res.status(200)
         .jsonp({
           success: 1,

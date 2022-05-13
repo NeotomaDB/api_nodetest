@@ -35,7 +35,7 @@ router.get('/geopoliticalunits/:gpid/datasets', handlers.datasetsbygeopol);
 router.get('/geopoliticalunits/:gpid/sites', handlers.sitesbygeopol);
 router.get('/occurrences', handlers.occurrencequery);
 router.get('/occurrences/:occurrenceid', handlers.occurrencebyid);
-router.get('/oxcal/calibrate', handlers.oxcalibrate)
+// router.get('/oxcal/calibrate', handlers.oxcalibrate)
 router.get('/pollen/:id', handlers.pollen);
 router.get('/pollen/', handlers.pollen);
 router.get('/publications', handlers.publicationquery);
@@ -51,6 +51,7 @@ router.get('/sites/', handlers.sitesquery); // Goes to the queries.
 router.get('/summary/dsdbmonth/', handlers.dsdbmonth);
 router.get('/summary/dstypemonth/', handlers.dstypemonth);
 router.get('/summary/rawbymonth/', handlers.rawbymonth);
+router.get('/summary/sparklines/', handlers.sparklines);
 router.get('/taxa/:taxonid', handlers.taxonbyid);
 router.get('/taxa/:taxonid/occurrence', handlers.occurrencebytaxon);
 router.get('/taxa/:taxonid/occurrences', handlers.occurrencebytaxon);
