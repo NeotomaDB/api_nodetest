@@ -7,7 +7,8 @@ const { sql, validateOut } = require('../../../src/neotomaapi.js');
 var Terraformer = require('terraformer');
 var WKT = require('terraformer-wkt-parser');
 
-const datasetquerysql = sql('../v2.0/helpers/datasets/datasetqueryv2.sql');
+//const datasetquerysql = sql('../v2.0/helpers/datasets/datasetqueryv2.sql');
+const datasetquerysql = sql('../v2.0/helpers/datasets/datasetqueryv3.sql');
 const datasetbyidsql = sql('../v2.0/helpers/datasets/datasetbyid.sql');
 const datasetbydbsql = sql('../v2.0/helpers/datasets/datasetbydb.sql');
 const datasetbysite = sql('../v2.0/helpers/datasets/datasetbysite.sql');
@@ -217,6 +218,7 @@ function datasetquery (req, res, next) {
     'altmax': parseInt(String(req.query.altmax)),
     'loc': he.decode(String(req.query.loc)),
     'gpid': parseInt(req.query.gpid),
+    'taxonid': parseInt(req.query.taxonid),
     'ageyoung': parseInt(req.query.ageyoung),
     'ageold': parseInt(req.query.ageold),
     'ageof': parseInt(req.query.ageof),
@@ -239,7 +241,6 @@ function datasetquery (req, res, next) {
         message: 'The older age is smaller than the younger age.  Neotoma ages are assumed to be in calibrated radiocarbon years since 1950, decreasing to the present and increasing through the Pleistocene.'
       });
   } else {
-
     var goodloc = !!outobj.loc
 
     if (goodloc) {
