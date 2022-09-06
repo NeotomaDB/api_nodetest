@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "mocha --config=test/.mocharc.yml --reporter-options reportDir=public,reportFilename=tests"
+    "test": "node ./node_modules/mocha/bin/mocha --config=test/.mocharc.yml --reporter-options reportDir=public,reportFilename=tests"
   },
   "pre-commit": "test",
   "dependencies": {
