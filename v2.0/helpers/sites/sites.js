@@ -12,7 +12,7 @@ const pgp = db.$config.pgp;
 const { sql, commaSep, ifUndef } = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
-const siteQuery = sql('../v2.0/helpers/sites/sitequery.sql');
+const siteQuery = sql('../v2.0/helpers/sites/sitequeryfaster.sql');
 const sitebydsid = sql('../v2.0/helpers/sites/sitebydsid.sql');
 const sitebyid = sql('../v2.0/helpers/sites/sitebyid.sql');
 const sitebygpid = sql('../v2.0/helpers/sites/sitebygpid.sql');
@@ -67,6 +67,46 @@ function sitesbyid (req, res, next) {
  * @return The function returns nothing, but sends the API result to the client.
  */
 function sitesquery (req, res, next) {
+
+  function checkObject (query, value) {
+    if (value) {
+      if (!value.every(Number.isInteger)) {
+        value = db.any(query, outobj)
+          .then(function (data) {
+            return data.map(x => x.output)
+          })
+          .catch(function (err) {
+            return res.status(500)
+              .json({
+                status: 'failure',
+                message: err.message,
+                query: outobj
+              });
+          });
+      }
+    }
+    return Promise.resolve(value);
+  }
+  function checkKeyword (value) {
+    if (value) {
+      if (!value.every(Number.isInteger)) {
+        value = db.any('SELECT keywordid FROM ndb.keywords WHERE keyword ILIKE ANY(${keywords})', outobj)
+          .then(function (data) {
+            return data.map(x => x.keywordid)
+          })
+          .catch(function (err) {
+            return res.status(500)
+              .json({
+                status: 'failure',
+                message: err.message,
+                query: outobj
+              });
+          });
+      }
+    }
+    return Promise.resolve(value);
+  }
+
   // Get the input parameters:
   var outobj = {
     'sitename': ifUndef(req.query.sitename, 'string'),
@@ -74,10 +114,17 @@ function sitesquery (req, res, next) {
     'altmin': ifUndef(req.query.altmin, 'int'),
     'altmax': ifUndef(req.query.altmax, 'int'),
     'loc': ifUndef(req.query.loc, 'string'),
+    'taxa': ifUndef(req.query.taxa, 'sep'),
+    'keywords': ifUndef(req.query.keywords, 'sep'),
     'gpid': ifUndef(req.query.gpid, 'sep'),
+    'contacts': ifUndef(req.query.contacts, 'sep'),
     'offset': ifUndef(req.query.offset, 'int'),
     'limit': ifUndef(req.query.limit, 'int')
   };
+
+  if (outobj.keywords === null) {
+    outobj.keywords = ifUndef(req.query.keyword, 'sep')
+  }
 
   if (!!outobj.loc) {
     outobj.loc = he.decode(outobj.loc);
@@ -102,21 +149,38 @@ function sitesquery (req, res, next) {
     outobj.loc = newloc;
   }
 
-  db.any(siteQuery, outobj)
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved all tables'
-        });
-    })
-    .catch(function (err) {
-      return res.status(500)
-        .json({
-          status: 'failure',
-          message: err.message,
-          query: outobj
+  /* Here's the actual call */
+  const geopol = 'SELECT geopoliticalid AS output FROM ndb.geopoliticalunits WHERE geopoliticalname ILIKE ANY(${gpid});';
+  const taxa = 'SELECT taxonid AS output FROM ndb.taxa WHERE taxonname ILIKE ANY(${taxa})';
+  const contacts = 'SELECT contactid AS output FROM ndb.contacts WHERE contactname ILIKE ANY(${contacts});';
+  const keyword = 'SELECT keywordid AS output FROM ndb.keywords WHERE keyword ILIKE ANY(${keywords})';
+
+  Promise.all([checkObject(geopol, outobj.gpid),
+    checkObject(keyword, outobj.keywords),
+    checkObject(taxa, outobj.taxa),
+    checkObject(contacts, outobj.contacts)])
+    .then(result => {
+      console.log(result)
+      outobj.gpid = result[0]
+      outobj.keywords = result[1]
+      outobj.taxa = result[2]
+      outobj.contacts = result[3]
+      db.any(siteQuery, outobj)
+        .then(function (data) {
+          res.status(200)
+            .json({
+              status: 'success',
+              data: data,
+              message: 'Retrieved all tables'
+            });
+        })
+        .catch(function (err) {
+          return res.status(500)
+            .json({
+              status: 'failure',
+              message: err.message,
+              query: data
+            });
         });
     });
 }
