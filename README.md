@@ -2,12 +2,13 @@
 
 [![NSF-1550707](https://img.shields.io/badge/NSF-1550707-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1550707) [![NSF-1541002](https://img.shields.io/badge/NSF-1541002-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1541002)
 
-
 # Neotoma API Implementation
 
 This repository is intended to act as the core repository for the Neotoma API version 1.5 and greater.  There are two main branches, `master` and `dev`.  Master is intended as the production branch, while `dev` is the main testing and development branch.  For documentation of the Neotoma Paleoecology Database see [this](http://neotoma-manual.readthedocs.io/en/latest/neotoma_introduction.html) and of the community see [this](https://www.neotomadb.org/).  Version 1 of the API is documented [here](http://wnapi.neotomadb.org/doc/home).
 
-Currently [http://api.neotomadb.org]() is the home for the API, and will resolve to a [OpenAPI](http://swagger.io) landing page with API documentation and search functionality.  The documentation is generated dynamically using [swagger-jsdoc](https://www.npmjs.com/package/swagger-jsdoc), as implemented in the `routes` files.  For an example, see [`routes/data.js`](https://github.com/NeotomaDB/api_nodetest/blob/dev/routes/data.js).
+Currently [https://api.neotomadb.org](https://api.neotomadb.org) is the home for the API, and will resolve to a [OpenAPI](http://swagger.io) landing page with API documentation and search functionality. The documentation is generated dynamically from the [swagger.json]() yaml file using the OpenAPI standard.
+
+Tests for the API are implemented using mocha/chakram and also make use of `oatts`, which generates tests directly from the `swagger.json` documentation.  To autogenerate the test suite, we use the bash script `genoatt.sh`, which provides base-level implementation of the `oatts` module, along with some fixes to modify values in the testing suite to ensure consistency with the API.  Once the tests have been generated we use `runmochabatch.sh` which tests each module and returns an HTML file (placed in the `public/` folder) that can be used to examine individual structural errors in the API (or documentation).
 
 ## Development
 

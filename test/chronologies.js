@@ -1,4 +1,5 @@
-var assert = require('assert');
+var assert = require('chai').assert
+
 var should = require('chai').should();
 var expect = require('chai').expect;
 var supertest = require('supertest');
@@ -8,7 +9,7 @@ dotenv.config();
 
 var api = supertest('http://localhost:' + process.env.APIPORT + '/');
 // *************************************************
-// Contact Data:
+// Chronology Data:
 //
 
 describe('Get chronology data by datasetid:', function () {

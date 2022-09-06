@@ -9,14 +9,17 @@ WITH collunit AS (
 	  AND (${altmax} IS NULL OR bigq.altitude <= ${altmax})
 	  AND (${loc}    IS NULL OR ST_Intersects(ST_GeogFromText(${loc}), bigq.geog))
 	  AND (${siteid} IS NULL OR bigq.siteid = ANY(${siteid}))
-	  AND ${gpid} IS NULL OR bigq.geopol = ANY(${gpid})
+	  AND (${gpid} IS NULL OR bigq.geopol && ${gpid})
+	  AND (${keywords} IS NULL OR bigq.keywords && ${keywords})
+	  AND (${contacts} IS NULL OR bigq.contacts && ${contacts})
+	  AND (${taxa} IS NULL OR bigq.taxa && ${taxa})
 )
 SELECT sts.siteid,
        sts.sitename as sitename,
        sts.sitedescription AS sitedescription,
        ST_AsGeoJSON(sts.geog,5,2) as geography,
        sts.altitude AS altitude,
-  	   json_agg(cus.collectionunit) AS collectionunits
+  	   json_agg(DISTINCT cus.collectionunit) AS collectionunits
 FROM
    (SELECT * FROM collunit) AS cus
    LEFT JOIN ndb.sites AS sts ON cus.siteid = sts.siteid

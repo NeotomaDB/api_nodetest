@@ -40,7 +40,13 @@ function occurrencebyid (req, res, next) {
         });
     })
     .catch(function (err) {
-      return next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message,
+          message: 'Must pass either queries or a comma separated integer sequence.'
+        });
+      next(err)
     });
 }
 
@@ -59,19 +65,19 @@ function occurrencequery (req, res, next) {
 
   // Get the input parameters:
   var outobj = {
-    'occurrenceid': commaSep(req.query.occurrenceid),
+    'occurrenceid': ifUndef(req.query.occurrenceid, 'sep'),
     'sitename': String(req.query.sitename),
     'altmin': parseInt(String(req.query.altmin)),
     'altmax': parseInt(String(req.query.altmax)),
     'loc': he.decode(String(req.query.loc)),
-    'gpid': commaSep(req.query.gpid),
-    'taxonid': commaSep(req.query.taxonid),
+    'gpid': ifUndef(req.query.gpid, 'sep'),
+    'taxonid': ifUndef(req.query.taxonid, 'sep'),
     'taxonname': name['taxa'],
     'taxondrop': name['drop'],
     'lower': req.query.lower,
-    'siteid': commaSep(req.query.siteid),
+    'siteid': ifUndef(req.query.siteid, 'sep'),
     'datasettype': String(req.query.datasettype),
-    'piid': commaSep(req.query.piid),
+    'piid': ifUndef(req.query.piid, 'sep'),
     'ageold': parseInt(String(req.query.ageold)),
     'ageyoung': parseInt(String(req.query.ageyoung)),
     'offset': req.query.offset,
@@ -120,6 +126,8 @@ function occurrencequery (req, res, next) {
 
   var goodlower = !!outobj.lower;
   var goodtaxa = !!outobj.taxonname || !!outobj.taxonid;
+
+  console.log(outobj)
   if (goodtaxa & goodlower & outobj.lower === 'true') {
     db.any(occurrencerecursquerysql, outobj)
       .then(function (data) {
@@ -131,7 +139,13 @@ function occurrencequery (req, res, next) {
           });
       })
       .catch(function (err) {
-        return next(err);
+        res.status(500)
+          .json({
+            status: 'failure',
+            data: err.message,
+            message: 'Must pass either queries or a comma separated integer sequence.'
+          });
+        next(err)
       });
   } else {
     db.any(occurrencequerysql, outobj)
@@ -144,7 +158,13 @@ function occurrencequery (req, res, next) {
           });
       })
       .catch(function (err) {
-        return next(err);
+        res.status(500)
+          .json({
+            status: 'failure',
+            data: err.message,
+            message: 'Must pass either queries or a comma separated integer sequence.'
+          });
+        next(err)
       });
   }
 };
@@ -152,7 +172,7 @@ function occurrencequery (req, res, next) {
 function occurrencebytaxon (req, res, next) {
   var taxonIdUsed = !!req.params.taxonid;
   if (taxonIdUsed) {
-    var taxonlist = commaSep(req.params.taxonid);
+    var taxonlist = ifUndef(req.params.taxonid, 'sep');
   } else {
     res.status(500)
       .json({
@@ -172,7 +192,13 @@ function occurrencebytaxon (req, res, next) {
         });
     })
     .catch(function (err) {
-      return next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message,
+          message: 'Must pass either queries or a comma separated integer sequence.'
+        });
+      next(err)
     });
 };
 
