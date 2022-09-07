@@ -87,25 +87,6 @@ function sitesquery (req, res, next) {
     }
     return Promise.resolve(value);
   }
-  function checkKeyword (value) {
-    if (value) {
-      if (!value.every(Number.isInteger)) {
-        value = db.any('SELECT keywordid FROM ndb.keywords WHERE keyword ILIKE ANY(${keywords})', outobj)
-          .then(function (data) {
-            return data.map(x => x.keywordid)
-          })
-          .catch(function (err) {
-            return res.status(500)
-              .json({
-                status: 'failure',
-                message: err.message,
-                query: outobj
-              });
-          });
-      }
-    }
-    return Promise.resolve(value);
-  }
 
   // Get the input parameters:
   var outobj = {

@@ -76,7 +76,6 @@ function publicationquery (req, res, next) {
   var novalues = Object.keys(outobj).every(function (x) {
     return typeof outobj[x] === 'undefined' || !outobj[x];
   });
-console.log(novalues)
   if (novalues === true) {
     if (!!req.accepts('json') & !req.accepts('html')) {
       res.redirect('/swagger.json');
@@ -114,28 +113,27 @@ function publicationbysite (req, res, next) {
     res.redirect('/api-docs')
   }
 
-  db.any(pubbystid, [siteid])
+  db.any(pubbystid, { 'siteid': siteid })
     .then(function (data) {
-      // var bibOutput = bib.formatpublbib(data);
       var bibOutput = data;
 
       /* This is a sequence I use to aggregate the publications by site */
       var returner = [];
-      var uniquepubs = bibOutput.map(x => x.publicationid).filter((x, i, a) => a.indexOf(x) === i)
+      var uniquepubs = bibOutput.map(x => x.publication.publicationid).filter((x, i, a) => a.indexOf(x) === i)
 
       for (var i = 0; i < uniquepubs.length; i++) {
         returner[i] = { 'publicationid': uniquepubs[i] }
       }
 
       for (i = 0; i < bibOutput.length; i++) {
-        var returnid = returner.map(x => x.publicationid).indexOf(bibOutput[i].publicationid)
+        var returnid = returner.map(x => x.publicationid).indexOf(bibOutput[i].publication.publicationid)
 
         if (!('title' in returner[returnid])) {
           /* Using `title` as a placeholder for any record that hasn't been added. */
           returner[returnid] = bibOutput[i]
-          returner[returnid].siteid = [returner[returnid].siteid]
+          returner[returnid].siteid = [returner[returnid].publication.siteid]
         } else {
-          returner[returnid]['siteid'].push(bibOutput[i].siteid);
+          returner[returnid]['siteid'].push(bibOutput[i].publication.siteid);
         }
       }
 
@@ -144,11 +142,15 @@ function publicationbysite (req, res, next) {
           status: 'success',
           data: returner,
           message: 'Retrieved all records.'
-        });
+        })
     })
     .catch(function (err) {
-      next(err);
-    });
+      return res.status(500)
+        .json({
+          status: 'failure',
+          message: err.message
+        });
+    })
 };
 
 /* To get publications by dataset: /v2.0/data/datasets/1001/publications */
