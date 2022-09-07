@@ -4,7 +4,7 @@ WITH collunit AS (
 	FROM
 		 ap.querytable AS bigq
 	WHERE
-	  (${sitename} IS NULL OR bigq.sitename ILIKE ${sitename})
+	  (${sitename} IS NULL OR bigq.sitename ILIKE ANY(${sitename}))
 	  AND (${altmin} IS NULL OR bigq.altitude >= ${altmin})
 	  AND (${altmax} IS NULL OR bigq.altitude <= ${altmax})
 	  AND (${loc}    IS NULL OR ST_Intersects(ST_GeogFromText(${loc}), bigq.geog))

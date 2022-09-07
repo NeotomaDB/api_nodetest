@@ -90,7 +90,7 @@ function sitesquery (req, res, next) {
 
   // Get the input parameters:
   var outobj = {
-    'sitename': ifUndef(req.query.sitename, 'string'),
+    'sitename': ifUndef(req.query.sitename, 'sep'),
     'siteid': ifUndef(req.query.siteid, 'sep'),
     'altmin': ifUndef(req.query.altmin, 'int'),
     'altmax': ifUndef(req.query.altmax, 'int'),
@@ -160,7 +160,7 @@ function sitesquery (req, res, next) {
             .json({
               status: 'failure',
               message: err.message,
-              query: data
+              query: outobj
             });
         });
     });
