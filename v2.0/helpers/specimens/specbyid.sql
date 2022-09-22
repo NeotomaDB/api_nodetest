@@ -39,4 +39,4 @@ LEFT JOIN ndb.specimensextypes AS sst ON sst.sexid = spec.sexid
 LEFT JOIN ndb.specimendomesticstatustypes AS sds ON sds.domesticstatusid = spec.domesticstatusid
 LEFT JOIN ndb.specimentaphonomy AS stph ON stph.specimenid = spec.specimenid
 LEFT JOIN ndb.taphonomictypes AS tty ON tty.taphonomictypeid = stph.taphonomictypeid
-WHERE ds.datasetid = ANY($1);
+WHERE spec.specimenid = ANY($1);
