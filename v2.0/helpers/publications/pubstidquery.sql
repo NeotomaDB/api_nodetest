@@ -1,12 +1,15 @@
 WITH stpub AS
-  (SELECT sts.siteid as siteid, publicationid, primarypub FROM
-  	ndb.datasetpublications as dp
+  (SELECT sts.siteid as siteid, sts.datasetid, publicationid, primarypub 
+   FROM ndb.datasetpublications as dp
   	INNER JOIN
   	ndb.dslinks AS sts
   	ON sts.datasetid = dp.datasetid
     WHERE (${siteid} IS NULL OR sts.siteid = ANY(${siteid})))
-SELECT DISTINCT jsonb_build_object('siteid', stpub.siteid,
-  'publicationid', pub.publicationid,
+SELECT DISTINCT jsonb_build_object(
+                           'datasets', json_agg(DISTINCT jsonb_build_object('siteid', stpub.siteid,
+                                                                   'datasetid', stpub.datasetid,
+                                                                   'primary', stpub.primarypub)),
+                           'publicationid', pub.publicationid,
                            'pubtypeid', pub.pubtypeid,
                            'pubtype', pt.pubtype,
                            'year' , pub.year,
@@ -31,7 +34,6 @@ SELECT DISTINCT jsonb_build_object('siteid', stpub.siteid,
                            'country'   , pub.country,
                            'originallanguage', pub.originallanguage,
                            'notes' , pub.notes,
-                           'primarypublication', COALESCE(stpub.primarypub, FALSE),
               'author', json_agg(DISTINCT jsonb_build_object('familyname', ca.familyname,
                                                    'givennames', ca.givennames,
                                                    'order', pa.authororder))) AS publication
@@ -40,4 +42,4 @@ INNER JOIN ndb.publicationauthors AS pa ON pub.publicationid = pa.publicationid
 INNER JOIN ndb.contacts as ca ON ca.contactid = pa.contactid
 INNER JOIN stpub ON pub.publicationid = stpub.publicationid
 INNER JOIN ndb.publicationtypes AS pt  ON     pub.pubtypeid = pt.pubtypeid
-GROUP BY pub.publicationid, pt.pubtype, stpub.siteid, stpub.primarypub
+GROUP BY pub.publicationid, pt.pubtype

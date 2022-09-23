@@ -24,7 +24,8 @@ function sql (file) {
    * @return An array of integers.
    */
 function commaSep (x) {
-  var sep = String(x).split(',')
+  var sep = String(x).split(',').map(x => x.trim())
+
   if (sep.map(x => parseInt(x)).every(isNaN)) {
     return sep;
   } else {
