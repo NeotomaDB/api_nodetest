@@ -8,7 +8,7 @@ describe('tests for /v2.0/data/geopoliticalunits', function () {
   describe('tests for get', function () {
     it('should respond 200 for "An array of geopolitical units."', function () {
       var response = request('get', 'http://localhost:3005/v2.0/data/geopoliticalunits', {
-        'qs': { 'gpid': 2710, 'gpname': 'in', 'rank': 1, 'lower': true },
+        'qs': { 'gpid': 9439, 'gpname': 'aute consectetur eiusmod', 'rank': 1, 'lower': false },
         'time': true
       });
 
