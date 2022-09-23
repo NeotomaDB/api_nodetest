@@ -3,7 +3,9 @@ WITH dpub AS
   	ndb.datasetpublications as dp
     WHERE ($1 IS NULL OR dp.datasetid IN ($1:csv)))
 SELECT json_build_object(
-              'datasetid', dpub.datasetid,
+              'datasets', json_agg(DISTINCT jsonb_build_object('siteid', dsl.siteid,
+                                                                   'datasetid', dpub.datasetid,
+                                                                   'primary', dpub.primarypub)),
               'publicationid', pub.publicationid,
              'pubtypeid', pub.pubtypeid,
              'pubtype', pt.pubtype,
@@ -29,7 +31,6 @@ SELECT json_build_object(
              'country'   , pub.country,
              'originallanguage', pub.originallanguage,
              'notes' , pub.notes,
-             'primarypublication', COALESCE(dpub.primarypub, FALSE),
               'author', json_agg(DISTINCT jsonb_build_object('familyname', ca.familyname,
                                                    'givennames', ca.givennames,
                                                    'order', pa.authororder))) AS publication
@@ -38,4 +39,5 @@ FROM ndb.publications AS pub
   INNER JOIN ndb.contacts as ca ON ca.contactid = pa.contactid
   INNER JOIN ndb.publicationtypes AS pt  ON     pub.pubtypeid = pt.pubtypeid
   INNER JOIN (SELECT * FROM dpub) AS dpub ON dpub.publicationid = pub.publicationid
-GROUP BY pub.publicationid, pt.pubtype, dpub.datasetid, dpub.primarypub
+  LEFT JOIN ndb.dslinks AS dsl ON dsl.datasetid = dpub.datasetid
+GROUP BY pub.publicationid, pt.pubtype

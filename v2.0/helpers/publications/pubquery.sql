@@ -27,7 +27,9 @@ json_build_object('publicationid', pub.publicationid,
                   'author', json_agg(DISTINCT jsonb_build_object('familyname', ca.familyname,
                                                    'givennames', ca.givennames,
                                                    'order', pa.authororder)),
-              'datasets', COALESCE(json_agg(DISTINCT dp.datasetid) FILTER (WHERE dp.datasetid IS NOT NULL), '[]')) AS publication,
+              'datasets', json_agg(DISTINCT jsonb_build_object('siteid', dsl.siteid,
+                                                                   'datasetid', dp.datasetid,
+                                                                   'primary', dp.primarypub))) AS publication,
               CASE WHEN ${search} IS NULL
                 THEN 1
               ELSE word_similarity(citation, ${search}) 
@@ -42,9 +44,9 @@ WHERE
   (${publicationid} IS NULL OR pub.publicationid = ANY (${publicationid}::int[]))     AND
   (${datasetid}  IS NULL OR      dp.datasetid = ANY (${datasetid})) AND
   (${siteid}     IS NULL OR      dsl.siteid = ANY (${siteid})) AND
-  (${familyname} IS NULL OR     ca.familyname LIKE  ${familyname})  AND
-  (${pubtype}    IS NULL OR        pt.pubtype =     ${pubtype})     AND
-  (${year}       IS NULL OR          pub.year =     ${year})        AND
+  (${familyname} IS NULL OR     ca.familyname LIKE  ANY(${familyname}))  AND
+  (${pubtype}    IS NULL OR        pt.pubtype =     ANY(${pubtype}))     AND
+  (${year}       IS NULL OR          pub.year =     ANY(${year}))        AND
   (${search}     IS NULL OR      word_similarity(citation, ${search}) > 0)
 GROUP BY pub.publicationid, pt.pubtype
 ORDER BY word_similarity(citation, ${search}) DESC
