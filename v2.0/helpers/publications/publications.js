@@ -1,6 +1,6 @@
 const db = require('../../../database/pgp_db');
 
-const { sql, validateOut } = require('../../../src/neotomaapi.js');
+const { sql, validateOut, commaSep, ifUndef } = require('../../../src/neotomaapi.js');
 
 const bib = require('../bib_format');
 
@@ -8,25 +8,20 @@ const bib = require('../bib_format');
 const pubbydsid = sql('../v2.0/helpers/publications/pubdsidquery.sql');
 const pubbystid = sql('../v2.0/helpers/publications/pubstidquery.sql');
 const pubquery = sql('../v2.0/helpers/publications/pubquery.sql');
-const rawpub = sql('../v2.0/helpers/publications/raw_pubid.sql');
+const rawpub = sql('../v2.0/helpers/publications/pubidquery.sql');
 
 /* By publication ID directly: .../v2.0/data/publications/1001 */
-
 function publicationid (req, res, next) {
   var pubIdUsed = !!req.params.pubid;
 
   if (pubIdUsed) {
     var pubid = {
-      pubid: String(req.params.pubid)
-        .split(',')
-        .map(function (item) {
-          return parseInt(item, 10);
-        }) };
+      pubid: commaSep(req.params.pubid)
+    };
   }
-
+console.log(pubid)
   db.any(rawpub, pubid)
     .then(function (data) {
-      // var bibOutput = bib.formatpublbib(data);
       var bibOutput = data
 
       res.status(200)
@@ -37,29 +32,21 @@ function publicationid (req, res, next) {
         });
     })
     .catch(function (err) {
-      return next(err);
+      return res.status(500)
+        .json({
+          status: 'failure',
+          message: err.message
+        });
     });
 };
 
 /* To query by publication: */
 function publicationquery (req, res, next) {
   var outobj = {
-    'publicationid': String(req.query.publicationid)
-      .split(',')
-      .map(function (item) {
-        return parseInt(item, 10);
-      }),
-    'datasetid': String(req.query.datasetid)
-      .split(',')
-      .map(function (item) {
-        return parseInt(item, 10);
-      }),
-    'siteid': String(req.query.siteid)
-      .split(',')
-      .map(function (item) {
-        return parseInt(item, 10);
-      }),
-    'doi': String(req.query.doi).split(','),
+    'publicationid': ifUndef(req.query.sitename, 'sep'),
+    'datasetid': commaSep(req.query.datasetid),
+    'siteid': commaSep(req.query.siteid),
+    'doi': String(req.query.doi).split(',').map(x => x.trim()),
     'familyname': String(req.query.familyname),
     'pubtype': String(req.query.pubtype),
     'year': req.query.year,
@@ -95,7 +82,11 @@ function publicationquery (req, res, next) {
           });
       })
       .catch(function (err) {
-        return next(err);
+        return res.status(500)
+          .json({
+            status: 'failure',
+            message: err.message
+          });
       });
   };
 };
@@ -106,36 +97,28 @@ function publicationbysite (req, res, next) {
   var siteIdUsed = !!req.params.siteid;
 
   if (siteIdUsed) {
-    var siteid = String(req.params.siteid).split(',').map(function (item) {
-      return parseInt(item, 10);
-    });
+    var siteid = commaSep(req.params.siteid);
   } else {
     res.redirect('/api-docs')
   }
 
   db.any(pubbystid, { 'siteid': siteid })
     .then(function (data) {
-      var bibOutput = data;
+      var bibOutput = data.map(x => x.publication);
 
-      /* This is a sequence I use to aggregate the publications by site */
-      var returner = [];
-      var uniquepubs = bibOutput.map(x => x.publication.publicationid).filter((x, i, a) => a.indexOf(x) === i)
+      let pubs = []
 
-      for (var i = 0; i < uniquepubs.length; i++) {
-        returner[i] = { 'publicationid': uniquepubs[i] }
-      }
-
-      for (i = 0; i < bibOutput.length; i++) {
-        var returnid = returner.map(x => x.publicationid).indexOf(bibOutput[i].publication.publicationid)
-
-        if (!('title' in returner[returnid])) {
-          /* Using `title` as a placeholder for any record that hasn't been added. */
-          returner[returnid] = bibOutput[i]
-          returner[returnid].siteid = [returner[returnid].publication.siteid]
+      for (let { siteid, ...cleanOut } of bibOutput) {
+        let pubids = pubs.map(x => x.publicationid).indexOf(cleanOut['publicationid'])
+        if (pubids === -1) {
+          pubs.push(cleanOut)
+          pubs[pubs.length - 1]['siteid'] = [siteid]
         } else {
-          returner[returnid]['siteid'].push(bibOutput[i].publication.siteid);
+          pubs[pubs.length - 1]['siteid'].push(siteid)
         }
       }
+
+      let returner = pubs.map(x => { return { 'publication': x } })
 
       res.status(200)
         .json({
@@ -162,9 +145,7 @@ function publicationbydataset (req, res, next) {
   var dsIdUsed = !!req.params.datasetid;
 
   if (dsIdUsed) {
-    var datasetid = String(req.params.datasetid).split(',').map(function (item) {
-      return parseInt(item, 10);
-    });
+    var datasetid = commaSep(req.params.datasetid);
   }
 
   db.any(pubbydsid, [datasetid])
@@ -200,7 +181,11 @@ function publicationbydataset (req, res, next) {
         });
     })
     .catch(function (err) {
-      next(err);
+      return res.status(500)
+        .json({
+          status: 'failure',
+          message: err.message
+        });
     });
 }
 
