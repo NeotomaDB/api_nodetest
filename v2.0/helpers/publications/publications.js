@@ -19,7 +19,7 @@ function publicationid (req, res, next) {
       pubid: commaSep(req.params.pubid)
     };
   }
-console.log(pubid)
+
   db.any(rawpub, pubid)
     .then(function (data) {
       var bibOutput = data
@@ -43,26 +43,24 @@ console.log(pubid)
 /* To query by publication: */
 function publicationquery (req, res, next) {
   var outobj = {
-    'publicationid': ifUndef(req.query.sitename, 'sep'),
-    'datasetid': commaSep(req.query.datasetid),
-    'siteid': commaSep(req.query.siteid),
-    'doi': String(req.query.doi).split(',').map(x => x.trim()),
-    'familyname': String(req.query.familyname),
-    'pubtype': String(req.query.pubtype),
-    'year': req.query.year,
+    'publicationid': ifUndef(req.query.publicationid, 'sep'),
+    'datasetid': ifUndef(req.query.datasetid, 'sep'),
+    'siteid': ifUndef(req.query.siteid, 'sep'),
+    'doi': ifUndef(req.query.doi, 'sep'),
+    'familyname': ifUndef(req.query.familyname, 'sep'),
+    'pubtype': ifUndef(req.query.pubtype, 'sep'),
+    'year': ifUndef(req.query.year, 'sep'),
     'search': String(req.query.search),
     'limit': parseInt(req.query.limit || 25),
     'offset': parseInt(req.query.offset || 0)
   };
 
-  if (outobj.doi[0] === 'undefined') {
-    outobj.doi = null;
-  }
   outobj = validateOut(outobj);
 
   var novalues = Object.keys(outobj).every(function (x) {
     return typeof outobj[x] === 'undefined' || !outobj[x];
   });
+
   if (novalues === true) {
     if (!!req.accepts('json') & !req.accepts('html')) {
       res.redirect('/swagger.json');
