@@ -118,6 +118,10 @@ module.exports = {
   },
   specimensbydsid: function (req, res, next) {
     const specimens = require('../helpers/specimens/specimens.js');
+    specimens.specimenbydsid(req, res, next);
+  },
+  specimensbyid: function (req, res, next) {
+    const specimens = require('../helpers/specimens/specimens.js');
     specimens.specimenbyid(req, res, next);
   },
 

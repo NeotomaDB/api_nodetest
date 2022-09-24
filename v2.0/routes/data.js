@@ -56,6 +56,7 @@ router.get('/taxa/:taxonid', handlers.taxonbyid);
 router.get('/taxa/:taxonid/occurrence', handlers.occurrencebytaxon);
 router.get('/taxa/:taxonid/occurrences', handlers.occurrencebytaxon);
 router.get('/taxa/', handlers.taxonquery);
-router.get('/specimens/:datasetid', handlers.specimensbydsid);
+router.get('/datasets/:datasetid/specimens', handlers.specimensbydsid);
+router.get('/specimens/:specimenid', handlers.specimensbyid);
 
 module.exports = router;

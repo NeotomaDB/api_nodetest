@@ -26,12 +26,15 @@ SELECT json_build_object('publicationid', pub.publicationid,
                          'author', json_agg(DISTINCT jsonb_build_object('familyname', ca.familyname,
                                                                         'givennames', ca.givennames,
                                                                         'order', pa.authororder)),
-                         'datasets', COALESCE(json_agg(DISTINCT datasetid) FILTER (WHERE datasetid IS NOT NULL), '[]'))
+                         'datasets', json_agg(DISTINCT jsonb_build_object('siteid', sts.siteid,
+                                                                   'datasetid', dp.datasetid,
+                                                                   'primary', dp.primarypub))) AS publication
 FROM             ndb.publications AS pub
 INNER JOIN ndb.publicationauthors AS pa ON pub.publicationid = pa.publicationid
 INNER JOIN           ndb.contacts AS ca ON ca.contactid = pa.contactid
 LEFT JOIN ndb.datasetpublications AS dp ON dp.publicationid = pub.publicationid
+LEFT JOIN ndb.dslinks AS sts ON sts.datasetid = dp.datasetid
 INNER JOIN   ndb.publicationtypes AS pt  ON     pub.pubtypeid = pt.pubtypeid
 WHERE
-  (${pubid} IS NULL OR pub.publicationid = ${pubid})
+  (${pubid} IS NULL OR pub.publicationid = ANY(${pubid}))
 GROUP BY pub.publicationid, pt.pubtype
