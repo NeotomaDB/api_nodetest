@@ -37,7 +37,6 @@ function datasettypesbymonths (req, res, next) {
           data: err.message,
           message: 'Must pass either queries or a comma separated integer sequence.'
         });
-      next(err)
     });
 }
 
@@ -75,7 +74,6 @@ function rawbymonth (req, res, next) {
           data: err.message,
           message: 'Must pass either queries or a comma separated integer sequence.'
         });
-      next(err)
     });
 }
 
@@ -113,7 +111,6 @@ function datasetdbsbymonths (req, res, next) {
           data: err.message,
           message: 'Must pass either queries or a comma separated integer sequence.'
         });
-      next(err)
     });
 }
 
@@ -154,7 +151,6 @@ function sparklines (req, res, next) {
           data: err.message,
           message: 'Must pass either queries or a comma separated integer sequence.'
         });
-      next(err)
     });
 }
 

@@ -8,13 +8,14 @@ const {
   commaSep
 } = require('../../../src/neotomaapi.js');
 
-const specimensql = sql('../v2.0/helpers/specimens/specbydsid.sql');
+const specimendssql = sql('../v2.0/helpers/specimens/specbydsid.sql');
+const specimensql = sql('../v2.0/helpers/specimens/specbyid.sql');
 
 function specimenbyid (req, res, next) {
-  var dsIdUsed = !!req.params.datasetid;
+  var spIdUsed = !!req.params.specimenid;
 
-  if (dsIdUsed) {
-    var datasetid = commaSep(req.params.datasetid);
+  if (spIdUsed) {
+    var specimenid = commaSep(req.params.specimenid);
   } else {
     res.status(500)
       .json({
@@ -24,7 +25,7 @@ function specimenbyid (req, res, next) {
       });
   }
 
-  db.any(specimensql, [datasetid])
+  db.any(specimensql, [specimenid])
     .then(function (data) {
       var returner = data.map(x => {
         if (x.length === 0) {
@@ -43,8 +44,57 @@ function specimenbyid (req, res, next) {
         });
     })
     .catch(function (err) {
-      next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: null,
+          message: err.message
+        });
     });
 }
 
+function specimenbydsid (req, res, next) {
+  var dsIdUsed = !!req.params.datasetid;
+  if (dsIdUsed) {
+    var datasetid = commaSep(req.params.datasetid);
+  } else {
+    res.status(500)
+      .json({
+        status: 'failure',
+        data: null,
+        message: 'Must pass either queries or a comma separated integer sequence.'
+      });
+  }
+
+  console.log(datasetid)
+
+  db.any(specimendssql, [datasetid])
+    .then(function (data) {
+      var returner = data.map(x => {
+        if (x.length === 0) {
+          // We're returning the structure, but nothing inside it:
+          var returner = [];
+        } else {
+          returner = x
+        }
+        return returner;
+      })
+      res.status(200)
+        .json({
+          status: 'success',
+          data: returner,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+      res.status(500)
+      .json({
+        status: 'failure',
+        data: null,
+        message: err.message
+      });
+    });
+}
+
+module.exports.specimenbydsid = specimenbydsid;
 module.exports.specimenbyid = specimenbyid;

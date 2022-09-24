@@ -46,7 +46,6 @@ function occurrencebyid (req, res, next) {
           data: err.message,
           message: 'Must pass either queries or a comma separated integer sequence.'
         });
-      next(err)
     });
 }
 
@@ -90,7 +89,7 @@ function occurrencequery (req, res, next) {
     // Adding in or replacing any stars in the name to allow wildcards.
     outobj.taxonname = outobj.taxonname.map(function (x) {
       var gbg = x.replace(/\*/g, '%');
-      return x.replace(/\*/g, '%')
+      return gbg
     });
   }
 
@@ -145,7 +144,6 @@ function occurrencequery (req, res, next) {
             data: err.message,
             message: 'Must pass either queries or a comma separated integer sequence.'
           });
-        next(err)
       });
   } else {
     db.any(occurrencequerysql, outobj)
@@ -164,7 +162,6 @@ function occurrencequery (req, res, next) {
             data: err.message,
             message: 'Must pass either queries or a comma separated integer sequence.'
           });
-        next(err)
       });
   }
 };
@@ -198,7 +195,6 @@ function occurrencebytaxon (req, res, next) {
           data: err.message,
           message: 'Must pass either queries or a comma separated integer sequence.'
         });
-      next(err)
     });
 };
 
