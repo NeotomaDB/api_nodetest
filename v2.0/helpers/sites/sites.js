@@ -81,8 +81,6 @@ function sitesquery (req, res, next) {
     var resultset = paramgrab.data
   }
 
-  console.log(resultset.doi)
-
   // Get the input parameters:
   var outobj = {
     'sitename': ifUndef(resultset.sitename, 'sep'),
@@ -99,8 +97,6 @@ function sitesquery (req, res, next) {
     'offset': ifUndef(resultset.offset, 'int'),
     'limit': ifUndef(resultset.limit, 'int')
   };
-
-  console.log(outobj)
 
   if (outobj.keywords === null) {
     outobj.keywords = ifUndef(resultset.keyword, 'sep')
@@ -168,7 +164,6 @@ function sitesbydataset (req, res, next) {
   var gooddsid = !!req.params.datasetid;
 
   let paramgrab = getparam(req)
-  console.log(paramgrab)
 
   if (!paramgrab.success) {
     res.status(500)

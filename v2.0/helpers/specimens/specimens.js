@@ -66,8 +66,6 @@ function specimenbydsid (req, res, next) {
       });
   }
 
-  console.log(datasetid)
-
   db.any(specimendssql, [datasetid])
     .then(function (data) {
       var returner = data.map(x => {
