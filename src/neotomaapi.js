@@ -121,10 +121,15 @@ function success (query, data, msg) {
 
 function getparam (req, name) {
   let result = { success: false, message: null, data: null };
+  console.log(req.body)
+  function clean (obj) {
+    let output = Object.keys(obj).filter(key => obj[key] !== undefined);
+    return output;
+  }
 
-  const testquery = { body: Object.keys(req.body),
-    params: Object.keys(req.params),
-    query: Object.keys(req.query) }
+  const testquery = { body: Object.keys(clean(req.body)),
+    params: Object.keys(clean(req.params)),
+    query: Object.keys(clean(req.query)) }
 
   // First ensure that there are no duplicate keys:
   let unstring = Object.values(testquery).flat()

@@ -22,7 +22,7 @@ HELP
 run_oatt() {
 
     rm ./test/v*.js
-    oatts generate --host localhost:3005 -s ./swagger.yaml -w test
+    oatts generate --host $remote -s ./swagger.yaml -w test
     eslint --fix ./test
 
     # oatts is a bit silly in picking its variables.  We need to make sure that we're
@@ -46,8 +46,9 @@ run_oatt() {
  # It is a good idea to make OPTIND local if you process options in a function.
  
 test=0
+remote=localhost:3005
 
- while getopts "ht" opt; do
+ while getopts "htd" opt; do
      case $opt in
          h)
              show_help
@@ -55,6 +56,9 @@ test=0
              ;;
          t)
              test=1
+             ;;
+         d)
+             remote=api-dev.neotomadb.org
              ;;
          *)
              echo You didn\'t use the correct flag.

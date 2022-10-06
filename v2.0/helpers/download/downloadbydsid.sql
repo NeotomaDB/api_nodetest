@@ -1,1 +1,1 @@
-SELECT doi.doiapi($1) AS data;
+SELECT doi.doiapi(${datasetid}) AS data;
