@@ -3,12 +3,15 @@ WITH collunit AS (
 		   bigq.collectionunit
 	FROM
 		 ap.querytable AS bigq
+		 LEFT JOIN ndb.datasetdoi AS dsdoi ON dsdoi.datasetid = bigq.datasetid
 	WHERE
 	  (${sitename} IS NULL OR bigq.sitename ILIKE ANY(${sitename}))
 	  AND (${altmin} IS NULL OR bigq.altitude >= ${altmin})
 	  AND (${altmax} IS NULL OR bigq.altitude <= ${altmax})
 	  AND (${loc}    IS NULL OR ST_Intersects(ST_GeogFromText(${loc}), bigq.geog))
 	  AND (${siteid} IS NULL OR bigq.siteid = ANY(${siteid}))
+	  AND (${datasetid} IS NULL OR bigq.datasetid = ANY(${datasetid}))
+	  AND (${doi} IS NULL OR dsdoi.doi = ANY(${doi}))
 	  AND (${gpid} IS NULL OR bigq.geopol && ${gpid})
 	  AND (${keywords} IS NULL OR bigq.keywords && ${keywords})
 	  AND (${contacts} IS NULL OR bigq.contacts && ${contacts})
