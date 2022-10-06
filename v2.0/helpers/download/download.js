@@ -4,8 +4,7 @@ var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
 const {
-  sql,
-  commaSep
+  sql, getparam, ifUndef
 } = require('../../../src/neotomaapi.js');
 
 const downloadsql = sql('../v2.0/helpers/download/downloadbydsid.sql');
@@ -41,56 +40,71 @@ function getdefault (chron) {
 }
 
 function downloadbyid (req, res, next) {
-  var dsIdUsed = !!req.params.datasetid;
-
-  if (dsIdUsed) {
-    var datasetid = commaSep(req.params.datasetid);
-  } else {
+  let paramgrab = getparam(req)
+  if (!paramgrab.success) {
     res.status(500)
       .json({
         status: 'failure',
         data: null,
-        message: 'Must pass either queries or a comma separated integer sequence.'
+        message: paramgrab.message
       });
-  }
+  } else {
+    var resultset = paramgrab.data
 
-  db.any(downloadsql, [datasetid])
-    .then(function (data) {
-      var returner = data.map(x => {
-        if (x.length === 0) {
-          // We're returning the structure, but nothing inside it:
-          var returner = [];
-        } else {
-          returner = {
-            // To avoid deep copy we need to pass the variable through:
-            'site': JSON.parse(JSON.stringify(x.data.data.site))
-          };
+    var outobj = {
+      'datasetid': ifUndef(resultset.datasetid, 'sep'),
+      'offset': ifUndef(resultset.offset, 'int'),
+      'limit': ifUndef(resultset.limit, 'int')
+    };
+    console.log(outobj)
 
-          delete returner.site.dataset;
-
-          returner['site']['collectionunit']['dataset'] = x.data.data.site.dataset;
-          returner['site']['collectionunit']['chronologies'] = x.data.chronologies;
-          var defaultchron = getdefault(returner['site']['collectionunit']['chronologies'])
-          returner['site']['collectionunit']['defaultchronology'] = defaultchron
-          returner['site']['collectionunit']['dataset']['samples'] = x.data.data.samples
-        }
-        return returner;
-      })
-      res.status(200)
-        .json({
-          status: 'success',
-          data: returner,
-          message: 'Retrieved all tables'
-        });
-    })
-    .catch(function (err) {
+    if (outobj.datasetid === null) {
       res.status(500)
         .json({
           status: 'failure',
-          data: err.message,
-          message: 'SQL Error.'
+          data: null,
+          message: 'Must pass either queries or a comma separated integer sequence.'
         });
-    });
+    } else {
+      db.any(downloadsql, outobj)
+        .then(function (data) {
+          var returner = data.map(x => {
+            if (x.length === 0) {
+              // We're returning the structure, but nothing inside it:
+              var returner = [];
+            } else {
+              returner = {
+                // To avoid deep copy we need to pass the variable through:
+                'site': JSON.parse(JSON.stringify(x.data.data.site))
+              };
+
+              delete returner.site.dataset;
+
+              returner['site']['collectionunit']['dataset'] = x.data.data.site.dataset;
+              returner['site']['collectionunit']['chronologies'] = x.data.chronologies;
+              var defaultchron = getdefault(returner['site']['collectionunit']['chronologies'])
+              returner['site']['collectionunit']['defaultchronology'] = defaultchron
+              returner['site']['collectionunit']['dataset']['samples'] = x.data.data.samples
+            }
+            return returner;
+          })
+          res.status(200)
+            .json({
+              status: 'success',
+              data: returner,
+              message: 'Retrieved all tables'
+            });
+        })
+        .catch(function (err) {
+          res.status(500)
+            .json({
+              status: 'failure',
+              data: err.message,
+              message: 'SQL Error.'
+            });
+        });
+    }
+  }
 }
 
 module.exports.downloadbyid = downloadbyid;

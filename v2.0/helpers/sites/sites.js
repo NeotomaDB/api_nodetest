@@ -1,4 +1,5 @@
 // Sites query:
+const { any } = require('bluebird');
 const he = require('he');
 const Terraformer = require('terraformer');
 const WKT = require('terraformer-wkt-parser');
@@ -9,7 +10,7 @@ const db = require('../../../database/pgp_db');
 const pgp = db.$config.pgp;
 
 // Helper for linking to external query files:
-const { sql, commaSep, ifUndef } = require('../../../src/neotomaapi.js');
+const { sql, commaSep, ifUndef, checkObject, getparam } = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
 const siteQuery = sql('../v2.0/helpers/sites/sitequeryfaster.sql');
@@ -67,44 +68,38 @@ function sitesbyid (req, res, next) {
  * @return The function returns nothing, but sends the API result to the client.
  */
 function sitesquery (req, res, next) {
+  let paramgrab = getparam(req)
 
-  function checkObject (query, value) {
-    if (value) {
-      if (!value.every(Number.isInteger)) {
-        value = db.any(query, outobj)
-          .then(function (data) {
-            return data.map(x => x.output)
-          })
-          .catch(function (err) {
-            return res.status(500)
-              .json({
-                status: 'failure',
-                message: err.message,
-                query: outobj
-              });
-          });
-      }
-    }
-    return Promise.resolve(value);
+  if (!paramgrab.success) {
+    res.status(500)
+      .json({
+        status: 'failure',
+        data: null,
+        message: paramgrab.message
+      });
+  } else {
+    var resultset = paramgrab.data
   }
 
   // Get the input parameters:
   var outobj = {
-    'sitename': ifUndef(req.query.sitename, 'sep'),
-    'siteid': ifUndef(req.query.siteid, 'sep'),
-    'altmin': ifUndef(req.query.altmin, 'int'),
-    'altmax': ifUndef(req.query.altmax, 'int'),
-    'loc': ifUndef(req.query.loc, 'string'),
-    'taxa': ifUndef(req.query.taxa, 'sep'),
-    'keywords': ifUndef(req.query.keywords, 'sep'),
-    'gpid': ifUndef(req.query.gpid, 'sep'),
-    'contacts': ifUndef(req.query.contacts, 'sep'),
-    'offset': ifUndef(req.query.offset, 'int'),
-    'limit': ifUndef(req.query.limit, 'int')
+    'sitename': ifUndef(resultset.sitename, 'sep'),
+    'siteid': ifUndef(resultset.siteid, 'sep'),
+    'datasetid': ifUndef(resultset.datasetid, 'sep'),
+    'doi': ifUndef(resultset.doi, 'sep'),
+    'altmin': ifUndef(resultset.altmin, 'int'),
+    'altmax': ifUndef(resultset.altmax, 'int'),
+    'loc': ifUndef(resultset.loc, 'string'),
+    'taxa': ifUndef(resultset.taxa, 'sep'),
+    'keywords': ifUndef(resultset.keywords, 'sep'),
+    'gpid': ifUndef(resultset.gpid, 'sep'),
+    'contacts': ifUndef(resultset.contacts, 'sep'),
+    'offset': ifUndef(resultset.offset, 'int'),
+    'limit': ifUndef(resultset.limit, 'int')
   };
 
   if (outobj.keywords === null) {
-    outobj.keywords = ifUndef(req.query.keyword, 'sep')
+    outobj.keywords = ifUndef(resultset.keyword, 'sep')
   }
 
   if (!!outobj.loc) {
@@ -136,12 +131,11 @@ function sitesquery (req, res, next) {
   const contacts = 'SELECT contactid AS output FROM ndb.contacts WHERE contactname ILIKE ANY(${contacts});';
   const keyword = 'SELECT keywordid AS output FROM ndb.keywords WHERE keyword ILIKE ANY(${keywords})';
 
-  Promise.all([checkObject(geopol, outobj.gpid),
-    checkObject(keyword, outobj.keywords),
-    checkObject(taxa, outobj.taxa),
-    checkObject(contacts, outobj.contacts)])
+  Promise.all([checkObject(res, geopol, outobj.gpid, outobj),
+    checkObject(res, keyword, outobj.keywords, outobj),
+    checkObject(res, taxa, outobj.taxa, outobj),
+    checkObject(res, contacts, outobj.contacts, outobj)])
     .then(result => {
-      console.log(result)
       outobj.gpid = result[0]
       outobj.keywords = result[1]
       outobj.taxa = result[2]
@@ -169,10 +163,21 @@ function sitesquery (req, res, next) {
 function sitesbydataset (req, res, next) {
   var gooddsid = !!req.params.datasetid;
 
-  if (gooddsid) {
-    var datasetid = String(req.params.datasetid).split(',').map(function (item) {
-      return parseInt(item, 10);
-    });
+  let paramgrab = getparam(req)
+
+  if (!paramgrab.success) {
+    res.status(500)
+      .json({
+        status: 'failure',
+        data: null,
+        message: paramgrab.message
+      });
+  } else {
+    var resultset = paramgrab.data
+  }
+
+  if (Object.keys(resultset).indexOf('datasetid') !== -1) {
+    var datasetid = commaSep(resultset.datasetid)
   } else {
     res.status(500)
       .json({
