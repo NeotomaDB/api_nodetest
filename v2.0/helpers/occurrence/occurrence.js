@@ -126,7 +126,6 @@ function occurrencequery (req, res, next) {
   var goodlower = !!outobj.lower;
   var goodtaxa = !!outobj.taxonname || !!outobj.taxonid;
 
-  console.log(outobj)
   if (goodtaxa & goodlower & outobj.lower === 'true') {
     db.any(occurrencerecursquerysql, outobj)
       .then(function (data) {
