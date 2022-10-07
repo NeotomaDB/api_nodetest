@@ -79,85 +79,86 @@ function sitesquery (req, res, next) {
       });
   } else {
     var resultset = paramgrab.data
-  }
 
-  // Get the input parameters:
-  var outobj = {
-    'sitename': ifUndef(resultset.sitename, 'sep'),
-    'siteid': ifUndef(resultset.siteid, 'sep'),
-    'datasetid': ifUndef(resultset.datasetid, 'sep'),
-    'doi': ifUndef(resultset.doi, 'sep'),
-    'altmin': ifUndef(resultset.altmin, 'int'),
-    'altmax': ifUndef(resultset.altmax, 'int'),
-    'loc': ifUndef(resultset.loc, 'string'),
-    'taxa': ifUndef(resultset.taxa, 'sep'),
-    'keywords': ifUndef(resultset.keywords, 'sep'),
-    'gpid': ifUndef(resultset.gpid, 'sep'),
-    'contacts': ifUndef(resultset.contacts, 'sep'),
-    'offset': ifUndef(resultset.offset, 'int'),
-    'limit': ifUndef(resultset.limit, 'int')
-  };
+    // Get the input parameters:
+    var outobj = {
+      'sitename': ifUndef(resultset.sitename, 'sep'),
+      'siteid': ifUndef(resultset.siteid, 'sep'),
+      'datasetid': ifUndef(resultset.datasetid, 'sep'),
+      'doi': ifUndef(resultset.doi, 'sep'),
+      'altmin': ifUndef(resultset.altmin, 'int'),
+      'altmax': ifUndef(resultset.altmax, 'int'),
+      'loc': ifUndef(resultset.loc, 'string'),
+      'taxa': ifUndef(resultset.taxa, 'sep'),
+      'keywords': ifUndef(resultset.keywords, 'sep'),
+      'gpid': ifUndef(resultset.gpid, 'sep'),
+      'contacts': ifUndef(resultset.contacts, 'sep'),
+      'offset': ifUndef(resultset.offset, 'int'),
+      'limit': ifUndef(resultset.limit, 'int')
+    };
 
-  if (outobj.keywords === null) {
-    outobj.keywords = ifUndef(resultset.keyword, 'sep')
-  }
-
-  if (!!outobj.loc) {
-    outobj.loc = he.decode(outobj.loc);
-  }
-  if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
-    return res.status(500)
-      .json({
-        status: 'failure',
-        message: 'The altmin is greater than altmax.  Please fix this!'
-      });
-  }
-
-  var goodloc = !!outobj.loc
-
-  if (goodloc) {
-    try {
-      var newloc = JSON.parse(outobj.loc)
-      newloc = WKT.convert(JSON.parse(outobj.loc));
-    } catch (err) {
-      newloc = outobj.loc;
+    if (outobj.keywords === null) {
+      outobj.keywords = ifUndef(resultset.keyword, 'sep')
     }
-    outobj.loc = newloc;
-  }
 
-  /* Here's the actual call */
-  const geopol = 'SELECT geopoliticalid AS output FROM ndb.geopoliticalunits WHERE geopoliticalname ILIKE ANY(${gpid});';
-  const taxa = 'SELECT taxonid AS output FROM ndb.taxa WHERE taxonname ILIKE ANY(${taxa})';
-  const contacts = 'SELECT contactid AS output FROM ndb.contacts WHERE contactname ILIKE ANY(${contacts});';
-  const keyword = 'SELECT keywordid AS output FROM ndb.keywords WHERE keyword ILIKE ANY(${keywords})';
+    if (!!outobj.loc) {
+      outobj.loc = he.decode(outobj.loc);
+    }
+    if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
+      return res.status(500)
+        .json({
+          status: 'failure',
+          message: 'The altmin is greater than altmax.  Please fix this!'
+        });
+    } else {
 
-  Promise.all([checkObject(res, geopol, outobj.gpid, outobj),
-    checkObject(res, keyword, outobj.keywords, outobj),
-    checkObject(res, taxa, outobj.taxa, outobj),
-    checkObject(res, contacts, outobj.contacts, outobj)])
-    .then(result => {
-      outobj.gpid = result[0]
-      outobj.keywords = result[1]
-      outobj.taxa = result[2]
-      outobj.contacts = result[3]
-      db.any(siteQuery, outobj)
-        .then(function (data) {
-          res.status(200)
-            .json({
-              status: 'success',
-              data: data,
-              message: 'Retrieved all tables'
-            });
-        })
-        .catch(function (err) {
-          return res.status(500)
-            .json({
-              status: 'failure',
-              message: err.message,
-              query: outobj
+      var goodloc = !!outobj.loc
+
+      if (goodloc) {
+        try {
+          var newloc = JSON.parse(outobj.loc)
+          newloc = WKT.convert(JSON.parse(outobj.loc));
+        } catch (err) {
+          newloc = outobj.loc;
+        }
+        outobj.loc = newloc;
+      }
+
+      /* Here's the actual call */
+      const geopol = 'SELECT geopoliticalid AS output FROM ndb.geopoliticalunits WHERE geopoliticalname ILIKE ANY(${gpid});';
+      const taxa = 'SELECT taxonid AS output FROM ndb.taxa WHERE taxonname ILIKE ANY(${taxa})';
+      const contacts = 'SELECT contactid AS output FROM ndb.contacts WHERE contactname ILIKE ANY(${contacts});';
+      const keyword = 'SELECT keywordid AS output FROM ndb.keywords WHERE keyword ILIKE ANY(${keywords})';
+
+      Promise.all([checkObject(res, geopol, outobj.gpid, outobj),
+        checkObject(res, keyword, outobj.keywords, outobj),
+        checkObject(res, taxa, outobj.taxa, outobj),
+        checkObject(res, contacts, outobj.contacts, outobj)])
+        .then(result => {
+          outobj.gpid = result[0]
+          outobj.keywords = result[1]
+          outobj.taxa = result[2]
+          outobj.contacts = result[3]
+          db.any(siteQuery, outobj)
+            .then(function (data) {
+              res.status(200)
+                .json({
+                  status: 'success',
+                  data: data,
+                  message: 'Retrieved all tables'
+                });
+            })
+            .catch(function (err) {
+              return res.status(500)
+                .json({
+                  status: 'failure',
+                  message: err.message,
+                  query: outobj
+                });
             });
         });
-    });
+    }
+  }
 }
 
 function sitesbydataset (req, res, next) {
