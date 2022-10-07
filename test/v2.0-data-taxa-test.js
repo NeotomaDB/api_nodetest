@@ -7,8 +7,8 @@ var expect = chakram.expect;
 describe('tests for /v2.0/data/taxa', function () {
   describe('tests for get', function () {
     it('should respond 200 for "A taxon or array of taxa."', function () {
-      var response = request('get', 'http://localhost:3005/v2.0/data/taxa', {
-        'qs': { 'taxonname': 'dolor veniam eiusmod', 'datasetid': 80216373, 'siteid': 17200 },
+      var response = request('get', 'http://api-dev.neotomadb.org/v2.0/data/taxa', {
+        'qs': { 'taxonname': 'dolore cupidatat aliquip dolor', 'datasetid': 33875388, 'siteid': 7068 },
         'time': true
       });
 
