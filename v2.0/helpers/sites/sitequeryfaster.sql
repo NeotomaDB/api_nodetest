@@ -4,8 +4,10 @@ WITH collunit AS (
 	FROM
 		 ap.querytable AS bigq
 		 LEFT JOIN ndb.datasetdoi AS dsdoi ON dsdoi.datasetid = bigq.datasetid
+		 INNER JOIN ndb.constituentdatabases AS cdb ON cdb.databaseid = bigq.databaseid
 	WHERE
 	  (${sitename} IS NULL OR bigq.sitename ILIKE ANY(${sitename}))
+	  AND (${database} IS NULL OR cdb.databasename ILIKE ANY(${database}))
 	  AND (${altmin} IS NULL OR bigq.altitude >= ${altmin})
 	  AND (${altmax} IS NULL OR bigq.altitude <= ${altmax})
 	  AND (${loc}    IS NULL OR ST_Intersects(ST_GeogFromText(${loc}), bigq.geog))
