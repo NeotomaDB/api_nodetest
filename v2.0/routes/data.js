@@ -16,7 +16,7 @@ router.get('/datasets_elc/', handlers.datasetquery_elc);
 
 router.get(['/sites/:siteid/datasets', '/datasets/:datasetid', '/geopoliticalunits/:gpid/datasets', '/datasets', '/datasets/:datasetid'], handlers.datasetquery)
 router.post(['/sites/:siteid/datasets', '/geopoliticalunits/:gpid/datasets', '/datasets', 
-             '/datasets/:datasetid'], handlers.datasetquery)
+             '/datasets/:datasetid', '/datasets/db'], handlers.datasetquery)
 
 
 router.get('/datasets/:datasetid/chronologies', handlers.chronologiesbydsid);
