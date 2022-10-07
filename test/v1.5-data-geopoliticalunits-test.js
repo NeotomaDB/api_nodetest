@@ -7,8 +7,8 @@ var expect = chakram.expect;
 describe('tests for /v1.5/data/geopoliticalunits', function () {
   describe('tests for get', function () {
     it('should respond 200 for "An array of geopolitical units."', function () {
-      var response = request('get', 'http://localhost:3005/v1.5/data/geopoliticalunits', {
-        'qs': { 'gpid': 9887, 'gpname': 'tempor sunt proident est', 'rank': 1, 'lower': false },
+      var response = request('get', 'http://api-dev.neotomadb.org/v1.5/data/geopoliticalunits', {
+        'qs': { 'gpid': 9423, 'gpname': 'minim laboris', 'rank': 2, 'lower': true },
         'time': true
       });
 
