@@ -56,7 +56,6 @@ function downloadbyid (req, res, next) {
       'offset': ifUndef(resultset.offset, 'int'),
       'limit': ifUndef(resultset.limit, 'int')
     };
-    console.log(outobj)
 
     if (outobj.datasetid === null) {
       res.status(500)
