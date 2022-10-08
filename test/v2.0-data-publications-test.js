@@ -7,8 +7,8 @@ var expect = chakram.expect;
 describe('tests for /v2.0/data/publications', function () {
   describe('tests for get', function () {
     it('should respond 200 for "A list of publications."', function () {
-      var response = request('get', 'http://api-dev.neotomadb.org/v2.0/data/publications', {
-        'qs': { 'publicationid': 12321, 'datasetid': 68096667, 'siteid': 9564, 'familyname': 'nisi', 'pubtype': 'Authored Report', 'year': 1890, 'search': 'deserunt', 'limit': 10, 'offset': 0 },
+      var response = request('get', 'http://localhost:3005/v2.0/data/publications', {
+        'qs': { 'publicationid': 19190, 'datasetid': 42304597, 'siteid': 18454, 'familyname': 'anim reprehenderit officia pariatur', 'pubtype': 'Other Authored', 'year': 1814, 'search': 'nisi adipisicing est cillum', 'limit': 10, 'offset': 0 },
         'time': true
       });
 
