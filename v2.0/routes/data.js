@@ -13,15 +13,18 @@ router.get('/contacts/:contactid', handlers.contactsbyid);
 router.get('/contacts/', handlers.contactquery);
 router.get('/datasets_elc/:datasetid', handlers.datasetbyid_elc);
 router.get('/datasets_elc/', handlers.datasetquery_elc);
-router.get('/datasets/db', handlers.datasetsbydb);  // Take database names
-router.get('/datasets/:datasetid', handlers.datasetbyid);
+
+router.get(['/sites/:siteid/datasets', '/datasets/:datasetid', '/geopoliticalunits/:gpid/datasets', '/datasets', '/datasets/:datasetid'], handlers.datasetquery)
+router.post(['/sites/:siteid/datasets', '/geopoliticalunits/:gpid/datasets', '/datasets', 
+             '/datasets/:datasetid', '/datasets/db'], handlers.datasetquery)
+
+
 router.get('/datasets/:datasetid/chronologies', handlers.chronologiesbydsid);
 router.get('/datasets/:datasetid/contacts', handlers.contactsbydataid);
 router.get('/datasets/:datasetid/doi', handlers.doibydsid);
 router.get('/datasets/:datasetid/lithology', handlers.lithologybydsid);
 router.get('/datasets/:datasetid/publications', handlers.publicationbydataset);
 router.get('/datasets/:datasetid/taxa/', handlers.taxonbydsid);
-router.get('/datasets/', handlers.datasetquery);
 router.get('/dbtables', handlers.dbtables);
 router.get('/dbtables/:table', handlers.dbtables);
 
@@ -31,7 +34,6 @@ router.post(['/downloads'], handlers.downloadbyid);
 router.get('/frozen/:datasetid', handlers.frozen);
 router.get('/geopoliticalunits', handlers.geopoliticalunits);
 router.get('/geopoliticalunits/:gpid', handlers.geopoliticalbyid);
-router.get('/geopoliticalunits/:gpid/datasets', handlers.datasetsbygeopol);
 router.get('/occurrences', handlers.occurrencequery);
 router.get('/occurrences/:occurrenceid', handlers.occurrencebyid);
 // router.get('/oxcal/calibrate', handlers.oxcalibrate)
@@ -42,11 +44,12 @@ router.get('/publications/:pubid', handlers.publicationid);
 router.get('/sites/:siteid/chronologies', handlers.chronologiesbystid);
 router.get('/sites/:siteid/contacts', handlers.contactsbysiteid);
 router.get('/sites/:siteid/datasets_elc', handlers.datasetsbysite_elc); // Takes integers, including comma separated
-router.get('/sites/:siteid/datasets', handlers.datasetsbysite); // Takes integers, including comma separated
+
 router.get('/sites/:siteid/geopoliticalunits', handlers.geopolbysite);
 router.get('/sites/:siteid/publications', handlers.publicationbysite);
 
-router.get(['/sites/', '/sites/:siteid', '/contacts/:contactid/sites', '/datasets/:datasetid/sites', '/geopoliticalunits/:gpid/sites'], handlers.sitesquery); // Goes to the queries.
+router.get(['/sites/', '/sites/:siteid', '/contacts/:contactid/sites', '/datasets/:datasetid/sites', '/geopoliticalunits/:gpid/sites'],
+  handlers.sitesquery); // Goes to the queries.
 router.post(['/sites/', '/contacts/:contactid/sites', '/datasets/:datasetid/sites', '/geopoliticalunits/:gpid/sites'], handlers.sitesquery); // Goes to the queries.
 
 router.get('/summary/dsdbmonth/', handlers.dsdbmonth);

@@ -85,6 +85,7 @@ function sitesquery (req, res, next) {
       'sitename': ifUndef(resultset.sitename, 'sep'),
       'siteid': ifUndef(resultset.siteid, 'sep'),
       'datasetid': ifUndef(resultset.datasetid, 'sep'),
+      'database': ifUndef(resultset.database, 'sep'),
       'doi': ifUndef(resultset.doi, 'sep'),
       'altmin': ifUndef(resultset.altmin, 'int'),
       'altmax': ifUndef(resultset.altmax, 'int'),
