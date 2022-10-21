@@ -144,9 +144,9 @@ function getparam (req, name) {
   }
 
   let output = {
-    body: req.body,
-    params: req.params,
-    query: req.query }
+    body: JSON.parse(JSON.stringify(req.body)),
+    params: JSON.parse(JSON.stringify(req.params)),
+    query: JSON.parse(JSON.stringify(req.query)) }
 
   result = {
     success: true,
