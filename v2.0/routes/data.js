@@ -5,6 +5,10 @@
 
 var express = require('express');
 var router = express.Router();
+let apicache = require('apicache');
+let cache = apicache.middleware;
+const onlyStatus200 = (req, res) => res.statusCode === 200
+const cacheSuccesses = cache('5 minutes', onlyStatus200)
 
 var handlers = require('../handlers/data_handlers');
 
@@ -14,10 +18,10 @@ router.get('/contacts/', handlers.contactquery);
 router.get('/datasets_elc/:datasetid', handlers.datasetbyid_elc);
 router.get('/datasets_elc/', handlers.datasetquery_elc);
 
-router.get(['/sites/:siteid/datasets', '/datasets/:datasetid', '/geopoliticalunits/:gpid/datasets', '/datasets', '/datasets/:datasetid'], handlers.datasetquery)
-router.post(['/sites/:siteid/datasets', '/geopoliticalunits/:gpid/datasets', '/datasets', 
-             '/datasets/:datasetid', '/datasets/db'], handlers.datasetquery)
-
+router.get(['/sites/:siteid/datasets', '/datasets/:datasetid',
+  '/geopoliticalunits/:gpid/datasets', '/datasets', '/datasets/:datasetid'], cacheSuccesses, handlers.datasetquery)
+router.post(['/sites/:siteid/datasets', '/geopoliticalunits/:gpid/datasets', '/datasets',
+  '/datasets/:datasetid', '/datasets/db'], handlers.datasetquery)
 
 router.get('/datasets/:datasetid/chronologies', handlers.chronologiesbydsid);
 router.get('/datasets/:datasetid/contacts', handlers.contactsbydataid);
@@ -28,7 +32,7 @@ router.get('/datasets/:datasetid/taxa/', handlers.taxonbydsid);
 router.get('/dbtables', handlers.dbtables);
 router.get('/dbtables/:table', handlers.dbtables);
 
-router.get(['/downloads/:datasetid', '/downloads/'], handlers.downloadbyid);
+router.get(['/downloads/:datasetid', '/downloads/'], cacheSuccesses, handlers.downloadbyid);
 router.post(['/downloads'], handlers.downloadbyid);
 
 router.get('/frozen/:datasetid', handlers.frozen);
@@ -48,9 +52,10 @@ router.get('/sites/:siteid/datasets_elc', handlers.datasetsbysite_elc); // Takes
 router.get('/sites/:siteid/geopoliticalunits', handlers.geopolbysite);
 router.get('/sites/:siteid/publications', handlers.publicationbysite);
 
-router.get(['/sites/', '/sites/:siteid', '/contacts/:contactid/sites', '/datasets/:datasetid/sites', '/geopoliticalunits/:gpid/sites'],
-  handlers.sitesquery); // Goes to the queries.
-router.post(['/sites/', '/contacts/:contactid/sites', '/datasets/:datasetid/sites', '/geopoliticalunits/:gpid/sites'], handlers.sitesquery); // Goes to the queries.
+router.get(['/sites/', '/sites/:siteid',
+  '/contacts/:contactid/sites', '/datasets/:datasetid/sites', '/geopoliticalunits/:gpid/sites'], cacheSuccesses, handlers.sitesquery); // Goes to the queries.
+router.post(['/sites/', '/contacts/:contactid/sites',
+  '/datasets/:datasetid/sites', '/geopoliticalunits/:gpid/sites'], handlers.sitesquery); // Goes to the queries.
 
 router.get('/summary/dsdbmonth/', handlers.dsdbmonth);
 router.get('/summary/dstypemonth/', handlers.dstypemonth);

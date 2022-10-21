@@ -15,10 +15,12 @@ dotenv.config();
 
 let app = express();
 let cache = apicache.middleware;
+const onlyStatus200 = (req, res) => res.statusCode === 200
+const cacheSuccesses = cache('5 minutes', onlyStatus200)
 
 app.engine('html', require('ejs').renderFile);
 app.use(cors());
-app.use(cache('5 minutes'));
+// app.use(cache('5 minutes'));
 app.use(express.static('mochawesome-report'));
 app.use(compression());
 
