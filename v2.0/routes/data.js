@@ -32,8 +32,8 @@ router.get('/datasets/:datasetid/taxa/', handlers.taxonbydsid);
 router.get('/dbtables', handlers.dbtables);
 router.get('/dbtables/:table', handlers.dbtables);
 
-router.get(['/downloads/:datasetid', '/downloads/'], cacheSuccesses, handlers.downloadbyid);
 router.post(['/downloads'], handlers.downloadbyid);
+router.get(['/downloads/:datasetid', '/downloads/'], cacheSuccesses, handlers.downloadbyid);
 
 router.get('/frozen/:datasetid', handlers.frozen);
 router.get('/geopoliticalunits', handlers.geopoliticalunits);
@@ -52,10 +52,10 @@ router.get('/sites/:siteid/datasets_elc', handlers.datasetsbysite_elc); // Takes
 router.get('/sites/:siteid/geopoliticalunits', handlers.geopolbysite);
 router.get('/sites/:siteid/publications', handlers.publicationbysite);
 
-router.get(['/sites/', '/sites/:siteid',
-  '/contacts/:contactid/sites', '/datasets/:datasetid/sites', '/geopoliticalunits/:gpid/sites'], cacheSuccesses, handlers.sitesquery); // Goes to the queries.
 router.post(['/sites/', '/contacts/:contactid/sites',
   '/datasets/:datasetid/sites', '/geopoliticalunits/:gpid/sites'], handlers.sitesquery); // Goes to the queries.
+router.get(['/sites/', '/sites/:siteid',
+  '/contacts/:contactid/sites', '/datasets/:datasetid/sites', '/geopoliticalunits/:gpid/sites'], cacheSuccesses, handlers.sitesquery); // Goes to the queries.
 
 router.get('/summary/dsdbmonth/', handlers.dsdbmonth);
 router.get('/summary/dstypemonth/', handlers.dstypemonth);
