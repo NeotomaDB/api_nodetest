@@ -8,6 +8,7 @@ WITH collunit AS (
 	WHERE
 	  (${sitename} IS NULL OR bigq.sitename ILIKE ANY(${sitename}))
 	  AND (${database} IS NULL OR cdb.databasename ILIKE ANY(${database}))
+	  AND (${datasettype} IS NULL OR bigq.datasettype = ${datasettype})
 	  AND (${altmin} IS NULL OR bigq.altitude >= ${altmin})
 	  AND (${altmax} IS NULL OR bigq.altitude <= ${altmax})
 	  AND (${loc}    IS NULL OR ST_Intersects(ST_GeogFromText(${loc}), bigq.geog))
