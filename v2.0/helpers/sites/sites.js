@@ -92,6 +92,7 @@ function sitesquery (req, res, next) {
       'loc': ifUndef(resultset.loc, 'string'),
       'taxa': ifUndef(resultset.taxa, 'sep'),
       'keywords': ifUndef(resultset.keywords, 'sep'),
+      'datasettype': ifUndef(resultset.datasettype, 'string'),
       'gpid': ifUndef(resultset.gpid, 'sep'),
       'contacts': ifUndef(resultset.contacts, 'sep'),
       'offset': ifUndef(resultset.offset, 'int'),
@@ -130,7 +131,7 @@ function sitesquery (req, res, next) {
       const taxa = 'SELECT taxonid AS output FROM ndb.taxa WHERE taxonname ILIKE ANY(${taxa})';
       const contacts = 'SELECT contactid AS output FROM ndb.contacts WHERE contactname ILIKE ANY(${contacts});';
       const keyword = 'SELECT keywordid AS output FROM ndb.keywords WHERE keyword ILIKE ANY(${keywords})';
-
+console.log(outobj)
       Promise.all([checkObject(res, geopol, outobj.gpid, outobj),
         checkObject(res, keyword, outobj.keywords, outobj),
         checkObject(res, taxa, outobj.taxa, outobj),
