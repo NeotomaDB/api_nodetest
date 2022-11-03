@@ -113,7 +113,6 @@ function sitesquery (req, res, next) {
           message: 'The altmin is greater than altmax.  Please fix this!'
         });
     } else {
-
       var goodloc = !!outobj.loc
 
       if (goodloc) {
@@ -124,6 +123,7 @@ function sitesquery (req, res, next) {
           newloc = outobj.loc;
         }
         outobj.loc = newloc;
+        console.log(newloc);
       }
 
       /* Here's the actual call */
