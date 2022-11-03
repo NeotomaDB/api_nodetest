@@ -123,7 +123,6 @@ function sitesquery (req, res, next) {
           newloc = outobj.loc;
         }
         outobj.loc = newloc;
-        console.log(newloc);
       }
 
       /* Here's the actual call */
