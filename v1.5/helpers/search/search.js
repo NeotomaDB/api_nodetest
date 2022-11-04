@@ -2,7 +2,6 @@
 const path = require('path');
 // get global database object
 var db = require('../../../database/pgp_db');
-const { ifUndef } = require('../../../src/neotomaapi');
 var pgp = db.$config.pgp;
 
 // Helper for linking to external query files:
@@ -142,7 +141,7 @@ function explorersearch (req, res, next) {
   console.log('req.query.search object: ' + inputParamObj);
 
   var qryParams = {
-    '_taxonids': ifUndef(inputParamObj.taxa, 'sep'),
+    '_taxonids': null,
     '_elemtypeids': null,
     '_taphtypeids': null,
     '_depenvids': null,
