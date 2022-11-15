@@ -8,7 +8,7 @@ WITH datasets AS (
     (${sitename} IS NULL OR bigq.sitename ILIKE ANY(${sitename}))
 	  AND (${altmin} IS NULL OR bigq.altitude >= ${altmin})
 	  AND (${altmax} IS NULL OR bigq.altitude <= ${altmax})
-	  AND (${loc}    IS NULL OR ST_Intersects(ST_GeogFromText(${loc}), bigq.geog))
+	  AND (${loc}    IS NULL OR NOT ST_Disjoint(ST_GeogFromText(${loc})::geometry, bigq.geog::geometry))
 	  AND (${siteid} IS NULL OR bigq.siteid = ANY(${siteid}))
 	  AND (${gpid} IS NULL OR bigq.geopol && ${gpid})
 	  AND (${keywords} IS NULL OR bigq.keywords && ${keywords})

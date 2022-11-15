@@ -32,7 +32,7 @@ router.get('/datasets/:datasetid/taxa/', handlers.taxonbydsid);
 router.get('/dbtables', handlers.dbtables);
 router.get('/dbtables/:table', handlers.dbtables);
 
-router.post(['/downloads'], handlers.downloadbyid);
+router.post(['/downloads'], handlers.downloadbyidstream);
 router.get(['/downloads/:datasetid', '/downloads/'], cacheSuccesses, handlers.downloadbyid);
 
 router.get('/frozen/:datasetid', handlers.frozen);

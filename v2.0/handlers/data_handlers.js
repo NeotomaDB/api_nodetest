@@ -179,7 +179,10 @@ module.exports = {
     const download = require('../helpers/download/download.js');
     download.downloadbyid(req, res, next);
   },
-
+  downloadbyidstream: function (req, res, next) {
+    const download = require('../helpers/download/download.js');
+    download.downloadbyidstream(req, res, next);
+  },
   // DOIs
   doibydsid: function (req, res, next) {
     const dois = require('../helpers/doi/dois.js');

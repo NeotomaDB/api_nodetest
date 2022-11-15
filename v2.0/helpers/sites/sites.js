@@ -113,7 +113,6 @@ function sitesquery (req, res, next) {
           message: 'The altmin is greater than altmax.  Please fix this!'
         });
     } else {
-
       var goodloc = !!outobj.loc
 
       if (goodloc) {

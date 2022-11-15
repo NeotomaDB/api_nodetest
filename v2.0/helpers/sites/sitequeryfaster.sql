@@ -11,7 +11,7 @@ WITH collunit AS (
 	  AND (${datasettype} IS NULL OR bigq.datasettype = ${datasettype})
 	  AND (${altmin} IS NULL OR bigq.altitude >= ${altmin})
 	  AND (${altmax} IS NULL OR bigq.altitude <= ${altmax})
-	  AND (${loc}    IS NULL OR ST_Intersects(ST_GeogFromText(${loc}), bigq.geog))
+	  AND (${loc}    IS NULL OR NOT ST_Disjoint(ST_GeogFromText(${loc})::geometry, bigq.geog::geometry))
 	  AND (${siteid} IS NULL OR bigq.siteid = ANY(${siteid}))
 	  AND (${datasetid} IS NULL OR bigq.datasetid = ANY(${datasetid}))
 	  AND (${doi} IS NULL OR dsdoi.doi = ANY(${doi}))
