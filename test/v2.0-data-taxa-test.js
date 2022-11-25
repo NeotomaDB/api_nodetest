@@ -8,7 +8,7 @@ describe('tests for /v2.0/data/taxa', function () {
   describe('tests for get', function () {
     it('should respond 200 for "A taxon or array of taxa."', function () {
       var response = request('get', 'http://localhost:3005/v2.0/data/taxa', {
-        'qs': { 'taxonname': 'elit velit', 'datasetid': 75584611, 'siteid': 14205 },
+        'qs': { 'taxonname': 'minim Lorem consequat', 'datasetid': 51102826, 'siteid': 3071 },
         'time': true
       });
 

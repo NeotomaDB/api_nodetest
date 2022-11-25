@@ -680,8 +680,6 @@ components:
           $ref: '#/components/schemas/contactid'
         contactname:
           $ref: '#/components/schemas/contactname'
-        contactstatusid:
-          $ref: '#/components/schemas/contactstatusid'
         contactstatus:
           $ref: '#/components/schemas/contactstatus'
         email:
@@ -710,10 +708,6 @@ components:
           type: string
         url:
           $ref: '#/components/schemas/url'
-        recdatecreated:
-          $ref: '#/components/schemas/recdatecreated'
-        recdatemodified:
-          $ref: '#/components/schemas/recdatemodified'
       type: object
     recdatemodified:
       type: string

@@ -8,7 +8,7 @@ describe('tests for /v2.0/data/publications', function () {
   describe('tests for get', function () {
     it('should respond 200 for "A list of publications."', function () {
       var response = request('get', 'http://localhost:3005/v2.0/data/publications', {
-        'qs': { 'publicationid': 6100, 'datasetid': 93804710, 'siteid': 10440, 'familyname': 'ex', 'pubtype': 'Website', 'year': 1609, 'search': 'sunt exercitation elit adipisicing irure', 'limit': 10, 'offset': 0 },
+        'qs': { 'publicationid': 10100, 'datasetid': 4590158, 'siteid': 17877, 'familyname': 'laborum', 'pubtype': 'Legacy', 'year': 2074, 'search': 'commodo ipsum', 'limit': 10, 'offset': 0 },
         'time': true
       });
 
