@@ -18,6 +18,11 @@ function dbtables (req, res, next) {
 
   db.any(query, queryTable)
     .then(function (data, queryTable) {
+      if (tableparam) {
+        data = data;
+      } else {
+        data = data.map(x => x.tablename);
+      }
       res.status(200)
         .json({
           status: 'success',
