@@ -40,8 +40,12 @@ function chronologybyid (req, res, next) {
         });
     })
     .catch(function (err) {
-      return next(err);
-    })
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message
+        });
+    });
 }
 
 function chronologybydsid (req, res, next) {
@@ -72,8 +76,12 @@ function chronologybydsid (req, res, next) {
         });
     })
     .catch(function (err) {
-      return next(err);
-    })
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message
+        });
+    });
 }
 
 function chronologybystid (req, res, next) {
@@ -102,8 +110,12 @@ function chronologybystid (req, res, next) {
         });
     })
     .catch(function (err) {
-      return next(err);
-    })
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message
+        });
+    });
 }
 
 module.exports.chronologybyid = chronologybyid;

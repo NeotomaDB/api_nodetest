@@ -30,8 +30,12 @@ function collectiontypes (req, res, next) {
         })
     })
     .catch(function (err) {
-      return next(err);
-    })
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message
+        });
+    });
 }
 
 function datasettypes (req, res, next) {
@@ -45,7 +49,11 @@ function datasettypes (req, res, next) {
         })
     })
     .catch(function (err) {
-      return next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message
+        });
     });
 }
 
@@ -63,14 +71,12 @@ function taxaindatasets (req, res, next) {
       res.status(500)
         .json({
           status: 'failure',
-          data: err.message,
-          message: 'Must pass either queries or a comma separated integer sequence.'
+          data: err.message
         });
     });
 }
 
 function taxagrouptypes (req, res, next) {
-
   db.query('select ap.gettaxagrouptypes();')
     .then(function (data) {
       res.status(200)
@@ -81,12 +87,15 @@ function taxagrouptypes (req, res, next) {
         })
     })
     .catch(function (err) {
-      return next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message
+        });
     });
 }
 
 function keywords (req, res, next) {
-
   db.query('select ap.getkeywords();')
     .then(function (data) {
       res.status(200)
@@ -97,12 +106,15 @@ function keywords (req, res, next) {
         })
     })
     .catch(function (err) {
-      return next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message
+        });
     });
 }
 
 function authorpis (req, res, next) {
-
   db.query('select ap.getpeople();')
     .then(function (data) {
       res.status(200)
@@ -113,7 +125,11 @@ function authorpis (req, res, next) {
         })
     })
     .catch(function (err) {
-      return next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message
+        });
     });
 }
 
@@ -139,13 +155,16 @@ function taphonomysystems (req, res, next) {
           })
       })
       .catch(function (err) {
-        return next(err);
+        res.status(500)
+          .json({
+            status: 'failure',
+            data: err.message
+          });
       });
   }
 }
 
 function depositionalenvironments (req, res, next) {
-
   db.query('select ap.getdeptenvtypesroot();')
     .then(function (data) {
       res.status(200)
@@ -156,6 +175,10 @@ function depositionalenvironments (req, res, next) {
         })
     })
     .catch(function (err) {
-      return next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message
+        });
     });
 }
