@@ -48,7 +48,11 @@ function geopoliticalbyid (req, res, next) {
         });
     })
     .catch(function (err) {
-      return next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message
+        });
     });
 }
 
@@ -96,7 +100,11 @@ function geopoliticalunits (req, res, next) {
           });
       })
       .catch(function (err) {
-        return next(err);
+        res.status(500)
+          .json({
+            status: 'failure',
+            data: err.message
+          });
       });
   } else {
     res.redirect('/api-docs');
@@ -137,7 +145,11 @@ function geopolbysite (req, res, next) {
           });
       })
       .catch(function (err) {
-        return next(err);
+        res.status(500)
+          .json({
+            status: 'failure',
+            data: err.message
+          });
       });
   } else {
     res.redirect('/api-docs');

@@ -146,7 +146,11 @@ function datasetquery (req, res, next) {
         });
     })
     .catch(function (err) {
-      return next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message
+        });
     });
 }
 
