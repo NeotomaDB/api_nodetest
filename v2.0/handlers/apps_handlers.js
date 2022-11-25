@@ -35,7 +35,6 @@ function collectiontypes (req, res, next) {
 }
 
 function datasettypes (req, res, next) {
-
   db.query('select ap.getdatasettypes();')
     .then(function (data) {
       res.status(200)
@@ -51,28 +50,23 @@ function datasettypes (req, res, next) {
 }
 
 function taxaindatasets (req, res, next) {
-  db.query('SELECT * FROM ap.gettaxaindatasets()')
+  db.query('SELECT * FROM ap.taxaindatasetview;')
     .then(function (data) {
-      var agg = []
-      for (let k = 0; k < data.length; k++) {
-        var indexer = agg.map(x => x.taxonid).indexOf(data[k].taxonid)
-        if (indexer > -1) {
-          agg[indexer]['datasettypeid'] = [agg[indexer]['datasettypeid'], data[k]['datasettypeid']].flat()
-        } else {
-          agg.push(data[k])
-        }
-      }
-
       res.status(200)
         .type('application/json')
         .jsonp({
           status: 'success',
-          data: agg,
+          data: data,
           message: 'Retrieved all taxa in datasets'
         })
     }).catch(function (err) {
-      return next(err);
-    })
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message,
+          message: 'Must pass either queries or a comma separated integer sequence.'
+        });
+    });
 }
 
 function taxagrouptypes (req, res, next) {
