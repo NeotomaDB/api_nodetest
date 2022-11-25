@@ -419,6 +419,7 @@ components:
     address:
       example: 550 N Park St, Madison WI, USA
       type: string
+      nullable: true
     ageold:
       example: 11452
       format: int64
@@ -686,8 +687,10 @@ components:
           $ref: '#/components/schemas/email'
         phone:
           type: string
+          nullable: true
         fax:
           type: string
+          nullable: true
         familyname:
           example: Goring
           type: string
@@ -700,12 +703,15 @@ components:
         notes:
           example: This user is a member of the Neotoma Leadership Team.
           type: string
+          nullable: true
         suffix:
           example: Esq.
           type: string
+          nullable: true
         title:
           example: Lord Mayor
           type: string
+          nullable: true
         url:
           $ref: '#/components/schemas/url'
       type: object
@@ -757,20 +763,15 @@ components:
     contactresponse:
       properties:
         data:
-          type: object
-          properties:
-            query: 
-              type: object
-            result:
-              type: array
-              items:
+          type: array
+          items:
                 $ref: '#/components/schemas/contact'
-          minItems: 0
         status:
           $ref: '#/components/schemas/status'
       type: object
     contactstatus:
-      type: integer
+      type: string
+      nullable: true
     dataset:
       properties:
         data:
@@ -998,8 +999,6 @@ components:
     dbtablenameresponse:
       properties:
         data:
-          items:
-            type: string
           type: array
         message:
           $ref: '#/components/schemas/message'
@@ -1010,16 +1009,7 @@ components:
       type: object
       properties:
         data:
-          type: object
-          properties:
-            data:
-              items:
-                type: object
-              type: array
-            limit:
-              $ref: '#/components/schemas/limit'
-            offset:
-              $ref: '#/components/schemas/offset'
+          type: array
         message:
           $ref: '#/components/schemas/message'
         status:
@@ -1549,6 +1539,7 @@ components:
       properties:
         author:
           type: string
+          nullable: true
         ecolgroup:
           type: string
         highertaxonid:
@@ -1557,6 +1548,7 @@ components:
         publicationid:
           format: int32
           type: integer
+          nullable: true
         publication:
           type: string
           nullable: true
@@ -1647,6 +1639,7 @@ components:
       example: http://neotomadb.org
       format: url
       type: string
+      nullable: true
 info:
   contact:
     email: goring@wisc.edu
@@ -2071,7 +2064,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/datasetresponsev2_0'
+                $ref: '#/components/schemas/datasetv2'
           description: Datasets
       summary: Datasets associated with a Neotoma database.
       tags:
