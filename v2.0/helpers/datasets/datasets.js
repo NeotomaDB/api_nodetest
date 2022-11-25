@@ -134,7 +134,7 @@ function datasetbydb (req, res, next) {
     }
     database = validateOut(database)
   }
-
+  
   db.any(datasetbydbsql, database)
     .then(function (data) {
       if (data.length === 0) {
@@ -245,6 +245,9 @@ function datasetquery (req, res, next) {
       outobj.loc = he.decode(outobj.loc)
     }
 
+    if (outobj.datasetid[0] === 'db') {
+      outobj.datasetid = null;
+    }
 
     if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
       res.status(500)
