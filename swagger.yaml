@@ -697,9 +697,11 @@ components:
         givennames:
           example: Simon
           type: string
+          nullable: true
         leadinginitials:
           example: S. J.
           type: string
+          nullable: true
         notes:
           example: This user is a member of the Neotoma Leadership Team.
           type: string
@@ -2350,7 +2352,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/datasetresponsev2_0'
+                $ref: '#/components/schemas/datasetv2_0'
           description: An array of datasets.
       summary: Returns information about datasets based on the geopolitical unit in which they occur.
       tags:

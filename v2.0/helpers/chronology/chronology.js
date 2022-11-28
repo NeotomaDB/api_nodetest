@@ -99,7 +99,7 @@ function chronologybystid (req, res, next) {
         message: 'Must pass either queries or an integer sequence.'
       });
   };
-  
+
   db.any(chronologybystidsql, [siteid])
     .then(function (data) {
       res.status(200)
