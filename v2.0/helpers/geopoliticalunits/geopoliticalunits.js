@@ -3,7 +3,8 @@
 // get global database object
 var db = require('../../../database/pgp_db');
 
-const { sql, commaSep } = require('../../../src/neotomaapi.js');
+// Helper for linking to external query files:
+const { sql, commaSep, ifUndef, checkObject, getparam } = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
 const gpuQuery = sql('../v2.0/helpers/geopoliticalunits/gpuQuery.sql');
@@ -65,15 +66,27 @@ function geopoliticalunits (req, res, next) {
       where the records are, with regards to political units.
   */
 
-  var outobj = { 'gpid': req.query.gpid,
-    'gpname': req.query.gpname,
-    'rank': req.query.rank,
-    'lower': req.query.lower,
-    'limit': req.query.limit,
-    'offset': req.query.offset
-  };
+  let paramgrab = getparam(req)
+  console.log(paramgrab)
 
-  if (Object.keys(outobj).every(function (x) { return typeof outobj[x] === 'undefined'; }) === false) {
+  if (!paramgrab.success) {
+    res.status(500)
+      .json({
+        status: 'failure',
+        data: null,
+        message: paramgrab.message
+      });
+  } else {
+    var resultset = paramgrab.data
+
+    let outobj = {
+      gpid: resultset.gpid,
+      gpname: resultset.gpname,
+      limit: resultset.limit,
+      offset: resultset.offset,
+      rank: resultset.rank,
+      lower: resultset.lower }
+
     db.any(gpuQuery, outobj)
       .then(function (data) {
         if (data.length === 0) {
@@ -106,8 +119,6 @@ function geopoliticalunits (req, res, next) {
             data: err.message
           });
       });
-  } else {
-    res.redirect('/api-docs');
   }
 }
 
