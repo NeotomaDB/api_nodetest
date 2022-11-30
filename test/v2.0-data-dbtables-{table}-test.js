@@ -8,7 +8,7 @@ describe('tests for /v2.0/data/dbtables/{table}', function () {
   describe('tests for get', function () {
     it('should respond 200 for "Returned table."', function () {
       var response = request('get', 'http://localhost:3005/v2.0/data/dbtables/{table}', {
-        'qs': { 'table': 'enim ad ea' },
+        'qs': { 'table': 'nisi', 'limit': 10, 'offset': 0 },
         'time': true
       });
 

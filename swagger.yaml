@@ -180,8 +180,49 @@ components:
       name: datasettype
       required: false
       schema:
-        example: pollen
         type: string
+        enum: 
+          - null
+          - geochronologic
+          - loss-on-ignition
+          - pollen
+          - plant macrofossil
+          - vertebrate fauna
+          - macroinvertebrate
+          - pollen surface sample
+          - insect
+          - ostracode
+          - water chemistry
+          - diatom
+          - ostracode surface sample
+          - diatom surface sample
+          - geochemistry
+          - physical sedimentology
+          - charcoal
+          - testate amoebae
+          - X-ray fluorescence (XRF)
+          - X-ray diffraction (XRD)
+          - energy dispersive X-ray spectroscopy (EDS/EDX)
+          - biomarker
+          - modern plant biomarker
+          - phytolith
+          - specimen stable isotope
+          - paleomagnetic,biochemistry
+          - modern biochemistry
+          - organic carbon
+          - insect modern
+          - chironomid
+          - stable isotope
+          - testate amoebae surface sample
+          - charcoal surface sample
+          - cladocera
+          - diatom top-bottom
+          - microcharcoal
+          - macrocharcoal
+          - pollen trap
+          - dinoflagellates
+          - diatom bottom sample
+          - Metabarcoding aeDNA
     familyNameQuery:
       description: Family name (last name) of the the researcher (may use the % wildcard)
       in: query
@@ -378,7 +419,15 @@ components:
       name: table
       required: false
       schema:
-        example: sites
+        example: agetypes
+        type: string
+    tablePath:
+      description: Valid name for a Neotoma Table
+      in: path
+      name: table
+      required: true
+      schema:
+        example: agetypes
         type: string
     taxonNameQuery:
       description: Taxon name or partial name.
@@ -2262,9 +2311,11 @@ paths:
   /v2.0/data/dbtables/{table}:
     get:
       description: |
-        Returns the named Neotoma Database table.  An empty query will return a list of tables.
+        Returns the named Neotoma Database table.  An empty query will return a list of tables. Uses a default limit of 25 and offset of 0.
       parameters:
         - $ref: '#/components/parameters/tableQuery'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/offsetParam'
       responses:
         '200':
           content:
@@ -2352,7 +2403,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/datasetv2_0'
+                $ref: '#/components/schemas/datasetv2'
           description: An array of datasets.
       summary: Returns information about datasets based on the geopolitical unit in which they occur.
       tags:
@@ -2762,39 +2813,6 @@ paths:
       summary: Individual occurrence records for Neotoma records.
       tags:
         - Occurrence metadata
-        - v2.0
-  /v2.0/dbtables/table:
-    get:
-      description: Returns the named Neotoma Database table.  An empty query returns a list of all Neotoma tables.
-      parameters:
-        - description: Neotoma database table name.
-          example: geochrontypes
-          in: query
-          name: table
-          schema:
-            type: string
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/dbtables'
-          description: Returned table.
-      summary: Returns the named Neotoma Database table with limits & offsets.
-      tags:
-        - Database tables
-        - v1.5
-  /v2.0/dbtables/tablenames:
-    get:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/dbtablenameresponse'
-          description: A list of all the tables in the Neotoma database.
-      tags:
-        - Database tables
         - v2.0
 servers:
   - description: Neotoma production server.
