@@ -109,7 +109,7 @@ function geopoliticalunits (req, res, next) {
         res.status(200)
           .json({
             status: 'success',
-            data: { query: outobj, result: returner }
+            data: returner
           });
       })
       .catch(function (err) {
