@@ -180,8 +180,49 @@ components:
       name: datasettype
       required: false
       schema:
-        example: pollen
         type: string
+        enum: 
+          - null
+          - geochronologic
+          - loss-on-ignition
+          - pollen
+          - plant macrofossil
+          - vertebrate fauna
+          - macroinvertebrate
+          - pollen surface sample
+          - insect
+          - ostracode
+          - water chemistry
+          - diatom
+          - ostracode surface sample
+          - diatom surface sample
+          - geochemistry
+          - physical sedimentology
+          - charcoal
+          - testate amoebae
+          - X-ray fluorescence (XRF)
+          - X-ray diffraction (XRD)
+          - energy dispersive X-ray spectroscopy (EDS/EDX)
+          - biomarker
+          - modern plant biomarker
+          - phytolith
+          - specimen stable isotope
+          - paleomagnetic,biochemistry
+          - modern biochemistry
+          - organic carbon
+          - insect modern
+          - chironomid
+          - stable isotope
+          - testate amoebae surface sample
+          - charcoal surface sample
+          - cladocera
+          - diatom top-bottom
+          - microcharcoal
+          - macrocharcoal
+          - pollen trap
+          - dinoflagellates
+          - diatom bottom sample
+          - Metabarcoding aeDNA
     familyNameQuery:
       description: Family name (last name) of the the researcher (may use the % wildcard)
       in: query
@@ -378,7 +419,15 @@ components:
       name: table
       required: false
       schema:
-        example: sites
+        example: agetypes
+        type: string
+    tablePath:
+      description: Valid name for a Neotoma Table
+      in: path
+      name: table
+      required: true
+      schema:
+        example: agetypes
         type: string
     taxonNameQuery:
       description: Taxon name or partial name.
@@ -419,6 +468,7 @@ components:
     address:
       example: 550 N Park St, Madison WI, USA
       type: string
+      nullable: true
     ageold:
       example: 11452
       format: int64
@@ -680,40 +730,41 @@ components:
           $ref: '#/components/schemas/contactid'
         contactname:
           $ref: '#/components/schemas/contactname'
-        contactstatusid:
-          $ref: '#/components/schemas/contactstatusid'
         contactstatus:
           $ref: '#/components/schemas/contactstatus'
         email:
           $ref: '#/components/schemas/email'
         phone:
           type: string
+          nullable: true
         fax:
           type: string
+          nullable: true
         familyname:
           example: Goring
           type: string
         givennames:
           example: Simon
           type: string
+          nullable: true
         leadinginitials:
           example: S. J.
           type: string
+          nullable: true
         notes:
           example: This user is a member of the Neotoma Leadership Team.
           type: string
+          nullable: true
         suffix:
           example: Esq.
           type: string
+          nullable: true
         title:
           example: Lord Mayor
           type: string
+          nullable: true
         url:
           $ref: '#/components/schemas/url'
-        recdatecreated:
-          $ref: '#/components/schemas/recdatecreated'
-        recdatemodified:
-          $ref: '#/components/schemas/recdatemodified'
       type: object
     recdatemodified:
       type: string
@@ -763,20 +814,15 @@ components:
     contactresponse:
       properties:
         data:
-          type: object
-          properties:
-            query: 
-              type: object
-            result:
-              type: array
-              items:
+          type: array
+          items:
                 $ref: '#/components/schemas/contact'
-          minItems: 0
         status:
           $ref: '#/components/schemas/status'
       type: object
     contactstatus:
-      type: integer
+      type: string
+      nullable: true
     dataset:
       properties:
         data:
@@ -1004,8 +1050,6 @@ components:
     dbtablenameresponse:
       properties:
         data:
-          items:
-            type: string
           type: array
         message:
           $ref: '#/components/schemas/message'
@@ -1016,16 +1060,7 @@ components:
       type: object
       properties:
         data:
-          type: object
-          properties:
-            data:
-              items:
-                type: object
-              type: array
-            limit:
-              $ref: '#/components/schemas/limit'
-            offset:
-              $ref: '#/components/schemas/offset'
+          type: array
         message:
           $ref: '#/components/schemas/message'
         status:
@@ -1555,6 +1590,7 @@ components:
       properties:
         author:
           type: string
+          nullable: true
         ecolgroup:
           type: string
         highertaxonid:
@@ -1563,6 +1599,7 @@ components:
         publicationid:
           format: int32
           type: integer
+          nullable: true
         publication:
           type: string
           nullable: true
@@ -1653,6 +1690,7 @@ components:
       example: http://neotomadb.org
       format: url
       type: string
+      nullable: true
 info:
   contact:
     email: goring@wisc.edu
@@ -2077,7 +2115,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/datasetresponsev2_0'
+                $ref: '#/components/schemas/datasetv2'
           description: Datasets
       summary: Datasets associated with a Neotoma database.
       tags:
@@ -2273,9 +2311,11 @@ paths:
   /v2.0/data/dbtables/{table}:
     get:
       description: |
-        Returns the named Neotoma Database table.  An empty query will return a list of tables.
+        Returns the named Neotoma Database table.  An empty query will return a list of tables. Uses a default limit of 25 and offset of 0.
       parameters:
         - $ref: '#/components/parameters/tableQuery'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/offsetParam'
       responses:
         '200':
           content:
@@ -2363,7 +2403,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/datasetresponsev2_0'
+                $ref: '#/components/schemas/datasetv2'
           description: An array of datasets.
       summary: Returns information about datasets based on the geopolitical unit in which they occur.
       tags:
@@ -2773,39 +2813,6 @@ paths:
       summary: Individual occurrence records for Neotoma records.
       tags:
         - Occurrence metadata
-        - v2.0
-  /v2.0/dbtables/table:
-    get:
-      description: Returns the named Neotoma Database table.  An empty query returns a list of all Neotoma tables.
-      parameters:
-        - description: Neotoma database table name.
-          example: geochrontypes
-          in: query
-          name: table
-          schema:
-            type: string
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/dbtables'
-          description: Returned table.
-      summary: Returns the named Neotoma Database table with limits & offsets.
-      tags:
-        - Database tables
-        - v1.5
-  /v2.0/dbtables/tablenames:
-    get:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/dbtablenameresponse'
-          description: A list of all the tables in the Neotoma database.
-      tags:
-        - Database tables
         - v2.0
 servers:
   - description: Neotoma production server.
