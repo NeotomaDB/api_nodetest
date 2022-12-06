@@ -21,7 +21,7 @@ describe('Get contact data:', function () {
       .set('Accept', 'application/json')
       .end(function (err, res) {
         if (err) return done(err);
-        assert.strictEqual(Object.keys(res.body.data.result).length, 25);
+        assert.strictEqual(res.body.data.length, 25);
         done();
       });
   });
@@ -31,7 +31,7 @@ describe('Get contact data:', function () {
       .set('Accept', 'application/json')
       .end(function (err, res) {
         if (err) return done(err);
-        assert.strictEqual(res.body.data.result[0]['familyname'], 'Grimm')
+        assert.strictEqual(res.body.data[0]['familyname'], 'Grimm')
         done();
       });
   });
@@ -41,7 +41,7 @@ describe('Get contact data:', function () {
       .set('Accept', 'application/json')
       .end(function (err, res) {
         if (err) return done(err);
-        assert.strictEqual(Object.keys(res.body.data.result).length, 25);
+        assert.strictEqual(res.body.data.length, 25);
         done();
       });
   });
@@ -51,7 +51,7 @@ describe('Get contact data:', function () {
       .set('Accept', 'application/json')
       .end(function (err, res) {
         if (err) return done(err);
-        assert.strictEqual(Object.keys(res.body.data.result).length, 30);
+        assert.strictEqual(res.body.data.length, 30);
         done();
       });
   });
