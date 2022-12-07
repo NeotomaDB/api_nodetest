@@ -15,8 +15,8 @@ var handlers = require('../handlers/data_handlers');
 router.get('/chronologies/:chronologyid', handlers.chronologiesbyid);
 router.get('/contacts/:contactid', handlers.contactsbyid);
 router.get('/contacts/', handlers.contactquery);
-router.get('/datasets_elc/:datasetid', handlers.datasetbyid_elc);
-router.get('/datasets_elc/', handlers.datasetquery_elc);
+
+router.get(['/datasets_elc/', '/datasets_elc/:datasetid'], handlers.datasetquery_elc);
 
 router.get(['/sites/:siteid/datasets', '/datasets/:datasetid',
   '/geopoliticalunits/:gpid/datasets', '/datasets', '/datasets/:datasetid'], cacheSuccesses, handlers.datasetquery)
@@ -29,10 +29,9 @@ router.get('/datasets/:datasetid/doi', handlers.doibydsid);
 router.get('/datasets/:datasetid/lithology', handlers.lithologybydsid);
 router.get('/datasets/:datasetid/publications', handlers.publicationbydataset);
 router.get('/datasets/:datasetid/taxa/', handlers.taxonbydsid);
-router.get('/dbtables', handlers.dbtables);
-router.get('/dbtables/:table', handlers.dbtables);
+router.get(['/dbtables/:table', '/dbtables'], handlers.dbtables);
 
-router.post(['/downloads'], handlers.downloadbyidstream);
+router.post(['/downloads'], handlers.downloadbyid);
 router.get(['/downloads/:datasetid', '/downloads/'], cacheSuccesses, handlers.downloadbyid);
 
 router.get('/frozen/:datasetid', handlers.frozen);

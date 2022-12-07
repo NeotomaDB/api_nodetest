@@ -11,7 +11,7 @@ SELECT
                          'unittype', cts.colltype)
   AS site,
   json_agg(
-    json_build_object(  'datasetid', dts.datasetid,
+    DISTINCT jsonb_build_object(  'datasetid', dts.datasetid,
                       'datasettype', dst.datasettype,
                      'datasetnotes', dts.notes,
                          'database', cstdb.databasename,

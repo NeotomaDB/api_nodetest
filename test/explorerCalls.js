@@ -9,7 +9,7 @@ dotenv.config();
 let appServicesLocation = 'http://localhost:' + process.env.APIPORT + '/v1.5/apps';
 
 describe('Tests for Explorer App Services', function () {
-  this.timeout(8000);
+  this.timeout(12000);
   describe('tests for get', function () {
     it('should respond 200 for TaxaGroupTypes', function () {
       var response = request('get', appServicesLocation + '/TaxaGroupTypes', {
