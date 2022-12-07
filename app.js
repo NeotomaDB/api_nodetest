@@ -1,6 +1,5 @@
 let apicache = require('apicache');
 let compression = require('compression');
-let bodyParser = require('body-parser');
 let cookieParser = require('cookie-parser');
 let cors = require('cors');
 let express = require('express');
@@ -19,8 +18,9 @@ const onlyStatus200 = (req, res) => res.statusCode === 200
 const cacheSuccesses = cache('5 minutes', onlyStatus200)
 
 app.engine('html', require('ejs').renderFile);
+
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 // app.use(cache('5 minutes'));
 app.use(express.static('mochawesome-report'));
 app.use(compression());
