@@ -7,7 +7,7 @@ var expect = chakram.expect;
 describe('tests for /v1.5/data/sites/{siteid}', function () {
   describe('tests for get', function () {
     it('should respond 200 for "An array of site elements."', function () {
-      var response = request('get', 'http://api-dev.neotomadb.org/v1.5/data/sites/500', {
+      var response = request('get', 'http://localhost:3005/v1.5/data/sites/500', {
         'time': true
       });
 

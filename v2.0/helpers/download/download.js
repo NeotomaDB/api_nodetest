@@ -50,7 +50,6 @@ function downloadbyid (req, res, next) {
       });
   } else {
     var resultset = paramgrab.data
-
     var outobj = {
       'datasetid': ifUndef(resultset.datasetid, 'sep'),
       'offset': ifUndef(resultset.offset, 'int'),

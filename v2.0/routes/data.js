@@ -31,7 +31,7 @@ router.get('/datasets/:datasetid/publications', handlers.publicationbydataset);
 router.get('/datasets/:datasetid/taxa/', handlers.taxonbydsid);
 router.get(['/dbtables/:table', '/dbtables'], handlers.dbtables);
 
-router.post(['/downloads'], handlers.downloadbyidstream);
+router.post(['/downloads'], handlers.downloadbyid);
 router.get(['/downloads/:datasetid', '/downloads/'], cacheSuccesses, handlers.downloadbyid);
 
 router.get('/frozen/:datasetid', handlers.frozen);

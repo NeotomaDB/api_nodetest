@@ -7,8 +7,8 @@ var expect = chakram.expect;
 describe('tests for /v2.0/data/contacts', function () {
   describe('tests for get', function () {
     it('should respond 200 for "contact"', function () {
-      var response = request('get', 'http://api-dev.neotomadb.org/v2.0/data/contacts', {
-        'qs': { 'contactid': 9462, 'familyname': 'dolor proident do eiusmod Duis', 'contactname': 'dolore eu Ut irure', 'contactstatus': 'active', 'limit': 10, 'offset': 0 },
+      var response = request('get', 'http://localhost:3005/v2.0/data/contacts', {
+        'qs': { 'contactid': 14408, 'familyname': 'aliqua amet', 'contactname': 'magna aute incididunt est', 'contactstatus': 'unknown', 'limit': 10, 'offset': 0 },
         'time': true
       });
 
