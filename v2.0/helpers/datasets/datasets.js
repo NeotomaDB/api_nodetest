@@ -2,7 +2,7 @@
 const he = require('he')
 const db = require('../../../database/pgp_db');
 
-const { sql, ifUndef, getparam } = require('../../../src/neotomaapi.js');
+const { sql, ifUndef, checkObject, getparam } = require('../../../src/neotomaapi.js');
 
 var Terraformer = require('terraformer');
 var WKT = require('terraformer-wkt-parser');
@@ -134,7 +134,7 @@ function datasetbydb (req, res, next) {
     }
     database = validateOut(database)
   }
-
+  
   db.any(datasetbydbsql, database)
     .then(function (data) {
       if (data.length === 0) {
@@ -240,11 +240,16 @@ function datasetquery (req, res, next) {
       'limit': parseInt(resultset.limit || 25),
       'offset': parseInt(resultset.offset || 0)
     };
-
+    console.log(outobj)
     if (outobj.loc !== null) {
       outobj.loc = he.decode(outobj.loc)
     }
 
+    if (outobj.datasetid !== null) {
+      if (outobj.datasetid[0] === 'db') {
+        outobj.datasetid = null;
+      }
+    }
 
     if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
       res.status(500)
@@ -272,27 +277,36 @@ function datasetquery (req, res, next) {
         outobj.loc = newloc;
       }
 
-      db.any(datasetquerysql, outobj)
-        .then(function (data) {
-          if (data.length === 0) {
-            // We're returning the structure, but nothing inside it:
-            var returner = [];
-          } else {
-            returner = data;
-          };
-          res.status(200)
-            .json({
-              status: 'success',
-              data: returner,
-              message: 'Retrieved all tables'
-            });
-        })
-        .catch(function (err) {
-          res.status(500)
-            .json({
-              status: 'failure',
-              data: err.message,
-              message: 'Must pass either queries or a comma separated integer sequence.'
+      const geopol = 'SELECT geopoliticalid AS output FROM ndb.geopoliticalunits WHERE geopoliticalname ILIKE ANY(${gpid});';
+      const taxa = 'SELECT taxonid AS output FROM ndb.taxa WHERE taxonname ILIKE ANY(${taxa})';
+      const contacts = 'SELECT contactid AS output FROM ndb.contacts WHERE contactname ILIKE ANY(${contacts});';
+      const keyword = 'SELECT keywordid AS output FROM ndb.keywords WHERE keyword ILIKE ANY(${keywords})';
+
+      Promise.all([checkObject(res, geopol, outobj.gpid, outobj),
+        checkObject(res, keyword, outobj.keywords, outobj),
+        checkObject(res, taxa, outobj.taxa, outobj),
+        checkObject(res, contacts, outobj.contacts, outobj)])
+        .then(result => {
+          outobj.gpid = result[0]
+          outobj.keywords = result[1]
+          outobj.taxa = result[2]
+          outobj.contacts = result[3]
+          db.any(datasetquerysql, outobj)
+            .then(function (data) {
+              res.status(200)
+                .json({
+                  status: 'success',
+                  data: data,
+                  message: 'Retrieved all tables'
+                });
+            })
+            .catch(function (err) {
+              return res.status(500)
+                .json({
+                  status: 'failure',
+                  message: err.message,
+                  query: outobj
+                });
             });
         });
     }

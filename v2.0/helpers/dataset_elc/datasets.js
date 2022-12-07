@@ -5,7 +5,7 @@ const path = require('path');
 var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
-const { sql, commaSep, validateOut } = require('../../../src/neotomaapi.js');
+const { sql, commaSep, validateOut, getparam, ifUndef } = require('../../../src/neotomaapi.js');
 
 var Terraformer = require('terraformer');
 var WKT = require('terraformer-wkt-parser');
@@ -84,23 +84,35 @@ function datasetbysiteid (req, res, next) {
 
 function datasetquery (req, res, next) {
   // First get all the inputs and parse them:
-  var outobj = {
-    'datasetid': commaSep(req.query.datasetid),
-    'siteid': commaSep(req.query.siteid),
-    'piid': commaSep(req.query.piid),
-    'datasettype': String(req.query.sitename),
-    'altmin': parseInt(String(req.query.altmin)),
-    'altmax': parseInt(String(req.query.altmax)),
-    'loc': String(req.query.loc),
-    'gpid': parseInt(req.query.gpid),
-    'ageyoung': parseInt(req.query.ageyoung),
-    'ageold': parseInt(req.query.ageold),
-    'ageof': parseInt(req.query.ageold),
-    'limit': parseInt(req.query.limit),
-    'offset':parseInt(req.query.offset)
-  };
+  let paramgrab = getparam(req)
 
-  outobj = validateOut(outobj);
+  if (!paramgrab.success) {
+    res.status(500)
+      .json({
+        status: 'failure',
+        data: null,
+        message: paramgrab.message
+      });
+  } else {
+    var resultset = paramgrab.data
+
+    var outobj = {
+      'datasetid': ifUndef(resultset.datasetid, 'sep'),
+      'siteid': ifUndef(resultset.siteid, 'sep'),
+      'piid': ifUndef(resultset.piid, 'sep'),
+      'sitename': ifUndef(resultset.sitename, 'sep'),
+      'datasettype': ifUndef(resultset.datasettype, 'string'),
+      'altmin': ifUndef(resultset.altmin, 'int'),
+      'altmax': ifUndef(resultset.altmax, 'int'),
+      'loc': ifUndef(resultset.loc, 'string'),
+      'gpid': ifUndef(resultset.gpid, 'int'),
+      'ageyoung': ifUndef(resultset.ageyoung, 'int'),
+      'ageold': ifUndef(resultset.ageold, 'int'),
+      'ageof': ifUndef(resultset.ageold, 'int'),
+      'limit': ifUndef(resultset.limit, 'int'),
+      'offset': ifUndef(resultset.offset, 'int')
+    };
+  }
 
   if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
     res.status(500)
@@ -146,7 +158,11 @@ function datasetquery (req, res, next) {
         });
     })
     .catch(function (err) {
-      return next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message
+        });
     });
 }
 

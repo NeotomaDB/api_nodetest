@@ -18,6 +18,9 @@ WITH collunit AS (
 	  AND (${gpid} IS NULL OR bigq.geopol && ${gpid})
 	  AND (${keywords} IS NULL OR bigq.keywords && ${keywords})
 	  AND (${contacts} IS NULL OR bigq.contacts && ${contacts})
+	  AND (${ageyoung} IS NULL OR     ${ageyoung} > bigq.younger)
+      AND (${ageold} IS NULL OR       ${ageold} < bigq.older)
+      AND (${ageof} IS NULL OR        ${ageof} BETWEEN bigq.younger AND bigq.older)
 	  AND (${taxa} IS NULL OR bigq.taxa && ${taxa})
 )
 SELECT sts.siteid,

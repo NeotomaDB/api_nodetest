@@ -48,11 +48,15 @@ function contacts (req, res, next) {
         res.status(200)
           .json({
             status: 'success',
-            data: { query: outobj, result: returner }
+            data: returner
           });
       })
       .catch(function (err) {
-        return next(err);
+        res.status(500)
+          .json({
+            status: 'failure',
+            data: err.message
+          });
       });
   };
 }
@@ -90,7 +94,11 @@ function contactsbyid (req, res, next) {
         });
     })
     .catch(function (err) {
-      return next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message
+        });
     });
 }
 
@@ -127,8 +135,12 @@ function contactsbydataid (req, res, next) {
         });
     })
     .catch(function (err) {
-      return next(err);
-    })
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message
+        });
+    });
 }
 
 function contactsbysiteid (req, res, next) {
@@ -163,8 +175,12 @@ function contactsbysiteid (req, res, next) {
         });
     })
     .catch(function (err) {
-      return next(err);
-    })
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message
+        });
+    });
 }
 
 module.exports.contactquery = contacts;

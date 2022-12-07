@@ -30,12 +30,15 @@ function collectiontypes (req, res, next) {
         })
     })
     .catch(function (err) {
-      return next(err);
-    })
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message
+        });
+    });
 }
 
 function datasettypes (req, res, next) {
-
   db.query('select ap.getdatasettypes();')
     .then(function (data) {
       res.status(200)
@@ -46,37 +49,34 @@ function datasettypes (req, res, next) {
         })
     })
     .catch(function (err) {
-      return next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message
+        });
     });
 }
 
 function taxaindatasets (req, res, next) {
-  db.query('SELECT * FROM ap.gettaxaindatasets()')
+  db.query('SELECT * FROM ap.taxaindatasetview;')
     .then(function (data) {
-      var agg = []
-      for (let k = 0; k < data.length; k++) {
-        var indexer = agg.map(x => x.taxonid).indexOf(data[k].taxonid)
-        if (indexer > -1) {
-          agg[indexer]['datasettypeid'] = [agg[indexer]['datasettypeid'], data[k]['datasettypeid']].flat()
-        } else {
-          agg.push(data[k])
-        }
-      }
-
       res.status(200)
         .type('application/json')
         .jsonp({
           status: 'success',
-          data: agg,
+          data: data,
           message: 'Retrieved all taxa in datasets'
         })
     }).catch(function (err) {
-      return next(err);
-    })
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message
+        });
+    });
 }
 
 function taxagrouptypes (req, res, next) {
-
   db.query('select ap.gettaxagrouptypes();')
     .then(function (data) {
       res.status(200)
@@ -87,12 +87,15 @@ function taxagrouptypes (req, res, next) {
         })
     })
     .catch(function (err) {
-      return next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message
+        });
     });
 }
 
 function keywords (req, res, next) {
-
   db.query('select ap.getkeywords();')
     .then(function (data) {
       res.status(200)
@@ -103,12 +106,15 @@ function keywords (req, res, next) {
         })
     })
     .catch(function (err) {
-      return next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message
+        });
     });
 }
 
 function authorpis (req, res, next) {
-
   db.query('select ap.getpeople();')
     .then(function (data) {
       res.status(200)
@@ -119,7 +125,11 @@ function authorpis (req, res, next) {
         })
     })
     .catch(function (err) {
-      return next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message
+        });
     });
 }
 
@@ -145,13 +155,16 @@ function taphonomysystems (req, res, next) {
           })
       })
       .catch(function (err) {
-        return next(err);
+        res.status(500)
+          .json({
+            status: 'failure',
+            data: err.message
+          });
       });
   }
 }
 
 function depositionalenvironments (req, res, next) {
-
   db.query('select ap.getdeptenvtypesroot();')
     .then(function (data) {
       res.status(200)
@@ -162,6 +175,10 @@ function depositionalenvironments (req, res, next) {
         })
     })
     .catch(function (err) {
-      return next(err);
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message
+        });
     });
 }
