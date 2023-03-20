@@ -3,9 +3,7 @@
 var db = require('../../../database/pgp_db');
 var pgp = db.$config.pgp;
 
-const {
-  sql, getparam, ifUndef
-} = require('../../../src/neotomaapi.js');
+const { sql, getparam, ifUndef } = require('../../../src/neotomaapi.js');
 
 const downloadsql = sql('../v2.0/helpers/download/downloadbydsid.sql');
 
@@ -73,12 +71,11 @@ function downloadbyid (req, res, next) {
             } else {
               returner = {
                 // To avoid deep copy we need to pass the variable through:
-                'site': JSON.parse(JSON.stringify(x.data.data.site))
+                'site': JSON.parse(JSON.stringify(x.data.data.dataset))['site']
               };
 
-              delete returner.site.dataset;
-
-              returner['site']['collectionunit']['dataset'] = x.data.data.site.dataset;
+              // delete returner.site.dataset;
+              //returner['site']['collectionunit']['dataset'] = x.data.data.site.dataset;
               returner['site']['collectionunit']['chronologies'] = x.data.chronologies;
               var defaultchron = getdefault(returner['site']['collectionunit']['chronologies'])
               returner['site']['collectionunit']['defaultchronology'] = defaultchron

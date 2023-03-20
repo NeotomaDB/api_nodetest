@@ -1,8 +1,6 @@
 // Sites query:
 const { any } = require('bluebird');
 const he = require('he');
-const Terraformer = require('terraformer');
-const WKT = require('terraformer-wkt-parser');
 const { stream } = require('../../../database/pgp_db');
 
 // get global database object
@@ -10,7 +8,7 @@ const db = require('../../../database/pgp_db');
 const pgp = db.$config.pgp;
 
 // Helper for linking to external query files:
-const { sql, commaSep, ifUndef, checkObject, getparam } = require('../../../src/neotomaapi.js');
+const { sql, commaSep, ifUndef, checkObject, getparam, parseLocations } = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
 const siteQuery = sql('../v2.0/helpers/sites/sitequeryfaster.sql');
@@ -82,21 +80,26 @@ function sitesquery (req, res, next) {
 
     // Get the input parameters:
     var outobj = {
-      'sitename': ifUndef(resultset.sitename, 'sep'),
-      'siteid': ifUndef(resultset.siteid, 'sep'),
-      'datasetid': ifUndef(resultset.datasetid, 'sep'),
-      'database': ifUndef(resultset.database, 'sep'),
-      'doi': ifUndef(resultset.doi, 'sep'),
-      'altmin': ifUndef(resultset.altmin, 'int'),
+      'ageof': ifUndef(resultset.ageof, 'int'),
+      'ageold': ifUndef(resultset.ageold, 'int'),
+      'ageyoung': ifUndef(resultset.ageyoung, 'int'),
       'altmax': ifUndef(resultset.altmax, 'int'),
-      'loc': ifUndef(resultset.loc, 'string'),
-      'taxa': ifUndef(resultset.taxa, 'sep'),
-      'keywords': ifUndef(resultset.keywords, 'sep'),
-      'datasettype': ifUndef(resultset.datasettype, 'string'),
-      'gpid': ifUndef(resultset.gpid, 'sep'),
+      'altmin': ifUndef(resultset.altmin, 'int'),
       'contacts': ifUndef(resultset.contacts, 'sep'),
+      'database': ifUndef(resultset.database, 'sep'),
+      'datasetid': ifUndef(resultset.datasetid, 'sep'),
+      'datasettype': ifUndef(resultset.datasettype, 'string'),
+      'doi': ifUndef(resultset.doi, 'sep'),
+      'gpid': ifUndef(resultset.gpid, 'sep'),
+      'keywords': ifUndef(resultset.keywords, 'sep'),
+      'limit': ifUndef(resultset.limit, 'int'),
+      'loc': ifUndef(resultset.loc, 'string'),
+      'maxage': ifUndef(resultset.maxage, 'int'),
+      'minage': ifUndef(resultset.minage, 'int'),
       'offset': ifUndef(resultset.offset, 'int'),
-      'limit': ifUndef(resultset.limit, 'int')
+      'siteid': ifUndef(resultset.siteid, 'sep'),
+      'sitename': ifUndef(resultset.sitename, 'sep'),
+      'taxa': ifUndef(resultset.taxa, 'sep')
     };
 
     if (outobj.keywords === null) {
@@ -116,13 +119,16 @@ function sitesquery (req, res, next) {
       var goodloc = !!outobj.loc
 
       if (goodloc) {
-        try {
-          var newloc = JSON.parse(outobj.loc)
-          newloc = WKT.convert(JSON.parse(outobj.loc));
+        // For the PostGIS query we need the result in WKT format, but we accept it in geoJSON or WKT.
+        try {3
+          outobj.loc = parseLocations(outobj.loc);
         } catch (err) {
-          newloc = outobj.loc;
+          return res.status(500)
+            .json({
+              status: 'failure',
+              message: 'The spatial object passed in loc is not parsing properly. Is it valid WKT/geoJSON?'
+            });
         }
-        outobj.loc = newloc;
       }
 
       /* Here's the actual call */

@@ -1,3 +1,12 @@
+WITH RECURSIVE lowertaxa AS (SELECT
+              txa.taxonid,
+              txa.highertaxonid
+         FROM ndb.taxa AS txa
+        WHERE (${taxonid} IS NULL OR (txa.taxonid = ANY (${taxonid})))
+        UNION ALL
+       SELECT m.taxonid, m.highertaxonid
+         FROM ndb.taxa AS m
+         JOIN lowertaxa ON lowertaxa.taxonid = m.highertaxonid)
 SELECT DISTINCT txa.taxonid,
        txa.taxonname,
        txa.author AS author,
@@ -9,16 +18,12 @@ SELECT DISTINCT txa.taxonid,
        txa.publicationid AS publicationid,
        pub.citation AS publication
 FROM
-  ndb.taxa AS txa
-  LEFT OUTER JOIN ndb.ecolgroups AS ecg ON ecg.taxonid = txa.taxonid
+  lowertaxa AS taxa
+  LEFT OUTER JOIN ndb.taxa AS txa ON txa.taxonid = taxa.taxonid
+  LEFT OUTER JOIN ndb.ecolgroups AS ecg ON ecg.taxonid = taxa.taxonid
   LEFT OUTER JOIN ndb.ecolgrouptypes AS ecgt ON ecgt.ecolgroupid = ecg.ecolgroupid
   INNER JOIN ndb.taxagrouptypes AS tgt ON tgt.taxagroupid = txa.taxagroupid
   LEFT OUTER JOIN ndb.publications AS pub ON pub.publicationid = txa.publicationid
-WHERE
-  ((${taxonid} IS NULL) OR txa.taxonid = ANY(${taxonid}))
-  AND (${status} IS NULL OR txa.extinct = ${status})
-  AND (${taxagroup} IS NULL OR tgt.taxagroup ILIKE ANY(${taxagroup}))
-  AND (${ecolgroup} IS NULL OR ecgt.ecolgroup ILIKE ANY(${ecolgroup}))
 OFFSET (CASE WHEN ${offset} IS NULL THEN 0
                  ELSE ${offset}
             END)

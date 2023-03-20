@@ -28,7 +28,6 @@ router.get('/datasets/:datasetid/contacts', handlers.contactsbydataid);
 router.get('/datasets/:datasetid/doi', handlers.doibydsid);
 router.get('/datasets/:datasetid/lithology', handlers.lithologybydsid);
 router.get('/datasets/:datasetid/publications', handlers.publicationbydataset);
-router.get('/datasets/:datasetid/taxa/', handlers.taxonbydsid);
 router.get(['/dbtables/:table', '/dbtables'], handlers.dbtables);
 
 router.post(['/downloads'], handlers.downloadbyid);
@@ -37,8 +36,8 @@ router.get(['/downloads/:datasetid', '/downloads/'], cacheSuccesses, handlers.do
 router.get('/frozen/:datasetid', handlers.frozen);
 router.get('/geopoliticalunits', handlers.geopoliticalunits);
 router.get('/geopoliticalunits/:gpid', handlers.geopoliticalbyid);
-router.get('/occurrences', handlers.occurrencequery);
-router.get('/occurrences/:occurrenceid', handlers.occurrencebyid);
+router.get(['/occurrences', '/occurrences/:occurrenceid', '/taxa/:taxonid/occurrences', '/taxa/:taxonid/occurrences'],
+  cacheSuccesses, handlers.occurrencequery);
 // router.get('/oxcal/calibrate', handlers.oxcalibrate)
 router.get('/pollen/:id', handlers.pollen);
 router.get('/pollen/', handlers.pollen);
@@ -60,10 +59,8 @@ router.get('/summary/dsdbmonth/', handlers.dsdbmonth);
 router.get('/summary/dstypemonth/', handlers.dstypemonth);
 router.get('/summary/rawbymonth/', handlers.rawbymonth);
 router.get('/summary/sparklines/', handlers.sparklines);
-router.get('/taxa/:taxonid', handlers.taxonbyid);
-router.get('/taxa/:taxonid/occurrence', handlers.occurrencebytaxon);
-router.get('/taxa/:taxonid/occurrences', handlers.occurrencebytaxon);
-router.get('/taxa/', handlers.taxonquery);
+router.get(['/taxa/:taxonid', '/taxa/'], handlers.taxonquery);
+router.get('/datasets/:datasetid/taxa/', handlers.taxonbydsid);
 router.get('/datasets/:datasetid/specimens', handlers.specimensbydsid);
 router.get('/specimens/:specimenid', handlers.specimensbyid);
 

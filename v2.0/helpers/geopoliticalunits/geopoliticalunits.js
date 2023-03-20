@@ -67,7 +67,6 @@ function geopoliticalunits (req, res, next) {
   */
 
   let paramgrab = getparam(req)
-  console.log(paramgrab)
 
   if (!paramgrab.success) {
     res.status(500)

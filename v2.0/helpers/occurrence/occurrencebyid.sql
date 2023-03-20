@@ -1,7 +1,10 @@
 SELECT
 	  data.dataid AS occurrence, 
-	  samples.sampleid AS sample,
-	  json_build_object('taxonid', tx.taxonid, 'taxonname', tx.taxonname) AS taxon,
+	  json_build_object('sampleid', samples.sampleid,
+	  				    'taxonid', tx.taxonid,
+						'taxonname', tx.taxonname,
+						'value', data.value,
+						'variableunits', vu.varuableunits) AS sample,
 	  json_build_object('age', ages.age,  'ageolder', ages.ageolder, 'ageyounger', ages.ageyounger) AS ages,
 	  json_build_object('datasetid', ds.datasetid, 'siteid', sts.siteid, 'sitename', sts.sitename, 
 	                    'altitude', sts.altitude, 'location', ST_AsGeoJSON(sts.geog,5,2), 
@@ -10,6 +13,7 @@ SELECT
 	ndb.samples AS samples
 	LEFT OUTER JOIN ndb.data AS data ON samples.sampleid = data.sampleid
 	LEFT OUTER JOIN ndb.variables AS var ON data.variableid = var.variableid
+	LEFT OUTER JOIN ndb.variableunits AS vu ON var.variableunitid = vu.variableunitid
 	LEFT OUTER JOIN ndb.samplekeywords AS sampkey on samples.sampleid = sampkey.sampleid
 	LEFT OUTER JOIN ndb.datasets AS ds ON samples.datasetid = ds.datasetid 
 	LEFT OUTER JOIN ndb.collectionunits AS cu ON ds.collectionunitid = cu.collectionunitid
@@ -20,4 +24,10 @@ SELECT
 	LEFT OUTER JOIN (ndb.datasetdatabases AS dd 
 	LEFT OUTER JOIN ndb.constituentdatabases AS cdb ON dd.databaseid = cdb.databaseid) ON ds.datasetid = dd.datasetid
 WHERE 
-	data.dataid IN ($1:csv);
+	data.dataid IN (${occurrenceid})
+OFFSET (CASE WHEN ${offset} IS NULL THEN 0
+                 ELSE ${offset}
+            END)
+LIMIT (CASE WHEN ${limit} IS NULL THEN 25
+      ELSE ${limit}
+    END);

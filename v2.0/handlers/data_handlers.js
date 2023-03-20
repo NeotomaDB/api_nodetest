@@ -69,7 +69,7 @@ module.exports = {
   },
   taxonquery: function (req, res, next) {
     const taxon = require('../helpers/taxa/taxa.js');
-    taxon.gettaxonquery(req, res, next);
+    taxon.taxonquery(req, res, next);
   },
   pollen: function (req, res, next) {
     const pollen = require('../helpers/pollen/pollen.js');
