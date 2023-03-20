@@ -2,52 +2,15 @@
 
 // get global database object
 var db = require('../../../database/pgp_db');
-var pgp = db.$config.pgp;
 
-const { sql } = require('../../../src/neotomaapi.js');
+const { sql, ifUndef, getparam, checkObject } = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
-const taxonquerylower = sql('../v2.0/helpers/taxa/taxonquerylower.sql');
-const taxonquerystatic = sql('../v2.0/helpers/taxa/taxonquerystatic.sql');
+const taxonsqlr = sql('../v2.0/helpers/taxa/taxonquery_recurs.sql');
+const taxonsql = sql('../v2.0/helpers/taxa/taxonquery.sql');
 const taxonbyds = sql('../v2.0/helpers/taxa/taxonquerydsid.sql');
 
 // Actual functions:
-
-function taxonbyid (req, res, next) {
-  var taxonid = String(req.params.taxonid).split(',').map(function (item) {
-    return parseInt(item, 10);
-  });
-  var goodid = !!taxonid
-
-  if (goodid) {
-    var query = 'SELECT * FROM ndb.taxa WHERE taxa.taxonid = ANY ($1)';
-  } else {
-    res.status(500)
-      .json({
-        status: 'failure',
-        data: [],
-        message: 'Must pass either queries or an integer sequence.'
-      });
-  }
-
-  db.any(query, [taxonid])
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved all tables'
-        });
-    })
-    .catch(function (err) {
-      res.status(500)
-        .json({
-          status: 'failure',
-          data: err.message
-        });
-    });
-}
-
 function taxonbydsid (req, res, next) {
   var goodds = !!req.params.datasetid;
   if (goodds) {
@@ -81,92 +44,94 @@ function taxonbydsid (req, res, next) {
     });
 }
 
-function gettaxonquery (req, res, next) {
-  var goodtx = !!req.query.taxonid
-  if (goodtx) {
-    var taxonid = String(req.query.taxonid).split(',').map(function (item) {
-      return parseInt(item, 10);
-    });
+function taxonquery (req, res, next) {
+  // First get all the inputs and parse them:
+  let paramgrab = getparam(req)
+
+  if (!paramgrab.success) {
+    res.status(500)
+      .json({
+        status: 'failure',
+        data: null,
+        message: paramgrab.message
+      });
   } else {
-    taxonid = null;
-  }
+    var resultset = paramgrab.data
+    var outobj = {
+      'taxonid': ifUndef(resultset.taxonid, 'sep'),
+      'taxonname': ifUndef(resultset.taxonname, 'sep'),
+      'status': req.query.status === 1,
+      'taxagroup': ifUndef(resultset.taxagroup, 'sep'),
+      'ecolgroup': ifUndef(resultset.ecolgroup, 'sep'),
+      'lower': ifUndef(resultset.lower, 'string'),
+      'limit': ifUndef(resultset.limit, 'int'),
+      'offset': ifUndef(resultset.offset, 'int')
+    }
 
-  if (req.query.taxonname) {
-    var name = String(req.query.taxonname).toLowerCase().split(',')
-  };
-  if (req.query.taxagroup) {
-    var taxagroup = String(req.query.taxagroup).toLowerCase().split(',')
-  };
-  if (req.query.ecolgroup) {
-    var ecolgroup = String(req.query.ecolgroup).toLowerCase().split(',')
-  };
+    if (outobj.lower === null) {
+      outobj.lower = false
+    } else {
+      if (outobj['lower'].match(/[Tt](RUE|rue){0,1}/)) {
+        outobj.lower = true
+      }
+    }
 
-  var outobj = { 'taxonid': taxonid,
-    'taxonname': name,
-    'status': req.query.status === 1,
-    'taxagroup': taxagroup,
-    'ecolgroup': ecolgroup,
-    'lower': req.query.lower,
-    'limit': req.query.limit,
-    'offset': req.query.offset
-  }
+    if (!(outobj.taxonname === null)) {
+      // Replacing any asterisks with percent signs to ensure wildcards work.
+      outobj.taxonname = outobj['taxonname'].map((x) => {
+        return x.replace(/\*/g, '%')
+      });
+    }
 
-  if (typeof outobj.limit === 'undefined') {
-    outobj.limit = 25
-  }
-  if (typeof outobj.offset === 'undefined') {
-    outobj.offset = 0
-  }
-  if (typeof outobj.taxonid === 'undefined') {
-    outobj.taxonid = null;
-  };
+    const taxa = 'SELECT taxonid AS output FROM ndb.taxa WHERE taxonname ILIKE ANY(${taxonname})';
 
-  if (!(typeof outobj.taxonname === 'undefined')) {
-    outobj.taxonname = outobj.taxonname.map(function (x) {
-      var gbg = x.replace(/\*/g, '%');
-      return x.replace(/\*/g, '%')
-    });
-  }
+    Promise.all([checkObject(res, taxa, outobj.taxonname, outobj)])
+      .then(result => {
+        if (outobj.taxonid === null) {
+          outobj.taxonid = result[0]
+        } else {
+          if (!result[0] === null) {
+            outobj.taxonid.push(result[0])
+          }
+        }
 
-  if (outobj.lower === 'true') {
-    db.any(taxonquerylower, outobj)
-      .then(function (data) {
-        res.status(200)
-          .json({
-            status: 'success',
-            data: data,
-            message: 'Retrieved all tables'
-          });
+        console.log(outobj)
+
+        db.any(taxonsql, outobj)
+          .then(function (data) {
+            if (outobj.lower) {
+              outobj.taxonid = data.map(x => x.taxonid)
+              data = db.any(taxonsqlr, outobj)
+                .then(function (data) { return data })
+            }
+            return data;
+          })
+          .catch(function (err) {
+            res.status(500)
+              .json({
+                status: 'failure',
+                data: err.message
+              });
+          })
+          .then(function (data) {
+            res.status(200)
+              .json({
+                status: 'success',
+                data: data,
+                message: 'Retrieved all tables'
+              });
+          })
       })
       .catch(function (err) {
         res.status(500)
           .json({
             status: 'failure',
-            data: err.message
-          });
-      });
-  };
-
-  if (typeof outobj.lower === 'undefined') {
-    db.any(taxonquerystatic, outobj)
-      .then(function (data) {
-        res.status(200)
-          .json({
-            status: 'success',
-            data: data,
-            message: 'Retrieved all tables'
+            data: null,
+            message: err.message
           });
       })
-      .catch(function (err) {
-        res.status(500)
-          .json({
-            status: 'error',
-            error: err.message
-          });
-      });
-  };
+  }
 }
 
-module.exports.taxonbyid = taxonbyid;
-module.exports.gettaxonquery = gettaxonquery;
+module.exports.taxonquery = taxonquery;
 module.exports.taxonbydsid = taxonbydsid;

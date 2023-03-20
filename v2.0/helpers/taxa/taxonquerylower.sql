@@ -29,5 +29,14 @@ SELECT txa.taxonid,
   LEFT OUTER JOIN
   ndb.publications AS pub ON pub.publicationid = txa.publicationid
   WHERE
-  (${status} IS NULL OR txa.extinct = ${status})
-  AND (${taxagroup} IS NULL OR txa.taxagroupid LIKE ANY(${taxagroup}));
+WHERE
+  ((${taxonid} IS NULL) OR txa.taxonid = ANY(${taxonid}))
+  AND (${status} IS NULL OR txa.extinct = ${status})
+  AND (${taxagroup} IS NULL OR tgt.taxagroup ILIKE ANY(${taxagroup}))
+  AND (${ecolgroup} IS NULL OR ecgt.ecolgroup ILIKE ANY(${ecolgroup}))
+OFFSET (CASE WHEN ${offset} IS NULL THEN 0
+                 ELSE ${offset}
+            END)
+LIMIT (CASE WHEN ${limit} IS NULL THEN 25
+      ELSE ${limit}
+    END);

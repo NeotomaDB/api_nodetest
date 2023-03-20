@@ -2,10 +2,7 @@
 const he = require('he')
 const db = require('../../../database/pgp_db');
 
-const { sql, ifUndef, checkObject, getparam } = require('../../../src/neotomaapi.js');
-
-var Terraformer = require('terraformer');
-var WKT = require('terraformer-wkt-parser');
+const { sql, ifUndef, checkObject, getparam, parseLocations } = require('../../../src/neotomaapi.js');
 
 const datasetquerysql = sql('../v2.0/helpers/datasets/datasetqueryfaster.sql');
 const datasetbyidsql = sql('../v2.0/helpers/datasets/datasetbyid.sql');
@@ -34,21 +31,7 @@ function datasetsbygeopol (req, res, next) {
         message: 'Must pass either queries or a comma separated integer sequence.'
       });
   }
-  /*if (gpIdUsed) {
-    var gpid = String(req.params.gpid)
-      .split(',')
-      .map(function (item) {
-        return parseInt(item, 10);
-      });
-  } else {
-    res.status(500)
-      .json({
-        status: 'failure',
-        data: null,
-        message: 'Must pass either queries or a comma separated integer sequence.'
-      });
-  }
-*/
+
   db.any(datasetbygpidsql, gpData)
     .then(function (data) {
       if (data.length === 0) {
@@ -219,28 +202,27 @@ function datasetquery (req, res, next) {
 
     // Get the input parameters:
     var outobj = {
-      'datasetid': ifUndef(resultset.datasetid, 'sep'),
+      'ageof': ifUndef(resultset.ageof, 'int'),
+      'ageold': ifUndef(resultset.ageold, 'int'),
+      'ageyoung': ifUndef(resultset.ageyoung, 'int'),
+      'altmax': ifUndef(resultset.altmax, 'int'),
+      'altmin': ifUndef(resultset.altmin, 'int'),
+      'contacts': ifUndef(resultset.contacts, 'sep'),
       'database': ifUndef(resultset.database, 'sep'),
+      'datasetid': ifUndef(resultset.datasetid, 'sep'),
+      'datasettype': ifUndef(resultset.datasettype, 'string'),
+      'doi': ifUndef(resultset.doi, 'sep'),
+      'gpid': ifUndef(resultset.gpid, 'sep'),
+      'keywords': ifUndef(resultset.keywords, 'sep'),
+      'limit': ifUndef(resultset.limit, 'int'),
+      'loc': ifUndef(resultset.loc, 'string'),
+      'maxage': ifUndef(resultset.maxage, 'int'),
+      'minage': ifUndef(resultset.minage, 'int'),
+      'offset': ifUndef(resultset.offset, 'int'),
       'siteid': ifUndef(resultset.siteid, 'sep'),
       'sitename': ifUndef(resultset.sitename, 'sep'),
-      'keywords': ifUndef(resultset.keywords, 'sep'),
-      'contacts': ifUndef(resultset.keywords, 'sep'),
-      'taxa': ifUndef(resultset.taxa, 'sep'),
-      'doi': ifUndef(resultset.doi, 'sep'),
-      'piid': ifUndef(resultset.piid, 'sep'),
-      'datasettype': ifUndef(resultset.datasettype, 'string'),
-      'altmin': ifUndef(resultset.altmin, 'int'),
-      'altmax': ifUndef(resultset.altmax, 'int'),
-      'loc': ifUndef(resultset.loc, 'string'),
-      'gpid': ifUndef(resultset.gpid, 'sep'),
-      'taxonid': ifUndef(resultset.taxonid, 'sep'),
-      'ageyoung': ifUndef(resultset.ageyoung, 'int'),
-      'ageold': ifUndef(resultset.ageold, 'int'),
-      'ageof': ifUndef(resultset.ageof, 'int'),
-      'limit': parseInt(resultset.limit || 25),
-      'offset': parseInt(resultset.offset || 0)
+      'taxa': ifUndef(resultset.taxa, 'sep')
     };
-    console.log(outobj)
     if (outobj.loc !== null) {
       outobj.loc = he.decode(outobj.loc)
     }
@@ -268,13 +250,17 @@ function datasetquery (req, res, next) {
       var goodloc = !!outobj.loc
 
       if (goodloc) {
+        // For the PostGIS query we need the result in WKT format, but we accept it in geoJSON or WKT.
         try {
-          var newloc = JSON.parse(outobj.loc)
-          newloc = WKT.convert(JSON.parse(outobj.loc));
+          outobj.loc = parseLocations(outobj.loc);
         } catch (err) {
-          newloc = outobj.loc;
+          return res.status(500)
+            .json({
+              status: 'failure',
+              err: err.message,
+              message: 'The spatial object passed in loc is not parsing properly. Is it valid WKT/geoJSON?'
+            });
         }
-        outobj.loc = newloc;
       }
 
       const geopol = 'SELECT geopoliticalid AS output FROM ndb.geopoliticalunits WHERE geopoliticalname ILIKE ANY(${gpid});';
@@ -291,6 +277,7 @@ function datasetquery (req, res, next) {
           outobj.keywords = result[1]
           outobj.taxa = result[2]
           outobj.contacts = result[3]
+
           db.any(datasetquerysql, outobj)
             .then(function (data) {
               res.status(200)
