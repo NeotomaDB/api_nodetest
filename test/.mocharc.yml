@@ -1,9 +1,11 @@
 exit: false
 bail: false
+check-leaks: true
+allow-uncaught: false
 slow: 1000
 timeout: 300000
 recursive: true
 color: true
+full-trace: true
 ui: 'bdd'
-sort: true
 reporter: 'mochawesome'

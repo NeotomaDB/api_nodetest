@@ -15,6 +15,8 @@ Options:
     [none]      build the mocha tests and exit
     -h          display this help and exit
     -t          build the tests and run "npm test"
+    -d          build the tests for the remove development server at api-dev.
+    -p          build the tests for the remove production server at api.neotomadb.org
 
 HELP
 }
@@ -59,6 +61,9 @@ remote=localhost:3005
              ;;
          d)
              remote=api-dev.neotomadb.org
+             ;;
+         p)
+             remote=api.neotomadb.org
              ;;
          *)
              echo You didn\'t use the correct flag.
