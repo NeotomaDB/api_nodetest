@@ -247,44 +247,13 @@ function taxaindatasets (req, res, next) {
   db.query('select * from ap.gettaxaindatasets()')
     .then(function (data) {
       // data are records of (taxonid, taxonname, taxagroupid, datasettypeid)
-      // example record: {"gettaxaindatasets":"(27739,albite,CHM,28)"}
       // desired output:  [...,{"TaxonName":"Acalypha-type","TaxonID":27017,"TaxaGroupID":"VPL","DatasetTypeIDs":[3,4,7,23]},...]
-
-      var rawTaxa = data;
-      var datasettypesByTaxon = [];
-      var currentTaxonID = -1;
-      var dtbytxnObj = {};
-
-      rawTaxa.forEach(function (d, i) {
-        if (currentTaxonID == d.taxonid) {
-          // found additional records for taxonid, add datasettype to array
-          dtbytxnObj.datasettypeids.push(+d.datasettypeid);
-        } else {
-          // if dtbytxnObj not empty object, add to results before creating new instance for next taxon
-          if (dtbytxnObj.hasOwnProperty('taxonid')) {
-            datasettypesByTaxon.push(dtbytxnObj);
-          }
-          currentTaxonID = d.taxonid;
-          dtbytxnObj = {};
-          dtbytxnObj.taxonid = +d.taxonid;
-          dtbytxnObj.taxonname = d.taxonname;
-          dtbytxnObj.taxagroupid = d.taxagroupid;
-          dtbytxnObj.datasettypeids = [];
-          dtbytxnObj.datasettypeids.push(+d.datasettypeid)
-        }
-      })
-
-      // add last taxon object to results
-      if (dtbytxnObj.hasOwnProperty('taxonid')) {
-        datasettypesByTaxon.push(dtbytxnObj);
-      }
-
       res.status(200)
         .type('application/json')
         .jsonp({
           success: 1,
           status: 'success',
-          data: datasettypesByTaxon,
+          data: data,
           message: 'Retrieved all taxa in datasets'
         })
     }).catch(function (err) {

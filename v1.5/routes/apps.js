@@ -373,10 +373,6 @@ router.get('/geochronologies', handlers.geochronologies);
 **/
 router.get('/TaxaInDatasets', handlers.taxaindatasets);
 
-
-
-
-
 router.get('/TaxaGroupTypes', handlers.taxagrouptypes);
 
 router.get('/keywords', handlers.keywords);
