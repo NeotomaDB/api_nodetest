@@ -1,6 +1,5 @@
 let apicache = require('apicache');
 let compression = require('compression');
-let bodyParser = require('body-parser');
 let cookieParser = require('cookie-parser');
 let cors = require('cors');
 let express = require('express');
@@ -19,8 +18,9 @@ const onlyStatus200 = (req, res) => res.statusCode === 200
 const cacheSuccesses = cache('5 minutes', onlyStatus200)
 
 app.engine('html', require('ejs').renderFile);
+
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 // app.use(cache('5 minutes'));
 app.use(express.static('mochawesome-report'));
 app.use(compression());
@@ -94,7 +94,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 console.log('applying routes...')
 
 app.get('/v1', (req, res) => {
-  res.status(301).redirect('http://wnapi.neotomadb.org/')
+  res.status(500)
+    .json({
+      status: 'failure',
+      message: 'The v1 instance of the Neotoma API has been decomissioned. If you recieve this message through the neotoma R package, please move to the neotoma2 R package using devtools::install_github("NeotomaDB/neotoma2")'
+    });
 })
 
 app.get('/v1/doc/*', (req, res) => {
@@ -102,7 +106,11 @@ app.get('/v1/doc/*', (req, res) => {
 });
 
 app.get('/v1/*', (req, res) => {
-  res.status(301).redirect('http://wnapi.neotomadb.org' + req.originalUrl)
+  res.status(500)
+    .json({
+      status: 'failure',
+      message: 'The v1 instance of the Neotoma API has been decomissioned. If you recieve this message through the neotoma R package, please move to the neotoma2 R package using devtools::install_github("NeotomaDB/neotoma2")'
+    });
 })
 
 app.get('/tests/*', (req, res) => {
