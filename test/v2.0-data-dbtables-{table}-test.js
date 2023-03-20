@@ -7,8 +7,8 @@ var expect = chakram.expect;
 describe('tests for /v2.0/data/dbtables/{table}', function () {
   describe('tests for get', function () {
     it('should respond 200 for "Returned table."', function () {
-      var response = request('get', 'http://localhost:3005/v2.0/data/dbtables/{table}', {
-        'qs': { 'table': 'adipisicing', 'limit': 10, 'offset': 0 },
+      var response = request('get', 'http://localhost:3005/v2.0/data/dbtables/esseoccaecatetipsumanim', {
+        'qs': { 'limit': 10, 'offset': 0 },
         'time': true
       });
 
