@@ -1,6 +1,8 @@
 const path = require('path');
+var assert = require('assert');
 const { result } = require('../database/pgp_db');
 var db = require('../database/pgp_db');
+const { geojsonToWKT, wktToGeoJSON } = require("@terraformer/wkt");
 var pgp = db.$config.pgp;
 
 // Goes through an object tree and clears out NULL elements (not sure this is the best).
@@ -156,6 +158,45 @@ function getparam (req, name) {
   return result;
 }
 
+function customFilter (object, result) {
+  if (object.hasOwnProperty('coordinates')) {
+    result.push(object.coordinates);
+  }
+
+  for (var i = 0; i < Object.keys(object).length; i++) {
+    if (typeof object[Object.keys(object)[i]] === 'object') {
+      customFilter(object[Object.keys(object)[i]], result);
+    }
+  }
+}
+
+function parseLocations (location) {
+  // Take in a location string that may be either WKT or geojson and parse it to valid WKT.
+  // Best case scenario is that it's a valid WKT string and we can just keep going:
+  try {
+    assert.strictEqual(typeof location, 'string')
+    var test = wktToGeoJSON(location)
+    var outloc = location
+  } catch (err) {
+    if (err.name === 'Error') {
+      // Terraformer doesn't give us a super great error name :)
+      // Here we know it's not valid WKT, so we can try geoJSON:
+      var parsedloc = JSON.parse(location.replace(/'/g, '"'))
+      var geoms = []
+      customFilter(parsedloc, geoms)
+      try {
+        outloc = geojsonToWKT({ 'type': 'MultiPolygon', 'coordinates': geoms })
+      } catch (err) {
+        console.log(err)
+      }
+      // The WKT parser only pulls geometries, so we need to unnest them:
+    } else if (err.name === 'AssertionError') {
+      throw new Error('Location must be passed as a string.')
+    }
+  }
+  return outloc
+}
+
 module.exports.failure = failure;
 module.exports.success = success;
 module.exports.validateOut = validateOut;
@@ -165,3 +206,4 @@ module.exports.commaSep = commaSep;
 module.exports.removeEmpty = removeEmpty;
 module.exports.checkObject = checkObject;
 module.exports.getparam = getparam;
+module.exports.parseLocations = parseLocations;
