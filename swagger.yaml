@@ -2,7 +2,7 @@
 components:
   parameters:
     ageOfQuery:
-      description: Dataset age ranges must contain this age (in calibrated years before present, with 0 at 1950CE)
+      description: Dataset age ranges must span this age (in calibrated years before present, with 0 at 1950CE)
       in: query
       name: ageof
       required: false
@@ -232,6 +232,14 @@ components:
           - dinoflagellates
           - diatom bottom sample
           - Metabarcoding aeDNA
+    ecolGroupQuery:
+      description: The ecological group of interest for the Neotoma taxon (from the Neotoma ecolgrouptypes table)
+      in: query
+      name: ecolgroup
+      required: false
+      schema:
+        type: string
+        example: Charcoal
     familyNameQuery:
       description: Family name (last name) of the the researcher (may use the % wildcard)
       in: query
@@ -250,19 +258,16 @@ components:
         minimum: 1
         type: integer
     gpidQuery:
-      description: Numeric ID or valid name for the geopolitical unit.
+      description: Numeric ID for the geopolitical unit from the Neotoma geopoliticalunits table.
       in: query
       name: gpid
       required: false
       schema:
-        type: string
+        format: int32
+        maximum: 11000
+        minimum: 1
+        type: integer
       examples:
-        countryname:
-          value: Canada
-          summary: The name of a country, state or other region.
-        countrynames:
-          value: Italy, austria, switzerland
-          summary: The name of a set of locations, separated by commas.
         gpid:
           value: 756
           summary: A valid unique identifier for geopolitical units from Neotoma's geopoliticalunits table.
@@ -275,8 +280,14 @@ components:
       name: gpname
       required: false
       schema:
-        example: Canada
         type: string
+      examples:
+        countryname:
+          value: Canada
+          summary: The name of a country, state or other region.
+        countrynames:
+          value: Italy, austria, switzerland
+          summary: The name of a set of locations, separated by commas.
     keywordQuery:
       description: A valid keyword for samples within Neotoma. The list of valid names can be obtained through a call to the dbtables API call.
       in: query
@@ -311,7 +322,7 @@ components:
         type: string
       examples:
         SouthAmericangeoJSON:
-          value: {"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"coordinates":[[[-73.300,-35.768],[-75.442,-43.787],[-64.059,-43.533],[-53.572,-38.844],[-55.043,-34.302],[-61.150,-33.904],[-68.248,-34.407],[-73.300,-35.768]]],"type":"Polygon"}}]}
+          value: "{'type':'FeatureCollection','features':[{'type':'Feature','properties':{},'geometry':{'coordinates':[[[-73.300,-35.768],[-75.442,-43.787],[-64.059,-43.533],[-53.572,-38.844],[-55.043,-34.302],[-61.150,-33.904],[-68.248,-34.407],[-73.300,-35.768]]],'type':'Polygon'}}]}"
           summary: A geoJSON representation of a polygon that includes Argentina and Chile.
         EuropeanWKT:
           value: POLYGON ((12.49 45.53, 9.847 42.879, 16.982 40.812, 20.549 44.03, 14.736 46.266, 12.49 45.53))
@@ -481,6 +492,14 @@ components:
       required: false
       schema:
         example: Canis
+        type: string
+    taxaGroupQuery:
+      description: The taxonomic grouping the taxon belongs to, from the Neotoma taxagrouptypes table.
+      in: query
+      name: taxongroup
+      required: false
+      schema:
+        example: Algae
         type: string
     taxonidPath:
       description: |
@@ -1322,8 +1341,18 @@ components:
                 format: int64
                 type: integer
               sample:
-                format: int64
-                type: integer
+                type: object
+                properties:
+                  sampleid:
+                    $ref: '#/components/schemas/sampleid'
+                  taxonid:
+                    $ref: '#/components/schemas/taxonid'
+                  taxonname:
+                    $ref: '#/components/schemas/taxonname'
+                  value:
+                    $ref: '#/components/schemas/value'
+                  variableunits:
+                    $ref: '#/components/schemas/sampleunits'
               site:
                 properties:
                   altitude:
@@ -1473,6 +1502,11 @@ components:
           type: integer
         Year:
           type: string
+    sampleid:
+      type: integer
+    sampleunits:
+      type: string
+      enum: ['μm', 'μm^2/ml', 'μm^2/pollen concentration', '1-5 scale', 'cm', 'cm^2', 'cm^2/ml', 'fragments/ml', 'g', 'g/ml', 'grains/aliquot', 'grains/g', 'grains/g sample', 'grains/ml', 'grains/tablet', 'mmho', 'ml', 'MNI', 'NISP', 'number', 'number/ml', 'particles/ml', 'percent', 'percent after LOI', 'percent dry mass', 'present/absent', 'units not specified', 'NISP digitized', 'percent digitized', '°C', 'μS', 'meq/L', 'mg/L', 'Spaulding scale', 'per mille', 'number/g', 'm', 'MNE', 'NISP/100 ml', 'g/m^2', 'mm^2/ml', 'particles/cm^2/yr', '1-4 scale', 'elemental ratio', 'ppm', 'individual specimen', 'mg/L CaCO3', 'μg/L', 'l', 'valves/g', 'NISP/ml', 'mS/cm', 'μg/g', 'mg N/L', 'μS/cm', 'NTU', 'μmho/cm', 'grains/mg', 'mg', 'number/1000', 'κ (SI) × 10^-6', 'κ (cgs) × 10^-6', 'grams', '1-2 scale', 'ratio', 'PTU', 'κ (cgs) × 10^-5', 'Pt-Co scale', 'ppb', 'μeq/L', 'Pt-Co units', 'μS/cm 25°C', 'TCU', '1-3 scale', 'particles/g', 'nl', 'mm', 'number×1000', 'mm^3', 'fraction total alkanes', 'response at m/z = 1302', 'response at m/z = 1050', 'response at m/z = 1292', 'response at m/z = 1018', 'response at m/z = 1020', 'response at m/z = 1022', 'response at m/z = 1032', 'response at m/z = 1034', 'response at m/z = 1036', 'response at m/z = 1046', 'response at m/z = 1048', 'spheres/mL', 'per mille VSMOW', 'peak area', 'cm^3', 'yr/cm', 'yr/m', 'yr', 'mm^2', 'kcps', 'kcps^2', 'valves/ml', 'Pt-Co', 'μmol/L', 'κ (SI) × 10^-5', 'concentration', 'mm^2/cm^2/yr', 'grains/cm^2*yr', 'NISP+', 'Unit', 'µS/cm 25°C', 'µg/L', 'units', 'µS/cm', 'mmol/L', 'µeq/L', 'Index', 'umol/L', 'cm^2/cm^3', 'C°', 'SD', '>2 mm', '>5 mm', 'fragment', '>1 mm', 'per mille VPDB', 'per mille air N', 'mg/ml', 'particles/cm^3', 'cm^2/yr', 'per mille VPDB/17O', 'atomic ratio', 'mg/100 mg', 'per mille VSMOV', 'error', '>10 mm', 'mm^3/cm^3', 'number/tablet', 'mg/g', 'mg/kg', 'm^2', 'present', 'SI', 'µS/cm 25C', 'cc', 'per mil, PDB', 'per mil, air', 'percent dry weight', 'µg/kg', 'Mean uM', 'uM', 'μS/cm25°C', 'fragments/l', 'particles/l', 'NISP/tablet', 'grains/cm²/yr', 'moisture weight %', 'particles', 'count', 'class', 'volume-percent', 'mm2', 'cm3', 'mm/year', 'promil', 'MS (SI)', '#/cm2/a', '#/cm3', '#/g', '#', '#/cc', '#/cm2/kyr', '% dry wt', 'cps', 'grains/cm3', 'particles/cm²/yr', 'g/L', 'cm²', 'g/cm3', 'g/cm2', 'pCi/g', 'Bg/g', 'Bg/kg', 'dpm/g', 'g/cm2/yr', 'g/m2/yr', 'kg/m2/yr', 'μm^2', 'grains/cm^3', 'presence/absence', '#/tablet', 'grains/cc', 'count of reads', 'count of PCR replicates', 'spores/tablet', 'cm/yr', 'presence/abence', 'cyst/cm2/yr', 'cysts/g']
     sitedescription:
       example: Lake is located in a pre-glacial gorge of the Wisconsin river cut through the Baraboo Hills, a bedrock high. The valley is dammed at both ends by terminal moraines deposited by the Green Bay lobe, which flowed around the Baraboo Hills. Lake is fed by groundwater. Surrounding vegetation, white-black-bur oak.
       nullable: true
@@ -1562,10 +1596,7 @@ components:
           $ref: '#/components/schemas/message'
         status:
           $ref: '#/components/schemas/status'
-        success:
-          $ref: '#/components/schemas/success'
     status:
-      example: success
       type: string
     success:
       enum:
@@ -1717,6 +1748,11 @@ components:
         status:
           $ref: '#/components/schemas/status'
       type: object
+    taxonid:
+      type: integer
+      format: int64
+    taxonname:
+      type: string
     taxonresponse:
       properties:
         data:
@@ -1736,6 +1772,8 @@ components:
       format: url
       type: string
       nullable: true
+    value:
+      type: number
 info:
   contact:
     email: goring@wisc.edu
@@ -2363,7 +2401,7 @@ paths:
       description: |
         Returns the named Neotoma Database table.  An empty query will return a list of tables. Uses a default limit of 25 and offset of 0.
       parameters:
-        - $ref: '#/components/parameters/tableQuery'
+        - $ref: '#/components/parameters/tablePath'
         - $ref: '#/components/parameters/limitParam'
         - $ref: '#/components/parameters/offsetParam'
       responses:
@@ -2509,6 +2547,8 @@ paths:
       description: Returns occurrence information for a particular taxon, geographic region or temporal slice.
       parameters:
         - $ref: '#/components/parameters/occurrenceidPath'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/offsetParam'
       responses:
         '200':
           content:
@@ -2625,7 +2665,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/sitesv2'
+                $ref: '#/components/schemas/sitesv2response'
           description: An array of sites.
       summary: Site information.
       tags:
@@ -2830,8 +2870,11 @@ paths:
       description: Returns information about a taxon and (if requested) related taxa.
       parameters:
         - $ref: '#/components/parameters/taxonNameQuery'
-        - $ref: '#/components/parameters/datasetidQuery'
-        - $ref: '#/components/parameters/siteidQuery'
+        - $ref: '#/components/parameters/taxaGroupQuery'
+        - $ref: '#/components/parameters/ecolGroupQuery'
+        - $ref: '#/components/parameters/taxastatusQuery'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/offsetParam'
       responses:
         '200':
           content:
@@ -2864,6 +2907,8 @@ paths:
       description: Returns occurrence information for a particular taxon, geographic region or temporal slice.
       parameters:
         - $ref: '#/components/parameters/taxonidPath'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/offsetParam'
       responses:
         '200':
           content:
