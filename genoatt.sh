@@ -1,7 +1,7 @@
 #!/bin/bash
 show_help() {
 cat <<HELP
-Usage: bash genoatt.sh [-ht]
+Usage: bash genoatt.sh [-htdp]
 
 Use the oatts npm module to build mocha tests for the package and optionally execute the test suite.
 
@@ -50,7 +50,7 @@ run_oatt() {
 test=0
 remote=localhost:3005
 
- while getopts "htd" opt; do
+ while getopts "htdp" opt; do
      case $opt in
          h)
              show_help

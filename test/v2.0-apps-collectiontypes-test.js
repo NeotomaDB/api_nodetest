@@ -7,7 +7,7 @@ var expect = chakram.expect;
 describe('tests for /v2.0/apps/collectiontypes', function () {
   describe('tests for get', function () {
     it('should respond 200 for "A table of Neotoma collection types."', function () {
-      var response = request('get', 'http://api-dev.neotomadb.org/v2.0/apps/collectiontypes', {
+      var response = request('get', 'http://api.neotomadb.org/v2.0/apps/collectiontypes', {
         'time': true
       });
 

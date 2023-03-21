@@ -7,7 +7,7 @@ var expect = chakram.expect;
 describe('tests for /v2.0/data/dbtables/{table}', function () {
   describe('tests for get', function () {
     it('should respond 200 for "Returned table."', function () {
-      var response = request('get', 'http://api-dev.neotomadb.org/v2.0/data/dbtables/exercitationvoluptateDuis', {
+      var response = request('get', 'http://api.neotomadb.org/v2.0/data/dbtables/dolorproident', {
         'qs': { 'limit': 10, 'offset': 0 },
         'time': true
       });

@@ -7,7 +7,7 @@ var expect = chakram.expect;
 describe('tests for /v2.0/data/publications/{publicationid}', function () {
   describe('tests for get', function () {
     it('should respond 200 for "A list of publications."', function () {
-      var response = request('get', 'http://api-dev.neotomadb.org/v2.0/data/publications/6169', {
+      var response = request('get', 'http://api.neotomadb.org/v2.0/data/publications/500', {
         'time': true
       });
 

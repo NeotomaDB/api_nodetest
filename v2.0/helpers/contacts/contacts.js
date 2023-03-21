@@ -157,7 +157,6 @@ function contactsbysiteid (req, res, next) {
         message: 'Must pass either queries or an integer sequence.'
       });
   }
-
   db.any(contactbystid, [siteid])
     .then(function (data) {
       if (data.length === 0) {
