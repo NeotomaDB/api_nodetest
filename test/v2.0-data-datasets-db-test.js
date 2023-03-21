@@ -7,8 +7,8 @@ var expect = chakram.expect;
 describe('tests for /v2.0/data/datasets/db', function () {
   describe('tests for get', function () {
     it('should respond 200 for "Datasets"', function () {
-      var response = request('get', 'http://api-dev.neotomadb.org/v2.0/data/datasets/db', {
-        'qs': { 'limit': 10, 'offset': 0, 'database': 'African Pollen Database' },
+      var response = request('get', 'http://api.neotomadb.org/v2.0/data/datasets/db', {
+        'qs': { 'limit': 10, 'offset': 0, 'database': 'Deep-Time Palynology Database' },
         'time': true
       });
 

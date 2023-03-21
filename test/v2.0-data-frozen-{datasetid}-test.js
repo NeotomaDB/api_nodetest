@@ -7,7 +7,7 @@ var expect = chakram.expect;
 describe('tests for /v2.0/data/frozen/{datasetid}', function () {
   describe('tests for get', function () {
     it('should respond 200 for "Returned download object."', function () {
-      var response = request('get', 'http://api-dev.neotomadb.org/v2.0/data/frozen/3572', {
+      var response = request('get', 'http://api.neotomadb.org/v2.0/data/frozen/500', {
         'time': true
       });
 

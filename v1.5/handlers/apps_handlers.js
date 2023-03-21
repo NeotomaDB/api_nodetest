@@ -244,7 +244,7 @@ function elementtypes (req, res, next) {
 }
 
 function taxaindatasets (req, res, next) {
-  db.query('select * from ap.gettaxaindatasets()')
+  db.query('SELECT * FROM ap.taxaindatasetview;')
     .then(function (data) {
       // data are records of (taxonid, taxonname, taxagroupid, datasettypeid)
       // desired output:  [...,{"TaxonName":"Acalypha-type","TaxonID":27017,"TaxaGroupID":"VPL","DatasetTypeIDs":[3,4,7,23]},...]
