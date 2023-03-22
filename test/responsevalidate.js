@@ -10,7 +10,13 @@ const YAML = require('yamljs');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const api = supertest('http://localhost:' + process.env.APIPORT + '/');
+if (typeof process.env.APIPATH === 'undefined') {
+  var testroute = 'http://localhost:' + process.env.APIPORT + '/'
+} else {
+  testroute = process.env.APIPATH
+}
+
+var api = supertest(testroute);
 
 const fullPath = path.join(process.cwd(), 'swagger.yaml');
 const apidoc = YAML.load(fullPath)

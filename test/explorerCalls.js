@@ -6,7 +6,15 @@ var expect = chakram.expect;
 const dotenv = require('dotenv');
 dotenv.config();
 
-let appServicesLocation = 'http://localhost:' + process.env.APIPORT + '/v1.5/apps';
+if (typeof process.env.APIPATH === 'undefined') {
+  var testroute = 'http://localhost:' + process.env.APIPORT + '/'
+} else {
+  testroute = process.env.APIPATH
+}
+
+let appServicesLocation = testroute + 'v1.5/apps';
+
+// let appServicesLocation = 'http://localhost:' + process.env.APIPORT + '/v1.5/apps';
 
 describe('Tests for Explorer App Services', function () {
   this.timeout(12000);
