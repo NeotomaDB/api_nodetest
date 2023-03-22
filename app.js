@@ -1,3 +1,5 @@
+"use strict";
+
 let apicache = require('apicache');
 let compression = require('compression');
 let cookieParser = require('cookie-parser');
@@ -133,7 +135,7 @@ app.use('/v2.0/dbtables', v2dbtables);
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
-  //res.locals.error = process.env.NODE_ENV === 'development' ? err : {};
+  // res.locals.error = process.env.NODE_ENV === 'development' ? err : {};
 
   // render the error page
   res.status(err.status || 500);
