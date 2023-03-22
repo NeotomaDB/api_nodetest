@@ -9,3 +9,4 @@ color: true
 full-trace: true
 ui: 'bdd'
 reporter: 'mochawesome'
+retries: 3

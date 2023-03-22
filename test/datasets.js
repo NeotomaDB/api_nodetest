@@ -6,7 +6,13 @@ var supertest = require('supertest');
 const dotenv = require('dotenv');
 dotenv.config();
 
-var api = supertest('http://localhost:' + process.env.APIPORT + '/');
+if (typeof process.env.APIPATH === 'undefined') {
+  var testroute = 'http://localhost:' + process.env.APIPORT + '/'
+} else {
+  testroute = process.env.APIPATH
+}
+
+var api = supertest(testroute);
 
 // *************************************************
 // Datasets:

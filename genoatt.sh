@@ -59,7 +59,7 @@ remote=localhost:3005
          t)
              test=1
              ;;
-         d)
+         d)            
              remote=api-dev.neotomadb.org
              ;;
          p)
