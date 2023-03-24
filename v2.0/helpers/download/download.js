@@ -71,14 +71,15 @@ function downloadbyid (req, res, next) {
             } else {
               returner = {
                 // To avoid deep copy we need to pass the variable through:
-                'site': JSON.parse(JSON.stringify(x.data.data.dataset))['site']
+                'site': JSON.parse(JSON.stringify(x.data.data))['site']
               };
 
               // delete returner.site.dataset;
-              //returner['site']['collectionunit']['dataset'] = x.data.data.site.dataset;
+              returner['site']['collectionunit']['dataset'] = x.data.data.site.dataset;
               returner['site']['collectionunit']['chronologies'] = x.data.chronologies;
               var defaultchron = getdefault(returner['site']['collectionunit']['chronologies'])
               returner['site']['collectionunit']['defaultchronology'] = defaultchron
+              console.log(returner.site.collectionunit)
               returner['site']['collectionunit']['dataset']['samples'] = x.data.data.samples
             }
             return returner;
