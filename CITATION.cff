@@ -9,4 +9,5 @@ authors:
 title: "The Neotoma Paleoecology Database API v2.0.0"
 version: 2.0.0
 url: "https://api.neotomadb.org"
+doi: "10.5281/zenodo.7893836"
 date-released: 2023-05-03
