@@ -1,8 +1,5 @@
-const bib = require('../helpers/bib_format');
-
 // get global database object
-var db = require('../../database/pgp_db');
-var pgp = db.$config.pgp;
+var dbtest = require('../../database/pgp_db').dbheader
 
 module.exports = {
   datasettypes: datasettypes,
@@ -32,6 +29,7 @@ module.exports = {
 
 /* All the Endpoint functions */
 function collectiontypes (req, res, next) {
+  let db = dbtest(req)
   db.query('select * from ap.getcollectiontypes()')
     .then(function (data) {
       res.status(200)
@@ -54,7 +52,7 @@ function collectiontypes (req, res, next) {
 }
 
 function datasettypes (req, res, next) {
-  // Get the query string:
+  let db = dbtest(req)
 
   db.query('select * from ap.getdatasettypes();')
     .then(function (data) {
@@ -76,124 +74,9 @@ function datasettypes (req, res, next) {
     });
 }
 
-/** ** deprecated seach handler ****
-
-function exsearch(req, res, next) {
-  console.log("hitting app/search handler");
-  var data = [];
-  // Get the query string:
-
-  //search input param is stringified JSON object, thus parse first
-  var inputParamObj = JSON.parse(req.query.search);
-  console.log("req.query.search object using JSON.stringify: "+ JSON.stringify(inputParamObj));
-
-  console.log("Object.entries: "+Object.entries(inputParamObj));
-
-    var qryParams = {
-    _taxonids: [],
-    _elemtypeids: [],
-    _taphtypeids: [],
-    _depenvids: [],
-    _abundpct: null,
-    _datasettypeid: null,
-    _keywordid: null,
-    _coords: null,
-    _gpid: null,
-    _altmin: null,
-    _altmax: null,
-    _coltypeid: null,
-    _dbid: null,
-    _sitename: null,
-    _contactid: null,
-    _ageold: null,
-    _ageyoung: null,
-    _agedocontain: null, //default true
-    _agedirectdate: null, //default false
-    _subdate: null
-  }
-
-if (inputParamObj.taxa){
-    qryParams._taxonids = inputParamObj.taxa.taxonIds;
-}
-
-if (inputParamObj.time){
-
-}
-
-if (inputParamObj.metadata){
-
-}
-
-if (inputParamObj.abundance){
-
-}
-
-if (inputParamObj.space){
-
-}
-
-//parse search parameters
-  Object.keys(inputParamObj).every(function(x) {
-    var modProp = "_"+x;
-    console.log("x: "+x);
-    console.log("modProp: "+ modProp);
-    if(qryParams.hasOwnProperty(modProp)){
-      qryParams[modProp] = inputParamObj[x];
-    }
-  });
-
-   Object.getOwnPropertyNames(inputParamObj).every(function(x) {
-    var modProp = "_"+x;
-    console.log("x: "+x);
-    console.log("modProp: "+ modProp);
-    //if(qryParams.hasOwnProperty(modProp)){
-    //  qryParams[modProp] = inputParamObj[x];
-    //}
-  });
-
-   console.log("inputParamObj is: "+JSON.stringify(qryParams, null, 2));
-
-   -//-db.query('select * from ap.explorersearch($1,  $2,  $3,  $4,  $5,  $6,  $7,  $8,  $9,  $10,  $11,  $12,  $13,  $14,  $15,  $16,  $17,  $18,  $19,  $20);', qryParams)
-    db.query('select * from ap.explorersearch('+
-      '_taxonids,'+
-      '_elemtypeids,'+
-      '_taphtypeids,'+
-      '_depenvids,'+
-      '_abundpct,'+
-      '_datasettypeid,'+
-      '_keywordid,'+
-      '_coords,'+
-      '_gpid,'+
-      '_altmin,'+
-      '_altmax,'+
-      '_coltypeid,'+
-      '_dbid,'+
-      '_sitename,'+
-      '_contactid,'+
-      '_ageold,'+
-      '_ageyoung,'+
-      '_agedocontain,'+ //default true
-      '_agedirectdate,'+ //default false
-      '_subdate)',
-      qryParams)
-        .then(function (data) {
-          res.status(200)
-            .type('application/json')
-            .jsonp({
-              success: 1,
-              status: 'success',
-              data: data,
-              message: 'Retrieved Explorer search results'
-            })
-        })
-        .catch(function (err) {
-          return next(err);
-        });
-}
-
-*** end deprecated search handler */
-
 function elementtypes (req, res, next) {
+  let db = dbtest(req)
+
   var taxonid, taxagroupid;
   taxonid = req.query.taxonid;
   taxagroupid = req.query.taxagroupid;
@@ -244,6 +127,7 @@ function elementtypes (req, res, next) {
 }
 
 function taxaindatasets (req, res, next) {
+  let db = dbtest(req)
   db.query('SELECT * FROM ap.taxaindatasetview;')
     .then(function (data) {
       // data are records of (taxonid, taxonname, taxagroupid, datasettypeid)
@@ -262,8 +146,7 @@ function taxaindatasets (req, res, next) {
 }
 
 function taxagrouptypes (req, res, next) {
-  // Get the query string:
-  var query = {};
+  let db = dbtest(req)
 
   db.query('select * from ap.gettaxagrouptypes();')
     .then(function (data) {
@@ -281,9 +164,7 @@ function taxagrouptypes (req, res, next) {
 }
 
 function keywords (req, res, next) {
-  // Get the query string:
-  var query = {};
-
+  let db = dbtest(req)
   db.query('select * from ap.getkeywords();')
     .then(function (data) {
       res.status(200)
@@ -300,8 +181,7 @@ function keywords (req, res, next) {
 }
 
 function authorpis (req, res, next) {
-  // Get the query string:
-  var query = {};
+  let db = dbtest(req)
 
   db.query('select * from ap.getpeople();')
     .then(function (data) {
@@ -319,8 +199,7 @@ function authorpis (req, res, next) {
 }
 
 function authors (req, res, next) {
-  // Get the query string:
-  var query = {};
+  let db = dbtest(req)
 
   db.query('select * from ap.getauthors();')
     .then(function (data) {
@@ -340,6 +219,7 @@ function authors (req, res, next) {
 function taphonomysystems (req, res, next) {
   // Get the query string:
   var datasetTypeId = req.query.datasetTypeId;
+  let db = dbtest(req)
 
   if (!datasetTypeId) {
     res.status(200)
@@ -367,8 +247,7 @@ function taphonomysystems (req, res, next) {
 }
 
 function depositionalenvironments (req, res, next) {
-  // Get the query string:
-  var query = {};
+  let db = dbtest(req)
 
   db.query('select * from ap.getdeptenvtypesroot();')
     .then(function (data) {
@@ -386,6 +265,7 @@ function depositionalenvironments (req, res, next) {
 }
 
 function depositionalenvironmentsbyid (req, res, next) {
+  let db = dbtest(req)
   // Get the query string:
   var depenvtid = req.params.id;
   console.log('depenvtid is: ' + depenvtid);
@@ -416,6 +296,7 @@ function depositionalenvironmentsbyid (req, res, next) {
 }
 
 function relativeages (req, res, next) {
+  let db = dbtest(req)
   // Get the query string:
   var ageScaleID = req.query.agescaleid;
   if (!req.query.agescaleid || !parseInt(req.query.agescaleid)) {
