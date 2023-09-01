@@ -1,24 +1,23 @@
-const promise = require('bluebird');
+/**
+ * Create connection object to open database connection to the required database.
+ * @param {req} An http Request object passed from the calling function.
+ * @returns {Database} A database connection.
+ */
 
-const initOptions = {
-  // Initialization Options
-  promiseLib: promise
-};
-
-const pgp = require('pg-promise')(initOptions);
-pgp.pg.types.setTypeParser(20, BigInt);
-BigInt.prototype.toJSON = function() {
-  try {
-    result = this.parseInt();
+function dbheader (req) {
+  var out = {
+    'host': process.env.RDS_HOSTNAME,
+    'user': process.env.RDS_USERNAME,
+    'database': process.env.RDS_DATABASE,
+    'password': process.env.RDS_PASSWORD,
+    'port': process.env.RDS_PORT,
+    'ssl': true,
+    'query_timeout': 3000
   }
-  catch(err) {
-    result = this.toString();
-  };
-  return result;
-};
+  console.log(out)
+  return pgp(out)
+}
 
-const ctStr = require('./db_connect.json');
-
-const db = pgp(ctStr);
-
-module.exports = db;
+module.exports = {
+  dbheader: dbheader
+}

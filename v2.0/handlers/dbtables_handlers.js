@@ -1,6 +1,5 @@
 // get global database object
-const db = require('../../database/pgp_db');
-const pgp = db.$config.pgp;
+var dbtest = require('../database/pgp_db').dbheader
 
 module.exports = {
   ndbtable: getNDBtable,
@@ -12,6 +11,8 @@ module.exports = {
 /* All the Endpoint functions */
 
 function getNDBtable (req, res, next) {
+  var db = dbtest(req)
+
   if (req.query.table) {
     var table = new pgp.helpers.TableName({ table: req.query.table, schema: 'ndb' });
   } else {
@@ -54,6 +55,7 @@ function getNDBtable (req, res, next) {
 }
 
 function tablenames (req, res, next) {
+  var db = dbtest(req)
   db.query("SELECT tablename FROM pg_catalog.pg_tables where schemaname='ndb';")
     .then(function (data) {
       res.status(200)
