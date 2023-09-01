@@ -1,5 +1,6 @@
 // get global database object
-var dbtest = require('../../database/pgp_db').dbheader
+const dbtest = require('../../database/pgp_db').dbheader
+const { ifUndef, getparam } = require('../../src/neotomaapi.js');
 
 module.exports = {
   ndbtable: getNDBtable,
@@ -12,10 +13,25 @@ module.exports = {
 
 function getNDBtable (req, res, next) {
   var db = dbtest(req)
+  let paramgrab = getparam(req)
 
-  if (req.query.table) {
-    var table = new pgp.helpers.TableName({ table: req.query.table, schema: 'ndb' });
-  } else {
+  if (!paramgrab.success) {
+    res.status(500)
+      .json({
+        status: 'failure',
+        data: null,
+        message: paramgrab.message
+      });
+  }
+
+  let resultset = paramgrab.data
+  let outobj = {
+    'table': ifUndef(resultset.table, 'string'),
+    'limit': ifUndef(resultset.limit, 'int'),
+    'offset': ifUndef(resultset.offset, 'int')
+  }
+
+  if (!outobj.table) {
     res.status(500)
       .json({
         status: 'failure',
@@ -24,24 +40,21 @@ function getNDBtable (req, res, next) {
       });
   }
 
-  if (req.query.limit) {
-    var limit = parseInt(req.query.limit);
-  } else {
-    limit = 25;
+  if (outobj.limit == null) {
+    outobj.limit = 25;
   }
 
-  if (req.query.offset) {
-    var offset = parseInt(req.query.offset);
-  } else {
-    offset = 0;
+  if (outobj.offset == null) {
+    outobj.offset = 0;
   }
+  console.log(outobj)
 
-  db.query('SELECT * FROM $1 LIMIT $2 OFFSET $3;', [table, limit, offset])
+  db.query("SELECT * FROM ndb.${table:name} LIMIT ${limit} OFFSET ${offset};", outobj)
     .then(function (data) {
       res.status(200)
         .json({
           status: 'success',
-          data: { limit: limit, offset: offset, data: data },
+          data: { query: outobj, data: data },
           message: 'Retrieved rows from ' + req.query.table
         });
     })
