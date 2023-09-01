@@ -30,7 +30,7 @@ module.exports = {
 /* All the Endpoint functions */
 function collectiontypes (req, res, next) {
   let db = dbtest(req)
-  db.query('select * from ap.getcollectiontypes()')
+  db.query('SELECT * FROM ap.getcollectiontypes()')
     .then(function (data) {
       res.status(200)
         .type('application/json')
@@ -54,7 +54,7 @@ function collectiontypes (req, res, next) {
 function datasettypes (req, res, next) {
   let db = dbtest(req)
 
-  db.query('select * from ap.getdatasettypes();')
+  db.query('SELECT * FROM ap.getdatasettypes();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -91,8 +91,7 @@ function elementtypes (req, res, next) {
       })
   } else {
     if (!taxagroupid) {
-      console.log('calling ap.getelementtypesbytaxonid($1)');
-      db.query('select * from ap.getelementtypesbytaxonid($1)', [taxonid])
+      db.query('SELECT * FROM ap.getelementtypesbytaxonid($1)', [taxonid])
         .then(function (data) {
           res.status(200)
             .type('application/json')
@@ -107,8 +106,7 @@ function elementtypes (req, res, next) {
           return next(err);
         })
     } else {
-      console.log('calling ap.getelementtypes($1)')
-      db.query('select * from ap.getelementtypes($1)', [taxagroupid])
+      db.query('SELECT * FROM ap.getelementtypes($1)', [taxagroupid])
         .then(function (data) {
           res.status(200)
             .type('application/json')
@@ -148,7 +146,7 @@ function taxaindatasets (req, res, next) {
 function taxagrouptypes (req, res, next) {
   let db = dbtest(req)
 
-  db.query('select * from ap.gettaxagrouptypes();')
+  db.query('SELECT * FROM ap.gettaxagrouptypes();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -165,7 +163,7 @@ function taxagrouptypes (req, res, next) {
 
 function keywords (req, res, next) {
   let db = dbtest(req)
-  db.query('select * from ap.getkeywords();')
+  db.query('SELECT * FROM ap.getkeywords();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -183,7 +181,7 @@ function keywords (req, res, next) {
 function authorpis (req, res, next) {
   let db = dbtest(req)
 
-  db.query('select * from ap.getpeople();')
+  db.query('SELECT * FROM ap.getpeople();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -201,7 +199,7 @@ function authorpis (req, res, next) {
 function authors (req, res, next) {
   let db = dbtest(req)
 
-  db.query('select * from ap.getauthors();')
+  db.query('SELECT * FROM ap.getauthors();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -230,7 +228,7 @@ function taphonomysystems (req, res, next) {
         message: 'No datasetTypeId provided.'
       })
   } else {
-    db.query('select * from ap.gettaphonomicsystems(' + datasetTypeId + ');')
+    db.query('SELECT * FROM ap.gettaphonomicsystems(' + datasetTypeId + ');')
       .then(function (data) {
         res.status(200)
           .jsonp({
@@ -249,7 +247,7 @@ function taphonomysystems (req, res, next) {
 function depositionalenvironments (req, res, next) {
   let db = dbtest(req)
 
-  db.query('select * from ap.getdeptenvtypesroot();')
+  db.query('SELECT * FROM ap.getdeptenvtypesroot();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -279,7 +277,7 @@ function depositionalenvironmentsbyid (req, res, next) {
         message: 'No depenvtid provided.'
       })
   } else {
-    db.query('select * from ap.getdeptenvtypes($1);', [depenvtid])
+    db.query('SELECT * FROM ap.getdeptenvtypes($1);', [depenvtid])
       .then(function (data) {
         res.status(200)
           .jsonp({
