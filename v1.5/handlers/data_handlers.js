@@ -1,7 +1,7 @@
-const bib = require('../helpers/bib_format');
 // get global database object
-var db = require('../../database/pgp_db');
-var pgp = db.$config.pgp;
+var dbtest = require('../../database/pgp_db').dbheader
+
+const bib = require('../helpers/bib_format');
 
 // Defining the query functions:
 module.exports = {
@@ -99,6 +99,7 @@ module.exports = {
 };
 
 function downloads (req, res, next) {
+  var db = dbtest(req)
   var datasetId = req.params.datasetid;
 
   if (!datasetId) {
@@ -206,6 +207,7 @@ function downloads (req, res, next) {
 // one route defined chronologies/:id
 // TODO write function
 function chronology (req, res, next) {
+  var db = dbtest(req)
   var chronId = +req.params.id;
 
   /*
@@ -245,23 +247,24 @@ function chronology (req, res, next) {
 }
 
 function publicationid (req, res, next) {
+  var db = dbtest(req)
   if (req.params.pubid) {
     var pubid = parseInt(req.params.pubid);
   } else {
-    var pubid = null;
+    pubid = null;
   }
 
   var query = 'select * from ndb.publications AS pubs where pubs.publicationid = $1';
 
-  output = db.any(query, [pubid])
+  db.any(query, [pubid])
     .then(function (data) {
-      bib_output = bib.formatpublbib(data);
+      let bibOutput = bib.formatpublbib(data);
 
       res.status(200)
         .jsonp({
           success: 1,
           status: 'success',
-          data: bib_output,
+          data: bibOutput,
           message: 'Retrieved all tables'
         });
     })
@@ -271,6 +274,7 @@ function publicationid (req, res, next) {
 };
 
 function publicationquery (req, res, next) {
+  var db = dbtest(req)
   // return publications for datasetid
   // v1 query
   /*
@@ -306,11 +310,11 @@ function publicationquery (req, res, next) {
       })
       .catch(function (err) {
         res.status(500)
-        .json({
-          status: 'failure',
-          data: err.message,
-          message: 'Ran into an error.'
-        });
+          .json({
+            status: 'failure',
+            data: err.message,
+            message: 'Ran into an error.'
+          });
       });
   }
 };
@@ -320,33 +324,33 @@ function publicationbysite (req, res, next) {
 };
 
 function publicationbydataset (req, res, next) {
+  var db = dbtest(req)
   /*
   Get publications by associated dataset IDs:
   */
 
-  if (req.params.datasetid) {
-    var datasetid = String(req.params.datasetid).split(',').map(function (item) {
-      return parseInt(item, 10);
-    });
-
-    query = 'WITH dpub AS ' +
+  let query = 'WITH dpub AS ' +
             '(SELECT * FROM ndb.datasetpublications as dp ' +
             'WHERE ($1 IS NULL OR dp.datasetid IN ($1:csv))) ' +
             'SELECT * FROM ndb.publications AS pub INNER JOIN ' +
             'ndb.publicationauthors AS pa ON pub.publicationid = pa.publicationid INNER JOIN ' +
             'ndb.contacts as ca ON ca.contactid = pa.contactid ' +
             'WHERE pub.publicationid IN (SELECT publicationid FROM dpub)'
+
+  if (req.params.datasetid) {
+    var datasetid = String(req.params.datasetid).split(',').map(function (item) {
+      return parseInt(item, 10);
+    });
   }
 
-  output = db.any(query, [datasetid])
+  db.any(query, [datasetid])
     .then(function (data) {
-      bib_output = bib.formatpublbib(data);
-
+      let bibOutput = bib.formatpublbib(data);
       res.status(200)
         .jsonp({
           success: 1,
           status: 'success',
-          data: bib_output,
+          data: bibOutput,
           message: 'Retrieved all tables'
         });
     })
