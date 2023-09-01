@@ -1,5 +1,3 @@
-"use strict";
-
 let apicache = require('apicache');
 let compression = require('compression');
 let cookieParser = require('cookie-parser');

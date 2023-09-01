@@ -1,5 +1,5 @@
 // get global database object
-var dbtest = require('../database/pgp_db').dbheader
+var dbtest = require('../../database/pgp_db').dbheader
 
 module.exports = {
   ndbtable: getNDBtable,
