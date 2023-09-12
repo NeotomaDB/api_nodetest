@@ -3,8 +3,7 @@
 const path = require('path');
 
 // get global database object
-var db = require('../../../database/pgp_db');
-var pgp = db.$config.pgp;
+var dbtest = require('../../../database/pgp_db').dbheader;
 
 const { sql, commaSep, ifUndef, removeEmpty, validateOut } = require('../../../src/neotomaapi.js');
 
@@ -15,6 +14,7 @@ const contactbydsid = sql('../v2.0/helpers/contacts/contactbydsid.sql');
 const contactbystid = sql('../v2.0/helpers/contacts/contactbysiteid.sql');
 
 function contacts (req, res, next) {
+  let db = dbtest(req)
   var contactIdUsed = !!req.query.contactid;
   if (contactIdUsed) {
     var contactid = String(req.query.contactid).split(',').map(function (item) {
@@ -62,6 +62,7 @@ function contacts (req, res, next) {
 }
 
 function contactsbyid (req, res, next) {
+  let db = dbtest(req)
   var contactUsed = !!req.params.contactid
 
   if (contactUsed) {
@@ -103,6 +104,7 @@ function contactsbyid (req, res, next) {
 }
 
 function contactsbydataid (req, res, next) {
+  let db = dbtest(req)
   var datasetIdUsed = !!req.params.datasetid
 
   if (datasetIdUsed) {
@@ -144,6 +146,7 @@ function contactsbydataid (req, res, next) {
 }
 
 function contactsbysiteid (req, res, next) {
+  let db = dbtest(req)
   var siteIdUsed = !!req.params.siteid;
   if (siteIdUsed) {
     var siteid = String(req.params.siteid).split(',').map(function (item) {

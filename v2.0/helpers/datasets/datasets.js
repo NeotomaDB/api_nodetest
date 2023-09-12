@@ -1,6 +1,7 @@
 // get global database object
 const he = require('he')
-const db = require('../../../database/pgp_db');
+// get global database object
+var dbtest = require('../../../database/pgp_db').dbheader;
 
 const { sql, ifUndef, checkObject, getparam, parseLocations } = require('../../../src/neotomaapi.js');
 
@@ -11,6 +12,7 @@ const datasetbysite = sql('../v2.0/helpers/datasets/datasetbysite.sql');
 const datasetbygpidsql = sql('../v2.0/helpers/datasets/datasetbygpid.sql');
 
 function datasetsbygeopol (req, res, next) {
+  let db = dbtest(req)
   var gpIdUsed = !!req.params.gpid;
 
   if (gpIdUsed) {
@@ -58,6 +60,7 @@ function datasetsbygeopol (req, res, next) {
 }
 
 function datasetbyid (req, res, next) {
+  let db = dbtest(req)
   var dsIdUsed = !!req.params.datasetid;
 
   if (dsIdUsed) {
@@ -102,6 +105,7 @@ function datasetbyid (req, res, next) {
 }
 
 function datasetbydb (req, res, next) {
+  let db = dbtest(req)
   var dbUsed = !!req.query.database;
 
   if (dbUsed) {
@@ -145,6 +149,7 @@ function datasetbydb (req, res, next) {
 }
 
 function datasetbysiteid (req, res, next) {
+  let db = dbtest(req)
   var stIdUsed = !!req.params.siteid;
 
   if (stIdUsed) {
@@ -187,6 +192,7 @@ function datasetbysiteid (req, res, next) {
 }
 
 function datasetquery (req, res, next) {
+  let db = dbtest(req)
   // First get all the inputs and parse them:
   let paramgrab = getparam(req)
 

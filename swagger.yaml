@@ -2925,6 +2925,8 @@ servers:
     url: https://api.neotomadb.org/
   - description: Neotoma development server.
     url: https://api-dev.neotomadb.org/
+  - description: Local Neotoma server.
+    url: http://localhost:3005/
 tags:
   - description: Endpoints that access tables from Neotoma verbatim.
     externalDocs:

@@ -3,6 +3,7 @@ var assert = require('assert');
 var dbtest = require('../database/pgp_db').dbheader;
 
 const promise = require('bluebird')
+
 const options = {
   // Initialization Options
   promiseLib: promise,

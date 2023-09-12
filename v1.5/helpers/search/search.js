@@ -1,8 +1,9 @@
 // Sites query:
 const path = require('path');
+
 // get global database object
-var db = require('../../../database/pgp_db');
-var pgp = db.$config.pgp;
+var dbtest = require('../../../database/pgp_db').dbheader;
+var pgp = require('../../../database/pgp_db').pgp;
 
 // Helper for linking to external query files:
 function sql (file) {
@@ -121,6 +122,7 @@ const rollupSites = function (data) {
 }
 
 function explorersearch (req, res, next) {
+  let db = dbtest(req)
   var data = [];
   // Get the query string:
 
