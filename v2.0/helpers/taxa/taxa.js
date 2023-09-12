@@ -1,7 +1,7 @@
 // Taxa query:
 
 // get global database object
-var db = require('../../../database/pgp_db');
+var dbtest = require('../../../database/pgp_db').dbheader;
 
 const { sql, ifUndef, getparam, checkObject } = require('../../../src/neotomaapi.js');
 
@@ -12,6 +12,8 @@ const taxonbyds = sql('../v2.0/helpers/taxa/taxonquerydsid.sql');
 
 // Actual functions:
 function taxonbydsid (req, res, next) {
+  let db = dbtest(req)
+
   var goodds = !!req.params.datasetid;
   if (goodds) {
     var datasetid = String(req.params.datasetid).split(',').map(function (item) {
@@ -45,6 +47,8 @@ function taxonbydsid (req, res, next) {
 }
 
 function taxonquery (req, res, next) {
+  let db = dbtest(req)
+
   // First get all the inputs and parse them:
   let paramgrab = getparam(req)
 

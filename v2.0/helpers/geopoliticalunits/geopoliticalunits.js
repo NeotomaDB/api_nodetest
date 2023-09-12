@@ -1,10 +1,10 @@
 // geopoliticalunits query:
 
 // get global database object
-var db = require('../../../database/pgp_db');
+var dbtest = require('../../../database/pgp_db').dbheader;
 
 // Helper for linking to external query files:
-const { sql, commaSep, ifUndef, checkObject, getparam } = require('../../../src/neotomaapi.js');
+const { sql, commaSep, getparam } = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
 const gpuQuery = sql('../v2.0/helpers/geopoliticalunits/gpuQuery.sql');
@@ -12,6 +12,7 @@ const gpuid = sql('../v2.0/helpers/geopoliticalunits/gpubyid.sql');
 const gpsiteid = sql('../v2.0/helpers/geopoliticalunits/geopolbysiteid.sql');
 
 function geopoliticalbyid (req, res, next) {
+  let db = dbtest(req)
   var gpIdUsed = !!req.params.gpid;
 
   if (gpIdUsed) {
@@ -65,7 +66,7 @@ function geopoliticalunits (req, res, next) {
     Should be able to pass in site IDs, or dataset IDs to then figure out
       where the records are, with regards to political units.
   */
-
+  let db = dbtest(req)
   let paramgrab = getparam(req)
 
   if (!paramgrab.success) {
@@ -125,7 +126,7 @@ function geopolbysite (req, res, next) {
   /*
   Get geopolitical units by associated site IDs:
   */
-
+  let db = dbtest(req)
   if (req.params.siteid) {
     var siteid = commaSep(req.params.siteid);
     var outobj = { siteid: siteid }
