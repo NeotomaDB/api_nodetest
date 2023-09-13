@@ -114,9 +114,9 @@ function datasetsbysiteids (req, res, next) {
   var badstid = false;
   var siteids = [];
   siteids = String(req.query.siteids)
-    .split(",")
-    .map(function(item) {
-      if(NaN == parseInt(item)) {
+    .split(',')
+    .map(function (item) {
+      if (NaN == parseInt(item)) {
         badstid = true
         //bad datasetid
         return
@@ -153,14 +153,14 @@ function datasetsbysiteids (req, res, next) {
 
 function datasetquery (req, res, next) {
   let db = req.app.locals.db
-  console.log('Here')
+
   var datasetid = req.params.datasetid;
 
   // Get the query string:
   var query = 'SELECT * FROM ndb.datasets as dts WHERE ';
 
   if (!!datasetid) {
-    query = query + 'dts.datasetid = '  + parseInt(datasetid);
+    query = query + 'dts.datasetid = ' + parseInt(datasetid);
   }
 
   db.any(query)

@@ -9,7 +9,6 @@ const taxonbyds = sql('../v2.0/helpers/taxa/taxonquerydsid.sql');
 
 // Actual functions:
 function taxonbydsid (req, res, next) {
-
   let db = req.app.locals.db
 
   var goodds = !!req.params.datasetid;
@@ -87,7 +86,7 @@ function taxonquery (req, res, next) {
 
     const taxa = 'SELECT taxonid AS output FROM ndb.taxa WHERE taxonname ILIKE ANY(${taxonname})';
 
-    Promise.all([checkObject(res, taxa, outobj.taxonname, outobj)])
+    Promise.all([checkObject(req, res, taxa, outobj.taxonname, outobj)])
       .then(result => {
         if (outobj.taxonid === null) {
           outobj.taxonid = result[0]

@@ -42,7 +42,7 @@ function geochronologies (req, res, next) {
           });
       })
       .catch(function (err) {
-        console.log('Error in apps geochronologies:', err.message || err);
+        // console.log('Error in apps geochronologies:', err.message || err);
         next(err);
       });
   }

@@ -1,6 +1,3 @@
-// get global database object
-var dbtest = require('../../database/pgp_db').dbheader
-
 module.exports = {
   datasettypes: datasettypes,
   collectiontypes: collectiontypes,
@@ -19,7 +16,7 @@ module.exports = {
   depositionalenvironmentsbyid: depositionalenvironmentsbyid,
   relativeages: relativeages,
   search: function (req, res, next) {
-    console.log('calling search helper');
+    // console.log('calling search helper');
     var exsearch = require('../helpers/search/search.js');
     exsearch.explorersearch(req, res, next);
   }
@@ -29,7 +26,7 @@ module.exports = {
 
 /* All the Endpoint functions */
 function collectiontypes (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
   db.query('SELECT * FROM ap.getcollectiontypes()')
     .then(function (data) {
       res.status(200)
@@ -52,7 +49,7 @@ function collectiontypes (req, res, next) {
 }
 
 function datasettypes (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
 
   db.query('SELECT * FROM ap.getdatasettypes();')
     .then(function (data) {
@@ -75,7 +72,7 @@ function datasettypes (req, res, next) {
 }
 
 function elementtypes (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
 
   var taxonid, taxagroupid;
   taxonid = req.query.taxonid;
@@ -125,7 +122,7 @@ function elementtypes (req, res, next) {
 }
 
 function taxaindatasets (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
   db.query('SELECT * FROM ap.taxaindatasetview;')
     .then(function (data) {
       // data are records of (taxonid, taxonname, taxagroupid, datasettypeid)
@@ -144,7 +141,7 @@ function taxaindatasets (req, res, next) {
 }
 
 function taxagrouptypes (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
 
   db.query('SELECT * FROM ap.gettaxagrouptypes();')
     .then(function (data) {
@@ -162,7 +159,7 @@ function taxagrouptypes (req, res, next) {
 }
 
 function keywords (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
   db.query('SELECT * FROM ap.getkeywords();')
     .then(function (data) {
       res.status(200)
@@ -179,7 +176,7 @@ function keywords (req, res, next) {
 }
 
 function authorpis (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
 
   db.query('SELECT * FROM ap.getpeople();')
     .then(function (data) {
@@ -197,7 +194,7 @@ function authorpis (req, res, next) {
 }
 
 function authors (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
 
   db.query('SELECT * FROM ap.getauthors();')
     .then(function (data) {
@@ -217,7 +214,7 @@ function authors (req, res, next) {
 function taphonomysystems (req, res, next) {
   // Get the query string:
   var datasetTypeId = req.query.datasetTypeId;
-  let db = dbtest(req)
+  let db = req.app.locals.db
 
   if (!datasetTypeId) {
     res.status(200)
@@ -245,7 +242,7 @@ function taphonomysystems (req, res, next) {
 }
 
 function depositionalenvironments (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
 
   db.query('SELECT * FROM ap.getdeptenvtypesroot();')
     .then(function (data) {
@@ -263,10 +260,10 @@ function depositionalenvironments (req, res, next) {
 }
 
 function depositionalenvironmentsbyid (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
   // Get the query string:
   var depenvtid = req.params.id;
-  console.log('depenvtid is: ' + depenvtid);
+  // console.log('depenvtid is: ' + depenvtid);
 
   if (isNaN(depenvtid)) {
     res.status(200)
@@ -294,7 +291,7 @@ function depositionalenvironmentsbyid (req, res, next) {
 }
 
 function relativeages (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
   // Get the query string:
   var ageScaleID = req.query.agescaleid;
   if (!req.query.agescaleid || !parseInt(req.query.agescaleid)) {
