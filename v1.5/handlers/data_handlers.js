@@ -1,6 +1,3 @@
-// get global database object
-var dbtest = require('../../database/pgp_db').dbheader
-
 const bib = require('../helpers/bib_format');
 
 // Defining the query functions:
@@ -99,7 +96,7 @@ module.exports = {
 };
 
 function downloads (req, res, next) {
-  var db = dbtest(req)
+  let db = req.app.locals.db
   var datasetId = req.params.datasetid;
 
   if (!datasetId) {
@@ -207,7 +204,7 @@ function downloads (req, res, next) {
 // one route defined chronologies/:id
 // TODO write function
 function chronology (req, res, next) {
-  var db = dbtest(req)
+  let db = req.app.locals.db
   var chronId = +req.params.id;
 
   /*
@@ -247,7 +244,7 @@ function chronology (req, res, next) {
 }
 
 function publicationid (req, res, next) {
-  var db = dbtest(req)
+  let db = req.app.locals.db
   if (req.params.pubid) {
     var pubid = parseInt(req.params.pubid);
   } else {
@@ -274,7 +271,7 @@ function publicationid (req, res, next) {
 };
 
 function publicationquery (req, res, next) {
-  var db = dbtest(req)
+  let db = req.app.locals.db
   // return publications for datasetid
   // v1 query
   /*
@@ -324,7 +321,7 @@ function publicationbysite (req, res, next) {
 };
 
 function publicationbydataset (req, res, next) {
-  var db = dbtest(req)
+  let db = req.app.locals.db
   /*
   Get publications by associated dataset IDs:
   */

@@ -1,6 +1,6 @@
 // Contacts query:
 
-const { sql, commaSep, ifUndef, removeEmpty, validateOut } = require('../../../src/neotomaapi.js');
+const { sql, validateOut } = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
 const contactbyid = sql('../v2.0/helpers/contacts/contactbyid.sql');

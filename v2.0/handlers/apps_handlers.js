@@ -1,6 +1,4 @@
 // get global database object
-var dbtest = require('../../database/pgp_db').dbheader
-
 module.exports = {
   datasettypes: datasettypes,
   collectiontypes: collectiontypes,
@@ -16,7 +14,7 @@ module.exports = {
 
 /* All the Endpoint functions */
 function collectiontypes (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
   db.query('select ap.getcollectiontypes()')
     .then(function (data) {
       res.status(200)
@@ -37,7 +35,7 @@ function collectiontypes (req, res, next) {
 }
 
 function datasettypes (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
   db.query('select ap.getdatasettypes();')
     .then(function (data) {
       res.status(200)
@@ -57,7 +55,7 @@ function datasettypes (req, res, next) {
 }
 
 function taxaindatasets (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
   db.query('SELECT * FROM ap.taxaindatasetview;')
     .then(function (data) {
       res.status(200)
@@ -77,7 +75,7 @@ function taxaindatasets (req, res, next) {
 }
 
 function taxagrouptypes (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
   db.query('select ap.gettaxagrouptypes();')
     .then(function (data) {
       res.status(200)
@@ -97,7 +95,7 @@ function taxagrouptypes (req, res, next) {
 }
 
 function keywords (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
   db.query('select ap.getkeywords();')
     .then(function (data) {
       res.status(200)
@@ -117,7 +115,7 @@ function keywords (req, res, next) {
 }
 
 function authorpis (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
   db.query('select ap.getpeople();')
     .then(function (data) {
       res.status(200)
@@ -137,7 +135,7 @@ function authorpis (req, res, next) {
 }
 
 function taphonomysystems (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
   // Get the query string:
   var datasettypeid = req.query.datasettypeid;
 
@@ -169,7 +167,7 @@ function taphonomysystems (req, res, next) {
 }
 
 function depositionalenvironments (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
   db.query('select ap.getdeptenvtypesroot();')
     .then(function (data) {
       res.status(200)

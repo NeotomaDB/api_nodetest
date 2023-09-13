@@ -273,10 +273,10 @@ function datasetquery (req, res, next) {
       const contacts = 'SELECT contactid AS output FROM ndb.contacts WHERE contactname ILIKE ANY(${contacts});';
       const keyword = 'SELECT keywordid AS output FROM ndb.keywords WHERE keyword ILIKE ANY(${keywords})';
 
-      Promise.all([checkObject(res, geopol, outobj.gpid, outobj),
-        checkObject(res, keyword, outobj.keywords, outobj),
-        checkObject(res, taxa, outobj.taxa, outobj),
-        checkObject(res, contacts, outobj.contacts, outobj)])
+      Promise.all([checkObject(req, res, geopol, outobj.gpid, outobj),
+        checkObject(req, res, keyword, outobj.keywords, outobj),
+        checkObject(req, res, taxa, outobj.taxa, outobj),
+        checkObject(req, res, contacts, outobj.contacts, outobj)])
         .then(result => {
           outobj.gpid = result[0]
           outobj.keywords = result[1]

@@ -1,6 +1,5 @@
 const path = require('path');
 var assert = require('assert');
-var dbtest = require('../database/pgp_db').dbheader;
 
 const promise = require('bluebird')
 
@@ -27,7 +26,7 @@ const options = {
     // Exclude the big chunky query:
     console.log(JSON.stringify(err))
     var messageout = { 'error': JSON.stringify(err), 'query': e.query }
-    //messageout.db = { 'client': e.client.user, 'database': e.client.database, 'host': e.client.host }
+    messageout.db = { 'client': e.client.user, 'database': e.client.database, 'host': e.client.host }
     console.log(date.toISOString() + ' ' + JSON.stringify(messageout))
   }
 }
@@ -69,7 +68,8 @@ function commaSep (x) {
 
 /* Takes integer values and passes them into a query to the database.
    This is used when we need to pre-process values for an API call. */
-function checkObject (res, query, value, outobj) {
+function checkObject (req, res, query, value, outobj) {
+  let db = req.app.locals.db
   if (value) {
     if (!value.every(Number.isInteger)) {
       value = db.any(query, outobj)

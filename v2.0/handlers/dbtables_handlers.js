@@ -1,5 +1,4 @@
 // get global database object
-const dbtest = require('../../database/pgp_db').dbheader
 const { ifUndef, getparam } = require('../../src/neotomaapi.js');
 
 module.exports = {
@@ -12,7 +11,7 @@ module.exports = {
 /* All the Endpoint functions */
 
 function getNDBtable (req, res, next) {
-  var db = dbtest(req)
+  let db = req.app.locals.db
   let paramgrab = getparam(req)
 
   if (!paramgrab.success) {
@@ -68,7 +67,7 @@ function getNDBtable (req, res, next) {
 }
 
 function tablenames (req, res, next) {
-  var db = dbtest(req)
+  let db = req.app.locals.db
   db.query("SELECT tablename FROM pg_catalog.pg_tables where schemaname='ndb';")
     .then(function (data) {
       res.status(200)
