@@ -1,9 +1,7 @@
-// get global database object
-var db = require('../../../database/pgp_db');
-
 const { validateOut } = require('../../../src/neotomaapi.js');
 
 function datasettypesbymonths (req, res, next) {
+  let db = req.app.locals.db
   var outobj = { 'start': parseInt(req.query.start || 0),
     'end': parseInt(req.query.end || 1) }
 
@@ -41,6 +39,7 @@ function datasettypesbymonths (req, res, next) {
 }
 
 function rawbymonth (req, res, next) {
+  let db = req.app.locals.db
   var outobj = { 'start': parseInt(req.query.start || 0), 
     'end': parseInt(req.query.end || 1) }
 
@@ -78,6 +77,7 @@ function rawbymonth (req, res, next) {
 }
 
 function datasetdbsbymonths (req, res, next) {
+  let db = req.app.locals.db
   var outobj = { 'start': parseInt(req.query.start || 0),
     'end': parseInt(req.query.end || 1) }
 
@@ -115,6 +115,7 @@ function datasetdbsbymonths (req, res, next) {
 }
 
 function sparklines (req, res, next) {
+  let db = req.app.locals.db
   var outobj = { 'start': parseInt(req.query.start || 0),
     'end': parseInt(req.query.end || 1) }
 

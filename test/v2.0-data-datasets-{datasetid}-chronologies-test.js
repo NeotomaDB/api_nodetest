@@ -7,7 +7,7 @@ var expect = chakram.expect;
 describe('tests for /v2.0/data/datasets/{datasetid}/chronologies', function () {
   describe('tests for get', function () {
     it('should respond 200 for "chronology"', function () {
-      var response = request('get', 'http://localhost:3005/v2.0/data/datasets/4237/chronologies', {
+      var response = request('get', 'http://localhost:3005/v2.0/data/datasets/500/chronologies', {
         'time': true
       });
 

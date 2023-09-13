@@ -1,12 +1,6 @@
 // Contacts query:
 
-const path = require('path');
-
-// get global database object
-var db = require('../../../database/pgp_db');
-var pgp = db.$config.pgp;
-
-const { sql, commaSep, ifUndef, removeEmpty, validateOut } = require('../../../src/neotomaapi.js');
+const { sql, validateOut } = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
 const contactbyid = sql('../v2.0/helpers/contacts/contactbyid.sql');
@@ -15,6 +9,7 @@ const contactbydsid = sql('../v2.0/helpers/contacts/contactbydsid.sql');
 const contactbystid = sql('../v2.0/helpers/contacts/contactbysiteid.sql');
 
 function contacts (req, res, next) {
+  let db = req.app.locals.db
   var contactIdUsed = !!req.query.contactid;
   if (contactIdUsed) {
     var contactid = String(req.query.contactid).split(',').map(function (item) {
@@ -62,6 +57,7 @@ function contacts (req, res, next) {
 }
 
 function contactsbyid (req, res, next) {
+  let db = req.app.locals.db
   var contactUsed = !!req.params.contactid
 
   if (contactUsed) {
@@ -103,6 +99,7 @@ function contactsbyid (req, res, next) {
 }
 
 function contactsbydataid (req, res, next) {
+  let db = req.app.locals.db
   var datasetIdUsed = !!req.params.datasetid
 
   if (datasetIdUsed) {
@@ -144,6 +141,7 @@ function contactsbydataid (req, res, next) {
 }
 
 function contactsbysiteid (req, res, next) {
+  let db = req.app.locals.db
   var siteIdUsed = !!req.params.siteid;
   if (siteIdUsed) {
     var siteid = String(req.params.siteid).split(',').map(function (item) {

@@ -1,8 +1,5 @@
 // Taxa query:
 
-// get global database object
-var db = require('../../../database/pgp_db');
-
 const { sql, ifUndef, getparam, checkObject } = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
@@ -12,6 +9,8 @@ const taxonbyds = sql('../v2.0/helpers/taxa/taxonquerydsid.sql');
 
 // Actual functions:
 function taxonbydsid (req, res, next) {
+  let db = req.app.locals.db
+
   var goodds = !!req.params.datasetid;
   if (goodds) {
     var datasetid = String(req.params.datasetid).split(',').map(function (item) {
@@ -45,6 +44,8 @@ function taxonbydsid (req, res, next) {
 }
 
 function taxonquery (req, res, next) {
+  let db = req.app.locals.db
+
   // First get all the inputs and parse them:
   let paramgrab = getparam(req)
 
@@ -85,7 +86,7 @@ function taxonquery (req, res, next) {
 
     const taxa = 'SELECT taxonid AS output FROM ndb.taxa WHERE taxonname ILIKE ANY(${taxonname})';
 
-    Promise.all([checkObject(res, taxa, outobj.taxonname, outobj)])
+    Promise.all([checkObject(req, res, taxa, outobj.taxonname, outobj)])
       .then(result => {
         if (outobj.taxonid === null) {
           outobj.taxonid = result[0]
