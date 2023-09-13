@@ -1,14 +1,9 @@
-// Sites query:
-const path = require('path');
-// get global database object
-var db = require('../../../database/pgp_db');
-var pgp = db.$config.pgp;
-
-const { sql, commaSep, ifUndef, removeEmpty, validateOut } = require('../../../src/neotomaapi.js');
+const { sql, commaSep } = require('../../../src/neotomaapi.js');
 
 const doisql = sql('../v2.0/helpers/doi/doibydsid.sql');
 
 function doibydsid (req, res, next) {
+  let db = req.app.locals.db
   var dsIdUsed = !!req.params.datasetid;
 
   if (dsIdUsed) {

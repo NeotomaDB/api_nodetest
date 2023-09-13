@@ -1,15 +1,10 @@
 // Lithology query:
-const path = require('path');
-// get global database object
-var db = require('../../../database/pgp_db');
-var pgp = db.$config.pgp;
-
-const { sql, commaSep, ifUndef, removeEmpty, validateOut } = require('../../../src/neotomaapi.js');
+const { sql, commaSep } = require('../../../src/neotomaapi.js');
 
 const lithologybyds = sql('../v2.0/helpers/lithology/lithologybyds.sql');
 
 function lithologybydsid (req, res, next) {
-
+  let db = req.app.locals.db
   var dsIdUsed = !!req.params.datasetid;
 
   if (dsIdUsed) {

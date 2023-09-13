@@ -1,8 +1,8 @@
 // get global database object
 const he = require('he')
-const db = require('../../../database/pgp_db');
+// get global database object
 
-const { sql, ifUndef, checkObject, getparam, parseLocations } = require('../../../src/neotomaapi.js');
+const { sql, ifUndef, checkObject, validateOut, getparam, parseLocations } = require('../../../src/neotomaapi.js');
 
 const datasetquerysql = sql('../v2.0/helpers/datasets/datasetqueryfaster.sql');
 const datasetbyidsql = sql('../v2.0/helpers/datasets/datasetbyid.sql');
@@ -11,6 +11,7 @@ const datasetbysite = sql('../v2.0/helpers/datasets/datasetbysite.sql');
 const datasetbygpidsql = sql('../v2.0/helpers/datasets/datasetbygpid.sql');
 
 function datasetsbygeopol (req, res, next) {
+  let db = req.app.locals.db
   var gpIdUsed = !!req.params.gpid;
 
   if (gpIdUsed) {
@@ -58,6 +59,7 @@ function datasetsbygeopol (req, res, next) {
 }
 
 function datasetbyid (req, res, next) {
+  let db = req.app.locals.db
   var dsIdUsed = !!req.params.datasetid;
 
   if (dsIdUsed) {
@@ -102,6 +104,7 @@ function datasetbyid (req, res, next) {
 }
 
 function datasetbydb (req, res, next) {
+  let db = req.app.locals.db
   var dbUsed = !!req.query.database;
 
   if (dbUsed) {
@@ -145,6 +148,7 @@ function datasetbydb (req, res, next) {
 }
 
 function datasetbysiteid (req, res, next) {
+  let db = req.app.locals.db
   var stIdUsed = !!req.params.siteid;
 
   if (stIdUsed) {
@@ -187,6 +191,7 @@ function datasetbysiteid (req, res, next) {
 }
 
 function datasetquery (req, res, next) {
+  let db = req.app.locals.db
   // First get all the inputs and parse them:
   let paramgrab = getparam(req)
 
@@ -268,10 +273,10 @@ function datasetquery (req, res, next) {
       const contacts = 'SELECT contactid AS output FROM ndb.contacts WHERE contactname ILIKE ANY(${contacts});';
       const keyword = 'SELECT keywordid AS output FROM ndb.keywords WHERE keyword ILIKE ANY(${keywords})';
 
-      Promise.all([checkObject(res, geopol, outobj.gpid, outobj),
-        checkObject(res, keyword, outobj.keywords, outobj),
-        checkObject(res, taxa, outobj.taxa, outobj),
-        checkObject(res, contacts, outobj.contacts, outobj)])
+      Promise.all([checkObject(req, res, geopol, outobj.gpid, outobj),
+        checkObject(req, res, keyword, outobj.keywords, outobj),
+        checkObject(req, res, taxa, outobj.taxa, outobj),
+        checkObject(req, res, contacts, outobj.contacts, outobj)])
         .then(result => {
           outobj.gpid = result[0]
           outobj.keywords = result[1]

@@ -6,8 +6,6 @@ const path = require('path');
 const parseTaxa = require('../parsetaxa.js').parseTaxa
 
 // get global database object
-const db = require('../../../database/pgp_db');
-const pgp = db.$config.pgp;
 
 const { sql, ifUndef, validateOut, getparam } = require('../../../src/neotomaapi.js');
 
@@ -16,6 +14,7 @@ const occurrencerecursquerysql = sql('../v2.0/helpers/occurrence/occurrence_recu
 const occurrencetaxonquerysql = sql('../v2.0/helpers/occurrence/occurrencebytaxon.sql');
 
 function occurrencequery (req, res, next) {
+  let db = req.app.locals.db
   // The broader query:
 
   let paramgrab = getparam(req)
@@ -135,6 +134,7 @@ function occurrencequery (req, res, next) {
 };
 
 function occurrencebytaxon (req, res, next) {
+  let db = req.app.locals.db
   var taxonIdUsed = !!req.params.taxonid;
   if (taxonIdUsed) {
     var taxonlist = ifUndef(req.params.taxonid, 'sep');
