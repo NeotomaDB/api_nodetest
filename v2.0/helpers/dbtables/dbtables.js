@@ -1,14 +1,10 @@
 // Returns the data tables:
-
-// get global database object
-var db = require('../../../database/pgp_db');
-var pgp = db.$config.pgp;
-
-const { sql, commaSep, validateOut, getparam, ifUndef } = require('../../../src/neotomaapi.js');
+const { getparam, ifUndef } = require('../../../src/neotomaapi.js');
 
 // Defining the query function:
 
 function dbtables (req, res, next) {
+  let db = req.app.locals.db
   let paramgrab = getparam(req)
 
   if (!paramgrab.success) {

@@ -1,9 +1,9 @@
-let pgPromise = require('pg-promise');
-let promise = require('bluebird');
+import * as promise from 'bluebird'
+import pgPromise from 'pg-promise';
 
 const options = {
   // Initialization Options
-  promiseLib: pgPromise.promise,
+  promiseLib: promise,
   capSQL: true,
   query (e) {
     var date = new Date()
@@ -27,21 +27,6 @@ const options = {
     //messageout.db = { 'client': e.client.user, 'database': e.client.database, 'host': e.client.host }
     console.log(date.toISOString() + ' ' + JSON.stringify(messageout))
   }
-};
+}
 
-let pgp = pgPromise(options);
-
-function dbheader () {
-  var out = {
-    'host': process.env.RDS_HOSTNAME,
-    'user': process.env.RDS_USERNAME,
-    'database': process.env.RDS_DATABASE,
-    'password': process.env.RDS_PASSWORD,
-    'port': process.env.RDS_PORT,
-    'ssl': false, // Note, change this for AWS.
-    'query_timeout': 3000
-  }
-  return pgp(out)
-};
-
-module.exports = { 'pgp': pgp, 'dbheader': dbheader }
+export let pgp = pgPromise(options);

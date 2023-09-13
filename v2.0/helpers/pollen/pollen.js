@@ -1,10 +1,8 @@
 // pollen query:
 // get global database object
-var db = require('../../../database/pgp_db');
-
-var pgp = db.$config.pgp;
 
 function pollen (req, res, next) {
+  let db = req.app.locals.db
   // Get the query string:
   var query = {};
 

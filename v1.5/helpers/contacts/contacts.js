@@ -1,8 +1,6 @@
 // Sites query:
 
 // get global database object
-var dbtest = require('../../../database/pgp_db').dbheader;
-
 const { sql } = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
@@ -10,7 +8,7 @@ const contactbyid = sql('../v1.5/helpers/contacts/contactbyid.sql');
 const contactquery = sql('../v1.5/helpers/contacts/contactquery.sql');
 
 function contacts (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
   if (!!req.query.contactid) {
     var contactid = String(req.query.contactid).split(',').map(function(item) {
       return parseInt(item, 10);
@@ -67,7 +65,7 @@ function contacts (req, res, next) {
 }
 
 function contactsbyid (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
   if (!!req.params.contactid) {
     var contactid = String(req.params.contactid).split(',').map(function(item) {
       return parseInt(item, 10);

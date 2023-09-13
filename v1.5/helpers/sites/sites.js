@@ -1,25 +1,13 @@
-// Sites query:
-
-const path = require('path');
-
-//get global database object
-var db = require('../../../database/pgp_db');
-var pgp = db.$config.pgp;
-
-// Helper for linking to external query files:
-function sql(file) {
-    const fullPath = path.join(__dirname, file);
-    return new pgp.QueryFile(fullPath, {minify: true});
-}
+const { sql } = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
- const siteQuery = sql('./sitequery.sql');
-const sitebydsid = sql('./sitebydsid.sql');
-  const sitebyid = sql('./sitebyid.sql');
-const sitebygpid = sql('./sitebygpid.sql');
+const siteQuery = sql('../v1.5/helpers/sites/sitequery.sql');
+const sitebydsid = sql('../v1.5/helpers/sites/sitebydsid.sql');
+const sitebyid = sql('../v1.5/helpers/sites/sitebyid.sql');
+const sitebygpid = sql('../v1.5/helpers/sites/sitebygpid.sql');
 
 function sitesbyid(req, res, next) {
-
+  let db = req.app.locals.db
   if (!!req.params.siteid) {
     var siteid = String(req.params.siteid).split(',').map(function(item) {
       return parseInt(item, 10);
@@ -27,12 +15,12 @@ function sitesbyid(req, res, next) {
 
   } else {
     res.status(500)
-        .json({
-          success: 0,
-          status: 'failure',
-          data: null,
-          message: 'Must pass either queries or an integer sequence.'
-        });
+      .json({
+        success: 0,
+        status: 'failure',
+        data: null,
+        message: 'Must pass either queries or an integer sequence.'
+      });
   }
 
   db.any(sitebyid, [siteid])
@@ -46,21 +34,21 @@ function sitesbyid(req, res, next) {
         });
     })
     .catch(function (err) {
-        return next(err);
+      return next(err);
     })
 }
 
 
 function sitesquery(req, res, next) {
-
+  let db = req.app.locals.db
   // Get the input parameters:
   var outobj = {'sitename':String(req.query.sitename),
-                  'siteid': parseInt(String(req.query.siteid)),
-                  'altmin':parseInt(String(req.query.altmin)),
-                  'altmax':parseInt(String(req.query.altmax)),
-                     'loc':String(req.query.loc),
-                    'gpid':parseInt(req.query.gpid)
-               };
+    'siteid': parseInt(String(req.query.siteid)),
+    'altmin':parseInt(String(req.query.altmin)),
+    'altmax':parseInt(String(req.query.altmax)),
+    'loc':String(req.query.loc),
+    'gpid':parseInt(req.query.gpid)
+  };
 
   if (typeof req.query.sitename === 'undefined') { outobj.sitename = null }
   if (typeof req.query.siteid === 'undefined')   { outobj.siteid = null }
@@ -88,12 +76,12 @@ function sitesquery(req, res, next) {
         });
     })
     .catch(function (err) {
-        return next(err);
+      return next(err);
     });
 }
 
 function sitesbydataset(req, res, next) {
-
+  let db = req.app.locals.db
   if (!!req.params.datasetid) {
     var datasetid = String(req.params.datasetid).split(',').map(function(item) {
       return parseInt(item, 10);
@@ -101,11 +89,11 @@ function sitesbydataset(req, res, next) {
 
   } else {
     res.status(500)
-        .json({
-          status: 'failure',
-          data: null,
-          message: 'Must pass either queries or an integer sequence.'
-        });
+      .json({
+        status: 'failure',
+        data: null,
+        message: 'Must pass either queries or an integer sequence.'
+      });
   }
 
   db.any(sitebydsid, [datasetid])
@@ -119,12 +107,12 @@ function sitesbydataset(req, res, next) {
         });
     })
     .catch(function (err) {
-        return next(err);
+      return next(err);
     });
 }
 
 function sitesbygeopol(req, res, next) {
-
+  let db = req.app.locals.db
   if (!!req.params.gpid) {
     var gpid = String(req.params.gpid).split(',').map(function(item) {
       return parseInt(item, 10);
@@ -132,11 +120,11 @@ function sitesbygeopol(req, res, next) {
 
   } else {
     res.status(500)
-        .json({
-          status: 'failure',
-          data: null,
-          message: 'Must pass either queries or an integer sequence.'
-        });
+      .json({
+        status: 'failure',
+        data: null,
+        message: 'Must pass either queries or an integer sequence.'
+      });
   }
 
   db.any(sitebygpid, [gpid])
@@ -150,7 +138,7 @@ function sitesbygeopol(req, res, next) {
         });
     })
     .catch(function (err) {
-        return next(err);
+      return next(err);
     });
 }
 
