@@ -8,6 +8,7 @@ let rfs = require('rotating-file-stream') // version 2.x
 let path = require('path');
 let YAML = require('yamljs');
 let swaggerUi = require('swagger-ui-express');
+var dbtest = require('./database/pgp_db').dbheader;
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -24,6 +25,8 @@ app.use(express.json());
 // app.use(cache('5 minutes'));
 app.use(express.static('mochawesome-report'));
 app.use(compression());
+
+app.locals.db = dbtest();
 
 // test trigger watch restart - 09/12/20
 //

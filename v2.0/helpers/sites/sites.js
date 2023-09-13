@@ -1,11 +1,6 @@
 // Sites query:
 const { any } = require('bluebird');
 const he = require('he');
-const { stream } = require('../../../database/pgp_db');
-
-// get global database object
-const db = require('../../../database/pgp_db');
-const pgp = db.$config.pgp;
 
 // Helper for linking to external query files:
 const { sql, commaSep, ifUndef, checkObject, getparam, parseLocations } = require('../../../src/neotomaapi.js');
@@ -26,6 +21,7 @@ const sitebyctid = sql('../v2.0/helpers/sites/sitebyctid.sql');
  */
 
 function sitesbyid (req, res, next) {
+  let db = req.app.locals.db
   var goodstid = !!req.params.siteid;
 
   if (goodstid) {
@@ -66,6 +62,7 @@ function sitesbyid (req, res, next) {
  * @return The function returns nothing, but sends the API result to the client.
  */
 function sitesquery (req, res, next) {
+  let db = req.app.locals.db
   let paramgrab = getparam(req)
 
   if (!paramgrab.success) {
@@ -169,7 +166,7 @@ function sitesquery (req, res, next) {
 }
 
 function sitesbydataset (req, res, next) {
-  var gooddsid = !!req.params.datasetid;
+  let db = req.app.locals.db
 
   let paramgrab = getparam(req)
 
@@ -215,6 +212,7 @@ function sitesbydataset (req, res, next) {
 }
 
 function sitesbygeopol (req, res, next) {
+  let db = req.app.locals.db
   var goodgp = !!req.params.gpid;
 
   if (goodgp) {
@@ -261,6 +259,7 @@ function sitesbygeopol (req, res, next) {
 }
 
 function sitesbycontact (req, res, next) {
+  let db = req.app.locals.db
   var goodctc = !!req.params.contactid
 
   if (goodctc) {

@@ -884,6 +884,15 @@ components:
         status:
           $ref: '#/components/schemas/status'
       type: object
+    contactfromsite:
+      properties:
+        data:
+          type: array
+          items:
+                $ref: '#/components/schemas/contact'
+        status:
+          $ref: '#/components/schemas/status'
+      type: object
     contactstatus:
       type: string
       nullable: true
@@ -2713,7 +2722,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/contact'
+                $ref: '#/components/schemas/contactfromsite'
           description: contact
       summary: Contact information for Neotoma contributors based on a known Neotoma site.
       tags:

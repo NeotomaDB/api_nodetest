@@ -1,41 +1,27 @@
 // xml parser
 const js2xmlparser = require('js2xmlparser');
-// Sites query:
-const path = require('path');
-//get global database object
-var db = require('../../../database/pgp_db');
-var pgp = db.$config.pgp;
-const bib   = require('./../bib_format');
 
-// Helper for linking to external query files:
-function sql(file) {
-  const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath, { minify: true });
-}
-
+const { sql } = require('../../../src/neotomaapi.js');
 // get recent uploads sql query
-const recentuploadssql = sql('./recentuploadsquery.sql');
-console.log('recent uploads query object', recentuploadssql);
+const recentuploadssql = sql('../v1.5/helpers/recentuploads/recentuploadsquery.sql');
 
-function recentuploadsquery(req, res, next) {
-  
+function recentuploadsquery (req, res, next) {
+  let db = req.app.locals.db
   var months = +req.params.months;
 
-    db.any(recentuploadssql, [months])
-      .then(function (data) {
-        // xml parsing options
-        var options = {
-          declaration: {
-              include: false
-          },
-          attributeString: 'data',
-          useCDATA: true
-        };
+  db.any(recentuploadssql, [months])
+    .then(function (data) {
+      // xml parsing options
+      var options = {
+        declaration: {
+          include: false
+        },
+        attributeString: 'data',
+        useCDATA: true
+      };
 
-        //console.log(js2xmlparser.parse('results',data, options));
-
-        data = js2xmlparser.parse('results', data, options);
-        res.status(200).set('Content-Type', 'text/plain').send(data);
+      data = js2xmlparser.parse('results', data, options);
+      res.status(200).set('Content-Type', 'text/plain').send(data);
     })
     .catch(function (err) {
       next(err);

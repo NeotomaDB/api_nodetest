@@ -1,19 +1,6 @@
-// Sites query:
-const path = require('path');
 
-// get global database object
-var dbtest = require('../../../database/pgp_db').dbheader;
-var pgp = require('../../../database/pgp_db').pgp;
-
-// Helper for linking to external query files:
-function sql (file) {
-  const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath, {
-    minify: true
-  });
-}
-
-const explorersearchQry = sql('./explorersearchQuery.sql');
+const { sql } = require('../../../src/neotomaapi.js');
+const explorersearchQry = sql('../v1.5/helpers/search/explorersearchQuery.sql');
 
 // see link for need of custom function
 // https://stackoverflow.com/questions/15762768/javascript-math-round-to-two-decimal-places#15762794
@@ -122,25 +109,22 @@ const rollupSites = function (data) {
 }
 
 function explorersearch (req, res, next) {
-  let db = dbtest(req)
-  var data = [];
-  // Get the query string:
+  let db = req.app.locals.db
 
+  // Get the query string:
   // search input param is stringified JSON object, thus parse first
   try {
     var inputParamObj = JSON.parse(req.query.search);
   } catch (err) {
     res.status(500)
-        .type('application/json')
-        .json({
-          status: 'failure',
-          data: err.message,
-          query: req.query,
-          message: 'The Search enpoint expects structured JSON through the search parameter.'
-        })
+      .type('application/json')
+      .json({
+        status: 'failure',
+        data: err.message,
+        query: req.query,
+        message: 'The Search enpoint expects structured JSON through the search parameter.'
+      })
   }
-
-  console.log('req.query.search object: ' + inputParamObj);
 
   var qryParams = {
     '_taxonids': null,

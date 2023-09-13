@@ -1,13 +1,10 @@
-// get global database object
-var dbtest = require('../../../database/pgp_db').dbheader;
-
 const { sql } = require('../../../src/neotomaapi.js');
 
 const geochronbydatasetidsql = sql('./geochronologybydatasetid.sql');
 const datasetpissql = sql('./datasetpis.sql');
 
 function geochronologies (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
   var datasetId = parseInt(req.query.datasetid, 10);
 
   if (!datasetId || isNaN(datasetId)) {

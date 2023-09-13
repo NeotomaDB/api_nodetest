@@ -1,13 +1,10 @@
-// get global database object
-var dbtest = require('../../../database/pgp_db').dbheader;
-
 const { sql } = require('../../../src/neotomaapi.js');
 
 const datasetbyidsql = sql('../v1.5/helpers/datasets/datasetbyid.sql');
 const datasetsbysitesql = sql('../v1.5/helpers/datasets/datasetbysites.sql');
 
-function datasetbyid(req, res, next) {
-  let db = dbtest(req)
+function datasetbyid (req, res, next) {
+  let db = req.app.locals.db
   var datasetid = req.query.datasetid;
   //check if datasetid provided by query or URL slug
   if (!!req.query.datasetid) {
@@ -39,8 +36,8 @@ function datasetbyid(req, res, next) {
     });
 }
 
-function datasetbyids(req, res, next) {
-  let db = dbtest(req)
+function datasetbyids (req, res, next) {
+  let db = req.app.locals.db
 
   var baddtsid = false;
   var datasetids = [];
@@ -81,8 +78,8 @@ function datasetbyids(req, res, next) {
     });
 }
 
-function datasetsbysiteid(req, res, next) {
-  let db = dbtest(req)
+function datasetsbysiteid (req, res, next) {
+  let db = req.app.locals.db
   //check if valid integer siteid
   var siteid = +req.query.siteid;
 
@@ -112,8 +109,8 @@ function datasetsbysiteid(req, res, next) {
     });
 }
 
-function datasetsbysiteids(req, res, next) {
-  let db = dbtest(req)
+function datasetsbysiteids (req, res, next) {
+  let db = req.app.locals.db
   var badstid = false;
   var siteids = [];
   siteids = String(req.query.siteids)
@@ -154,8 +151,8 @@ function datasetsbysiteids(req, res, next) {
     });
 }
 
-function datasetquery(req, res, next) {
-  let db = dbtest(req)
+function datasetquery (req, res, next) {
+  let db = req.app.locals.db
   console.log('Here')
   var datasetid = req.params.datasetid;
 

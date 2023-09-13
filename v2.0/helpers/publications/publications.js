@@ -1,6 +1,3 @@
-// get global database object
-var dbtest = require('../../../database/pgp_db').dbheader;
-
 const { sql, validateOut, commaSep, ifUndef } = require('../../../src/neotomaapi.js');
 
 const bib = require('../bib_format');
@@ -13,7 +10,7 @@ const rawpub = sql('../v2.0/helpers/publications/pubidquery.sql');
 
 /* By publication ID directly: .../v2.0/data/publications/1001 */
 function publicationid (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
   var pubIdUsed = !!req.params.pubid;
 
   if (pubIdUsed) {
@@ -44,7 +41,7 @@ function publicationid (req, res, next) {
 
 /* To query by publication: */
 function publicationquery (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
   var outobj = {
     'publicationid': ifUndef(req.query.publicationid, 'sep'),
     'datasetid': ifUndef(req.query.datasetid, 'sep'),
@@ -99,7 +96,7 @@ function publicationquery (req, res, next) {
 /* To get publications by site: /v2.0/data/sites/1001/publications */
 
 function publicationbysite (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
   var siteIdUsed = !!req.params.siteid;
 
   if (siteIdUsed) {
@@ -145,7 +142,7 @@ function publicationbysite (req, res, next) {
 /* To get publications by dataset: /v2.0/data/datasets/1001/publications */
 
 function publicationbydataset (req, res, next) {
-  let db = dbtest(req)
+  let db = req.app.locals.db
   /*
   Get publications by associated dataset IDs:
   */
