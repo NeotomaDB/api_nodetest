@@ -1,18 +1,9 @@
 // Sites query:
-const path = require('path');
-// get global database object
-var db = require('../../../database/pgp_db');
-var pgp = db.$config.pgp;
-
-// Helper for linking to external query files:
-function sql (file) {
-  const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath, {minify: true});
-}
-
-const doisql = sql('./doibydsid.sql');
+const { sql } = require('../../../src/neotomaapi.js');
+const downloadsql = sql('../v2.0/helpers/doi/downloadbydsid.sql');
 
 function downloadbyid (req, res, next) {
+  let db = req.app.locals.db
   var dsIdUsed = !!req.params.datasetid;
 
   if (dsIdUsed) {

@@ -1,17 +1,10 @@
-// Building and returning the specimen objects.
-// Currently returns only for specimen selection using dataset IDs.
-var db = require('../../../database/pgp_db');
-var pgp = db.$config.pgp;
-
-const {
-  sql,
-  commaSep
-} = require('../../../src/neotomaapi.js');
+const { sql, commaSep } = require('../../../src/neotomaapi.js');
 
 const specimendssql = sql('../v2.0/helpers/specimens/specbydsid.sql');
 const specimensql = sql('../v2.0/helpers/specimens/specbyid.sql');
 
 function specimenbyid (req, res, next) {
+  let db = req.app.locals.db
   var spIdUsed = !!req.params.specimenid;
 
   if (spIdUsed) {
@@ -54,6 +47,7 @@ function specimenbyid (req, res, next) {
 }
 
 function specimenbydsid (req, res, next) {
+  let db = req.app.locals.db
   var dsIdUsed = !!req.params.datasetid;
   if (dsIdUsed) {
     var datasetid = commaSep(req.params.datasetid);
@@ -86,11 +80,11 @@ function specimenbydsid (req, res, next) {
     })
     .catch(function (err) {
       res.status(500)
-      .json({
-        status: 'failure',
-        data: null,
-        message: err.message
-      });
+        .json({
+          status: 'failure',
+          data: null,
+          message: err.message
+        });
     });
 }
 

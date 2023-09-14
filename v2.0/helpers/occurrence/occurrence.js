@@ -2,7 +2,6 @@
 const Terraformer = require('terraformer');
 const he = require('he')
 const WKT = require('terraformer-wkt-parser');
-const path = require('path');
 const parseTaxa = require('../parsetaxa.js').parseTaxa
 
 // get global database object
