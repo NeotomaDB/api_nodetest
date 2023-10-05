@@ -3,7 +3,7 @@
   "version": "1.4.0",
   "private": true,
   "scripts": {
-    "start": "node app.js",
+    "start": "NODE_ENV=production node ./bin/www",
     "test": "node ./node_modules/mocha/bin/mocha --config=test/.mocharc.yml --reporter-options reportDir=public,reportFilename=tests"
   },
   "pre-commit": "test",
