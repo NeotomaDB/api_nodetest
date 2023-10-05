@@ -1,5 +1,5 @@
-var prepCommaString = function(x) {
-	return x.toLowerCase().split(',')
+var prepCommaString = function (x) {
+  return x.toLowerCase().split(',')
 }
 
-module.exports.prepCommaString = prepCommaString;
+module.exports.prepCommaString = prepCommaString

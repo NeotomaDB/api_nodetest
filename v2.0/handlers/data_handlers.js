@@ -1,13 +1,5 @@
-// get global database object (I think I can deprecate this)
-// var db = require('../../database/pgp_db');
-// var pgp = db.$config.pgp;
-
 // Defining the query functions:
 module.exports = {
-  /* oxcalibrate: function (req, res, next) {
-    const oxcal = require('../oxcal/oxcal.js');
-    oxcal.calibrate(req, res, next);
-  }, */
   frozen: function (req, res, next) {
     const frozen = require('../helpers/frozendata/frozen.js');
     frozen.frozenbyid(req, res, next);

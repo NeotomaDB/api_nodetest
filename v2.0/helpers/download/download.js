@@ -1,8 +1,5 @@
 // Building and returning the downloads objects.
 // Currently returns only for download selection using dataset IDs.
-var db = require('../../../database/pgp_db');
-var pgp = db.$config.pgp;
-
 const { sql, getparam, ifUndef } = require('../../../src/neotomaapi.js');
 
 const downloadsql = sql('../v2.0/helpers/download/downloadbydsid.sql');
@@ -38,6 +35,7 @@ function getdefault (chron) {
 }
 
 function downloadbyid (req, res, next) {
+  let db = req.app.locals.db
   let paramgrab = getparam(req)
   if (!paramgrab.success) {
     res.status(500)

@@ -3,12 +3,12 @@
   "version": "1.4.0",
   "private": true,
   "scripts": {
-    "start": "node --inspect ./bin/www",
+    "start": "node app.js",
     "test": "node ./node_modules/mocha/bin/mocha --config=test/.mocharc.yml --reporter-options reportDir=public,reportFilename=tests"
   },
   "pre-commit": "test",
   "dependencies": {
-    "@terraformer/wkt": "^2.1.2",
+    "@terraformer/wkt": "^2.2.0",
     "acorn": "^6.4.2",
     "apicache": "^1.6.2",
     "axios": "^0.21.1",
@@ -23,6 +23,7 @@
     "dotenv": "^8.6.0",
     "ejs": "^3.1.8",
     "express": "^4.18.1",
+    "express-rate-limit": "^7.0.0",
     "he": "^1.2.0",
     "jade": "^0.29.0",
     "js2xmlparser": "^4.0.1",

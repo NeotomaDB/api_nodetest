@@ -1,9 +1,6 @@
-// Sites query:
-// get global database object
-var db = require('../../../database/pgp_db');
-var pgp = db.$config.pgp;
 
 function frozenbyid (req, res, next) {
+  let db = req.app.locals.db
   var datasetid = String(req.params.datasetid)
 
   db.any('SELECT download FROM doi.frozen WHERE datasetid = $1', [datasetid])

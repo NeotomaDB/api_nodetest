@@ -1,9 +1,39 @@
 const path = require('path');
 var assert = require('assert');
-const { result } = require('../database/pgp_db');
-var db = require('../database/pgp_db');
-const { geojsonToWKT, wktToGeoJSON } = require("@terraformer/wkt");
-var pgp = db.$config.pgp;
+
+const promise = require('bluebird')
+
+const options = {
+  // Initialization Options
+  promiseLib: promise,
+  capSQL: true,
+  query (e) {
+    var date = new Date()
+    var messageout = { 'hasExecuted': e.client.hasExecuted }
+    // Exclude the big chunky query:
+    if (e.query.match(/CONCAT.*pronamespace = n.oid/)) {
+      messageout.query = 'List all functions'
+    } else if (e.query.match(/WHERE proname LIKE/)) {
+      messageout.query = 'Match function schema'
+    } else {
+      messageout.query = e.query
+      messageout.db = { client: e.client.user, database: e.client.database, host: e.client.host }
+    }
+    console.log(date.toISOString() + ' ' + JSON.stringify(messageout))
+  },
+  error (err, e) {
+    var date = new Date()
+    // Exclude the big chunky query:
+    console.log(JSON.stringify(err))
+    var messageout = { 'error': JSON.stringify(err), 'query': e.query }
+    messageout.db = { 'client': e.client.user, 'database': e.client.database, 'host': e.client.host }
+    console.log(date.toISOString() + ' ' + JSON.stringify(messageout))
+  }
+}
+
+const pgp = require('pg-promise')(options)
+
+const { geojsonToWKT, wktToGeoJSON } = require('@terraformer/wkt');
 
 // Goes through an object tree and clears out NULL elements (not sure this is the best).
 function removeEmpty (obj) {
@@ -38,7 +68,8 @@ function commaSep (x) {
 
 /* Takes integer values and passes them into a query to the database.
    This is used when we need to pre-process values for an API call. */
-function checkObject (res, query, value, outobj) {
+function checkObject (req, res, query, value, outobj) {
+  let db = req.app.locals.db
   if (value) {
     if (!value.every(Number.isInteger)) {
       value = db.any(query, outobj)

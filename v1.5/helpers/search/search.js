@@ -1,18 +1,6 @@
-// Sites query:
-const path = require('path');
-// get global database object
-var db = require('../../../database/pgp_db');
-var pgp = db.$config.pgp;
 
-// Helper for linking to external query files:
-function sql (file) {
-  const fullPath = path.join(__dirname, file);
-  return new pgp.QueryFile(fullPath, {
-    minify: true
-  });
-}
-
-const explorersearchQry = sql('./explorersearchQuery.sql');
+const { sql } = require('../../../src/neotomaapi.js');
+const explorersearchQry = sql('../v1.5/helpers/search/explorersearchQuery.sql');
 
 // see link for need of custom function
 // https://stackoverflow.com/questions/15762768/javascript-math-round-to-two-decimal-places#15762794
@@ -121,24 +109,22 @@ const rollupSites = function (data) {
 }
 
 function explorersearch (req, res, next) {
-  var data = [];
-  // Get the query string:
+  let db = req.app.locals.db
 
+  // Get the query string:
   // search input param is stringified JSON object, thus parse first
   try {
     var inputParamObj = JSON.parse(req.query.search);
   } catch (err) {
     res.status(500)
-        .type('application/json')
-        .json({
-          status: 'failure',
-          data: err.message,
-          query: req.query,
-          message: 'The Search enpoint expects structured JSON through the search parameter.'
-        })
+      .type('application/json')
+      .json({
+        status: 'failure',
+        data: err.message,
+        query: req.query,
+        message: 'The Search enpoint expects structured JSON through the search parameter.'
+      })
   }
-
-  console.log('req.query.search object: ' + inputParamObj);
 
   var qryParams = {
     '_taxonids': null,
@@ -182,7 +168,7 @@ function explorersearch (req, res, next) {
       .map(function (item) {
         return parseInt(item, 10);
       });
-    console.dir('qryParams._elementtypeids: ' + qryParams._elemtypeids);
+    // console.dir('qryParams._elementtypeids: ' + qryParams._elemtypeids);
   }
 
   /* time options
@@ -219,7 +205,7 @@ function explorersearch (req, res, next) {
   */
 
   if (inputParamObj.metadata) {
-    console.log('metadata are:' + JSON.stringify(inputParamObj.metadata));
+    // console.log('metadata are:' + JSON.stringify(inputParamObj.metadata));
     if (inputParamObj.metadata.siteName) {
       qryParams._sitename = String(inputParamObj.metadata.siteName);
     }
@@ -258,17 +244,17 @@ function explorersearch (req, res, next) {
       "gpId": "9283"
     },
   */
-  console.dir('have inputParamObj.space' + inputParamObj.space);
+  // console.dir('have inputParamObj.space' + inputParamObj.space);
 
   if (inputParamObj.space) {
-    console.log('parsing inputParamObj.space');
+    // console.log('parsing inputParamObj.space');
     // check for geopolitical unit
     if (inputParamObj.space.gpId) {
       qryParams._gpid = parseInt(inputParamObj.space.gpId, 10);
     }
     // check for wkt
-    console.log('inputParamObj.space.wkt ' + inputParamObj.space.wkt);
-    console.log('qryParams._coords before assignment: ' + qryParams._coords);
+    // console.log('inputParamObj.space.wkt ' + inputParamObj.space.wkt);
+    // console.log('qryParams._coords before assignment: ' + qryParams._coords);
     if (inputParamObj.space.wkt) {
       qryParams._coords = String(inputParamObj.space.wkt);
     } else if (inputParamObj.space.bbox) {
@@ -277,7 +263,7 @@ function explorersearch (req, res, next) {
       qryParams._coords = null;
     }
 
-    console.log('qryParams._coords after assignment: ' + qryParams._coords);
+    // console.log('qryParams._coords after assignment: ' + qryParams._coords);
 
     // check for maxAltitude
     inputParamObj.space.maxAltitude ? qryParams._altmax = parseInt(inputParamObj.space.maxAltitude, 10) : qryParams._altmax = null;
@@ -285,8 +271,8 @@ function explorersearch (req, res, next) {
     inputParamObj.space.minAltitude ? qryParams._altmin = parseInt(inputParamObj.space.minAltitude, 10) : qryParams._altmin = null;
   }
 
-  console.log('qryParams is: ' + JSON.stringify(qryParams, null, 2));
-  console.log('inputParamObj is: ' + JSON.stringify(inputParamObj, null, 2));
+  // console.log('qryParams is: ' + JSON.stringify(qryParams, null, 2));
+  // console.log('inputParamObj is: ' + JSON.stringify(inputParamObj, null, 2));
 
   db.any(explorersearchQry, qryParams)
     .then(function (data) {
@@ -304,7 +290,7 @@ function explorersearch (req, res, next) {
         })
     })
     .catch(function (err) {
-      console.log(err);
+      // console.log(err);
       res.status(500)
         .type('application/json')
         .json({
