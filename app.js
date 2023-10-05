@@ -157,4 +157,11 @@ app.all('*', function (req, res) {
   res.redirect('/api-docs');
 });
 
+// in production, port is 3001 and server started in script 'www'
+// The variable is stored in the gitignored `.env` file.
+// This is managed in the www folder.
+if (process.env.NODE_ENV === 'development') {
+  app.listen(3005)
+}
+
 module.exports = app;
