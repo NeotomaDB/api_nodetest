@@ -1,11 +1,5 @@
 // NOTE:  This is a script to deal with the ELC API dataset issue.
-// Sites query:
-const path = require('path');
-// get global database object
-var db = require('../../../database/pgp_db');
-var pgp = db.$config.pgp;
-
-const { sql, commaSep, validateOut, getparam, ifUndef } = require('../../../src/neotomaapi.js');
+const { sql, commaSep, getparam, ifUndef } = require('../../../src/neotomaapi.js');
 
 var Terraformer = require('terraformer');
 var WKT = require('terraformer-wkt-parser');
@@ -15,6 +9,7 @@ const datasetbyidsql = sql('../v2.0/helpers/dataset_elc/datasetbyid.sql');
 const datasetbysite = sql('../v2.0/helpers/dataset_elc/datasetbysite.sql');
 
 function datasetbyid (req, res, next) {
+  let db = req.app.locals.db
   var dsIdUsed = !!req.params.datasetid;
 
   if (dsIdUsed) {
@@ -49,6 +44,7 @@ function datasetbyid (req, res, next) {
 }
 
 function datasetbysiteid (req, res, next) {
+  let db = req.app.locals.db
   var stIdUsed = !!req.params.siteid;
 
   if (stIdUsed) {
@@ -83,6 +79,7 @@ function datasetbysiteid (req, res, next) {
 }
 
 function datasetquery (req, res, next) {
+  let db = req.app.locals.db
   // First get all the inputs and parse them:
   let paramgrab = getparam(req)
 

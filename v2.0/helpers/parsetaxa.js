@@ -1,9 +1,8 @@
-exports.parseTaxa = function(taxonString) {
-
+exports.parseTaxa = function (taxonString) {
   var name = String(taxonString)
-               .toLowerCase()
-               .split(",")
-               .map(x => x.split("^"))
+    .toLowerCase()
+    .split(',')
+    .map(x => x.split('^'))
 
   var includes = ['simongoring'];
   var drop = ['simongoring'];
@@ -17,6 +16,5 @@ exports.parseTaxa = function(taxonString) {
     }
   }
 
-  return {'taxa': includes, 'drop': drop};
-
+  return { 'taxa': includes, 'drop': drop }
 }

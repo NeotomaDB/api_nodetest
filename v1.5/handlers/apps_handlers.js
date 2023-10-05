@@ -1,9 +1,3 @@
-const bib = require('../helpers/bib_format');
-
-// get global database object
-var db = require('../../database/pgp_db');
-var pgp = db.$config.pgp;
-
 module.exports = {
   datasettypes: datasettypes,
   collectiontypes: collectiontypes,
@@ -22,7 +16,7 @@ module.exports = {
   depositionalenvironmentsbyid: depositionalenvironmentsbyid,
   relativeages: relativeages,
   search: function (req, res, next) {
-    console.log('calling search helper');
+    // console.log('calling search helper');
     var exsearch = require('../helpers/search/search.js');
     exsearch.explorersearch(req, res, next);
   }
@@ -32,7 +26,8 @@ module.exports = {
 
 /* All the Endpoint functions */
 function collectiontypes (req, res, next) {
-  db.query('select * from ap.getcollectiontypes()')
+  let db = req.app.locals.db
+  db.query('SELECT * FROM ap.getcollectiontypes()')
     .then(function (data) {
       res.status(200)
         .type('application/json')
@@ -54,9 +49,9 @@ function collectiontypes (req, res, next) {
 }
 
 function datasettypes (req, res, next) {
-  // Get the query string:
+  let db = req.app.locals.db
 
-  db.query('select * from ap.getdatasettypes();')
+  db.query('SELECT * FROM ap.getdatasettypes();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -76,124 +71,9 @@ function datasettypes (req, res, next) {
     });
 }
 
-/** ** deprecated seach handler ****
-
-function exsearch(req, res, next) {
-  console.log("hitting app/search handler");
-  var data = [];
-  // Get the query string:
-
-  //search input param is stringified JSON object, thus parse first
-  var inputParamObj = JSON.parse(req.query.search);
-  console.log("req.query.search object using JSON.stringify: "+ JSON.stringify(inputParamObj));
-
-  console.log("Object.entries: "+Object.entries(inputParamObj));
-
-    var qryParams = {
-    _taxonids: [],
-    _elemtypeids: [],
-    _taphtypeids: [],
-    _depenvids: [],
-    _abundpct: null,
-    _datasettypeid: null,
-    _keywordid: null,
-    _coords: null,
-    _gpid: null,
-    _altmin: null,
-    _altmax: null,
-    _coltypeid: null,
-    _dbid: null,
-    _sitename: null,
-    _contactid: null,
-    _ageold: null,
-    _ageyoung: null,
-    _agedocontain: null, //default true
-    _agedirectdate: null, //default false
-    _subdate: null
-  }
-
-if (inputParamObj.taxa){
-    qryParams._taxonids = inputParamObj.taxa.taxonIds;
-}
-
-if (inputParamObj.time){
-
-}
-
-if (inputParamObj.metadata){
-
-}
-
-if (inputParamObj.abundance){
-
-}
-
-if (inputParamObj.space){
-
-}
-
-//parse search parameters
-  Object.keys(inputParamObj).every(function(x) {
-    var modProp = "_"+x;
-    console.log("x: "+x);
-    console.log("modProp: "+ modProp);
-    if(qryParams.hasOwnProperty(modProp)){
-      qryParams[modProp] = inputParamObj[x];
-    }
-  });
-
-   Object.getOwnPropertyNames(inputParamObj).every(function(x) {
-    var modProp = "_"+x;
-    console.log("x: "+x);
-    console.log("modProp: "+ modProp);
-    //if(qryParams.hasOwnProperty(modProp)){
-    //  qryParams[modProp] = inputParamObj[x];
-    //}
-  });
-
-   console.log("inputParamObj is: "+JSON.stringify(qryParams, null, 2));
-
-   -//-db.query('select * from ap.explorersearch($1,  $2,  $3,  $4,  $5,  $6,  $7,  $8,  $9,  $10,  $11,  $12,  $13,  $14,  $15,  $16,  $17,  $18,  $19,  $20);', qryParams)
-    db.query('select * from ap.explorersearch('+
-      '_taxonids,'+
-      '_elemtypeids,'+
-      '_taphtypeids,'+
-      '_depenvids,'+
-      '_abundpct,'+
-      '_datasettypeid,'+
-      '_keywordid,'+
-      '_coords,'+
-      '_gpid,'+
-      '_altmin,'+
-      '_altmax,'+
-      '_coltypeid,'+
-      '_dbid,'+
-      '_sitename,'+
-      '_contactid,'+
-      '_ageold,'+
-      '_ageyoung,'+
-      '_agedocontain,'+ //default true
-      '_agedirectdate,'+ //default false
-      '_subdate)',
-      qryParams)
-        .then(function (data) {
-          res.status(200)
-            .type('application/json')
-            .jsonp({
-              success: 1,
-              status: 'success',
-              data: data,
-              message: 'Retrieved Explorer search results'
-            })
-        })
-        .catch(function (err) {
-          return next(err);
-        });
-}
-
-*** end deprecated search handler */
-
 function elementtypes (req, res, next) {
+  let db = req.app.locals.db
+
   var taxonid, taxagroupid;
   taxonid = req.query.taxonid;
   taxagroupid = req.query.taxagroupid;
@@ -208,8 +88,7 @@ function elementtypes (req, res, next) {
       })
   } else {
     if (!taxagroupid) {
-      console.log('calling ap.getelementtypesbytaxonid($1)');
-      db.query('select * from ap.getelementtypesbytaxonid($1)', [taxonid])
+      db.query('SELECT * FROM ap.getelementtypesbytaxonid($1)', [taxonid])
         .then(function (data) {
           res.status(200)
             .type('application/json')
@@ -224,8 +103,7 @@ function elementtypes (req, res, next) {
           return next(err);
         })
     } else {
-      console.log('calling ap.getelementtypes($1)')
-      db.query('select * from ap.getelementtypes($1)', [taxagroupid])
+      db.query('SELECT * FROM ap.getelementtypes($1)', [taxagroupid])
         .then(function (data) {
           res.status(200)
             .type('application/json')
@@ -244,6 +122,7 @@ function elementtypes (req, res, next) {
 }
 
 function taxaindatasets (req, res, next) {
+  let db = req.app.locals.db
   db.query('SELECT * FROM ap.taxaindatasetview;')
     .then(function (data) {
       // data are records of (taxonid, taxonname, taxagroupid, datasettypeid)
@@ -262,10 +141,9 @@ function taxaindatasets (req, res, next) {
 }
 
 function taxagrouptypes (req, res, next) {
-  // Get the query string:
-  var query = {};
+  let db = req.app.locals.db
 
-  db.query('select * from ap.gettaxagrouptypes();')
+  db.query('SELECT * FROM ap.gettaxagrouptypes();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -281,10 +159,8 @@ function taxagrouptypes (req, res, next) {
 }
 
 function keywords (req, res, next) {
-  // Get the query string:
-  var query = {};
-
-  db.query('select * from ap.getkeywords();')
+  let db = req.app.locals.db
+  db.query('SELECT * FROM ap.getkeywords();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -300,10 +176,9 @@ function keywords (req, res, next) {
 }
 
 function authorpis (req, res, next) {
-  // Get the query string:
-  var query = {};
+  let db = req.app.locals.db
 
-  db.query('select * from ap.getpeople();')
+  db.query('SELECT * FROM ap.getpeople();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -319,10 +194,9 @@ function authorpis (req, res, next) {
 }
 
 function authors (req, res, next) {
-  // Get the query string:
-  var query = {};
+  let db = req.app.locals.db
 
-  db.query('select * from ap.getauthors();')
+  db.query('SELECT * FROM ap.getauthors();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -340,6 +214,7 @@ function authors (req, res, next) {
 function taphonomysystems (req, res, next) {
   // Get the query string:
   var datasetTypeId = req.query.datasetTypeId;
+  let db = req.app.locals.db
 
   if (!datasetTypeId) {
     res.status(200)
@@ -350,7 +225,7 @@ function taphonomysystems (req, res, next) {
         message: 'No datasetTypeId provided.'
       })
   } else {
-    db.query('select * from ap.gettaphonomicsystems(' + datasetTypeId + ');')
+    db.query('SELECT * FROM ap.gettaphonomicsystems(' + datasetTypeId + ');')
       .then(function (data) {
         res.status(200)
           .jsonp({
@@ -367,10 +242,9 @@ function taphonomysystems (req, res, next) {
 }
 
 function depositionalenvironments (req, res, next) {
-  // Get the query string:
-  var query = {};
+  let db = req.app.locals.db
 
-  db.query('select * from ap.getdeptenvtypesroot();')
+  db.query('SELECT * FROM ap.getdeptenvtypesroot();')
     .then(function (data) {
       res.status(200)
         .jsonp({
@@ -386,9 +260,10 @@ function depositionalenvironments (req, res, next) {
 }
 
 function depositionalenvironmentsbyid (req, res, next) {
+  let db = req.app.locals.db
   // Get the query string:
   var depenvtid = req.params.id;
-  console.log('depenvtid is: ' + depenvtid);
+  // console.log('depenvtid is: ' + depenvtid);
 
   if (isNaN(depenvtid)) {
     res.status(200)
@@ -399,7 +274,7 @@ function depositionalenvironmentsbyid (req, res, next) {
         message: 'No depenvtid provided.'
       })
   } else {
-    db.query('select * from ap.getdeptenvtypes($1);', [depenvtid])
+    db.query('SELECT * FROM ap.getdeptenvtypes($1);', [depenvtid])
       .then(function (data) {
         res.status(200)
           .jsonp({
@@ -416,6 +291,7 @@ function depositionalenvironmentsbyid (req, res, next) {
 }
 
 function relativeages (req, res, next) {
+  let db = req.app.locals.db
   // Get the query string:
   var ageScaleID = req.query.agescaleid;
   if (!req.query.agescaleid || !parseInt(req.query.agescaleid)) {
