@@ -39,7 +39,7 @@ function dbheader () {
     'password': process.env.RDS_PASSWORD,
     'port': process.env.RDS_PORT,
     'ssl': false, // Note, change this for AWS.
-    'query_timeout': 3000
+    'query_timeout': 10000
   }
   return pgp(out)
 };
