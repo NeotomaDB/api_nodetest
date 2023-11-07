@@ -24,7 +24,6 @@ const options = {
     // Exclude the big chunky query:
     console.log(JSON.stringify(err))
     var messageout = { 'error': JSON.stringify(err), 'query': e.query }
-    //messageout.db = { 'client': e.client.user, 'database': e.client.database, 'host': e.client.host }
     console.log(date.toISOString() + ' ' + JSON.stringify(messageout))
   }
 };
@@ -38,8 +37,8 @@ function dbheader () {
     'database': process.env.RDS_DATABASE,
     'password': process.env.RDS_PASSWORD,
     'port': process.env.RDS_PORT,
-    'ssl': false, // Note, change this for AWS.
-    'query_timeout': 10000
+    'ssl': process.env.SSL_CERT, // Note, change this for AWS.
+    'query_timeout': process.env.TIMEOUT
   }
   return pgp(out)
 };
