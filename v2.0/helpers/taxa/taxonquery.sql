@@ -1,10 +1,12 @@
 SELECT DISTINCT txa.taxonid,
+       txa.taxoncode,
        txa.taxonname,
        txa.author AS author,
        ecg.ecolgroupid AS ecolgroup,
        txa.highertaxonid,
        CASE WHEN txa.extinct = false THEN 'extant'
             WHEN txa.extinct = true  THEN 'extinct'
+       txa.taxagroupid,
        END AS status,
        txa.publicationid AS publicationid,
        pub.citation AS publication
