@@ -24,7 +24,8 @@ const limiter = rateLimiter({
   windowMS: 10000, // 1 second
   message: "You can't make any more requests at the moment. Try again later",
   statusCode: 429,
-  skip: (req, res) => !!process.env.LOCALLIMIT
+  skip: (req, res) => !!process.env.LOCALLIMIT,
+  validate: { trustProxy: false }
 });
 
 app.engine('html', require('ejs').renderFile);
