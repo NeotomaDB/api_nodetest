@@ -6,8 +6,8 @@ SELECT DISTINCT txa.taxonid,
        txa.highertaxonid,
        CASE WHEN txa.extinct = false THEN 'extant'
             WHEN txa.extinct = true  THEN 'extinct'
-       txa.taxagroupid,
        END AS status,
+       txa.taxagroupid,
        txa.publicationid AS publicationid,
        pub.citation AS publication
 FROM
