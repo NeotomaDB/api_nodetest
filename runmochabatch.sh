@@ -17,7 +17,7 @@ HELP
 }
 
 run_mocha() {
-    mocha --config=test/.mocharc.yml --reporter-options reportDir=public,reportFilename=tests
+    find ./test -name '*.js' | shuf | xargs mocha --config=test/.mocharc.yml --reporter-options reportDir=public,reportFilename=tests
 }
 
  OPTIND=1
@@ -26,7 +26,7 @@ run_mocha() {
  
 test=0
 
- while getopts "hdp" opt; do
+ while getopts "hdpa" opt; do
      case $opt in
          h)
              show_help
@@ -38,14 +38,15 @@ test=0
          p)
              export APIPATH='https://api.neotomadb.org/'
              ;;
+         a)  
+             export APIPATH='http://neotomaapi-env.eba-wd29jtvf.us-east-2.elasticbeanstalk.com/'
+             ;;
          *)
-             export APIPATH='http://localhost:3005/'
+             export APIPATH='http://localhost:3001/'
              ;;
      esac
  done
 
 run_mocha
 
- shift "$((OPTIND-1))"   # Discard the options and sentinel --
- 
-
+shift "$((OPTIND-1))"   # Discard the options and sentinel --

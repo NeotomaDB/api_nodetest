@@ -1,2 +1,3 @@
-{"extends": ["strongloop", "eslint-config-google"]
+{"extends": ["strongloop", "eslint-config-google"],
+"env":{"node":true, "mocha":true, "es6":true}
 }
