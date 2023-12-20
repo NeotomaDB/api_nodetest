@@ -25,7 +25,7 @@ run_oatt() {
 
     rm ./test/v*.js
     oatts generate --host $remote -s ./swagger.yaml -w test
-    eslint --fix ./test
+    eslint --quiet --fix ./test > genoatt.log
 
     # oatts is a bit silly in picking its variables.  We need to make sure that we're
     # getting the proper polygons, and making sure altmin/altmax are appropriate.
@@ -48,9 +48,9 @@ run_oatt() {
  # It is a good idea to make OPTIND local if you process options in a function.
  
 test=0
-remote=localhost:3005
+remote=localhost:3001
 
- while getopts "htdp" opt; do
+ while getopts "htdpa" opt; do
      case $opt in
          h)
              show_help
@@ -64,6 +64,9 @@ remote=localhost:3005
              ;;
          p)
              remote=api.neotomadb.org
+             ;;
+         a)
+             remote=neotomaapi-env.eba-wd29jtvf.us-east-2.elasticbeanstalk.com
              ;;
          *)
              echo You didn\'t use the correct flag.

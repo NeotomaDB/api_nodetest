@@ -10,3 +10,4 @@ full-trace: true
 ui: 'bdd'
 reporter: 'mochawesome'
 retries: 3
+jobs: 2
