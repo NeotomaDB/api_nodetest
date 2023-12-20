@@ -38,7 +38,8 @@ function dbheader () {
     'password': process.env.RDS_PASSWORD,
     'port': process.env.RDS_PORT,
     'ssl': process.env.SSL_CERT, // Note, change this for AWS.
-    'query_timeout': process.env.TIMEOUT
+    'query_timeout': process.env.TIMEOUT,
+    'application_name': 'Neotoma API Server'
   }
   return pgp(out)
 };
