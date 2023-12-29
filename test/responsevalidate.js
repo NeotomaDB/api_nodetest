@@ -10,12 +10,12 @@ const YAML = require('yamljs');
 const dotenv = require('dotenv');
 dotenv.config();
 
-if (typeof process.env.APIPATH === 'undefined') {
-  var testroute = 'http://localhost:' + process.env.APIPORT + '/'
-} else {
-  testroute = process.env.APIPATH
-}
+let testroute = process.env.APIPATH;
 
+if (typeof process.env.APIPATH === 'undefined') {
+  testroute = 'http://localhost:' + process.env.APIPORT + '/';
+}
+console.log(testroute)
 var api = supertest(testroute);
 
 const fullPath = path.join(process.cwd(), 'swagger.yaml');
@@ -35,7 +35,7 @@ function runTest (description, apipath) {
   describe(description, () => {
     it('should satisfy OpenAPI spec', async () => {
       // Get an HTTP response from your server (e.g. using axios)
-      const res = await axios.get('http://localhost:3005' + apipath)
+      const res = await axios.get(testroute)
       expect(res.status).to.equal(200);
       expect(res).to.satisfyApiSpec;
     });
