@@ -1,35 +1,43 @@
 // Occurrences query:
+'use strict';
+
 const Terraformer = require('terraformer');
-const he = require('he')
+const he = require('he');
 const WKT = require('terraformer-wkt-parser');
-const parseTaxa = require('../parsetaxa.js').parseTaxa
+const parseTaxa = require('../parsetaxa.js').parseTaxa;
 
 // get global database object
 
-const { sql, ifUndef, validateOut, getparam } = require('../../../src/neotomaapi.js');
+const {sql, ifUndef, validateOut, getparam} = require('../../../src/neotomaapi.js');
 
 const occurrencequerysql = sql('../v2.0/helpers/occurrence/occurrencequery.sql');
 const occurrencerecursquerysql = sql('../v2.0/helpers/occurrence/occurrence_recurs_query.sql');
 const occurrencetaxonquerysql = sql('../v2.0/helpers/occurrence/occurrencebytaxon.sql');
 
-function occurrencequery (req, res, next) {
-  let db = req.app.locals.db
+/**
+ * Query Neotoma for Occurrence Data
+ * @param {req} req An expressjs `request` object.
+ * @param {res} res A valid expressjs `res` object.
+ * @param {any} next
+ */
+function occurrencequery(req, res, next) {
+  const db = req.app.locals.db;
   // The broader query:
 
-  let paramgrab = getparam(req)
+  const paramgrab = getparam(req);
 
   if (!paramgrab.success) {
     res.status(500)
-      .json({
-        status: 'failure',
-        data: null,
-        message: paramgrab.message
-      });
+        .json({
+          status: 'failure',
+          data: null,
+          message: paramgrab.message,
+        });
   } else {
-    var resultset = paramgrab.data
+    const resultset = paramgrab.data;
 
     // Get the input parameters:
-    var outobj = {
+    let outobj = {
       'occurrenceid': ifUndef(resultset.occurrenceid, 'sep'),
       'sitename': String(resultset.sitename),
       'altmin': parseInt(String(resultset.altmin)),
@@ -46,42 +54,42 @@ function occurrencequery (req, res, next) {
       'ageold': parseInt(String(resultset.ageold)),
       'ageyoung': parseInt(String(resultset.ageyoung)),
       'offset': resultset.offset,
-      'limit': resultset.limit
+      'limit': resultset.limit,
     };
 
     outobj = validateOut(outobj);
 
     if (!(typeof outobj.taxonname === 'undefined') & !outobj.taxonname === null) {
       // Adding in or replacing any stars in the name to allow wildcards.
-      outobj.taxonname = outobj.taxonname.map(function (x) {
-        var gbg = x.replace(/\*/g, '%');
-        return gbg
+      outobj.taxonname = outobj.taxonname.map(function(x) {
+        const gbg = x.replace(/\*/g, '%');
+        return gbg;
       });
     }
 
     if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
       res.status(500)
-        .json({
-          status: 'failure',
-          message: 'The altmin is greater than altmax.  Please fix this!'
-        });
+          .json({
+            status: 'failure',
+            message: 'The altmin is greater than altmax.  Please fix this!',
+          });
       return;
     }
 
     if (outobj.ageyoung > outobj.ageold & !!outobj.ageyoung & !!outobj.ageold) {
       res.status(500)
-        .json({
-          status: 'failure',
-          message: 'ageyoung is greater than ageold.  Please fix this!'
-        });
+          .json({
+            status: 'failure',
+            message: 'ageyoung is greater than ageold.  Please fix this!',
+          });
       return;
     }
 
-    var goodloc = !!outobj.loc
+    const goodloc = !!outobj.loc;
 
     if (goodloc) {
       try {
-        var newloc = JSON.parse(outobj.loc)
+        var newloc = JSON.parse(outobj.loc);
         newloc = WKT.convert(JSON.parse(outobj.loc));
       } catch (err) {
         newloc = outobj.loc;
@@ -89,80 +97,80 @@ function occurrencequery (req, res, next) {
       outobj.loc = newloc;
     }
 
-    var goodlower = !!outobj.lower;
-    var goodtaxa = !!outobj.taxonname || !!outobj.taxonid;
+    const goodlower = !!outobj.lower;
+    const goodtaxa = !!outobj.taxonname || !!outobj.taxonid;
 
     if (goodtaxa & goodlower & outobj.lower === 'true') {
       db.any(occurrencerecursquerysql, outobj)
-        .then(function (data) {
-          res.status(200)
-            .json({
-              status: 'success',
-              data: data,
-              message: 'Retrieved all tables'
-            });
-        })
-        .catch(function (err) {
-          res.status(500)
-            .json({
-              status: 'failure',
-              data: err.message,
-              message: 'Must pass either queries or a comma separated integer sequence.'
-            });
-        });
+          .then(function(data) {
+            res.status(200)
+                .json({
+                  status: 'success',
+                  data: data,
+                  message: 'Retrieved all tables',
+                });
+          })
+          .catch(function(err) {
+            res.status(500)
+                .json({
+                  status: 'failure',
+                  data: err.message,
+                  params: outobj,
+                });
+          });
     } else {
       db.any(occurrencequerysql, outobj)
-        .then(function (data) {
-          res.status(200)
-            .json({
-              status: 'success',
-              data: data,
-              message: 'Retrieved all tables'
-            });
-        })
-        .catch(function (err) {
-          res.status(500)
-            .json({
-              status: 'failure',
-              data: err.message,
-              message: 'Must pass either queries or a comma separated integer sequence.'
-            });
-        });
+          .then(function(data) {
+            res.status(200)
+                .json({
+                  status: 'success',
+                  data: data,
+                  message: 'Retrieved all tables',
+                });
+          })
+          .catch(function(err) {
+            res.status(500)
+                .json({
+                  status: 'failure',
+                  data: err.message,
+                  params: outobj,
+                });
+          });
     }
   }
 };
 
-function occurrencebytaxon (req, res, next) {
-  let db = req.app.locals.db
-  var taxonIdUsed = !!req.params.taxonid;
+function occurrencebytaxon(req, res, next) {
+  const db = req.app.locals.db;
+  const taxonIdUsed = !!req.params.taxonid;
   if (taxonIdUsed) {
     var taxonlist = ifUndef(req.params.taxonid, 'sep');
   } else {
     res.status(500)
-      .json({
-        status: 'failure',
-        data: null,
-        message: 'Must pass either queries or an integer sequence.'
-      });
+        .json({
+          status: 'failure',
+          data: null,
+          message: 'Must pass either queries or an integer sequence.',
+        });
   }
 
   db.any(occurrencetaxonquerysql, [taxonlist])
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved all tables'
-        });
-    })
-    .catch(function (err) {
-      res.status(500)
-        .json({
-          status: 'failure',
-          data: err.message,
-          message: 'Must pass either queries or a comma separated integer sequence.'
-        });
-    });
+      .then(function(data) {
+        res.status(200)
+            .json({
+              status: 'success',
+              data: data,
+              message: 'Retrieved all tables',
+            });
+      })
+      .catch(function(err) {
+        res.status(500)
+            .json({
+              status: 'failure',
+              data: err.message,
+              message: 'Must pass either queries or a comma separated integer sequence.',
+            });
+      });
 };
 
 module.exports.occurrencequery = occurrencequery;

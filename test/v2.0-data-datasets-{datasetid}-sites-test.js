@@ -7,7 +7,7 @@ const expect = chakram.expect;
 describe('tests for /v2.0/data/datasets/{datasetid}/sites', function() {
   describe('tests for get', function() {
     it('should respond 200 for "Site"', function() {
-      const response = request('get', 'http://neotomaapi-env.eba-wd29jtvf.us-east-2.elasticbeanstalk.com/v2.0/data/datasets/500/sites', {
+      const response = request('get', 'http://neotomaapi-env.eba-wd29jtvf.us-east-2.elasticbeanstalk.com/v2.0/data/datasets/600/sites', {
         'time': true,
       });
 
