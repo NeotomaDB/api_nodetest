@@ -96,8 +96,6 @@ function taxonquery (req, res, next) {
           }
         }
 
-        console.log(outobj)
-
         db.any(taxonsql, outobj)
           .then(function (data) {
             if (outobj.lower) {

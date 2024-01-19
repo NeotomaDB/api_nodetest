@@ -77,7 +77,6 @@ function downloadbyid (req, res, next) {
               returner['site']['collectionunit']['chronologies'] = x.data.chronologies;
               var defaultchron = getdefault(returner['site']['collectionunit']['chronologies'])
               returner['site']['collectionunit']['defaultchronology'] = defaultchron
-              console.log(returner.site.collectionunit)
               returner['site']['collectionunit']['dataset']['samples'] = x.data.data.samples
             }
             return returner;
