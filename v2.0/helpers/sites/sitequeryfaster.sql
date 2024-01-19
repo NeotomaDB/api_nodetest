@@ -4,7 +4,7 @@ WITH collunit AS (
   FROM
      ap.querytable AS bigq
      LEFT JOIN ndb.datasetdoi AS dsdoi ON dsdoi.datasetid = bigq.datasetid
-     INNER JOIN ndb.constituentdatabases AS cdb ON cdb.databaseid = bigq.databaseid
+     LEFT OUTER JOIN ndb.constituentdatabases AS cdb ON cdb.databaseid = bigq.databaseid
   WHERE
     (${sitename} IS NULL OR bigq.sitename ILIKE ANY(${sitename}))
     AND (${ageof} IS NULL OR        ${ageof} BETWEEN bigq.younger AND bigq.older)
