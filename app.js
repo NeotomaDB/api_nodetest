@@ -89,6 +89,8 @@ const v2data = require('./v2.0/routes/data');
 const v2apps = require('./v2.0/routes/apps');
 const v2dbtables = require('./v2.0/routes/dbtables');
 
+const healthwatch = require('./v2.0/routes/healthwatch');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -132,6 +134,9 @@ app.get('/v1/*', (req, res) => {
 app.get('/tests/*', (req, res) => {
   express.static(path.join(`${__dirname}/mochawesome-report/mochawesome.html`));
 });
+
+// For AWS Healthchecks:
+app.use('/healthcheck/', healthwatch);
 
 // use the v1.5 endpoints:
 app.use('/', v15index);
