@@ -365,6 +365,17 @@ components:
         format: int32
         minimum: 0
         type: integer
+    pollenidPath:
+      description: |
+        Unique pollen taxon identifier (from the Neotoma taxa table).
+      in: path
+      name: id
+      required: true
+      schema:
+        format: int32
+        maximum: 50000
+        minimum: 1
+        type: integer
     publicationidPath:
       description: |
         Unique publication identifier (from the Neotoma publication table).
@@ -501,6 +512,14 @@ components:
       schema:
         example: Algae
         type: string
+    taxastatusQuery:
+      description: The taxonomic status of the taxon, either extinct (0) or extant (1).
+      in: query
+      name: status
+      required: false
+      schema:
+        example: 1
+        type: integer
     taxonidPath:
       description: |
         Unique taxonomic identifier (from the Neotoma taxon table).
@@ -1083,6 +1102,8 @@ components:
                           $ref: '#/components/schemas/datasetnotes'
                         datasetpi:
                           type: array
+                          items:
+                            type: object
                         datasettype:
                           $ref: '#/components/schemas/datasettype'
                         doi:
@@ -1124,6 +1145,8 @@ components:
       properties:
         data:
           type: array
+          items:
+            type: object
         message:
           $ref: '#/components/schemas/message'
         status:
@@ -1134,6 +1157,8 @@ components:
       properties:
         data:
           type: array
+          items:
+            type: object
         message:
           $ref: '#/components/schemas/message'
         status:
@@ -1618,6 +1643,8 @@ components:
           properties:
             data:
               type: array
+              items:
+                type: object
             query:
               type: object
           type: object
@@ -1632,6 +1659,8 @@ components:
           properties:
             data:
               type: array
+              items:
+                type: object
             query:
               type: object
           type: object
@@ -1646,6 +1675,8 @@ components:
           properties:
             data:
               type: array
+              items:
+                type: object
             query:
               type: object
           type: object
@@ -2597,6 +2628,8 @@ paths:
         - v2.0
   /v2.0/data/pollen/{id}:
     get:
+      parameters:
+        - $ref: '#/components/parameters/pollenidPath'
       responses:
         '200':
           content:
@@ -2939,27 +2972,27 @@ servers:
 tags:
   - description: Endpoints that access tables from Neotoma verbatim.
     externalDocs:
-      url: http://open.neotomadb.org/schemas/#Structure
+      url: https://open.neotomadb.org/dbschema/ndb/index.html
     name: Database tables
   - description: Information about chronological controls and the models used to add the temporal component to records.
     externalDocs:
-      url: https://neotoma-manual.readthedocs.io/en/latest/tables_chron.html
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#chronology-age-related-tables
     name: Chronology metadata
   - description: Information about Neotoma data contributors, authors and data analysts.
     externalDocs:
-      url: https://neotoma-manual.readthedocs.io/en/latest/tables_contacts.html
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#individual-related-tables
     name: Contact metadata
   - description: Information about site location and metadata specific to the individual dataset.
     externalDocs:
-      url: https://neotoma-manual.readthedocs.io/en/latest/tables_dataset.html
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#dataset-collection-related-tables
     name: Dataset metadata
   - description: Full dataset download, including all sample data for a particular dataset.
     externalDocs:
-      url: https://neotoma-manual.readthedocs.io/en/latest/tables_samples.html
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#sample-related-tables
     name: Data download
   - description: Information about the geopolitical units in which a site is located.
     externalDocs:
-      url: https://neotoma-manual.readthedocs.io/en/latest/tables_site.html#geopoliticalunits
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#site-related-tables
     name: Geopolitical metadata
   - description: A simplified data return, similar to the data download, but specific to a particular taxon, time or location.
     name: Occurrence metadata
@@ -2967,15 +3000,15 @@ tags:
     name: Pollen proportions
   - description: Formatted publication data related to Neotoma records.
     externalDocs:
-      url: https://neotoma-manual.readthedocs.io/en/latest/tables_publications.html
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#publication-related-tables
     name: Publication metadata
   - description: All metadata associated with a particular site with fossil records.
     externalDocs:
-      url: https://neotoma-manual.readthedocs.io/en/latest/tables_site.html
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#site-related-tables
     name: Site metadata
   - description: All available information about a particular taxon.
     externalDocs:
-      url: https://neotoma-manual.readthedocs.io/en/latest/tables_taxa.html
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#taxonomy-related-tables
     name: Taxonomic metadata
   - description: Summary statistics for the database as a whole.
     name: Summary Info
