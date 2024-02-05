@@ -1,7 +1,7 @@
 /*
 
-dbtables.js
-By: Michael Stryker
+healthwatch.js
+By: Simon Goring
 Last Updated: September 14, 2017
 
  */

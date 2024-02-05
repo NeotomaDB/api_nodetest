@@ -1,46 +1,54 @@
 // Taxa query:
-
-const { sql, ifUndef, getparam, checkObject } = require('../../../src/neotomaapi.js');
+'use strict';
+const {sql, ifUndef} = require('../../../src/neotomaapi.js');
+const {getparam, checkObject} = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
 const taxonsqlr = sql('../v2.0/helpers/taxa/taxonquery_recurs.sql');
 const taxonsql = sql('../v2.0/helpers/taxa/taxonquery.sql');
 const taxonbyds = sql('../v2.0/helpers/taxa/taxonquerydsid.sql');
 
-// Actual functions:
-function taxonbydsid (req, res, next) {
-  let db = req.app.locals.db
+/**
+ * Actual functions:
+ * @param {object} req An object passed through Express
+ * @param {object} res A resolve object passed through Express
+ * @param {object} next A next object passed through Express */
+function taxonbydsid(req, res, next) {
+  const db = req.app.locals.db;
+  let datasetid = null;
 
-  var goodds = !!req.params.datasetid;
+  const goodds = !!req.params.datasetid;
   if (goodds) {
-    var datasetid = String(req.params.datasetid).split(',').map(function (item) {
-      return parseInt(item, 10);
-    });
+    datasetid = String(req.params.datasetid)
+        .split(',')
+        .map(function(item) {
+          return parseInt(item, 10);
+        });
   } else {
     res.status(500)
-      .json({
-        status: 'failure',
-        data: null,
-        message: 'Must pass either queries or an integer sequence.'
-      });
+        .json({
+          status: 'failure',
+          data: null,
+          message: 'Must pass either queries or an integer sequence.'
+        });
   }
 
   db.any(taxonbyds, [datasetid])
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved all tables'
-        });
-    })
-    .catch(function (err) {
-      res.status(500)
-        .json({
-          status: 'failure',
-          data: err.message
-        });
-    });
+      .then(function(data) {
+        res.status(200)
+            .json({
+              status: 'success',
+              data: data,
+              message: 'Retrieved all tables',
+            });
+      })
+      .catch(function(err) {
+        res.status(500)
+            .json({
+              status: 'failure',
+              data: err.message,
+            });
+      });
 }
 
 function taxonquery (req, res, next) {
@@ -61,7 +69,7 @@ function taxonquery (req, res, next) {
     var outobj = {
       'taxonid': ifUndef(resultset.taxonid, 'sep'),
       'taxonname': ifUndef(resultset.taxonname, 'sep'),
-      'status': req.query.status === 1,
+      'status': ifUndef(resultset.status, 'int'),
       'taxagroup': ifUndef(resultset.taxagroup, 'sep'),
       'ecolgroup': ifUndef(resultset.ecolgroup, 'sep'),
       'lower': ifUndef(resultset.lower, 'string'),
