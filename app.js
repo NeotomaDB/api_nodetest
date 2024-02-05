@@ -8,7 +8,7 @@ const express = require('express');
 const morgan = require('morgan');
 const rfs = require('rotating-file-stream'); // version 2.x
 const path = require('path');
-const helmet = require('helmet');
+// const helmet = require('helmet');
 const YAML = require('yamljs');
 const swaggerUi = require('swagger-ui-express');
 const dbtest = require('./database/pgp_db').dbheader;
@@ -33,7 +33,7 @@ const limiter = rateLimiter({
 
 app.engine('html', require('ejs').renderFile);
 
-app.use(helmet());
+// app.use(helmet());
 app.use(cors());
 app.use(limiter);
 app.use(express.json());
