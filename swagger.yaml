@@ -74,6 +74,18 @@ components:
       schema:
         example: Grimm, Eric Christopher
         type: string
+    countQuery:
+      description: Should we return the row count for the table?
+      in: query
+      name: count
+      required: false
+      schema:
+        enum:
+          - True
+          - False
+        default: False
+        example: True
+        type: string
     contactStatusQuery:
       description: Current employment status
       in: query
@@ -2423,6 +2435,7 @@ paths:
         Returns the named Neotoma Database table.  An empty query will return a list of tables.
       parameters:
         - $ref: '#/components/parameters/tableQuery'
+        - $ref: '#/components/parameters/countQuery'
         - $ref: '#/components/parameters/limitParam'
         - $ref: '#/components/parameters/offsetParam'
       responses:
@@ -2968,7 +2981,7 @@ servers:
   - description: Neotoma development server.
     url: https://api-dev.neotomadb.org/
   - description: Local Neotoma server.
-    url: http://localhost:3005/
+    url: http://localhost:3001/
 tags:
   - description: Endpoints that access tables from Neotoma verbatim.
     externalDocs:
