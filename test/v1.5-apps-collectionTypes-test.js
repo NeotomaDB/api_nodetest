@@ -7,7 +7,7 @@ const expect = chakram.expect;
 describe('tests for /v1.5/apps/collectionTypes', function() {
   describe('tests for get', function() {
     it('should respond 200 for "Returns the set of collectiontypes recorded in Neotoma."', function() {
-      const response = request('get', 'http://neotomaapi-env.eba-wd29jtvf.us-east-2.elasticbeanstalk.com/v1.5/apps/collectionTypes', {
+      const response = request('get', 'http://localhost:3001/v1.5/apps/collectionTypes', {
         'time': true,
       });
 
