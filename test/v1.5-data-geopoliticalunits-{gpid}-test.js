@@ -7,7 +7,7 @@ const expect = chakram.expect;
 describe('tests for /v1.5/data/geopoliticalunits/{gpid}', function() {
   describe('tests for get', function() {
     it('should respond 200 for "An array of geopolitical units."', function() {
-      const response = request('get', 'http://neotomaapi-env.eba-wd29jtvf.us-east-2.elasticbeanstalk.com/v1.5/data/geopoliticalunits/1723', {
+      const response = request('get', 'http://localhost:3001/v1.5/data/geopoliticalunits/500', {
         'time': true,
       });
 

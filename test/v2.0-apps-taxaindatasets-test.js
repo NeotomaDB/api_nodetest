@@ -7,7 +7,7 @@ const expect = chakram.expect;
 describe('tests for /v2.0/apps/taxaindatasets', function() {
   describe('tests for get', function() {
     it('should respond 200 for "A list of all taxa in neotoma and the datasets in which they are found."', function() {
-      const response = request('get', 'http://neotomaapi-env.eba-wd29jtvf.us-east-2.elasticbeanstalk.com/v2.0/apps/taxaindatasets', {
+      const response = request('get', 'http://localhost:3001/v2.0/apps/taxaindatasets', {
         'time': true,
       });
 
