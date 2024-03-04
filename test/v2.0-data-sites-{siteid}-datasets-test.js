@@ -7,7 +7,7 @@ const expect = chakram.expect;
 describe('tests for /v2.0/data/sites/{siteid}/datasets', function() {
   describe('tests for get', function() {
     it('should respond 200 for "An array of datasets."', function() {
-      const response = request('get', 'http://neotomaapi-env.eba-wd29jtvf.us-east-2.elasticbeanstalk.com/v2.0/data/sites/500/datasets', {
+      const response = request('get', 'http://localhost:3001/v2.0/data/sites/8926/datasets', {
         'time': true,
       });
 
