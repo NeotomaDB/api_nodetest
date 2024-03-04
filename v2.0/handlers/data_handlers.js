@@ -187,6 +187,10 @@ module.exports = {
     const shortCall = require('../helpers/vueapp/shortcalls.js');
     shortCall.shortCall(req, res, next);
   },
+  hydroLakes: function(req, res, next) {
+    const hydroLake = require('../helpers/lakes/hydrolakes.js');
+    hydroLake.lakesbylocation(req, res, next);
+  },
 
   // SUMMARIES
   dstypemonth: function(req, res, next) {
