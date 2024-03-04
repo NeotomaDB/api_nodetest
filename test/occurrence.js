@@ -12,7 +12,7 @@ let testroute = process.env.APIPATH;
 if (typeof process.env.APIPATH === 'undefined') {
   testroute = 'http://localhost:' + process.env.APIPORT + '/';
 }
-console.log(testroute)
+console.log(testroute);
 const api = supertest(testroute);
 
 // *************************************************

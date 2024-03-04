@@ -7,7 +7,7 @@ const expect = chakram.expect;
 describe('tests for /v1.5/dbtables/{table}', function() {
   describe('tests for get', function() {
     it('should respond 200 for "Returned table."', function() {
-      const response = request('get', 'http://neotomaapi-env.eba-wd29jtvf.us-east-2.elasticbeanstalk.com/v1.5/dbtables/geochrontypes', {
+      const response = request('get', 'http://localhost:3001/v1.5/dbtables/geochrontypes', {
         'time': true,
       });
 

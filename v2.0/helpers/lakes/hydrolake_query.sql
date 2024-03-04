@@ -6,7 +6,8 @@ SELECT hl.objectid AS hydrolakeid,
     hl.vol_total AS volume,
     hl.depth_avg AS avgdepth,
     hl.wshd_area AS watershedarea,
-    ST_ASTEXT(hl.shape) AS wkt_shape
+    ST_ASTEXT(hl.shape) AS wkt_shape,
+    ST_DISTANCE((SELECT geog FROM ndb.sites WHERE siteid = ${siteid}), hl.shape::geography) AS distance
 FROM ap.hydrolakes AS hl
 WHERE
 ST_DWITHIN((SELECT geog FROM ndb.sites WHERE siteid = ${siteid}), hl.shape::geography, ${buffer});
