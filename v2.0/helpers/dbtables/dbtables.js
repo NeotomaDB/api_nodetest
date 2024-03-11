@@ -35,8 +35,10 @@ function dbtables(req, res, next) {
     query = 'SELECT * FROM ${table:raw} ' +
             'OFFSET (CASE WHEN ${offset} IS NULL THEN 0 ELSE ${offset} END) ' +
             'LIMIT (CASE WHEN ${limit} IS NULL THEN 25 ELSE ${limit} END)';
-    if (outobj.count.toLowerCase() === 'true') {
-      query = 'SELECT COUNT(*) FROM ${table:raw};';
+    if (outobj.count) {
+      if (outobj.count.toLowerCase() === 'true') {
+        query = 'SELECT COUNT(*) FROM ${table:raw};';
+      }
     }
   } else {
     query = "SELECT tablename FROM pg_tables WHERE schemaname='ndb';";
