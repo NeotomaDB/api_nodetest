@@ -2455,6 +2455,7 @@ paths:
         Returns the named Neotoma Database table.  An empty query will return a list of tables. Uses a default limit of 25 and offset of 0.
       parameters:
         - $ref: '#/components/parameters/tablePath'
+        - $ref: '#/components/parameters/countQuery'
         - $ref: '#/components/parameters/limitParam'
         - $ref: '#/components/parameters/offsetParam'
       responses:
