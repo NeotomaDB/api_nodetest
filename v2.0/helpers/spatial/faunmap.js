@@ -33,7 +33,8 @@ function faunmapoverlay(req, res, next) {
     const resultSet = paramGrab.data;
     // Get the input parameters:
     let outobj = {
-      'sciname': ifUndef(resultSet.sciname, 'int'),
+      'sciname': ifUndef(resultSet.sciname, 'string'),
+      'prec': ifUndef(resultSet.prec, 'int') || 1000,
     };
     db.any(faunmapQuery, outobj)
         .then(function(data) {
