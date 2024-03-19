@@ -12,6 +12,24 @@ components:
         maximum: 23900000
         minimum: -100
         type: integer
+    scinameQuery:
+      description: The scientific name for a mammal taxon. May be the complete name or use the `%` wildcard for the name.
+      in: query
+      name: sciname
+      required: true
+      schema:
+        example: canis%
+        type: string
+    precQuery:
+      description: Precision of points within a rendered polygon (in meters). Many spatial objects are generated statistically and may have overly precise point coordinates. Often precisions to 100m is sufficient for rendering to map.
+      in: query
+      name: prec
+      required: false
+      schema:
+        example: 100
+        type: integer
+        default: 1000
+        format: int32
     ageOldQuery:
       description: Oldest age that intercepts with the dataset (in calibrated years before present, with 0 at 1950CE)
       in: query
@@ -560,6 +578,28 @@ components:
       schema:
         type: string
   schemas:
+    faunalPoly:
+      properties:
+        data:
+          type: array
+          items:
+            properties:
+              gid:
+                type: array
+                items:
+                  type: integer
+                  format: int32
+              spid:
+                type: array
+                items:
+                  type: integer
+                  format: int32
+              sciname:
+                type: array
+                items:
+                  type: string
+              geom:
+                type: string
     address:
       example: 550 N Park St, Madison WI, USA
       type: string
@@ -1831,7 +1871,11 @@ info:
     email: goring@wisc.edu
     name: Simon J Goring
     url: http://goring.org
-  description: API Documentation for the Neotoma Paleoecological Database
+  description: >-
+    The [Neotoma Paleoecology Database](https://www.neotomadb.org) is a global database of fossils from the last 5.2 million years. All fossil records in Neotoma are reported with metadata that places the sample in space and in time, and provides additional information about taxonomy, publication history, and the models that are used to estimate the sample age.
+
+
+    The API is structured to provide users with reliable JSON responses from the live Neotoma Database 
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
@@ -2035,6 +2079,22 @@ paths:
       tags:
         - Database tables
         - v1.5
+  /v2.0/data/faunal:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/scinameQuery'
+        - $ref: '#/components/parameters/precQuery'
+      responses:
+        '200':
+          description: An object containing all matched species names, identifiers and a GeoJSON polygon representing the UNIONed ranges for the selected species.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/faunalPoly'
+      tags:
+        - External data
+        - v2.0
+        - Mammals
   /v2.0/apps/authorpis:
     get:
       responses:
