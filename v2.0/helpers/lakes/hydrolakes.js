@@ -34,11 +34,11 @@ function lakesbylocation (req, res, next) {
     // Get the input parameters:
     let outobj = {
       'siteid': ifUndef(resultSet.siteid, 'int'),
-      'buffer': ifUndef(resultSet.buffer, 'int'),
+      'buffer': ifUndef(resultSet.buffer, 'int') || 10000,
+      'prec': ifUndef(resultSet.prec, 'float') || 0.0001,
+      'proj': ifUndef(resultSet.proj, 'int') || 4326,
     };
-    if (!outobj['buffer']) {
-      outobj['buffer'] = 10000;
-    }
+    console.log(outobj)
     db.any(hydrolakeQuery, outobj)
         .then(function(data) {
           res.status(200)
