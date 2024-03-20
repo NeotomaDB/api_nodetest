@@ -208,5 +208,5 @@ module.exports = {
   sparklines: function(req, res, next) {
     const summaries = require('../helpers/summary/summary.js');
     summaries.sparklines(req, res, next);
-  }
+  },
 };
