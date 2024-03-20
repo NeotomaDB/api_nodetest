@@ -13,7 +13,7 @@ const options = {
     let messageout = {'hasExecuted': e.client.hasExecuted};
     // Exclude the big chunky query:
     if (e.query.match(/CONCAT.*pronamespace = n.oid/)) {
-      messageout.query = 'List all functions'
+      messageout.query = 'List all functions';
     } else if (e.query.match(/WHERE proname LIKE/)) {
       messageout.query = 'Match function schema';
     } else {
@@ -138,6 +138,8 @@ function ifUndef(x, opr) {
         return commaSep(x);
       case 'int':
         return parseInt(x, 10);
+      case 'float':
+        return parseFloat(x);
     }
   }
 }

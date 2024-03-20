@@ -209,4 +209,9 @@ module.exports = {
     const summaries = require('../helpers/summary/summary.js');
     summaries.sparklines(req, res, next);
   },
+  // SPATIAL
+  faunmap: function(req, res, next) {
+    const faunmap = require('../helpers/spatial/faunmap.js');
+    faunmap.faunmapoverlay(req, res, next);
+  },
 };
