@@ -1,3 +1,4 @@
+'use strict';
 /*
 
 apps.js
@@ -7,11 +8,10 @@ Last Updated: September 13, 2017
 
  */
 
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var handlers = require('../handlers/apps_handlers');
-
+const handlers = require('../handlers/apps_handlers');
 
 
 router.get('/', function(req, res, next) {
@@ -19,7 +19,7 @@ router.get('/', function(req, res, next) {
 });
 
 
-//https://api.neotomadb.org/v1/apps/collectionTypes?callback=dojo_request_script_callbacks.dojo_request_script8
+// https://api.neotomadb.org/v1/apps/collectionTypes?callback=dojo_request_script_callbacks.dojo_request_script8
 
 
 /**
@@ -28,7 +28,7 @@ router.get('/', function(req, res, next) {
 *    get:
 *      produces:
 *        - application/json
-*      parameters: 
+*      parameters:
 *      - name: "callback"
 *        in: "query"
 *        description: "jsonp callback function"
@@ -52,7 +52,7 @@ router.get('/', function(req, res, next) {
 *        type: array
 *        items:
 *          type: object
-*          properties: 
+*          properties:
 *            contactid:
 *              type: integer
 *              example: 1752
@@ -69,7 +69,7 @@ router.get('/authorpis', handlers.authorpis);
 *    get:
 *      produces:
 *        - application/json
-*      parameters: 
+*      parameters:
 *      - name: "callback"
 *        in: "query"
 *        description: "jsonp callback function"
@@ -93,7 +93,7 @@ router.get('/authorpis', handlers.authorpis);
 *        type: array
 *        items:
 *          type: object
-*          properties: 
+*          properties:
 *            contactid:
 *              type: integer
 *              example: 3
@@ -109,7 +109,7 @@ router.get('/authors', handlers.authors);
 *    get:
 *      produces:
 *        - application/json
-*      parameters: 
+*      parameters:
 *      - name: "callback"
 *        in: "query"
 *        description: "jsonp callback function"
@@ -133,7 +133,7 @@ router.get('/authors', handlers.authors);
 *        type: array
 *        items:
 *          type: object
-*          properties: 
+*          properties:
 *            colltypeid:
 *              type: integer
 *              example: 1
@@ -149,7 +149,7 @@ router.get('/collectiontypes', handlers.collectiontypes);
 *    get:
 *      produces:
 *        - application/json
-*      parameters: 
+*      parameters:
 *      - name: "callback"
 *        in: "query"
 *        description: "jsonp callback function"
@@ -188,7 +188,7 @@ router.get('/datasettypes', handlers.datasettypes);
 *    get:
 *      produces:
 *        - application/json
-*      parameters: 
+*      parameters:
 *      - name: "callback"
 *        in: "query"
 *        description: "jsonp callback function"
@@ -231,7 +231,7 @@ router.get('/depositionalenvironments/root', handlers.depositionalenvironments);
 *    get:
 *      produces:
 *        - application/json
-*      parameters: 
+*      parameters:
 *      - in: path
 *        required: true
 *        type: integer
@@ -271,16 +271,17 @@ router.get('/depositionalenvironments/root', handlers.depositionalenvironments);
 *              example: "Artificial Lake"
 **/
 
-router.get('/depositionalenvironments/:id', handlers.depositionalenvironmentsbyid);
+router.get('/depositionalenvironments/:id',
+    handlers.depositionalenvironmentsbyid);
 
-//http://localhost:3010/v1.5/apps/ElementTypes?taxagroupid=VPL&callback=dojo_request_script_callbacks.dojo_request_script14
+// http://localhost:3010/v1.5/apps/ElementTypes?taxagroupid=VPL&callback=dojo_request_script_callbacks.dojo_request_script14
 /**
 * @swagger
 *  /v1.5/apps/elementtypes:
 *    get:
 *      produces:
 *        - application/json
-*      parameters: 
+*      parameters:
 *      - name: "callback"
 *        in: "query"
 *        description: "jsonp callback function"
@@ -316,7 +317,7 @@ router.get('/depositionalenvironments/:id', handlers.depositionalenvironmentsbyi
 *        type: array
 *        items:
 *          type: object
-*          properties: 
+*          properties:
 *            elementtypeid:
 *              type: integer
 *              example: 467
@@ -330,20 +331,13 @@ router.get('/elementtypes', handlers.elementtypes);
 router.get('/geochronologies', handlers.geochronologies);
 
 
-
-
-
-
-
-
-
 /**
 * @swagger
 *  /v1.5/apps/DatasetTypes:
 *    get:
 *      produces:
 *        - application/json
-*      parameters: 
+*      parameters:
 *      - name: "callback"
 *        in: "query"
 *        description: "jsonp callback function"
@@ -367,7 +361,7 @@ router.get('/geochronologies', handlers.geochronologies);
 *        type: array
 *        items:
 *          type: object
-*          properties: 
+*          properties:
 *            getdatasettypes:
 *              type: string
 **/
@@ -377,11 +371,7 @@ router.get('/TaxaGroupTypes', handlers.taxagrouptypes);
 
 router.get('/keywords', handlers.keywords);
 
-
-
 router.get('/TaphonomySystems', handlers.taphonomysystems);
-
-
 
 /**
 * @swagger
@@ -446,6 +436,5 @@ router.get('/TaphonomySystems', handlers.taphonomysystems);
 router.get('/relativeages', handlers.relativeages);
 
 router.get('/search', handlers.search);
-
 
 module.exports = router;
