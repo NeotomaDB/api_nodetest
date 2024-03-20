@@ -34,7 +34,8 @@ function faunmapoverlay(req, res, next) {
     // Get the input parameters:
     let outobj = {
       'sciname': ifUndef(resultSet.sciname, 'string'),
-      'prec': ifUndef(resultSet.prec, 'int') || 1000,
+      'prec': ifUndef(resultSet.prec, 'int') || 0.0001,
+      'proj': ifUndef(resultSet.proj, 'int') || 4326,
     };
     db.any(faunmapQuery, outobj)
         .then(function(data) {

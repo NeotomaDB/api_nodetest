@@ -20,15 +20,28 @@ components:
       schema:
         example: canis%
         type: string
+    projQuery:
+      in: query
+      name: proj
+      required: false
+      schema:
+        type: integer
+        default: 4326
+        example: 3857
+      description: |
+        A valid integer [spatial reference identifier](https://en.wikipedia.org/wiki/Spatial_reference_system#Identifier) value. By default Neotoma returns all data with the SRID 4326 (standard lat/long), representing the [WSG84](https://en.wikipedia.org/wiki/World_Geodetic_System#WGS84) model of the planet. For web mapping users may choose SRID *3857* if using projected features.
     precQuery:
-      description: Precision of points within a rendered polygon (in meters). Many spatial objects are generated statistically and may have overly precise point coordinates. Often precisions to 100m is sufficient for rendering to map.
+      description: |
+        Precision of points within a rendered polygon. Many spatial objects are generated statistically and may have overly precise point coordinates. Often precisions to 100m is sufficient for rendering to map.<br>
+        **NOTE**: the precision is dependent on the projected units. For the default SRID=4326 projection, precision units are in decimal degrees, where 0.1 degrees latitude = 11.1km and 0.0001 degrees latitude = 11.1m. For metric precision, units will be in meters.<br>
+        The default value of *0.0001* represents a metric distance of 11.1m in the default 4326 projection.
       in: query
       name: prec
       required: false
       schema:
         example: 100
         type: integer
-        default: 1000
+        default: 0.0001
         format: int32
     ageOldQuery:
       description: Oldest age that intercepts with the dataset (in calibrated years before present, with 0 at 1950CE)
@@ -500,6 +513,16 @@ components:
         maximum: 30000
         minimum: 1
         type: integer
+    bufferQuery:
+      description: Buffer distance for point of polygon in meters.
+      in: query
+      name: buffer
+      required: false
+      schema:
+        format: int64
+        minimum: 0
+        default: 10000
+        type: integer
     siteidQuery:
       description: Valid Neotoma site identifier (integer), either singly or in a comma separated list.
       in: query
@@ -578,8 +601,56 @@ components:
       schema:
         type: string
   schemas:
+    lakesPoly:
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            properties:
+              hydrolakeid:
+                type: integer
+                description: |
+                  Unique lake identifier in the [HydroLakes10k](https://www.hydrosheds.org/products/hydrolakes) database.
+              lakename:
+                type: string
+                description: |
+                  Name of lake or reservoir.<br>
+                  This field is currently only populated for lakes with an area of at least 500km^2^; for large reservoirs where a name was available in the GRanD database; and for smaller lakes where a name was available in the GLWD database. [source PDF](https://data.hydrosheds.org/file/technical-documentation/HydroLAKES_TechDoc_v10.pdf)
+              lakearea:
+                description: Lake area in square kilometers.
+                type: integer
+              shorelen:
+                description: Shore length/lake perimeter in kilometers.
+                type: integer
+              volume:
+                type: number
+                description: |
+                  Total lake or reservoir volume, in million cubic meters (1*mcm* = 0.001 km^3^).<br>
+                  For most polygons, this value represents the total lake volume as estimated using the geostatistical modeling approach by Messager et al. (2016). However, where either a reported lake volume (for lakes ≥ 500 km^2^) or a reported reservoir volume (from GRanD database) existed, the total volume represents this reported value. In cases of regulated lakes, the total volume represents the larger value between reported reservoir and modeled or reported lake volume. [source PDF](https://data.hydrosheds.org/file/technical-documentation/HydroLAKES_TechDoc_v10.pdf)
+              avgdepth: 
+                type: number
+                description: |
+                  Average lake depth, in meters.
+                  Average lake depth is defined as the ratio between total lake volume (`volume`) and lake area (`lakearea`).
+              watershedarea:
+                type: number
+                description: |
+                  Area of the watershed associated with the lake, in square kilometers.<br>
+                  The watershed area is calculated by deriving and measuring the upstream contribution area to the lake pour point using the HydroSHEDS drainage network map at 15 arc-second resolution.<br>
+                  **-9999**: no data as lake pour point is not on HydroSHEDS landmask
+              wkt_shape:
+                type: string
+                description: |
+                  A Well-Known-Text representation of the lake, resolved to the appropriate precision.
+
     faunalPoly:
       properties:
+        message:
+          type: string
         data:
           type: array
           items:
@@ -2079,14 +2150,17 @@ paths:
       tags:
         - Database tables
         - v1.5
-  /v2.0/data/faunal:
+  /v2.0/data/spatial/faunal:
     get:
       parameters:
         - $ref: '#/components/parameters/scinameQuery'
         - $ref: '#/components/parameters/precQuery'
       responses:
         '200':
-          description: An object containing all matched species names, identifiers and a GeoJSON polygon representing the UNIONed ranges for the selected species.
+          description: |
+            An object containing all matched species names, identifiers and a GeoJSON polygon representing the UNIONed ranges for the selected species. All data is derived from:<br>
+            * Mammal Diversity Database. (2020). Mammal Diversity Database (Version 1.2) [Data set]. Zenodo. DOI: [10.5281/zenodo.4139818](https://doi.org/10.5281/zenodo.4139818).<br>
+            * Map of Life. (2021). Mammal range maps harmonised to the Mammals Diversity Database [Data set]. Map of Life. [10.48600/MOL-48VZ-P413](https://doi.org/10.48600/MOL-48VZ-P413)
           content:
             application/json:
               schema:
@@ -2095,6 +2169,28 @@ paths:
         - External data
         - v2.0
         - Mammals
+        - Spatial
+  /v2.0/data/spatial/lakes:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/siteidQuery'
+        - $ref: '#/components/parameters/bufferQuery'
+        - $ref: '#/components/parameters/precQuery'
+        - $ref: '#/components/parameters/projQuery'
+      responses:
+        '200':
+          description: |
+            An object containing all matched lakes within some buffer distance of a site. Data derived from the [HydroLakes database](https://www.hydrosheds.org/products/hydrolakes):<br>
+            * Messager, M.L., Lehner, B., Grill, G., Nedeva, I., Schmitt, O. (2016). Estimating the volume and age of water stored in global lakes using a geo-statistical approach. *Nature Communications*, 7: 13603. doi: [10.1038/ncomms13603](https://doi.org/10.1038/ncomms13603)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/lakesPoly'
+      tags:
+        - External data
+        - v2.0
+        - Lake morphometry
+        - Spatial
   /v2.0/apps/authorpis:
     get:
       responses:
