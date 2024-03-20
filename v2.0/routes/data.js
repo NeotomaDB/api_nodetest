@@ -60,10 +60,10 @@ router.get('/sites/:siteid/publications', handlers.publicationbysite);
 
 router.post(['/sites/', '/contacts/:contactid/sites',
   '/datasets/:datasetid/sites',
-  '/geopoliticalunits/:gpid/sites'], handlers.sitesquery); // Goes to the queries.
+  '/geopoliticalunits/:gpid/sites'], handlers.sitesquery);
 router.get(['/sites/', '/sites/:siteid',
   '/contacts/:contactid/sites', '/datasets/:datasetid/sites',
-  '/geopoliticalunits/:gpid/sites'], cacheSuccesses, handlers.sitesquery); // Goes to the queries.
+  '/geopoliticalunits/:gpid/sites'], cacheSuccesses, handlers.sitesquery);
 
 router.get('/summary/dsdbmonth/', handlers.dsdbmonth);
 router.get('/summary/dstypemonth/', handlers.dstypemonth);
@@ -74,7 +74,10 @@ router.get('/datasets/:datasetid/taxa/', handlers.taxonbydsid);
 router.get('/datasets/:datasetid/specimens', handlers.specimensbydsid);
 router.get('/specimens/:specimenid', handlers.specimensbyid);
 
-router.post('/lakes/', handlers.hydroLakes);
-router.get('/lakes/', handlers.hydroLakes);
+router.post('/spatial/lakes/', handlers.hydroLakes);
+router.get('/spatial/lakes/', handlers.hydroLakes);
+
+router.get('/spatial/faunal', handlers.faunmap);
+router.post('/spatial/faunal', handlers.faunmap);
 
 module.exports = router;

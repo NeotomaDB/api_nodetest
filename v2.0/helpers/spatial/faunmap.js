@@ -1,13 +1,13 @@
 'use strict';
 // Spatial queries to HydroLakes on Neotoma:
-const { any } = require('bluebird');
+const {any} = require('bluebird');
 const he = require('he');
 
 // Helper for linking to external query files:
 const {sql, ifUndef, getparam} = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
-const hydrolakeQuery = sql('../v2.0/helpers/lakes/hydrolake_query.sql');
+const faunmapQuery = sql('../v2.0/helpers/spatial/faunmap_geom.sql');
 
 /**
  * Return API results for sites when only a string of site IDs is passed in.
@@ -18,9 +18,9 @@ const hydrolakeQuery = sql('../v2.0/helpers/lakes/hydrolake_query.sql');
  *   (sends to the `next` function in app.js)
  * @return The function returns nothing, but sends the API result to the client.
  */
-function lakesbylocation (req, res, next) {
+function faunmapoverlay(req, res, next) {
   const db = req.app.locals.db;
-  let paramGrab = getparam(req);
+  const paramGrab = getparam(req);
 
   if (!paramGrab.success) {
     res.status(500)
@@ -33,13 +33,11 @@ function lakesbylocation (req, res, next) {
     const resultSet = paramGrab.data;
     // Get the input parameters:
     let outobj = {
-      'siteid': ifUndef(resultSet.siteid, 'int'),
-      'buffer': ifUndef(resultSet.buffer, 'int') || 10000,
-      'prec': ifUndef(resultSet.prec, 'float') || 0.0001,
+      'sciname': ifUndef(resultSet.sciname, 'string'),
+      'prec': ifUndef(resultSet.prec, 'int') || 0.0001,
       'proj': ifUndef(resultSet.proj, 'int') || 4326,
     };
-    console.log(outobj)
-    db.any(hydrolakeQuery, outobj)
+    db.any(faunmapQuery, outobj)
         .then(function(data) {
           res.status(200)
               .json({
@@ -59,4 +57,4 @@ function lakesbylocation (req, res, next) {
   }
 }
 
-module.exports.lakesbylocation = lakesbylocation;
+module.exports.faunmapoverlay = faunmapoverlay;

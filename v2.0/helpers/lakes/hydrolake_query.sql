@@ -6,7 +6,10 @@ SELECT hl.objectid AS hydrolakeid,
     hl.vol_total AS volume,
     hl.depth_avg AS avgdepth,
     hl.wshd_area AS watershedarea,
-    ST_ASTEXT(hl.shape) AS wkt_shape,
+    ST_ASEWKT(
+            ST_Simplify(
+                ST_Transform(hl.shape, ${proj}), ${prec}),
+                    LENGTH(TRIM(TRAILING '0' FROM SPLIT_PART(${prec}::text, '.', 2)))) AS wkt_shape,
     ST_DISTANCE((SELECT geog FROM ndb.sites WHERE siteid = ${siteid}), hl.shape::geography) AS distance
 FROM ap.hydrolakes AS hl
 WHERE
