@@ -74,9 +74,10 @@ router.get('/datasets/:datasetid/taxa/', handlers.taxonbydsid);
 router.get('/datasets/:datasetid/specimens', handlers.specimensbydsid);
 router.get('/specimens/:specimenid', handlers.specimensbyid);
 
-router.post('/lakes/', handlers.hydroLakes);
-router.get('/lakes/', handlers.hydroLakes);
+router.post('/spatial/lakes/', handlers.hydroLakes);
+router.get('/spatial/lakes/', handlers.hydroLakes);
 
-router.get('/faunal/', handlers.faunmap);
+router.get('/spatial/faunal', handlers.faunmap);
+router.post('/spatial/faunal', handlers.faunmap);
 
 module.exports = router;
