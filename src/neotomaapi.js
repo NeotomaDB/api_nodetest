@@ -1,5 +1,6 @@
+'use strict';
 const path = require('path');
-var assert = require('assert');
+const assert = require('assert');
 
 const promise = require('bluebird')
 
@@ -8,32 +9,36 @@ const options = {
   promiseLib: promise,
   capSQL: true,
   query (e) {
-    var date = new Date()
-    var messageout = { 'hasExecuted': e.client.hasExecuted }
+    const date = new Date()
+    let messageout = {'hasExecuted': e.client.hasExecuted}
     // Exclude the big chunky query:
     if (e.query.match(/CONCAT.*pronamespace = n.oid/)) {
-      messageout.query = 'List all functions'
+      messageout.query = 'List all functions';
     } else if (e.query.match(/WHERE proname LIKE/)) {
-      messageout.query = 'Match function schema'
+      messageout.query = 'Match function schema';
     } else {
-      messageout.query = e.query
-      messageout.db = { client: e.client.user, database: e.client.database, host: e.client.host }
+      messageout.query = e.query;
+      messageout.db = {client: e.client.user,
+        database: e.client.database,
+        host: e.client.host};
     }
     console.log(date.toISOString() + ' ' + JSON.stringify(messageout))
   },
-  error (err, e) {
-    var date = new Date()
+  error(err, e) {
+    const date = new Date();
     // Exclude the big chunky query:
     console.log(JSON.stringify(err))
-    var messageout = { 'error': JSON.stringify(err), 'query': e.query }
-    messageout.db = { 'client': e.client.user, 'database': e.client.database, 'host': e.client.host }
-    console.log(date.toISOString() + ' ' + JSON.stringify(messageout))
-  }
-}
+    let messageout = {'error': JSON.stringify(err), 'query': e.query};
+    messageout.db = {'client': e.client.user,
+      'database': e.client.database,
+      'host': e.client.host};
+    console.log(date.toISOString() + ' ' + JSON.stringify(messageout));
+  },
+};
 
-const pgp = require('pg-promise')(options)
+const pgp = require('pg-promise')(options);
 
-const { geojsonToWKT, wktToGeoJSON } = require('@terraformer/wkt');
+const {geojsonToWKT, wktToGeoJSON} = require('@terraformer/wkt');
 
 // Goes through an object tree and clears out NULL elements (not sure this is the best).
 function removeEmpty (obj) {
@@ -56,7 +61,7 @@ function sql (file) {
    * @param x A comma separated string.
    * @return An array of integers.
    */
-function commaSep (x) {
+function commaSep(x) {
   var sep = String(x).split(',').map(x => x.trim())
 
   if (sep.map(x => /^\d+$/.test(x)).every(x => x === false)) {
@@ -95,7 +100,7 @@ function checkObject (req, res, query, value, outobj) {
    * @param x Any value passed in from an object.
    * @return either the value of `x` or a `null` value.
    */
-function ifUndef (x, opr) {
+function ifUndef(x, opr) {
   if (typeof x === 'undefined') {
     return null;
   } else {
@@ -106,6 +111,8 @@ function ifUndef (x, opr) {
         return commaSep(x);
       case 'int':
         return parseInt(x, 10);
+      case 'float':
+        return parseFloat(x);
     }
   }
 }
