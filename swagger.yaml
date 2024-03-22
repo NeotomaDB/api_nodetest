@@ -1,6 +1,17 @@
 ---
 components:
   parameters:
+    ageQuery:
+      description: Icesheet age (in calibrated radiocarbon years before present, with 0 at 1950CE).
+      in: query
+      name: age
+      required: false
+      schema:
+        example: 6700
+        format: int64
+        maximum: 18000
+        minimum: 1000
+        type: integer
     ageOfQuery:
       description: Dataset age ranges must span this age (in calibrated years before present, with 0 at 1950CE)
       in: query
@@ -40,9 +51,8 @@ components:
       required: false
       schema:
         example: 100
-        type: integer
+        type: number
         default: 0.0001
-        format: int32
     ageOldQuery:
       description: Oldest age that intercepts with the dataset (in calibrated years before present, with 0 at 1950CE)
       in: query
@@ -646,7 +656,6 @@ components:
                 type: string
                 description: |
                   A Well-Known-Text representation of the lake, resolved to the appropriate precision.
-
     faunalPoly:
       properties:
         message:
@@ -671,6 +680,26 @@ components:
                   type: string
               geom:
                 type: string
+    icesheetPoly:
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            gid:
+              type: array
+              items:
+                type: integer
+                format: int32
+            age:
+              type: integer
+              format: int32
+            calibrated:
+              type: integer
+              format: int32
+            geom:
+              type: string
     address:
       example: 550 N Park St, Madison WI, USA
       type: string
@@ -2154,6 +2183,7 @@ paths:
     get:
       parameters:
         - $ref: '#/components/parameters/scinameQuery'
+        - $ref: '#/components/parameters/projQuery'
         - $ref: '#/components/parameters/precQuery'
       responses:
         '200':
@@ -2169,6 +2199,25 @@ paths:
         - External data
         - v2.0
         - Mammals
+        - Spatial
+  /v2.0/data/spatial/icesheet:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/ageQuery'
+        - $ref: '#/components/parameters/projQuery'
+        - $ref: '#/components/parameters/precQuery'
+      responses:
+        '200':
+          description: |
+            An object containing glacial extents for the selected time period (in **calibrated radiocarbon years**).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/icesheetPoly'
+      tags:
+        - External data
+        - v2.0
+        - Glaciares
         - Spatial
   /v2.0/data/spatial/lakes:
     get:

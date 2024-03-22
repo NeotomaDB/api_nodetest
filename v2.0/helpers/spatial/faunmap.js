@@ -11,12 +11,12 @@ const faunmapQuery = sql('../v2.0/helpers/spatial/faunmap_geom.sql');
 
 /**
  * Return API results for sites when only a string of site IDs is passed in.
- * @param req: The URL request
- * @param res: The response object, to which the response
+ * @param {req} req The URL request
+ * @param {res} res The response object, to which the response
  *   (200, 404, 500) is sent.
- * @param next: Callback argument to the middleware function
+ * @param {next} next Callback argument to the middleware function
  *   (sends to the `next` function in app.js)
- * @return The function returns nothing, but sends the API result to the client.
+ * The function returns nothing, but sends the API result to the client.
  */
 function faunmapoverlay(req, res, next) {
   const db = req.app.locals.db;
@@ -32,7 +32,7 @@ function faunmapoverlay(req, res, next) {
   } else {
     const resultSet = paramGrab.data;
     // Get the input parameters:
-    let outobj = {
+    const outobj = {
       'sciname': ifUndef(resultSet.sciname, 'string'),
       'prec': ifUndef(resultSet.prec, 'int') || 0.0001,
       'proj': ifUndef(resultSet.proj, 'int') || 4326,
