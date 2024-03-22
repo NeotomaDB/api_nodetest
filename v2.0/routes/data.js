@@ -79,5 +79,7 @@ router.get('/spatial/lakes/', handlers.hydroLakes);
 
 router.get('/spatial/faunal', handlers.faunmap);
 router.post('/spatial/faunal', handlers.faunmap);
+router.get('/spatial/icesheet', handlers.icesheet);
+router.post('/spatial/icesheet', handlers.icesheet);
 
 module.exports = router;
