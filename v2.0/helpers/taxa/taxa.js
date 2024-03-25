@@ -51,92 +51,107 @@ function taxonbydsid(req, res, next) {
       });
 }
 
-function taxonquery (req, res, next) {
-  let db = req.app.locals.db
+/**
+ * Return taxa based on a set of query parameters
+ * @param {req} req A request object passed from Express
+ * @param {res} res A response object passed from Express.
+ * @param {next} next A next object for Express.
+ */
+function taxonquery(req, res, next) {
+  const db = req.app.locals.db;
 
   // First get all the inputs and parse them:
-  let paramgrab = getparam(req)
+  const paramgrab = getparam(req);
 
   if (!paramgrab.success) {
     res.status(500)
-      .json({
-        status: 'failure',
-        data: null,
-        message: paramgrab.message
-      });
+        .json({
+          status: 'failure',
+          data: null,
+          message: paramgrab.message,
+        });
   } else {
-    var resultset = paramgrab.data
-    var outobj = {
+    const resultset = paramgrab.data;
+    let outobj = {
       'taxonid': ifUndef(resultset.taxonid, 'sep'),
       'taxonname': ifUndef(resultset.taxonname, 'sep'),
-      'status': ifUndef(resultset.status, 'int'),
+      'status': ifUndef(resultset.status, 'string'),
       'taxagroup': ifUndef(resultset.taxagroup, 'sep'),
       'ecolgroup': ifUndef(resultset.ecolgroup, 'sep'),
       'lower': ifUndef(resultset.lower, 'string'),
       'limit': ifUndef(resultset.limit, 'int'),
-      'offset': ifUndef(resultset.offset, 'int')
-    }
+      'offset': ifUndef(resultset.offset, 'int'),
+    };
 
     if (outobj.lower === null) {
-      outobj.lower = false
+      outobj.lower = false;
     } else {
       if (outobj['lower'].match(/[Tt](RUE|rue){0,1}/)) {
-        outobj.lower = true
+        outobj.lower = true;
       }
     }
+
+    if (outobj['status'] != null) {
+      if (!outobj['status'].match(/[01FfTt](RUE|rue|ALSE|alse){0,1}/)) {
+        outobj.status = null;
+      };
+    };
 
     if (!(outobj.taxonname === null)) {
       // Replacing any asterisks with percent signs to ensure wildcards work.
       outobj.taxonname = outobj['taxonname'].map((x) => {
-        return x.replace(/\*/g, '%')
+        return x.replace(/\*/g, '%');
       });
     }
 
-    const taxa = 'SELECT taxonid AS output FROM ndb.taxa WHERE taxonname ILIKE ANY(${taxonname})';
+    const taxa = 'SELECT taxonid AS output ' +
+      'FROM ndb.taxa WHERE taxonname ILIKE ANY(${taxonname})';
 
     Promise.all([checkObject(req, res, taxa, outobj.taxonname, outobj)])
-      .then(result => {
-        if (outobj.taxonid === null) {
-          outobj.taxonid = result[0]
-        } else {
-          if (!result[0] === null) {
-            outobj.taxonid.push(result[0])
-          }
-        }
-
-        db.any(taxonsql, outobj)
-          .then(function (data) {
-            if (outobj.lower) {
-              outobj.taxonid = data.map(x => x.taxonid)
-              data = db.any(taxonsqlr, outobj)
-                .then(function (data) { return data })
+        .then((result) => {
+          if (outobj.taxonid === null) {
+            outobj.taxonid = result[0];
+          } else {
+            if (!result[0] === null) {
+              outobj.taxonid.push(result[0]);
             }
-            return data;
-          })
-          .catch(function (err) {
-            res.status(500)
+          }
+
+          db.any(taxonsql, outobj)
+              .then(function(data) {
+                if (outobj.lower) {
+                  outobj.taxonid = data.map((x) => x.taxonid);
+                  data = db.any(taxonsqlr, outobj)
+                      .then(function(data) {
+                        return data;
+                      });
+                }
+                return data;
+              })
+              .catch(function(err) {
+                res.status(500)
+                    .json({
+                      status: 'failure',
+                      data: err.message,
+                    });
+              })
+              .then(function(data) {
+                res.status(200)
+                    .json({
+                      status: 'success',
+                      data: data,
+                      message: 'Retrieved all tables',
+                    });
+              });
+        })
+        .catch(function(err) {
+          res.status(500)
               .json({
                 status: 'failure',
-                data: err.message
+                data: null,
+                message: err.message,
               });
-          })
-          .then(function (data) {
-            res.status(200)
-              .json({
-                status: 'success',
-                data: data,
-                message: 'Retrieved all tables'
-              });
-          })
-      })
-      .catch(function (err) {
-        res.status(500)
-          .json({
-            status: 'failure',
-            data: null,
-            message: err.message
-          });
-      })
+        });
   }
 }
 
