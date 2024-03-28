@@ -214,4 +214,8 @@ module.exports = {
     const faunmap = require('../helpers/spatial/faunmap.js');
     faunmap.faunmapoverlay(req, res, next);
   },
+  icesheet: function(req, res, next) {
+    const icesheet = require('../helpers/spatial/icesheet.js');
+    icesheet.icesheetoverlay(req, res, next);
+  },
 };

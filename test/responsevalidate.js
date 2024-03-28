@@ -11,9 +11,8 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 let testroute = process.env.APIPATH;
-
 if (typeof process.env.APIPATH === 'undefined') {
-  testroute = 'http://localhost:' + process.env.APIPORT + '/';
+  testroute = 'http://localhost:' + process.env.APIPORT;
 }
 console.log(testroute)
 var api = supertest(testroute);
@@ -35,7 +34,9 @@ function runTest (description, apipath) {
   describe(description, () => {
     it('should satisfy OpenAPI spec', async () => {
       // Get an HTTP response from your server (e.g. using axios)
-      const res = await axios.get(testroute)
+      console.log(testroute + apipath)
+      const res = await axios.get(testroute + apipath)
+      
       expect(res.status).to.equal(200);
       expect(res).to.satisfyApiSpec;
     });

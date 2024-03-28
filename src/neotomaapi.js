@@ -188,7 +188,8 @@ function failure(query, msg) {
   const failobj = {'status': 0,
     'data': null,
     'query': query,
-    'message': msg};
+    'message': msg,
+  };
   return failobj;
 }
 
