@@ -2,7 +2,8 @@
 components:
   parameters:
     ageQuery:
-      description: Icesheet age (in calibrated radiocarbon years before present, with 0 at 1950CE).
+      description: |
+        Icesheet age (in calibrated radiocarbon years before present, with 0 at 1950CE). Ages range from 0 to 18000.
       in: query
       name: age
       required: false
@@ -588,7 +589,7 @@ components:
       schema:
         example: 1
         type: string
-        enum: [0,1, TRUE, True, FALSE, False]
+        enum: [0, 1, True, FALSE]
     taxonidPath:
       description: |
         Unique taxonomic identifier (from the Neotoma taxon table).

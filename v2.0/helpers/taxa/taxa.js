@@ -92,7 +92,7 @@ function taxonquery(req, res, next) {
     }
 
     if (outobj['status'] != null) {
-      if (!outobj['status'].match(/[01FfTt](RUE|rue|ALSE|alse){0,1}/)) {
+      if (!outobj['status'].match(/^[01FfTt](RUE|rue|ALSE|alse){0,1}/)) {
         outobj.status = null;
       };
     };
