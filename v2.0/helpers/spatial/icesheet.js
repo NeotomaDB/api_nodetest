@@ -7,7 +7,7 @@ const he = require('he');
 const {sql, ifUndef, getparam} = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
-const faunmapQuery = sql('../v2.0/helpers/spatial/faunmap_geom.sql');
+const icesheetQuery = sql('../v2.0/helpers/spatial/icesheet_geom.sql');
 
 /**
  * Return API results for sites when only a string of site IDs is passed in.
@@ -18,7 +18,7 @@ const faunmapQuery = sql('../v2.0/helpers/spatial/faunmap_geom.sql');
  *   (sends to the `next` function in app.js)
  * The function returns nothing, but sends the API result to the client.
  */
-function faunmapoverlay(req, res, next) {
+function icesheetoverlay(req, res, next) {
   const db = req.app.locals.db;
   const paramGrab = getparam(req);
 
@@ -33,16 +33,16 @@ function faunmapoverlay(req, res, next) {
     const resultSet = paramGrab.data;
     // Get the input parameters:
     const outobj = {
-      'sciname': ifUndef(resultSet.sciname, 'string'),
+      'age': ifUndef(resultSet.age, 'int'),
       'prec': ifUndef(resultSet.prec, 'int') || 0.0001,
       'proj': ifUndef(resultSet.proj, 'int') || 4326,
     };
-    db.any(faunmapQuery, outobj)
+    db.any(icesheetQuery, outobj)
         .then(function(data) {
           res.status(200)
               .json({
                 status: 'success',
-                data: data,
+                data: data[0],
                 message: 'Retrieved all tables',
               });
         })
@@ -57,4 +57,4 @@ function faunmapoverlay(req, res, next) {
   }
 }
 
-module.exports.faunmapoverlay = faunmapoverlay;
+module.exports.icesheetoverlay = icesheetoverlay;

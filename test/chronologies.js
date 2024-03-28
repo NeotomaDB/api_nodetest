@@ -1,3 +1,4 @@
+'use strict';
 const assert = require('chai').assert;
 
 const should = require('chai').should();
@@ -7,8 +8,10 @@ const supertest = require('supertest');
 const dotenv = require('dotenv');
 dotenv.config();
 
+let testroute = process.env.APIPORT;
+
 if (typeof process.env.APIPATH === 'undefined') {
-  var testroute = process.env.APIPORT + '/';
+  testroute = 'http://localhost:' + process.env.APIPORT + '/';
 } else {
   testroute = process.env.APIPATH;
 }
@@ -28,10 +31,6 @@ describe('Get chronology data by datasetid:', function() {
         .expect(function(res) {
           return res.body['data'].length === 4;
         })
-        .expect(200)
-        .end(function(err, res) {
-          if (err) return done(err);
-          done();
-        });
+        .expect(200, done());
   });
 });
