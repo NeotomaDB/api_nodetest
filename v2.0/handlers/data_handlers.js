@@ -1,5 +1,5 @@
 // Defining the query functions:
-'use strict'
+'use strict';
 module.exports = {
   frozen: function(req, res, next) {
     const frozen = require('../helpers/frozendata/frozen.js');
