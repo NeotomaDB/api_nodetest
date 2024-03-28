@@ -2,7 +2,8 @@
 components:
   parameters:
     ageQuery:
-      description: Icesheet age (in calibrated radiocarbon years before present, with 0 at 1950CE).
+      description: |
+        Icesheet age (in calibrated radiocarbon years before present, with 0 at 1950CE). Ages range from 0 to 18000.
       in: query
       name: age
       required: false
@@ -499,14 +500,15 @@ components:
         minimum: 1
         type: integer
     taxaQuery:
-      description: The name of a taxon, or a unique taxon identifier within Neotoma (obtained from a call to tables). May be a comma separated list of taxonomic names or numeric identifiers.
+      description: |
+        The name of a taxon, or a unique taxon identifier within Neotoma (obtained from a call to tables). May be a comma separated list of taxonomic names or numeric identifiers. As elsewhere, the `%` sign can be used as a wildcard.
       name: taxa
       in: query
       required: false
       schema:
         type: string
     sitenameQuery:
-      description: Name of the study site (may use the % wildcard)
+      description: Name of the study site (may use the % wildcard). Note that Neotoma study site names are not unique. For example there are more than 15 sites in Neotoma named *Clear Lake*.
       in: query
       name: sitename
       required: false
@@ -560,7 +562,9 @@ components:
         example: agetypes
         type: string
     taxonNameQuery:
-      description: Taxon name or partial name.
+      description: |
+        Taxon name or partial name. You can pass wildcard characters using `%`. For example, `%anis` will match
+        with *Canis* as well as the plant taxon *Triodanis*. It will not match `Canis lupus` because there is no terminal wildcard. This can be accompished using `%anis%`.
       in: query
       name: taxonname
       required: false
@@ -568,7 +572,8 @@ components:
         example: Canis
         type: string
     taxaGroupQuery:
-      description: The taxonomic grouping the taxon belongs to, from the Neotoma taxagrouptypes table.
+      description: |
+        The taxonomic grouping the taxon belongs to, from the Neotoma taxagrouptypes table. You can get the list of acceptable taxa group types using the [dbtables API call](https://api.neotomadb.org/api-docs/#/Database%20tables/get_v2_0_data_dbtables) and passing *taxagrouptypes* as the table.
       in: query
       name: taxongroup
       required: false
@@ -576,13 +581,15 @@ components:
         example: Algae
         type: string
     taxastatusQuery:
-      description: The taxonomic status of the taxon, either extinct (0) or extant (1).
+      description: |
+        The taxonomic extinction status of the taxon, either extinct (1, True) or extant (0, False).
       in: query
       name: status
       required: false
       schema:
         example: 1
-        type: integer
+        type: string
+        enum: [0, 1, True, FALSE]
     taxonidPath:
       description: |
         Unique taxonomic identifier (from the Neotoma taxon table).
