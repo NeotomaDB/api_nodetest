@@ -42,7 +42,7 @@ function icesheetoverlay(req, res, next) {
           res.status(200)
               .json({
                 status: 'success',
-                data: data,
+                data: data[0],
                 message: 'Retrieved all tables',
               });
         })
