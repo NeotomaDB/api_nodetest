@@ -1,3 +1,4 @@
+'use strict';
 const assert = require('assert');
 const should = require('chai').should();
 const expect = require('chai').expect;
@@ -6,10 +7,10 @@ const supertest = require('supertest');
 const dotenv = require('dotenv');
 dotenv.config();
 
-if (typeof process.env.APIPATH === 'undefined') {
-  var testroute = 'http://localhost:' + process.env.APIPORT + '/';
-} else {
-  testroute = process.env.APIPATH;
+let testroute = process.env.APIPATH;
+
+if (typeof testroute === 'undefined') {
+  testroute = 'http://localhost:' + process.env.APIPORT + '/';
 }
 
 const api = supertest(testroute);
@@ -49,29 +50,38 @@ describe('Get taxon data:', function() {
         });
   });
 
-  it('v2.0: Taxon queries should accept comma separated lists:', function(done) {
-    api.get('v2.0/data/taxa/?taxonname=abies,picea')
-        .set('Accept', 'application/json')
-        .end(function(err, res) {
-          assert.strictEqual(res.body.data[0]['taxonid'], 1);
-          done();
-          if (err) {
-            console.log(err.message);
-          };
-        });
-  });
+  it('v2.0: Taxon queries should accept comma separated lists:',
+      function(done) {
+        api.get('v2.0/data/taxa/?taxonname=abies,picea')
+            .set('Accept', 'application/json')
+            .end(function(err, res) {
+              assert.strictEqual(res.body.data[0]['taxonid'], 1);
+              done();
+              if (err) {
+                console.log(err.message);
+              };
+            });
+      });
 
-  it('v2.0: Hierarchical taxon queries should accept comma separated lists:', function(done) {
-    api.get('v2.0/data/taxa/?taxonname=abies,picea&lower=true')
-        .set('Accept', 'application/json')
-        .end(function(err, res) {
-          assert.strictEqual(res.body.data[0]['taxonid'], 1);
-          done();
-          if (err) {
-            console.log(err.message);
-          };
-        });
-  });
+  it('v2.0: Hierarchical taxon queries should accept comma separated lists:',
+      function(done) {
+        api.get('v2.0/data/taxa/?taxonname=abies,picea&lower=true')
+            .set('Accept', 'application/json')
+            .end(function(err, res) {
+              const data = res.body.data;
+              const higher = [...new Set(data.map((x) => x.highertaxonid))];
+              /* There should be four unique higher taxon IDs:
+                * One for `Abies`
+                * One for `Picea`
+                * The rest pointing to Abies & Picea.
+              */
+              assert.strictEqual(higher.length, 4);
+              done();
+              if (err) {
+                console.log(err.message);
+              };
+            });
+      });
 
   it('v2.0: Taxon queries should accept `*` as a wildcard:', function(done) {
     api.get('v2.0/data/taxa/?taxonname=abie*')
@@ -85,27 +95,29 @@ describe('Get taxon data:', function() {
         });
   });
 
-  it('v2.0: The default limit of 25 should be reached for taxon data:', function(done) {
-    api.get('v2.0/data/taxa/?taxonname=a*')
-        .set('Accept', 'application/json')
-        .end(function(err, res) {
-          assert.strictEqual(res.body.data.length, 25);
-          done();
-          if (err) {
-            console.log(err.message);
-          };
-        });
-  });
+  it('v2.0: The default limit of 25 should be reached for taxon data:',
+      function(done) {
+        api.get('v2.0/data/taxa/?taxonname=a*')
+            .set('Accept', 'application/json')
+            .end(function(err, res) {
+              assert.strictEqual(res.body.data.length, 25);
+              done();
+              if (err) {
+                console.log(err.message);
+              };
+            });
+      });
 
-  it('v2.0: Changing the limit should change the number of taxa retrieved:', function(done) {
-    api.get('v2.0/data/taxa/?taxonname=a*&limit=30')
-        .set('Accept', 'application/json')
-        .end(function(err, res) {
-          assert.strictEqual(res.body.data.length, 30);
-          done();
-          if (err) {
-            console.log(err.message);
-          };
-        });
-  });
+  it('v2.0: Changing the limit should change the number of taxa retrieved:',
+      function(done) {
+        api.get('v2.0/data/taxa/?taxonname=a*&limit=30')
+            .set('Accept', 'application/json')
+            .end(function(err, res) {
+              assert.strictEqual(res.body.data.length, 30);
+              done();
+              if (err) {
+                console.log(err.message);
+              };
+            });
+      });
 });
