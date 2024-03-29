@@ -1,3 +1,4 @@
+'use strict';
 /*
 
 apps.js
@@ -6,13 +7,11 @@ Last Updated: Aug 19, 2021
 
  */
 
-var express = require('express');
+const express = require('express');
+const router = express.Router();
+const handlers = require('../handlers/apps_handlers');
 
-var router = express.Router();
-
-var handlers = require('../handlers/apps_handlers');
-
-router.get('/', function (req, res, next) {
+router.get('/', function(req, res, next) {
   res.send('NeotomaDB apps API: please provide a valid request');
 });
 
@@ -31,5 +30,8 @@ router.get('/taphonomysystems', handlers.taphonomysystems);
 router.get('/taxaindatasets', handlers.taxaindatasets);
 
 router.get('/taxagrouptypes', handlers.taxagrouptypes);
+router.get('/constdb/datasets', handlers.datasetsummary);
+router.get('/constdb/datasetuploads', handlers.datasetuploads);
+router.get('/constdb/datasetages', handlers.datasetranges);
 
 module.exports = router;
