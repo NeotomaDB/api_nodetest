@@ -1,6 +1,14 @@
 ---
 components:
   parameters:
+    dbidQuery:
+      description: |
+        Unique constituent database identifier from the `ndb.constituentdatabases` table. Each of the Neotoma constituent databases is identified uniquely with an integer primary key.
+      in: query
+      name: dbid
+      required: false
+      schema:
+        type: integer
     ageQuery:
       description: |
         Icesheet age (in calibrated radiocarbon years before present, with 0 at 1950CE). Ages range from 0 to 18000.
@@ -618,6 +626,44 @@ components:
       schema:
         type: string
   schemas:
+    datasetagerangeresponse:
+      properties:
+        status:
+            type: string
+        message:
+          type: string
+        query:
+          type: object
+        data:
+          type: array
+          items:
+            properties:
+              older:
+                $ref: '#/components/schemas/ageold'
+              younger:
+                $ref: '#/components/schemas/ageyoung'
+              agetype:
+                $ref: '#/components/schemas/agetype'
+    datasetsShort:
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            properties:
+              siteid:
+                $ref: '#/components/schemas/siteid'
+              sitename:
+                $ref: '#/components/schemas/sitename'
+              datasetid:
+                $ref: '#/components/schemas/datasetid'
+              datasettype:
+                $ref: '#/components/schemas/datasetid'
+              coords:
+                type: array
     lakesPoly:
       properties:
         status:
@@ -672,21 +718,29 @@ components:
           items:
             properties:
               gid:
-                type: array
-                items:
-                  type: integer
-                  format: int32
+                oneOf:
+                  - type: array
+                    items:
+                      type: integer
+                      format: int32
+                  - type: 'null'
               spid:
-                type: array
-                items:
-                  type: integer
-                  format: int32
+                oneOf:
+                  - type: array
+                    items:
+                      type: integer
+                      format: int32
+                  - type: 'null'
               sciname:
-                type: array
-                items:
-                  type: string
+                oneOf:
+                  - type: 'null'
+                  - type: array
+                    items:
+                      type: string
               geom:
-                type: string
+                oneOf:
+                  - type: 'null'
+                  - type: string
     icesheetPoly:
       properties:
         message:
@@ -708,15 +762,20 @@ components:
             geom:
               type: string
     address:
+      description: A physical address, as a single string.
       example: 550 N Park St, Madison WI, USA
       type: string
       nullable: true
     ageold:
+      description: |
+        The older end of an age range for a sample or dataset measured with uncertainty (often 1SD).
       example: 11452
       format: int64
       nullable: true
       type: integer
     agerange:
+      description: |
+        The set of ages describing a sample age measured with uncertainty. Often described as the accepted age of the sample and then a younger and older age defined by ±1SD. The age range may be further defined in chronology or dataset notes.
       properties:
         ageold:
           $ref: '#/components/schemas/ageold'
@@ -1304,8 +1363,6 @@ components:
       properties:
         data:
           type: array
-          items:
-            type: object
         message:
           $ref: '#/components/schemas/message'
         status:
@@ -1316,8 +1373,6 @@ components:
       properties:
         data:
           type: array
-          items:
-            type: object
         message:
           $ref: '#/components/schemas/message'
         status:
@@ -1933,6 +1988,22 @@ components:
         success:
           $ref: '#/components/schemas/success'
       type: object
+    datasetuploadresponse:
+      description: |
+        A data response from the API showing how many datasets were uploaded each month, generally by constituent database.
+      properties:
+        message:
+          $ref: '#/components/schemas/message'
+        status:
+          $ref: '#/components/schemas/status'
+        data:
+          type: array
+          items:
+            properties:
+              count:
+                type: integer
+              month:
+                type: string
     taxagroupresponse:
       properties:
         data:
@@ -1991,6 +2062,53 @@ info:
   version: 2.0-oas3
 openapi: 3.0.0
 paths:
+  /v2.0/apps/constdb/datasetages:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/dbidQuery'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/datasetagerangeresponse'
+          description: |
+            Returns an ordered array (from earliest to latest) of upload counts by month (YYYY/MM/DD; all days as 01). Months with no uploads are excluded.
+      tags:
+        - Dataset metadata
+        - Summary Info
+        - v2.0
+  /v2.0/apps/constdb/datasetuploads:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/dbidQuery'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/datasetuploadresponse'
+          description: |
+            Returns an ordered array (from earliest to latest) of upload counts by month (YYYY/MM/DD; all days as 01). Months with no uploads are excluded.
+      tags:
+        - Dataset metadata
+        - Summary Info
+        - v2.0
+  /v2.0/apps/constdb/datasets:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/dbidQuery'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/datasetsShort'
+          description: |
+            Returns the set of datasets contained within a constituent database, identified by the constituent database identifier. Used for quick landing page generation.
+      tags:
+        - Dataset metadata
+        - v2.0
   /v1.5/apps/DatasetTypes:
     get:
       responses:

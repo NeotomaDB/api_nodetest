@@ -1,3 +1,4 @@
+'use strict';
 // get global database object
 module.exports = {
   datasettypes: datasettypes,
@@ -7,7 +8,19 @@ module.exports = {
   keywords: keywords,
   authorpis: authorpis,
   taphonomysystems: taphonomysystems,
-  depositionalenvironments: depositionalenvironments
+  depositionalenvironments: depositionalenvironments,
+  datasetsummary: function(req, res, next) {
+    const dssum = require('../helpers/landing/landing.js');
+    dssum.datasetbydbid(req, res, next);
+  },
+  datasetuploads: function(req, res, next) {
+    const dsup = require('../helpers/landing/landing.js');
+    dsup.dsuploadagg(req, res, next);
+  },
+  datasetranges: function(req, res, next) {
+    const dage = require('../helpers/landing/landing.js');
+    dage.datasetagesbydbid(req, res, next);
+  },
 };
 
 // Defining the query functions:
