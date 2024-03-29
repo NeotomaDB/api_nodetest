@@ -632,6 +632,8 @@ components:
             type: string
         message:
           type: string
+        query:
+          type: object
         data:
           type: array
           items:
@@ -716,21 +718,29 @@ components:
           items:
             properties:
               gid:
-                type: array
-                items:
-                  type: integer
-                  format: int32
+                oneOf:
+                  - type: array
+                    items:
+                      type: integer
+                      format: int32
+                  - type: 'null'
               spid:
-                type: array
-                items:
-                  type: integer
-                  format: int32
+                oneOf:
+                  - type: array
+                    items:
+                      type: integer
+                      format: int32
+                  - type: 'null'
               sciname:
-                type: array
-                items:
-                  type: string
+                oneOf:
+                  - type: 'null'
+                  - type: array
+                    items:
+                      type: string
               geom:
-                type: string
+                oneOf:
+                  - type: 'null'
+                  - type: string
     icesheetPoly:
       properties:
         message:
@@ -1353,8 +1363,6 @@ components:
       properties:
         data:
           type: array
-          items:
-            type: object
         message:
           $ref: '#/components/schemas/message'
         status:
@@ -1365,8 +1373,6 @@ components:
       properties:
         data:
           type: array
-          items:
-            type: object
         message:
           $ref: '#/components/schemas/message'
         status:
@@ -2056,7 +2062,7 @@ info:
   version: 2.0-oas3
 openapi: 3.0.0
 paths:
-  /v2.0/apps/constdb/datasetageranges:
+  /v2.0/apps/constdb/datasetages:
     get:
       parameters:
         - $ref: '#/components/parameters/dbidQuery'
