@@ -6,7 +6,7 @@ select cdb.databasename,
   array_agg(distinct qt.datasettype) AS datasettypes,
   MIN(qt.younger) as younger,
   MAX(qt.older) as older,
-  COUNT(distinct qt.datasetid) AS datasets
+  COUNT(distinct qt.datasetid)::int AS datasets
 from ndb.constituentdatabases AS cdb
 left join ap.querytable as qt on cdb.databaseid = qt.databaseid
 left join ndb.contacts as cnt on cdb.contactid = cnt.contactid
