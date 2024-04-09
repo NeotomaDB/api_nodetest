@@ -628,6 +628,7 @@ components:
   schemas:
     constdbdescription:
       type: string
+      nullable: true
       description: |
         A description provided by the stewards for the constituent database describing the database and its intended use.
     constdbresponse:
