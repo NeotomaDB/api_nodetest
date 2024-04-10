@@ -21,6 +21,10 @@ module.exports = {
     const dage = require('../helpers/landing/landing.js');
     dage.datasetagesbydbid(req, res, next);
   },
+  databasesummaries: function(req, res, next) {
+    const dbsumm = require('../helpers/landing/landing.js');
+    dbsumm.databasesummaries(req, res, next);
+  },
 };
 
 // Defining the query functions:
