@@ -46,6 +46,8 @@ components:
       required: false
       schema:
         type: integer
+        minimum: 2000
+        maximum: 32767
         default: 4326
         example: 3857
       description: |
@@ -60,6 +62,8 @@ components:
       required: false
       schema:
         example: 100
+        minimum: 0
+        exclusiveMinimum: true
         type: number
         default: 0.0001
     ageOldQuery:
@@ -115,6 +119,7 @@ components:
         format: int64
         maximum: 40000
         minimum: 0
+        exclusiveMinimum: true
         type: integer
     contactNameQuery:
       description: Last name of the researcher (may use the % wildcard)
@@ -235,6 +240,7 @@ components:
       schema:
         format: int32
         minimum: 0
+        exclusiveMinimum: true
         type: integer
     doiQuery:
       description: A valid DOI in the form 10.XXXX/XXXXX (i.e., excluding 'https://doi.org').
@@ -459,6 +465,7 @@ components:
         format: int32
         maximum: 20000
         minimum: 0
+        exclusiveMinimum: true
         type: integer
     pubsearchQuery:
       description: A fulltext search string.  Either a literal portion of the article name, or keywords.
@@ -639,6 +646,7 @@ components:
           type: string
         query:
           type: object
+          nullable: true
         data:
           type: array
           items:
@@ -649,7 +657,7 @@ components:
               url:
                 $ref: "#/components/schemas/url"
               contactname:
-                $ref: "#/components/schemas/contact"
+                $ref: "#/components/schemas/contactname"
               email:
                 $ref: "#/components/schemas/email"
               datasettypes:
@@ -658,6 +666,7 @@ components:
                 type: array
                 items:
                   type: string
+                  nullable: true
               older:
                 $ref: '#/components/schemas/ageold'
               younger:
@@ -811,12 +820,9 @@ components:
       type: string
       nullable: true
     ageold:
-      description: |
-        The older end of an age range for a sample or dataset measured with uncertainty (often 1SD).
-      example: 11452
-      format: int64
+      example: 1000
       nullable: true
-      type: integer
+      type: number
     agerange:
       description: |
         The set of ages describing a sample age measured with uncertainty. Often described as the accepted age of the sample and then a younger and older age defined by ±1SD. The age range may be further defined in chronology or dataset notes.
@@ -838,9 +844,8 @@ components:
       type: string
     ageyoung:
       example: -35
-      format: int64
       nullable: true
-      type: integer
+      type: number
     altitude:
       example: 0
       format: int32
@@ -1127,6 +1132,7 @@ components:
     contactname:
       example: Goring, Simon J
       type: string
+      nullable: true
     contactresponsev15:
       properties:
         data:
@@ -2122,13 +2128,6 @@ paths:
                 $ref: '#/components/schemas/constdbresponse'
           description: |
             Returns metadata about each constituent database in Neotoma, including Summary Informationrmation about dataset types within the database and the age spans of the records in the database.
-        '500':
-          description: |
-            Error messages for the API are generally standardized across all models.
-          content:
-            application/json:
-              schema:
-                type: object
       tags:
         - Database metadata
         - Summary Informationrmation
@@ -2145,13 +2144,6 @@ paths:
                 $ref: '#/components/schemas/datasetagerangeresponse'
           description: |
             Returns an ordered array (from earliest to latest) of upload counts by month (YYYY/MM/DD; all days as 01). Months with no uploads are excluded.
-        '500':
-          description: |
-            Error messages for the API are generally standardized across all models.
-          content:
-            application/json:
-              schema:
-                type: object
       tags:
         - Dataset metadata
         - Summary Information
