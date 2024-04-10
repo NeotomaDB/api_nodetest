@@ -14,15 +14,5 @@ describe('tests for /v2.0/apps/constdb', function() {
       expect(response).to.have.status(200);
       return chakram.wait();
     });
-
-
-    it('should respond 500 for "Error messages for the API are generally standardized across all models. "', function() {
-      const response = request('get', 'http://localhost:3001/v2.0/apps/constdb', {
-        'time': true,
-      });
-
-      expect(response).to.have.status(500);
-      return chakram.wait();
-    });
   });
 });
