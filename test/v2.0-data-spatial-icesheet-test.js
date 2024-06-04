@@ -8,7 +8,7 @@ describe('tests for /v2.0/data/spatial/icesheet', function() {
   describe('tests for get', function() {
     it('should respond 200 for "An object containing glacial extents for the selected time period (in **calibrated radiocarbon years**). "', function() {
       const response = request('get', 'http://localhost:3001/v2.0/data/spatial/icesheet', {
-        'qs': {'age': 16685, 'proj': 31668, 'prec': -5214491.139078572},
+        'qs': {'age': 5717, 'proj': 11503, 'prec': 24189594.679282982},
         'time': true,
       });
 
