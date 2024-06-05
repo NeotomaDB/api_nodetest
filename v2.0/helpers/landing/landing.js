@@ -5,7 +5,8 @@ const he = require('he');
 const trans = require('csv-transform');
 
 // Helper for linking to external query files:
-const {sql,
+const {
+  sql,
   commaSep,
   ifUndef,
   checkObject,
@@ -193,8 +194,25 @@ function dsuploadagg(req, res, next) {
  */
 function databasesummaries(req, res, next) {
   const db = req.app.locals.db;
+  const paramgrab = getparam(req);
 
-  db.any(dbsum)
+  if (!paramgrab.success) {
+    res.status(500)
+        .json({
+          status: 'failure',
+          data: null,
+          message: paramgrab.message,
+        });
+  }
+
+  const resultset = paramgrab.data;
+
+  // Get the input parameters:
+  const outobj = {
+    'dbid': ifUndef(resultset.dbid, 'int'),
+  };
+
+  db.any(dbsum, outobj)
       .then(function(data) {
         res.status(200)
             .json({
