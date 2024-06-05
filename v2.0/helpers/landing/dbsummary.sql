@@ -1,48 +1,45 @@
 WITH constdb AS (
   select
-    cdb.databaseid,
-    cdb.databasename,
-    cdb.description,
-    cdb.url,
-    cnt.contactname,
-    cnt.email,
-    COUNT(distinct qt.siteid)::int AS sites
+	cdb.databaseid,
+    jsonb_build_object( 'databaseid', cdb.databaseid,
+     				    'databasename', cdb.databasename,
+					    'description', cdb.description,
+						'url', cdb.url,
+						'contact',cnt.contactname,
+						'email', cnt.email) as database,
+    qt.siteid,
+    qt.datasetid,
+    qt.datasettype
   from ndb.constituentdatabases AS cdb
   left join ap.querytable as qt on cdb.databaseid = qt.databaseid
   left join ndb.contacts as cnt on cdb.contactid = cnt.contactid
   WHERE (cdb.databaseid IS NULL OR cdb.databaseid = ${dbid})
-  group by
-      cdb.databasename, 
-      cdb.databaseid,
-      cdb.description,
-      cdb.url,
-      cnt.contactname,
-	  cnt.email
-), datasets as (
+), sites as (
 	select
-		qt.databaseid,
-		jsonb_build_object('datasettype', qt.datasettype,
-		  	'datasets', COUNT(distinct qt.datasetid)) as datasettypes
-	from ap.querytable as qt
-	where (qt.databaseid IS NULL OR qt.databaseid = ${dbid})
+		dst.databaseid,	
+		dst.database,
+	    COUNT(dst.siteid) as sitecount
+	from
+		constdb as dst
 	group by
-		qt.databaseid,
-		qt.datasettype
+		dst.database,
+		dst.databaseid
+), grouped as (
+	select
+	  st.database,
+	  st.sitecount,
+	  jsonb_build_object('datasettype', cdb.datasettype, 'datasets', COUNT(*)) as datasettypes
+	  from sites as st
+	  inner join constdb as cdb on cdb.databaseid = st.databaseid
+	  group by cdb.datasettype,
+	  st.database,
+	  st.sitecount
 )
-select
-  db.databaseid,
-  db.databasename,
-  db.url,
-  db.contactname,
-  db.email,
-  db.sites,
-  array_agg(dst.datasettypes) as datasettypes
-  from constdb as db
-  left join datasets as dst on dst.databaseid = db.databaseid
-  group by 
-	  db.databaseid,
-	  db.databasename,
-	  db.url,
-	  db.contactname,
-	  db.email,
-    db.sites;
+SELECT 
+	database,
+	sitecount,
+	array_agg(datasettypes) AS datasettypes
+from grouped
+group by
+	database,
+	sitecount
