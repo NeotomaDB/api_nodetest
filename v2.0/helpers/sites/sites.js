@@ -1,9 +1,14 @@
+'use strict';
+
 // Sites query:
 const { any } = require('bluebird');
 const he = require('he');
 
 // Helper for linking to external query files:
-const { sql, commaSep, ifUndef, checkObject, getparam, parseLocations } = require('../../../src/neotomaapi.js');
+const {
+  sql, commaSep,
+  ifUndef, checkObject,
+  getparam, parseLocations} = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
 const siteQuery = sql('../v2.0/helpers/sites/sitequeryfaster.sql');
@@ -13,70 +18,67 @@ const sitebygpid = sql('../v2.0/helpers/sites/sitebygpid.sql');
 const sitebyctid = sql('../v2.0/helpers/sites/sitebyctid.sql');
 
 /**
- * Return API results for sites when only a string of site IDs is passed in.
- * @param req The URL request
- * @param res The response object, to which the response (200, 404, 500) is sent.
- * @param next Callback argument to the middleware function (sends to the `next` function in app.js)
- * @return The function returns nothing, but sends the API result to the client.
+ * Call sites using the site ID.
+ * @param {req} req An Express request object.
+ * @param {res} res An Express response object.
+ * @param {next} next An Express "next" object.
  */
-
-function sitesbyid (req, res, next) {
-  let db = req.app.locals.db
-  var goodstid = !!req.params.siteid;
+function sitesbyid(req, res, next) {
+  const db = req.app.locals.db;
+  const goodstid = !!req.params.siteid;
 
   if (goodstid) {
-    var siteid = commaSep(req.params.siteid);
+    const siteid = commaSep(req.params.siteid);
+    db.any(sitebyid, [siteid])
+        .then(function(data) {
+          res.status(200)
+              .json({
+                status: 'success',
+                data: data,
+                message: 'Retrieved all tables',
+              });
+        })
+        .catch(function(err) {
+          return res.status(500)
+              .json({
+                status: 'failure',
+                message: err.message,
+                query: [siteid],
+              });
+        });
   } else {
     res.status(500)
-      .json({
-        status: 'failure',
-        data: null,
-        message: 'Must pass either queries or an integer sequence.'
-      });
-  }
-
-  db.any(sitebyid, [siteid])
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved all tables'
-        });
-    })
-    .catch(function (err) {
-      return res.status(500)
         .json({
           status: 'failure',
-          message: err.message,
-          query: [siteid]
+          data: null,
+          message: 'Must pass either queries or an integer sequence.'
         });
-    })
+  }
 }
 
 /**
- * Return API results for sites when a set of parameters are passed in.
- * @param req The URL request
- * @param res The response object, to which the response (200, 404, 500) is sent.
- * @param next Callback argument to the middleware function (sends to the `next` function in app.js)
- * @return The function returns nothing, but sends the API result to the client.
+ * Call sites with a range of parameters.
+ * @param {req} req An Express request object.
+ * @param {res} res An Express response object.
+ * @param {next} next An Express "next" object.
+ * @returns null
  */
 function sitesquery (req, res, next) {
-  let db = req.app.locals.db
-  let paramgrab = getparam(req)
+  const db = req.app.locals.db;
+  const paramgrab = getparam(req);
 
   if (!paramgrab.success) {
     res.status(500)
-      .json({
-        status: 'failure',
-        data: null,
-        message: paramgrab.message
-      });
+        .json({
+          status: 'failure',
+          data: null,
+          message: paramgrab.message,
+        });
   } else {
-    var resultset = paramgrab.data
+    const resultset = paramgrab.data;
 
     // Get the input parameters:
-    var outobj = {
+    const outobj = {
       'ageof': ifUndef(resultset.ageof, 'int'),
       'ageold': ifUndef(resultset.ageold, 'int'),
       'ageyoung': ifUndef(resultset.ageyoung, 'int'),
@@ -96,7 +98,7 @@ function sitesquery (req, res, next) {
       'offset': ifUndef(resultset.offset, 'int'),
       'siteid': ifUndef(resultset.siteid, 'sep'),
       'sitename': ifUndef(resultset.sitename, 'sep'),
-      'taxa': ifUndef(resultset.taxa, 'sep')
+      'taxa': ifUndef(resultset.taxa, 'sep'),
     };
 
     if (outobj.keywords === null) {
@@ -108,23 +110,25 @@ function sitesquery (req, res, next) {
     }
     if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
       return res.status(500)
-        .json({
-          status: 'failure',
-          message: 'The altmin is greater than altmax.  Please fix this!'
-        });
+          .json({
+            status: 'failure',
+            message: 'The altmin is greater than altmax.  Please fix this!',
+          });
     } else {
-      var goodloc = !!outobj.loc
+      const goodloc = !!outobj.loc;
 
       if (goodloc) {
-        // For the PostGIS query we need the result in WKT format, but we accept it in geoJSON or WKT.
-        try {3
+        // For the PostGIS query we need the result in WKT format
+        //  but we accept it in geoJSON or WKT.
+        try {
           outobj.loc = parseLocations(outobj.loc);
         } catch (err) {
           return res.status(500)
-            .json({
-              status: 'failure',
-              message: 'The spatial object passed in loc is not parsing properly. Is it valid WKT/geoJSON?'
-            });
+              .json({
+                status: 'failure',
+                message: 'The spatial object passed in loc is \
+                          not parsing properly. Is it valid WKT/geoJSON?'
+              });
         }
       }
 
@@ -139,17 +143,17 @@ function sitesquery (req, res, next) {
         checkObject(req, res, taxa, outobj.taxa, outobj),
         checkObject(req, res, contacts, outobj.contacts, outobj)])
         .then(result => {
-          outobj.gpid = result[0]
-          outobj.keywords = result[1]
-          outobj.taxa = result[2]
-          outobj.contacts = result[3]
+          outobj.gpid = result[0];
+          outobj.keywords = result[1];
+          outobj.taxa = result[2];
+          outobj.contacts = result[3];
           db.any(siteQuery, outobj)
             .then(function (data) {
               res.status(200)
                 .json({
                   status: 'success',
                   data: data,
-                  message: 'Retrieved all tables'
+                  message: 'Retrieved all tables',
                 });
             })
             .catch(function (err) {
