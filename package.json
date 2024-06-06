@@ -16,7 +16,7 @@
   },
   "pre-commit": "test",
   "dependencies": {
-    "@terraformer/wkt": "^2.2.0",
+    "@terraformer/wkt": "^2.2.1",
     "acorn": "^6.4.2",
     "apicache": "^1.6.2",
     "axios": "^1.6.5",
