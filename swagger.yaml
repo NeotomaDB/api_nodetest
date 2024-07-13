@@ -590,7 +590,7 @@ components:
       description: |
         The taxonomic grouping the taxon belongs to, from the Neotoma taxagrouptypes table. You can get the list of acceptable taxa group types using the [dbtables API call](https://api.neotomadb.org/api-docs/#/Database%20tables/get_v2_0_data_dbtables) and passing *taxagrouptypes* as the table.
       in: query
-      name: taxongroup
+      name: taxagroup
       required: false
       schema:
         example: Algae
