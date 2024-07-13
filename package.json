@@ -19,7 +19,7 @@
     "@terraformer/wkt": "^2.2.0",
     "acorn": "^6.4.2",
     "apicache": "^1.6.2",
-    "axios": "^1.6.5",
+    "axios": "^1.7.1",
     "big-json": "^3.2.0",
     "bluebird": "^3.7.2",
     "body-parser": "^1.20.2",
