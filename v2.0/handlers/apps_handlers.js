@@ -25,6 +25,10 @@ module.exports = {
     const dbsumm = require('../helpers/landing/landing.js');
     dbsumm.databasesummaries(req, res, next);
   },
+  contactoverview: function(req, res, next) {
+    const ctsumm = require('../helpers/contacts/contacts.js');
+    ctsumm.contactclassbydsid(req, res, next);
+  },
 };
 
 // Defining the query functions:
