@@ -8,6 +8,6 @@ recursive: true
 color: true
 full-trace: true
 ui: 'bdd'
-reporter: 'mochawesome'
+reporter: 'node_modules/mochawesome'
 retries: 3
 jobs: 2

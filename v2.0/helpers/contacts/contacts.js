@@ -140,6 +140,46 @@ function contactsbydataid (req, res, next) {
     });
 }
 
+function contactclassbydsid (req, res, next) {
+
+  const contactclassbydsid = sql('../v2.0/helpers/contacts/contact_class.sql');
+  let db = req.app.locals.db
+  var datasetIdUsed = !!req.params.datasetid;
+  if (datasetIdUsed) {
+    var datasetid = parseInt(req.params.datasetid)
+  } else {
+    res.status(500)
+      .json({
+        status: 'failure',
+        data: null,
+        message: 'Must pass either queries or an integer sequence.'
+      });
+  }
+  db.any(contactclassbydsid, [datasetid])
+    .then(function (data) {
+      if (data.length === 0) {
+        // We're returning the structure, but nothing inside it:
+        var returner = [];
+      } else {
+        returner = data;
+      };
+
+      res.status(200)
+        .json({
+          status: 'success',
+          data: returner,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message
+        });
+    });
+}
+
 function contactsbysiteid (req, res, next) {
   let db = req.app.locals.db
   var siteIdUsed = !!req.params.siteid;
@@ -184,3 +224,4 @@ module.exports.contactquery = contacts;
 module.exports.contactsbyid = contactsbyid;
 module.exports.contactsbydataid = contactsbydataid;
 module.exports.contactsbysiteid = contactsbysiteid;
+module.exports.contactclassbydsid = contactclassbydsid;
