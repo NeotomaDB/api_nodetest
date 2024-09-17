@@ -32,7 +32,7 @@
     "csv-transform": "^0.0.8",
     "dotenv": "^8.6.0",
     "ejs": "^3.1.10",
-    "express": "^4.19.2",
+    "express": "^4.21.0",
     "express-rate-limit": "^7.3.0",
     "he": "^1.2.0",
     "helmet": "^7.1.0",
