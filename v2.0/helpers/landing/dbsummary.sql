@@ -13,7 +13,7 @@ WITH constdb AS (
   from ndb.constituentdatabases AS cdb
   left join ap.querytable as qt on cdb.databaseid = qt.databaseid
   left join ndb.contacts as cnt on cdb.contactid = cnt.contactid
-  WHERE (cdb.databaseid IS NULL OR cdb.databaseid = ${dbid})
+  WHERE (${dbid} IS NULL OR cdb.databaseid = ${dbid})
 ), sites as (
 	select
 		dst.databaseid,	
