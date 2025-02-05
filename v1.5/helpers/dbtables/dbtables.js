@@ -1,16 +1,27 @@
-const { sql } = require('../../../src/neotomaapi.js');
+'use strict';
+
+const {sql} = require('../../../src/neotomaapi.js');
 
 const dbtablesQuery = sql('../v1.5/helpers/dbtables/dbtablesQuery.sql');
 
 // Defining the query function:
+/**
+ * Return the data table based on a set of query parameters
+ * @param {req} req A request object passed from Express
+ * @param {res} res A response object passed from Express.
+ * @param {next} next A next object for Express.
+ */
+function dbtables(req, res, next) {
+  const db = req.app.locals.db;
 
-function dbtables (req, res, next) {
-  let db = req.app.locals.db
   /*
   3 cases:
-  1: tablename passed with or without offset, limit, sort, order, fields --> return set of records
-  2: tablename and pkey value passed as id --> check if table is single field pkey, if so, return record
-  3: no tablename passed --> return list of tables
+  1: table passed with or without offset, limit, sort, order, fields
+    -> The query returns the table.
+  2: tablename and pkey value passed as id
+    -> check if table is single field pkey, if so, return record
+  3: no tablename passed.
+    -> return list of tables
   */
   // handle optional parameters: limit, offset, sort, order, format, fields
 
@@ -25,9 +36,11 @@ function dbtables (req, res, next) {
   if (req.query) {
     if (req.query.sort) {
       hasSortField = true;
-      sortField = req.query.sort.toLowerCase();
+      if (typeof req.query.sort === 'string') {
+        sortField = req.query.sort.toLowerCase();
+      }
       sortOrder = 'ASC';
-      if (req.query.order) {
+      if (req.query.order && typeof req.query.order === 'string') {
         req.query.order.toLowerCase() == 'd' ? sortOrder = 'DESC' : sortOrder = 'ASC';
       }
     }

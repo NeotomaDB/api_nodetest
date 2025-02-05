@@ -52,7 +52,8 @@
           "file": "\\test\\chronologies.js",
           "beforeHooks": [],
           "afterHooks": [],
-          "tests": [
+          "tests": [],
+          "suites": [
             {
               "title": "A call to two datasets returns two datasets of data:",
               "fullTitle": "Get chronology data by datasetid: A call to two datasets returns two datasets of data:",
@@ -76,13 +77,14 @@
           "passes": [
             "dce2292f-3f98-41ea-9105-5aabff578de7"
           ],
+          "passes": [],
           "failures": [],
           "pending": [],
           "skipped": [],
-          "duration": 1,
+          "duration": 0,
           "root": false,
           "rootEmpty": false,
-          "_timeout": 5000
+          "_timeout": 300000
         },
         {
           "uuid": "c132387a-b10e-4dc2-9fdd-418274349b5c",
@@ -91,7 +93,8 @@
           "file": "\\test\\contacts.js",
           "beforeHooks": [],
           "afterHooks": [],
-          "tests": [
+          "tests": [],
+          "suites": [
             {
               "title": "The default limit of 25 should be reached for contact data:",
               "fullTitle": "Get contact data: The default limit of 25 should be reached for contact data:",
@@ -286,7 +289,7 @@
           "duration": 9,
           "root": false,
           "rootEmpty": false,
-          "_timeout": 5000
+          "_timeout": 300000
         },
         {
           "uuid": "1d4c2eb2-e2b7-446f-b886-228234779c2a",
@@ -297,8 +300,8 @@
           "afterHooks": [],
           "tests": [
             {
-              "title": "Asking for the datasets associated with Lake Tulane work:",
-              "fullTitle": "Get datasets any number of ways: Asking for the datasets associated with Lake Tulane work:",
+              "title": "An empty query returns a valid response.",
+              "fullTitle": "Get geopolitical data: An empty query returns a valid response.",
               "timedOut": false,
               "duration": 1,
               "state": "failed",
@@ -319,8 +322,8 @@
               "skipped": false
             },
             {
-              "title": "Get dataset by singular id & return same id:",
-              "fullTitle": "Get datasets any number of ways: Get dataset by singular id & return same id:",
+              "title": "The default limit of 25 should be reached for country level data:",
+              "fullTitle": "Get geopolitical data: The default limit of 25 should be reached for country level data:",
               "timedOut": false,
               "duration": 1,
               "state": "failed",
@@ -341,8 +344,8 @@
               "skipped": false
             },
             {
-              "title": "Get dataset from siteid gives us siteids back and datasets:",
-              "fullTitle": "Get datasets any number of ways: Get dataset from siteid gives us siteids back and datasets:",
+              "title": "Changing the limit should change the number of countries retrieved:",
+              "fullTitle": "Get geopolitical data: Changing the limit should change the number of countries retrieved:",
               "timedOut": false,
               "duration": 1,
               "state": "failed",
@@ -407,8 +410,8 @@
               "skipped": false
             },
             {
-              "title": "Limits work:",
-              "fullTitle": "Get datasets any number of ways: Limits work:",
+              "title": "A single geopolitical unit (12) should be returned.",
+              "fullTitle": "Get geopolitical data: A single geopolitical unit (12) should be returned.",
               "timedOut": false,
               "duration": 1,
               "state": "failed",
@@ -467,7 +470,7 @@
           "duration": 7,
           "root": false,
           "rootEmpty": false,
-          "_timeout": 50000
+          "_timeout": 5000
         },
         {
           "uuid": "4edd84d9-e318-4b5c-9eaf-4dc249bdab05",
@@ -487,8 +490,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for TaxaGroupTypes",
-                  "fullTitle": "Tests for Explorer App Services tests for get should respond 200 for TaxaGroupTypes",
+                  "title": "should respond 200 for \"An array of datasets.\"",
+                  "fullTitle": "tests for /v1.5/data/datasets/{datasetid} tests for get should respond 200 for \"An array of datasets.\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -507,10 +510,50 @@
                   "parentUUID": "4ff9b72a-6aeb-497d-9b7c-92bfd1d48bee",
                   "isHook": false,
                   "skipped": false
-                },
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "c4f0b378-5d84-494f-bd5f-475e3e60e2a5"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 629,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 300000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 300000
+        },
+        {
+          "uuid": "2fcec9cc-cc54-4af6-be5c-626ce107e122",
+          "title": "tests for /v1.5/data/sites/{siteid}",
+          "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v1.5-data-sites-{siteid}-test.js",
+          "file": "/test/v1.5-data-sites-{siteid}-test.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "a0431c7a-9bf2-43a6-8dd5-6093a0b07ec0",
+              "title": "tests for get",
+              "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v1.5-data-sites-{siteid}-test.js",
+              "file": "/test/v1.5-data-sites-{siteid}-test.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
                 {
-                  "title": "should respond 200 for TaphonomyTypes",
-                  "fullTitle": "Tests for Explorer App Services tests for get should respond 200 for TaphonomyTypes",
+                  "title": "should respond 200 for \"An array of site elements.\"",
+                  "fullTitle": "tests for /v1.5/data/sites/{siteid} tests for get should respond 200 for \"An array of site elements.\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -529,10 +572,50 @@
                   "parentUUID": "4ff9b72a-6aeb-497d-9b7c-92bfd1d48bee",
                   "isHook": false,
                   "skipped": false
-                },
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "a208add4-aa3a-4986-b284-beeab40cf044"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 75,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 300000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 300000
+        },
+        {
+          "uuid": "a05b3bd3-0f2a-4957-b0c3-ce9c808a6ae8",
+          "title": "tests for /v2.0/data/spatial/icesheet",
+          "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-spatial-icesheet-test.js",
+          "file": "/test/v2.0-data-spatial-icesheet-test.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "599132bf-a340-4601-8552-88d02b309586",
+              "title": "tests for get",
+              "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-spatial-icesheet-test.js",
+              "file": "/test/v2.0-data-spatial-icesheet-test.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
                 {
-                  "title": "should respond 200 for TaphonomySystems",
-                  "fullTitle": "Tests for Explorer App Services tests for get should respond 200 for TaphonomySystems",
+                  "title": "should respond 200 for \"An object containing glacial extents for the selected time period (in **calibrated radiocarbon years**). \"",
+                  "fullTitle": "tests for /v2.0/data/spatial/icesheet tests for get should respond 200 for \"An object containing glacial extents for the selected time period (in **calibrated radiocarbon years**). \"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -551,10 +634,50 @@
                   "parentUUID": "4ff9b72a-6aeb-497d-9b7c-92bfd1d48bee",
                   "isHook": false,
                   "skipped": false
-                },
+                }
+              ],
+              "suites": [],
+              "passes": [],
+              "failures": [
+                "6a3c48cc-2511-49dd-aeac-5e6fe9cefa47"
+              ],
+              "pending": [],
+              "skipped": [],
+              "duration": 133,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 300000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 300000
+        },
+        {
+          "uuid": "0da1af0b-6139-451b-8681-7e1c7b9d7c58",
+          "title": "tests for /v2.0/data/taxa/{taxonid}",
+          "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-taxa-{taxonid}-test.js",
+          "file": "/test/v2.0-data-taxa-{taxonid}-test.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "8e49969a-6731-4868-8133-6a7f298ced0f",
+              "title": "tests for get",
+              "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-taxa-{taxonid}-test.js",
+              "file": "/test/v2.0-data-taxa-{taxonid}-test.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
                 {
-                  "title": "should respond 200 for ElementTypes",
-                  "fullTitle": "Tests for Explorer App Services tests for get should respond 200 for ElementTypes",
+                  "title": "should respond 200 for \"A taxon or array of taxa.\"",
+                  "fullTitle": "tests for /v2.0/data/taxa/{taxonid} tests for get should respond 200 for \"A taxon or array of taxa.\"",
                   "timedOut": false,
                   "duration": 3,
                   "state": "failed",
@@ -617,10 +740,50 @@
                   "parentUUID": "4ff9b72a-6aeb-497d-9b7c-92bfd1d48bee",
                   "isHook": false,
                   "skipped": false
-                },
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "742d0b98-b712-43f2-84e7-f9a2fc02ed88"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 76,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 300000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 300000
+        },
+        {
+          "uuid": "36317b4f-4fbf-42c4-b5da-f97acffa0265",
+          "title": "tests for /v2.0/data/sites/{siteid}/chronologies",
+          "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-sites-{siteid}-chronologies-test.js",
+          "file": "/test/v2.0-data-sites-{siteid}-chronologies-test.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "2b12df88-f703-4194-83f6-5271f0e58f4c",
+              "title": "tests for get",
+              "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-sites-{siteid}-chronologies-test.js",
+              "file": "/test/v2.0-data-sites-{siteid}-chronologies-test.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
                 {
-                  "title": "should respond 200 for keywords",
-                  "fullTitle": "Tests for Explorer App Services tests for get should respond 200 for keywords",
+                  "title": "should respond 200 for \"chronology\"",
+                  "fullTitle": "tests for /v2.0/data/sites/{siteid}/chronologies tests for get should respond 200 for \"chronology\"",
                   "timedOut": false,
                   "duration": 4,
                   "state": "failed",
@@ -639,10 +802,50 @@
                   "parentUUID": "4ff9b72a-6aeb-497d-9b7c-92bfd1d48bee",
                   "isHook": false,
                   "skipped": false
-                },
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "69e4ad02-ec5d-45c5-ba9a-c5cc7c46fdf3"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 172,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 300000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 300000
+        },
+        {
+          "uuid": "e4a3fb24-465e-4b39-92cf-f01f0d3d9bfc",
+          "title": "tests for /v2.0/apps/taxaindatasets",
+          "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-apps-taxaindatasets-test.js",
+          "file": "/test/v2.0-apps-taxaindatasets-test.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "6b13c00e-426c-4e45-8bc0-c85442991522",
+              "title": "tests for get",
+              "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-apps-taxaindatasets-test.js",
+              "file": "/test/v2.0-apps-taxaindatasets-test.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
                 {
-                  "title": "should respond 200 for authorpis",
-                  "fullTitle": "Tests for Explorer App Services tests for get should respond 200 for authorpis",
+                  "title": "should respond 200 for \"A list of all taxa in neotoma and the datasets in which they are found.\"",
+                  "fullTitle": "tests for /v2.0/apps/taxaindatasets tests for get should respond 200 for \"A list of all taxa in neotoma and the datasets in which they are found.\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -661,10 +864,50 @@
                   "parentUUID": "4ff9b72a-6aeb-497d-9b7c-92bfd1d48bee",
                   "isHook": false,
                   "skipped": false
-                },
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "f63934cf-97bf-42a0-a937-eaac04981c22"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 894,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 300000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 300000
+        },
+        {
+          "uuid": "a61433c6-5485-4fb7-a36b-a01526970fd3",
+          "title": "tests for /v1.5/apps/TaxaInDatasets",
+          "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v1.5-apps-TaxaInDatasets-test.js",
+          "file": "/test/v1.5-apps-TaxaInDatasets-test.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "8a9efa26-9637-4736-8d64-f0b804740386",
+              "title": "tests for get",
+              "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v1.5-apps-TaxaInDatasets-test.js",
+              "file": "/test/v1.5-apps-TaxaInDatasets-test.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
                 {
-                  "title": "should respond 200 for DepositionalEnvironments",
-                  "fullTitle": "Tests for Explorer App Services tests for get should respond 200 for DepositionalEnvironments",
+                  "title": "should respond 200 for \"An array of taxon identities with associated dataset IDs.\"",
+                  "fullTitle": "tests for /v1.5/apps/TaxaInDatasets tests for get should respond 200 for \"An array of taxon identities with associated dataset IDs.\"",
                   "timedOut": false,
                   "duration": 3,
                   "state": "failed",
@@ -683,10 +926,50 @@
                   "parentUUID": "4ff9b72a-6aeb-497d-9b7c-92bfd1d48bee",
                   "isHook": false,
                   "skipped": false
-                },
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "3ac8e283-65a6-4336-bb38-d28fcd0c3ddd"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 684,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 300000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 300000
+        },
+        {
+          "uuid": "5e7ea00e-aa4e-4972-85cc-4d5273fde809",
+          "title": "tests for /v2.0/data/publications",
+          "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-publications-test.js",
+          "file": "/test/v2.0-data-publications-test.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "81573d8c-bfe4-43c9-805c-bf7fdf24d1dc",
+              "title": "tests for get",
+              "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-publications-test.js",
+              "file": "/test/v2.0-data-publications-test.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
                 {
-                  "title": "should respond 200 for Search",
-                  "fullTitle": "Tests for Explorer App Services tests for get should respond 200 for Search",
+                  "title": "should respond 200 for \"A list of publications.\"",
+                  "fullTitle": "tests for /v2.0/data/publications tests for get should respond 200 for \"A list of publications.\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -795,7 +1078,7 @@
               "duration": 35,
               "root": false,
               "rootEmpty": false,
-              "_timeout": 12000
+              "_timeout": 300000
             }
           ],
           "passes": [],
@@ -805,7 +1088,7 @@
           "duration": 0,
           "root": false,
           "rootEmpty": false,
-          "_timeout": 12000
+          "_timeout": 300000
         },
         {
           "uuid": "f88288ae-e2e2-4da3-bef6-8f5ae98a0e21",
@@ -814,7 +1097,8 @@
           "file": "\\test\\geopolitical.js",
           "beforeHooks": [],
           "afterHooks": [],
-          "tests": [
+          "tests": [],
+          "suites": [
             {
               "title": "An empty query returns a valid response.",
               "fullTitle": "Get geopolitical data: An empty query returns a valid response.",
@@ -917,7 +1201,7 @@
           "duration": 5,
           "root": false,
           "rootEmpty": false,
-          "_timeout": 5000
+          "_timeout": 300000
         },
         {
           "uuid": "be27728e-aa34-4a17-a751-0c99d18e727f",
@@ -926,7 +1210,8 @@
           "file": "\\test\\neotoma_test.js",
           "beforeHooks": [],
           "afterHooks": [],
-          "tests": [
+          "tests": [],
+          "suites": [
             {
               "title": "`api-docs` redirects to the api documentation.",
               "fullTitle": "Any path goes to the api documentation: `api-docs` redirects to the api documentation.",
@@ -969,7 +1254,8 @@
           "file": "\\test\\occurrence.js",
           "beforeHooks": [],
           "afterHooks": [],
-          "tests": [
+          "tests": [],
+          "suites": [
             {
               "title": "Get occurrence by singular id & return same id:",
               "fullTitle": "Get occurrence data any number of ways: Get occurrence by singular id & return same id:",
@@ -1224,10 +1510,10 @@
           "failures": [],
           "pending": [],
           "skipped": [],
-          "duration": 1,
+          "duration": 0,
           "root": false,
           "rootEmpty": false,
-          "_timeout": 30000
+          "_timeout": 300000
         },
         {
           "uuid": "f856ac88-e5d6-4ccb-8581-87e9296f210e",
@@ -2607,6 +2893,7 @@
           "failures": [
             "b0e23e2a-b2aa-42c9-8a4b-5bbbea8cbe3e"
           ],
+          "failures": [],
           "pending": [],
           "skipped": [],
           "duration": 0,
@@ -2650,6 +2937,7 @@
           "failures": [
             "c125c36f-5bba-4209-acec-80545a104fcb"
           ],
+          "failures": [],
           "pending": [],
           "skipped": [],
           "duration": 0,
@@ -4384,7 +4672,8 @@
           "file": "\\test\\sites.js",
           "beforeHooks": [],
           "afterHooks": [],
-          "tests": [
+          "tests": [],
+          "suites": [
             {
               "title": "Get site by singular id & return same id:",
               "fullTitle": "Get site data any number of ways: Get site by singular id & return same id:",
@@ -4510,7 +4799,7 @@
           "duration": 5,
           "root": false,
           "rootEmpty": false,
-          "_timeout": 5000
+          "_timeout": 300000
         },
         {
           "uuid": "4b698da8-79b0-4b8e-a2a6-345527101c42",
@@ -4521,8 +4810,8 @@
           "afterHooks": [],
           "tests": [
             {
-              "title": "Get occurrence data using a simple geoJSON:",
-              "fullTitle": "Get Neotoma data with geoJSON extents: Get occurrence data using a simple geoJSON:",
+              "title": "Get occurrence by singular id & return same id:",
+              "fullTitle": "Get occurrence data any number of ways: Get occurrence by singular id & return same id:",
               "timedOut": false,
               "duration": 1,
               "state": "failed",
@@ -4543,8 +4832,8 @@
               "skipped": false
             },
             {
-              "title": "Get site data using a simple geoJSON:",
-              "fullTitle": "Get Neotoma data with geoJSON extents: Get site data using a simple geoJSON:",
+              "title": "Get the Flyover test call:",
+              "fullTitle": "Get occurrence data any number of ways: Get the Flyover test call:",
               "timedOut": false,
               "duration": 2,
               "state": "failed",
@@ -4565,8 +4854,8 @@
               "skipped": false
             },
             {
-              "title": "Get dataset data using a simple geoJSON:",
-              "fullTitle": "Get Neotoma data with geoJSON extents: Get dataset data using a simple geoJSON:",
+              "title": "Failing Canis test works:",
+              "fullTitle": "Get occurrence data any number of ways: Failing Canis test works:",
               "timedOut": false,
               "duration": 1,
               "state": "failed",
@@ -4632,8 +4921,8 @@
               "skipped": false
             },
             {
-              "title": "Get site data using a simple WKT:",
-              "fullTitle": "Get Neotoma data with WKT extents: Get site data using a simple WKT:",
+              "title": "Get occurrence by taxon:",
+              "fullTitle": "Get occurrence data any number of ways: Get occurrence by taxon:",
               "timedOut": false,
               "duration": 2,
               "state": "failed",
@@ -4654,8 +4943,8 @@
               "skipped": false
             },
             {
-              "title": "Get dataset data using a simple WKT:",
-              "fullTitle": "Get Neotoma data with WKT extents: Get dataset data using a simple WKT:",
+              "title": "Break occurrences by flipping altitudes:",
+              "fullTitle": "Get occurrence data any number of ways: Break occurrences by flipping altitudes:",
               "timedOut": false,
               "duration": 2,
               "state": "failed",
@@ -4676,8 +4965,8 @@
               "skipped": false
             },
             {
-              "title": "Get dataset data using a simple WKT:",
-              "fullTitle": "Get Neotoma data with WKT extents: Get dataset data using a simple WKT:",
+              "title": "Break occurrences by flipping ages:",
+              "fullTitle": "Get occurrence data any number of ways: Break occurrences by flipping ages:",
               "timedOut": false,
               "duration": 0,
               "state": "failed",
@@ -4744,8 +5033,8 @@
               "skipped": false
             },
             {
-              "title": "v2.0: A single taxon should be returned by id:",
-              "fullTitle": "Get taxon data: v2.0: A single taxon should be returned by id:",
+              "title": "Occurrences filter by age:",
+              "fullTitle": "Get occurrence data any number of ways: Occurrences filter by age:",
               "timedOut": false,
               "duration": 1,
               "state": "failed",
@@ -4766,8 +5055,8 @@
               "skipped": false
             },
             {
-              "title": "v2.0: Taxon queries should be case insensitive:",
-              "fullTitle": "Get taxon data: v2.0: Taxon queries should be case insensitive:",
+              "title": "Get occurrences with comma separated fields:",
+              "fullTitle": "Get occurrence data any number of ways: Get occurrences with comma separated fields:",
               "timedOut": false,
               "duration": 1,
               "state": "failed",
@@ -4788,8 +5077,8 @@
               "skipped": false
             },
             {
-              "title": "v2.0: Taxon queries should accept comma separated lists:",
-              "fullTitle": "Get taxon data: v2.0: Taxon queries should accept comma separated lists:",
+              "title": "Get occurrences with comma separated taxa:",
+              "fullTitle": "Get occurrence data any number of ways: Get occurrences with comma separated taxa:",
               "timedOut": false,
               "duration": 1,
               "state": "failed",
@@ -4810,8 +5099,8 @@
               "skipped": false
             },
             {
-              "title": "v2.0: Hierarchical taxon queries should accept comma separated lists:",
-              "fullTitle": "Get taxon data: v2.0: Hierarchical taxon queries should accept comma separated lists:",
+              "title": "Get hierarchical occurrences with comma separated taxa:",
+              "fullTitle": "Get occurrence data any number of ways: Get hierarchical occurrences with comma separated taxa:",
               "timedOut": false,
               "duration": 1,
               "state": "failed",
@@ -4832,8 +5121,8 @@
               "skipped": false
             },
             {
-              "title": "v2.0: Taxon queries should accept `*` as a wildcard:",
-              "fullTitle": "Get taxon data: v2.0: Taxon queries should accept `*` as a wildcard:",
+              "title": "Get occurrences returns lower taxa:",
+              "fullTitle": "Get occurrence data any number of ways: Get occurrences returns lower taxa:",
               "timedOut": false,
               "duration": 2,
               "state": "failed",
@@ -4854,8 +5143,8 @@
               "skipped": false
             },
             {
-              "title": "v2.0: The default limit of 25 should be reached for taxon data:",
-              "fullTitle": "Get taxon data: v2.0: The default limit of 25 should be reached for taxon data:",
+              "title": "Get occurrences with mammals and lower taxa works:",
+              "fullTitle": "Get occurrence data any number of ways: Get occurrences with mammals and lower taxa works:",
               "timedOut": false,
               "duration": 1,
               "state": "failed",
@@ -4876,8 +5165,8 @@
               "skipped": false
             },
             {
-              "title": "v2.0: Changing the limit should change the number of taxa retrieved:",
-              "fullTitle": "Get taxon data: v2.0: Changing the limit should change the number of taxa retrieved:",
+              "title": "Get occurrences using taxon and age bounds:",
+              "fullTitle": "Get occurrence data any number of ways: Get occurrences using taxon and age bounds:",
               "timedOut": false,
               "duration": 1,
               "state": "failed",
@@ -4915,7 +5204,7 @@
           "duration": 9,
           "root": false,
           "rootEmpty": false,
-          "_timeout": 300000
+          "_timeout": 30000
         },
         {
           "uuid": "40feca4b-5eae-4f43-a1a0-09030c85ea89",
@@ -5121,8 +5410,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"Contact\"",
-                  "fullTitle": "tests for /v1.5/data/contacts/{contactid} tests for get should respond 200 for \"Contact\"",
+                  "title": "should respond 200 for TaphonomySystems",
+                  "fullTitle": "Tests for Explorer App Services tests for get should respond 200 for TaphonomySystems",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -5183,8 +5472,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"An array of datasets.\"",
-                  "fullTitle": "tests for /v1.5/data/datasets/{datasetid} tests for get should respond 200 for \"An array of datasets.\"",
+                  "title": "should respond 200 for ElementTypes",
+                  "fullTitle": "Tests for Explorer App Services tests for get should respond 200 for ElementTypes",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -5245,8 +5534,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"Returned download object.\"",
-                  "fullTitle": "tests for /v1.5/data/downloads/{datasetid} tests for get should respond 200 for \"Returned download object.\"",
+                  "title": "should respond 200 for TaxaInDatasets (a slow service)",
+                  "fullTitle": "Tests for Explorer App Services tests for get should respond 200 for TaxaInDatasets (a slow service)",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -5307,8 +5596,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"An array of geopolitical units.\"",
-                  "fullTitle": "tests for /v1.5/data/geopoliticalunits tests for get should respond 200 for \"An array of geopolitical units.\"",
+                  "title": "should respond 200 for collectionTypes",
+                  "fullTitle": "Tests for Explorer App Services tests for get should respond 200 for collectionTypes",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -5369,8 +5658,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"An array of geopolitical units.\"",
-                  "fullTitle": "tests for /v1.5/data/geopoliticalunits/{gpid} tests for get should respond 200 for \"An array of geopolitical units.\"",
+                  "title": "should respond 200 for keywords",
+                  "fullTitle": "Tests for Explorer App Services tests for get should respond 200 for keywords",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -5431,8 +5720,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"A single occurrence object.\"",
-                  "fullTitle": "tests for /v1.5/data/occurrence/{occurrenceid} tests for get should respond 200 for \"A single occurrence object.\"",
+                  "title": "should respond 200 for authorpis",
+                  "fullTitle": "Tests for Explorer App Services tests for get should respond 200 for authorpis",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -5493,8 +5782,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"An array of site elements.\"",
-                  "fullTitle": "tests for /v1.5/data/sites/{siteid} tests for get should respond 200 for \"An array of site elements.\"",
+                  "title": "should respond 200 for DepositionalEnvironments",
+                  "fullTitle": "Tests for Explorer App Services tests for get should respond 200 for DepositionalEnvironments",
                   "timedOut": false,
                   "duration": 4,
                   "state": "failed",
@@ -5555,8 +5844,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"Returned table.\"",
-                  "fullTitle": "tests for /v1.5/dbtables/{table} tests for get should respond 200 for \"Returned table.\"",
+                  "title": "should respond 200 for Search",
+                  "fullTitle": "Tests for Explorer App Services tests for get should respond 200 for Search",
                   "timedOut": false,
                   "duration": 3,
                   "state": "failed",
@@ -5617,8 +5906,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"A table of Neotoma collection types.\"",
-                  "fullTitle": "tests for /v2.0/apps/authorpis tests for get should respond 200 for \"A table of Neotoma collection types.\"",
+                  "title": "should respond 200 for DatasetTypes",
+                  "fullTitle": "Tests for Explorer App Services tests for get should respond 200 for DatasetTypes",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -5679,8 +5968,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"A table of Neotoma collection types.\"",
-                  "fullTitle": "tests for /v2.0/apps/collectiontypes tests for get should respond 200 for \"A table of Neotoma collection types.\"",
+                  "title": "should respond 200 for RelativeAges",
+                  "fullTitle": "Tests for Explorer App Services tests for get should respond 200 for RelativeAges",
                   "timedOut": false,
                   "duration": 3,
                   "state": "failed",
@@ -5741,8 +6030,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"Returns an ordered array (from earliest to latest) of upload counts by month (YYYY/MM/DD; all days as 01). Months with no uploads are excluded. \"",
-                  "fullTitle": "tests for /v2.0/apps/constdb/datasetages tests for get should respond 200 for \"Returns an ordered array (from earliest to latest) of upload counts by month (YYYY/MM/DD; all days as 01). Months with no uploads are excluded. \"",
+                  "title": "should respond 200 for Geochronologies",
+                  "fullTitle": "Tests for Explorer App Services tests for get should respond 200 for Geochronologies",
                   "timedOut": false,
                   "duration": 3,
                   "state": "failed",
@@ -5773,7 +6062,7 @@
               "duration": 3,
               "root": false,
               "rootEmpty": false,
-              "_timeout": 300000
+              "_timeout": 12000
             }
           ],
           "passes": [],
@@ -5783,7 +6072,7 @@
           "duration": 0,
           "root": false,
           "rootEmpty": false,
-          "_timeout": 300000
+          "_timeout": 12000
         },
         {
           "uuid": "bfe0542c-af32-41b4-ba4f-45cf52f49e21",
@@ -5803,8 +6092,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"Returns the set of datasets contained within a constituent database, identified by the constituent database identifier. Used for quick landing page generation. \"",
-                  "fullTitle": "tests for /v2.0/apps/constdb/datasets tests for get should respond 200 for \"Returns the set of datasets contained within a constituent database, identified by the constituent database identifier. Used for quick landing page generation. \"",
+                  "title": "should respond 200 for \"occurrence\"",
+                  "fullTitle": "tests for /v2.0/data/occurrences tests for get should respond 200 for \"occurrence\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -5865,8 +6154,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"Returns an ordered array (from earliest to latest) of upload counts by month (YYYY/MM/DD; all days as 01). Months with no uploads are excluded. \"",
-                  "fullTitle": "tests for /v2.0/apps/constdb/datasetuploads tests for get should respond 200 for \"Returns an ordered array (from earliest to latest) of upload counts by month (YYYY/MM/DD; all days as 01). Months with no uploads are excluded. \"",
+                  "title": "should respond 200 for \"Returned table.\"",
+                  "fullTitle": "tests for /v2.0/data/dbtables tests for get should respond 200 for \"Returned table.\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -5927,8 +6216,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"Returns metadata about each constituent database in Neotoma, including Summary Informationrmation about dataset types within the database and the age spans of the records in the database. \"",
-                  "fullTitle": "tests for /v2.0/apps/constdb tests for get should respond 200 for \"Returns metadata about each constituent database in Neotoma, including Summary Informationrmation about dataset types within the database and the age spans of the records in the database. \"",
+                  "title": "should respond 200 for \"An array of datasets.\"",
+                  "fullTitle": "tests for /v2.0/data/datasets/{datasetid} tests for get should respond 200 for \"An array of datasets.\"",
                   "timedOut": false,
                   "duration": 3,
                   "state": "failed",
@@ -5989,8 +6278,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"A table of Neotoma collection types.\"",
-                  "fullTitle": "tests for /v2.0/apps/datasettypes tests for get should respond 200 for \"A table of Neotoma collection types.\"",
+                  "title": "should respond 200 for \"occurrence\"",
+                  "fullTitle": "tests for /v2.0/data/occurrences/{occurrenceid} tests for get should respond 200 for \"occurrence\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -6051,8 +6340,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"A table of Neotoma collection types.\"",
-                  "fullTitle": "tests for /v2.0/apps/depositionalenvironments/root tests for get should respond 200 for \"A table of Neotoma collection types.\"",
+                  "title": "should respond 200 for \"A count of the datasets added by database for the requested period.\"",
+                  "fullTitle": "tests for /v2.0/data/summary/dsdbmonth tests for get should respond 200 for \"A count of the datasets added by database for the requested period.\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -6102,8 +6391,7 @@
           "file": "\\test\\v2.0-apps-keywords-test.js",
           "beforeHooks": [],
           "afterHooks": [],
-          "tests": [],
-          "suites": [
+          "tests": [
             {
               "uuid": "7343b06a-546d-445a-9df8-59daf70933ef",
               "title": "tests for get",
@@ -6148,14 +6436,17 @@
               "_timeout": 300000
             }
           ],
-          "passes": [],
+          "suites": [],
+          "passes": [
+            "92f2f005-867f-4ef8-b208-260e0b010cb5"
+          ],
           "failures": [],
           "pending": [],
           "skipped": [],
           "duration": 0,
           "root": false,
           "rootEmpty": false,
-          "_timeout": 300000
+          "_timeout": 5000
         },
         {
           "uuid": "1c94bf70-1222-4db4-9e4b-a73ba2c1227a",
@@ -6175,8 +6466,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"A table of Neotoma collection types.\"",
-                  "fullTitle": "tests for /v2.0/apps/taphonomysystems tests for get should respond 200 for \"A table of Neotoma collection types.\"",
+                  "title": "should respond 200 for \"A Neotoma sites object.\"",
+                  "fullTitle": "tests for /v2.0/data/contacts/{contactid}/sites tests for get should respond 200 for \"A Neotoma sites object.\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -6237,8 +6528,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"A table of Neotoma collection types.\"",
-                  "fullTitle": "tests for /v2.0/apps/taxagrouptypes tests for get should respond 200 for \"A table of Neotoma collection types.\"",
+                  "title": "should respond 200 for \"Datasets\"",
+                  "fullTitle": "tests for /v2.0/data/datasets/db tests for get should respond 200 for \"Datasets\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -6299,8 +6590,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"A list of all taxa in neotoma and the datasets in which they are found.\"",
-                  "fullTitle": "tests for /v2.0/apps/taxaindatasets tests for get should respond 200 for \"A list of all taxa in neotoma and the datasets in which they are found.\"",
+                  "title": "should respond 200 for \"chronology\"",
+                  "fullTitle": "tests for /v2.0/data/datasets/{datasetid}/chronologies tests for get should respond 200 for \"chronology\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -6361,8 +6652,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"A Neotoma chronology object.\"",
-                  "fullTitle": "tests for /v2.0/data/chronologies/{chronid} tests for get should respond 200 for \"A Neotoma chronology object.\"",
+                  "title": "should respond 200 for \"An array of sites.\"",
+                  "fullTitle": "tests for /v2.0/data/sites/{siteid} tests for get should respond 200 for \"An array of sites.\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -6423,8 +6714,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"contact\"",
-                  "fullTitle": "tests for /v2.0/data/contacts tests for get should respond 200 for \"contact\"",
+                  "title": "should respond 200 for \"DOI\"",
+                  "fullTitle": "tests for /v2.0/data/datasets/{datasetid}/doi tests for get should respond 200 for \"DOI\"",
                   "timedOut": false,
                   "duration": 3,
                   "state": "failed",
@@ -6474,8 +6765,7 @@
           "file": "\\test\\v2.0-data-contacts-{contactid}-sites-test.js",
           "beforeHooks": [],
           "afterHooks": [],
-          "tests": [],
-          "suites": [
+          "tests": [
             {
               "uuid": "7b3379c6-c686-4547-9d97-dd435b89fd8a",
               "title": "tests for get",
@@ -6520,11 +6810,21 @@
               "_timeout": 300000
             }
           ],
-          "passes": [],
+          "suites": [],
+          "passes": [
+            "419c4691-34c1-4a9c-b813-f085dc2bfdd9",
+            "3af2b432-82ac-4959-ac9e-1457e72398c5",
+            "47f70dde-9834-4c84-b936-86ffcd555550",
+            "60b09eef-2764-4b65-a626-d4ecf2b4b38c",
+            "6a11dffd-adac-4291-847f-85fd1adfff35",
+            "ace1a5f8-408d-44bb-ae3b-51884ae44141",
+            "d765c9e8-bd43-4f40-9533-0c93aa16938d",
+            "39f46d82-7994-4a27-8ea9-cde734f377ee"
+          ],
           "failures": [],
           "pending": [],
           "skipped": [],
-          "duration": 0,
+          "duration": 1659,
           "root": false,
           "rootEmpty": false,
           "_timeout": 300000
@@ -6547,8 +6847,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"A Neotoma contacts object.\"",
-                  "fullTitle": "tests for /v2.0/data/contacts/{contactid} tests for get should respond 200 for \"A Neotoma contacts object.\"",
+                  "title": "should respond 200 for \"An array of geopolitical units.\"",
+                  "fullTitle": "tests for /v2.0/data/geopoliticalunits tests for get should respond 200 for \"An array of geopolitical units.\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -6598,8 +6898,7 @@
           "file": "\\test\\v2.0-data-datasets-db-test.js",
           "beforeHooks": [],
           "afterHooks": [],
-          "tests": [],
-          "suites": [
+          "tests": [
             {
               "uuid": "ab17ed2f-db76-4d56-92a7-ed64a3ccdd9b",
               "title": "tests for get",
@@ -6644,14 +6943,24 @@
               "_timeout": 300000
             }
           ],
-          "passes": [],
+          "suites": [],
+          "passes": [
+            "948c3284-3658-467a-a40f-63e03c0cf7d1",
+            "1ae370ad-2a8a-4f39-8845-cff4bcf1c847",
+            "352b1110-be71-44d7-b545-cb5dd5ee7206",
+            "8a27b675-b8dd-4147-b553-a8cda7774f1d",
+            "df873690-0956-4b1e-ab5a-45f1722acfce",
+            "b77e82fc-0a42-42fd-8772-df674c009217",
+            "4c64f85b-bfc5-4add-a517-b8dd39759cff",
+            "3daf57c7-dfe4-43e5-92fd-1d83aa06a8cc"
+          ],
           "failures": [],
           "pending": [],
           "skipped": [],
-          "duration": 0,
+          "duration": 569,
           "root": false,
           "rootEmpty": false,
-          "_timeout": 300000
+          "_timeout": 5000
         },
         {
           "uuid": "e352e7ed-ddbc-49e4-81b8-b8db71fa879d",
@@ -6660,8 +6969,7 @@
           "file": "\\test\\v2.0-data-datasets-test.js",
           "beforeHooks": [],
           "afterHooks": [],
-          "tests": [],
-          "suites": [
+          "tests": [
             {
               "uuid": "0d26536e-99f6-457e-afdf-674e5c0cf8b9",
               "title": "tests for get",
@@ -6706,14 +7014,19 @@
               "_timeout": 300000
             }
           ],
-          "passes": [],
+          "suites": [],
+          "passes": [
+            "eeb7a3ad-fa95-47b4-9229-591769afe91c",
+            "a8c60c76-5086-40b5-87e5-5bc21fe1c1c9",
+            "d63ecb4c-1c14-446a-94fe-375f7615655c"
+          ],
           "failures": [],
           "pending": [],
           "skipped": [],
-          "duration": 0,
+          "duration": 3338,
           "root": false,
           "rootEmpty": false,
-          "_timeout": 300000
+          "_timeout": 15000
         },
         {
           "uuid": "4d1cbb1a-cc5f-431a-bdef-72da94adf1d1",
@@ -6722,8 +7035,7 @@
           "file": "\\test\\v2.0-data-datasets-{datasetid}-chronologies-test.js",
           "beforeHooks": [],
           "afterHooks": [],
-          "tests": [],
-          "suites": [
+          "tests": [
             {
               "uuid": "fb3d074d-0fb0-4335-bd52-9888167dc63f",
               "title": "tests for get",
@@ -6768,14 +7080,20 @@
               "_timeout": 300000
             }
           ],
-          "passes": [],
+          "suites": [],
+          "passes": [
+            "f15f2a62-e566-4bd6-94ed-f67d67cc5e34",
+            "8c1aa9bb-9f1e-4150-bd56-c7e29efff762",
+            "cdbae2ce-dea3-4826-8967-b4daa7515022",
+            "89b91229-c12f-469b-b525-f80b4785c0c8"
+          ],
           "failures": [],
           "pending": [],
           "skipped": [],
-          "duration": 0,
+          "duration": 20607,
           "root": false,
           "rootEmpty": false,
-          "_timeout": 300000
+          "_timeout": 15000
         },
         {
           "uuid": "288d079a-0122-4de5-93c7-0aaeaa180db6",
@@ -6795,8 +7113,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"contact\"",
-                  "fullTitle": "tests for /v2.0/data/datasets/{datasetid}/contacts tests for get should respond 200 for \"contact\"",
+                  "title": "should respond 200 for \"A Neotoma chronology object.\"",
+                  "fullTitle": "tests for /v2.0/data/chronologies/{chronid} tests for get should respond 200 for \"A Neotoma chronology object.\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -6857,8 +7175,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"DOI\"",
-                  "fullTitle": "tests for /v2.0/data/datasets/{datasetid}/doi tests for get should respond 200 for \"DOI\"",
+                  "title": "should respond 200 for \"Returns the set of dataset types supported by Neotoma.\"",
+                  "fullTitle": "tests for /v1.5/apps/DatasetTypes tests for get should respond 200 for \"Returns the set of dataset types supported by Neotoma.\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -6919,8 +7237,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"Lithology\"",
-                  "fullTitle": "tests for /v2.0/data/datasets/{datasetid}/lithology tests for get should respond 200 for \"Lithology\"",
+                  "title": "should respond 200 for \"A count of the data objects added to Neotoma.\"",
+                  "fullTitle": "tests for /v2.0/data/summary/rawbymonth tests for get should respond 200 for \"A count of the data objects added to Neotoma.\"",
                   "timedOut": false,
                   "duration": 1,
                   "state": "failed",
@@ -6981,8 +7299,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"Publication\"",
-                  "fullTitle": "tests for /v2.0/data/datasets/{datasetid}/publications tests for get should respond 200 for \"Publication\"",
+                  "title": "should respond 200 for \"An array of datasets.\"",
+                  "fullTitle": "tests for /v2.0/data/sites/{siteid}/datasets tests for get should respond 200 for \"An array of datasets.\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -7043,8 +7361,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"Site\"",
-                  "fullTitle": "tests for /v2.0/data/datasets/{datasetid}/sites tests for get should respond 200 for \"Site\"",
+                  "title": "should respond 200 for \"A record of all pollen samples in time/space for a particular taxon.\"",
+                  "fullTitle": "tests for /v2.0/data/pollen tests for get should respond 200 for \"A record of all pollen samples in time/space for a particular taxon.\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -7105,8 +7423,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"Taxa\"",
-                  "fullTitle": "tests for /v2.0/data/datasets/{datasetid}/taxa tests for get should respond 200 for \"Taxa\"",
+                  "title": "should respond 200 for \"A table of Neotoma collection types.\"",
+                  "fullTitle": "tests for /v2.0/apps/datasettypes tests for get should respond 200 for \"A table of Neotoma collection types.\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -7168,7 +7486,7 @@
               "tests": [
                 {
                   "title": "should respond 200 for \"An array of datasets.\"",
-                  "fullTitle": "tests for /v2.0/data/datasets/{datasetid} tests for get should respond 200 for \"An array of datasets.\"",
+                  "fullTitle": "tests for /v2.0/data/sites/{siteid}/datasets_elc tests for get should respond 200 for \"An array of datasets.\"",
                   "timedOut": false,
                   "duration": 1,
                   "state": "failed",
@@ -7229,8 +7547,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"A Neotoma datasets object suitable for the EarthLife Consortium API.\"",
-                  "fullTitle": "tests for /v2.0/data/datasets_elc tests for get should respond 200 for \"A Neotoma datasets object suitable for the EarthLife Consortium API.\"",
+                  "title": "should respond 200 for \"Returned table.\"",
+                  "fullTitle": "tests for /v1.5/dbtables/{table} tests for get should respond 200 for \"Returned table.\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -7291,8 +7609,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"A Neotoma datasets object suitable for the EarthLife Consortium API.\"",
-                  "fullTitle": "tests for /v2.0/data/datasets_elc/{datasetid} tests for get should respond 200 for \"A Neotoma datasets object suitable for the EarthLife Consortium API.\"",
+                  "title": "should respond 200 for \"Contact\"",
+                  "fullTitle": "tests for /v1.5/data/contacts/{contactid} tests for get should respond 200 for \"Contact\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -7353,8 +7671,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"Returned table.\"",
-                  "fullTitle": "tests for /v2.0/data/dbtables tests for get should respond 200 for \"Returned table.\"",
+                  "title": "should respond 200 for \"A table of Neotoma collection types.\"",
+                  "fullTitle": "tests for /v2.0/apps/taphonomysystems tests for get should respond 200 for \"A table of Neotoma collection types.\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -7415,8 +7733,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"Returned table.\"",
-                  "fullTitle": "tests for /v2.0/data/dbtables/{table} tests for get should respond 200 for \"Returned table.\"",
+                  "title": "should respond 200 for \"An array of geopolitical units.\"",
+                  "fullTitle": "tests for /v1.5/data/geopoliticalunits/{gpid} tests for get should respond 200 for \"An array of geopolitical units.\"",
                   "timedOut": false,
                   "duration": 1,
                   "state": "failed",
@@ -7539,8 +7857,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"Returned download object.\"",
-                  "fullTitle": "tests for /v2.0/data/frozen/{datasetid} tests for get should respond 200 for \"Returned download object.\"",
+                  "title": "should respond 200 for \"A table of Neotoma collection types.\"",
+                  "fullTitle": "tests for /v2.0/apps/depositionalenvironments/root tests for get should respond 200 for \"A table of Neotoma collection types.\"",
                   "timedOut": false,
                   "duration": 3,
                   "state": "failed",
@@ -7601,8 +7919,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"An array of geopolitical units.\"",
-                  "fullTitle": "tests for /v2.0/data/geopoliticalunits tests for get should respond 200 for \"An array of geopolitical units.\"",
+                  "title": "should respond 200 for \"contact\"",
+                  "fullTitle": "tests for /v2.0/data/contacts tests for get should respond 200 for \"contact\"",
                   "timedOut": false,
                   "duration": 3,
                   "state": "failed",
@@ -7663,8 +7981,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"An array of datasets.\"",
-                  "fullTitle": "tests for /v2.0/data/geopoliticalunits/{gpid}/datasets tests for get should respond 200 for \"An array of datasets.\"",
+                  "title": "should respond 200 for \"An array of sites.\"",
+                  "fullTitle": "tests for /v2.0/data/sites tests for get should respond 200 for \"An array of sites.\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -7725,8 +8043,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"An array of sites.\"",
-                  "fullTitle": "tests for /v2.0/data/geopoliticalunits/{gpid}/sites tests for get should respond 200 for \"An array of sites.\"",
+                  "title": "should respond 200 for \"Returned table.\"",
+                  "fullTitle": "tests for /v2.0/data/dbtables/{table} tests for get should respond 200 for \"Returned table.\"",
                   "timedOut": false,
                   "duration": 3,
                   "state": "failed",
@@ -7787,8 +8105,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"An array of geopolitical units.\"",
-                  "fullTitle": "tests for /v2.0/data/geopoliticalunits/{gpid} tests for get should respond 200 for \"An array of geopolitical units.\"",
+                  "title": "should respond 200 for \"occurrence\"",
+                  "fullTitle": "tests for /v2.0/data/taxa/{taxonid}/occurrences tests for get should respond 200 for \"occurrence\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -7849,8 +8167,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"occurrence\"",
-                  "fullTitle": "tests for /v2.0/data/occurrences tests for get should respond 200 for \"occurrence\"",
+                  "title": "should respond 200 for \"An array of geopolitical units.\"",
+                  "fullTitle": "tests for /v1.5/data/geopoliticalunits tests for get should respond 200 for \"An array of geopolitical units.\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -7911,8 +8229,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"occurrence\"",
-                  "fullTitle": "tests for /v2.0/data/occurrences/{occurrenceid} tests for get should respond 200 for \"occurrence\"",
+                  "title": "should respond 200 for \"Taxa\"",
+                  "fullTitle": "tests for /v2.0/data/datasets/{datasetid}/taxa tests for get should respond 200 for \"Taxa\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -7973,8 +8291,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"A record of all pollen samples in time/space for a particular taxon.\"",
-                  "fullTitle": "tests for /v2.0/data/pollen tests for get should respond 200 for \"A record of all pollen samples in time/space for a particular taxon.\"",
+                  "title": "should respond 200 for \"Returns an ordered array (from earliest to latest) of upload counts by month (YYYY/MM/DD; all days as 01). Months with no uploads are excluded. \"",
+                  "fullTitle": "tests for /v2.0/apps/constdb/datasetuploads tests for get should respond 200 for \"Returns an ordered array (from earliest to latest) of upload counts by month (YYYY/MM/DD; all days as 01). Months with no uploads are excluded. \"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -8035,8 +8353,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"A record of all pollen samples in time/space for a particular taxon.\"",
-                  "fullTitle": "tests for /v2.0/data/pollen/{id} tests for get should respond 200 for \"A record of all pollen samples in time/space for a particular taxon.\"",
+                  "title": "should respond 200 for \"An array of geopolitical units.\"",
+                  "fullTitle": "tests for /v2.0/data/geopoliticalunits/{gpid} tests for get should respond 200 for \"An array of geopolitical units.\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -8097,8 +8415,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"A list of publications.\"",
-                  "fullTitle": "tests for /v2.0/data/publications tests for get should respond 200 for \"A list of publications.\"",
+                  "title": "should respond 200 for \"Returns the set of datasets contained within a constituent database, identified by the constituent database identifier. Used for quick landing page generation. \"",
+                  "fullTitle": "tests for /v2.0/apps/constdb/datasets tests for get should respond 200 for \"Returns the set of datasets contained within a constituent database, identified by the constituent database identifier. Used for quick landing page generation. \"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -8159,8 +8477,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"A list of publications.\"",
-                  "fullTitle": "tests for /v2.0/data/publications/{publicationid} tests for get should respond 200 for \"A list of publications.\"",
+                  "title": "should respond 200 for \"Site\"",
+                  "fullTitle": "tests for /v2.0/data/datasets/{datasetid}/sites tests for get should respond 200 for \"Site\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -8221,8 +8539,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"An array of sites.\"",
-                  "fullTitle": "tests for /v2.0/data/sites tests for get should respond 200 for \"An array of sites.\"",
+                  "title": "should respond 200 for \"A count of the datasets added by datasettype for the requested period.\"",
+                  "fullTitle": "tests for /v2.0/data/summary/dstypemonth tests for get should respond 200 for \"A count of the datasets added by datasettype for the requested period.\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -8283,8 +8601,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"chronology\"",
-                  "fullTitle": "tests for /v2.0/data/sites/{siteid}/chronologies tests for get should respond 200 for \"chronology\"",
+                  "title": "should respond 200 for \"A list of all keywords used for analysis units in the database.\"",
+                  "fullTitle": "tests for /v2.0/apps/keywords tests for get should respond 200 for \"A list of all keywords used for analysis units in the database.\"",
                   "timedOut": false,
                   "duration": 3,
                   "state": "failed",
@@ -8334,8 +8652,7 @@
           "file": "\\test\\v2.0-data-sites-{siteid}-contacts-test.js",
           "beforeHooks": [],
           "afterHooks": [],
-          "tests": [],
-          "suites": [
+          "tests": [
             {
               "uuid": "a1c1caeb-6dc0-492e-a419-0892f224e9aa",
               "title": "tests for get",
@@ -8380,11 +8697,14 @@
               "_timeout": 300000
             }
           ],
-          "passes": [],
+          "suites": [],
+          "passes": [
+            "ec0b6b9c-e768-4f5f-b464-451cafb08133"
+          ],
           "failures": [],
           "pending": [],
           "skipped": [],
-          "duration": 0,
+          "duration": 3,
           "root": false,
           "rootEmpty": false,
           "_timeout": 300000
@@ -8408,7 +8728,7 @@
               "tests": [
                 {
                   "title": "should respond 200 for \"An array of datasets.\"",
-                  "fullTitle": "tests for /v2.0/data/sites/{siteid}/datasets tests for get should respond 200 for \"An array of datasets.\"",
+                  "fullTitle": "tests for /v2.0/data/geopoliticalunits/{gpid}/datasets tests for get should respond 200 for \"An array of datasets.\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -8469,8 +8789,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"An array of datasets.\"",
-                  "fullTitle": "tests for /v2.0/data/sites/{siteid}/datasets_elc tests for get should respond 200 for \"An array of datasets.\"",
+                  "title": "should respond 200 for \"An object containing all matched species names, identifiers and a GeoJSON polygon representing the UNIONed ranges for the selected species. All data is derived from:<br> * Mammal Diversity Database. (2020). Mammal Diversity Database (Version 1.2) [Data set]. Zenodo. DOI: [10.5281/zenodo.4139818](https://doi.org/10.5281/zenodo.4139818).<br> * Map of Life. (2021). Mammal range maps harmonised to the Mammals Diversity Database [Data set]. Map of Life. [10.48600/MOL-48VZ-P413](https://doi.org/10.48600/MOL-48VZ-P413) \"",
+                  "fullTitle": "tests for /v2.0/data/spatial/faunal tests for get should respond 200 for \"An object containing all matched species names, identifiers and a GeoJSON polygon representing the UNIONed ranges for the selected species. All data is derived from:<br> * Mammal Diversity Database. (2020). Mammal Diversity Database (Version 1.2) [Data set]. Zenodo. DOI: [10.5281/zenodo.4139818](https://doi.org/10.5281/zenodo.4139818).<br> * Map of Life. (2021). Mammal range maps harmonised to the Mammals Diversity Database [Data set]. Map of Life. [10.48600/MOL-48VZ-P413](https://doi.org/10.48600/MOL-48VZ-P413) \"",
                   "timedOut": false,
                   "duration": 1,
                   "state": "failed",
@@ -8593,8 +8913,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"An array of sites.\"",
-                  "fullTitle": "tests for /v2.0/data/sites/{siteid} tests for get should respond 200 for \"An array of sites.\"",
+                  "title": "should respond 200 for \"contact\"",
+                  "fullTitle": "tests for /v2.0/data/datasets/{datasetid}/contacts tests for get should respond 200 for \"contact\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -8655,8 +8975,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"An object containing all matched species names, identifiers and a GeoJSON polygon representing the UNIONed ranges for the selected species. All data is derived from:<br> * Mammal Diversity Database. (2020). Mammal Diversity Database (Version 1.2) [Data set]. Zenodo. DOI: [10.5281/zenodo.4139818](https://doi.org/10.5281/zenodo.4139818).<br> * Map of Life. (2021). Mammal range maps harmonised to the Mammals Diversity Database [Data set]. Map of Life. [10.48600/MOL-48VZ-P413](https://doi.org/10.48600/MOL-48VZ-P413) \"",
-                  "fullTitle": "tests for /v2.0/data/spatial/faunal tests for get should respond 200 for \"An object containing all matched species names, identifiers and a GeoJSON polygon representing the UNIONed ranges for the selected species. All data is derived from:<br> * Mammal Diversity Database. (2020). Mammal Diversity Database (Version 1.2) [Data set]. Zenodo. DOI: [10.5281/zenodo.4139818](https://doi.org/10.5281/zenodo.4139818).<br> * Map of Life. (2021). Mammal range maps harmonised to the Mammals Diversity Database [Data set]. Map of Life. [10.48600/MOL-48VZ-P413](https://doi.org/10.48600/MOL-48VZ-P413) \"",
+                  "title": "should respond 200 for \"Returns metadata about each constituent database in Neotoma, including Summary Informationrmation about dataset types within the database and the age spans of the records in the database. \"",
+                  "fullTitle": "tests for /v2.0/apps/constdb tests for get should respond 200 for \"Returns metadata about each constituent database in Neotoma, including Summary Informationrmation about dataset types within the database and the age spans of the records in the database. \"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -8706,8 +9026,7 @@
           "file": "\\test\\v2.0-data-spatial-icesheet-test.js",
           "beforeHooks": [],
           "afterHooks": [],
-          "tests": [],
-          "suites": [
+          "tests": [
             {
               "uuid": "3eb8974d-4835-418b-8171-a6773405e42d",
               "title": "tests for get",
@@ -9000,14 +9319,23 @@
               "_timeout": 300000
             }
           ],
-          "passes": [],
+          "suites": [],
+          "passes": [
+            "dbb3ce50-e058-4225-863c-56025af80c13",
+            "a35e0b8f-4e4b-4a2e-a232-c8e8a4581dbb",
+            "dd1234af-62cc-4956-b21e-476c58c6a191",
+            "66e45741-96b9-4233-b8de-ddec3cb4c215",
+            "c1d0635c-1015-4833-a0d4-050be004a018",
+            "334cb142-ceb0-449e-9ebf-fb8bfaea0b02",
+            "b492e7a1-0c2d-4c30-816f-8e5bebfbd878"
+          ],
           "failures": [],
           "pending": [],
           "skipped": [],
-          "duration": 0,
+          "duration": 4601,
           "root": false,
           "rootEmpty": false,
-          "_timeout": 300000
+          "_timeout": 50000
         },
         {
           "uuid": "230438a7-7bd7-4fde-9ad5-58df7393a41f",
@@ -9016,8 +9344,7 @@
           "file": "\\test\\v2.0-data-taxa-test.js",
           "beforeHooks": [],
           "afterHooks": [],
-          "tests": [],
-          "suites": [
+          "tests": [
             {
               "uuid": "0d5950ef-0348-426b-98a7-8b3e490c15bb",
               "title": "tests for get",
@@ -9062,14 +9389,21 @@
               "_timeout": 300000
             }
           ],
-          "passes": [],
+          "suites": [],
+          "passes": [
+            "b2f79abe-9b3e-41aa-8b9c-1e149386b7a3",
+            "52e84e67-a8fe-488a-b28d-72eb16902c8f",
+            "19a714d9-0270-4712-949a-814282e1e7d7",
+            "ff2e3f7e-c86b-491a-883d-a5d32e91e039",
+            "25375415-1549-47d1-83de-cf6c70f77619"
+          ],
           "failures": [],
           "pending": [],
           "skipped": [],
-          "duration": 0,
+          "duration": 734,
           "root": false,
           "rootEmpty": false,
-          "_timeout": 300000
+          "_timeout": 5000
         },
         {
           "uuid": "2f8844aa-3ccd-45c7-8f9c-07c0f40153ea",
@@ -9089,8 +9423,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"occurrence\"",
-                  "fullTitle": "tests for /v2.0/data/taxa/{taxonid}/occurrences tests for get should respond 200 for \"occurrence\"",
+                  "title": "should respond 200 for \"A Neotoma contacts object.\"",
+                  "fullTitle": "tests for /v2.0/data/contacts/{contactid} tests for get should respond 200 for \"A Neotoma contacts object.\"",
                   "timedOut": false,
                   "duration": 3,
                   "state": "failed",
@@ -9116,6 +9450,7 @@
               "failures": [
                 "c60c7541-3732-491e-8ce1-45ffeacf845f"
               ],
+              "failures": [],
               "pending": [],
               "skipped": [],
               "duration": 3,
@@ -9151,8 +9486,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"A taxon or array of taxa.\"",
-                  "fullTitle": "tests for /v2.0/data/taxa/{taxonid} tests for get should respond 200 for \"A taxon or array of taxa.\"",
+                  "title": "should respond 200 for \"A table of Neotoma collection types.\"",
+                  "fullTitle": "tests for /v2.0/apps/authorpis tests for get should respond 200 for \"A table of Neotoma collection types.\"",
                   "timedOut": false,
                   "duration": 2,
                   "state": "failed",
@@ -9178,6 +9513,7 @@
               "failures": [
                 "398685fb-bb7c-4aa8-ad90-f9688fd8d900"
               ],
+              "failures": [],
               "pending": [],
               "skipped": [],
               "duration": 2,
