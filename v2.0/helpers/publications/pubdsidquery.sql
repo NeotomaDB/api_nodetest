@@ -6,7 +6,7 @@ SELECT json_build_object(
               'datasets', json_agg(DISTINCT jsonb_build_object('siteid', dsl.siteid,
                                                                    'datasetid', dpub.datasetid,
                                                                    'primary', dpub.primarypub)),
-              'publicationid', pub.publicationid,
+             'publicationid', pub.publicationid,
              'pubtypeid', pub.pubtypeid,
              'pubtype', pt.pubtype,
              'year' , pub.year,
@@ -31,7 +31,7 @@ SELECT json_build_object(
              'country'   , pub.country,
              'originallanguage', pub.originallanguage,
              'notes' , pub.notes,
-              'author', json_agg(DISTINCT jsonb_build_object('familyname', ca.familyname,
+             'author', json_agg(DISTINCT jsonb_build_object('familyname', ca.familyname,
                                                    'givennames', ca.givennames,
                                                    'order', pa.authororder))) AS publication
 FROM ndb.publications AS pub

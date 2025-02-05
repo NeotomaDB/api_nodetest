@@ -112,7 +112,7 @@ function taxonquery(req, res, next) {
           if (outobj.taxonid === null) {
             outobj.taxonid = result[0];
           } else {
-            if (!result[0] === null) {
+            if (!(result[0] === null)) {
               outobj.taxonid.push(result[0]);
             }
           }
