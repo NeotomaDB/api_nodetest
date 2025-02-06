@@ -29,6 +29,10 @@ module.exports = {
     const ctsumm = require('../helpers/contacts/contacts.js');
     ctsumm.contactclassbydsid(req, res, next);
   },
+  contact_orcid: function(req, res, next) {
+    const ct_orcid = require('../helpers/landing/landing.js');
+    ct_orcid.orcid_by_contact_id(req, res, next);
+  },
 };
 
 // Defining the query functions:
