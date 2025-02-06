@@ -1,4 +1,3 @@
----
 components:
   parameters:
     dbidQuery:
@@ -24,7 +23,8 @@ components:
         minimum: 1000
         type: integer
     ageOfQuery:
-      description: Dataset age ranges must span this age (in calibrated years before present, with 0 at 1950CE)
+      description: Dataset age ranges must span this age (in calibrated years before
+        present, with 0 at 1950CE)
       in: query
       name: ageof
       required: false
@@ -35,7 +35,8 @@ components:
         minimum: -100
         type: integer
     scinameQuery:
-      description: The scientific name for a mammal taxon. May be the complete name or use the `%` wildcard for the name.
+      description: The scientific name for a mammal taxon. May be the complete name or
+        use the `%` wildcard for the name.
       in: query
       name: sciname
       required: true
@@ -70,7 +71,8 @@ components:
         type: number
         default: 0.0001
     ageOldQuery:
-      description: Oldest age that intercepts with the dataset (in calibrated years before present, with 0 at 1950CE)
+      description: Oldest age that intercepts with the dataset (in calibrated years
+        before present, with 0 at 1950CE)
       in: query
       name: ageold
       required: false
@@ -81,7 +83,8 @@ components:
         minimum: -100
         type: integer
     ageYoungQuery:
-      description: Youngest age that intercepts with the dataset (in calibrated years before present, with 0 at 1950CE)
+      description: Youngest age that intercepts with the dataset (in calibrated years
+        before present, with 0 at 1950CE)
       in: query
       name: ageyoung
       required: false
@@ -157,7 +160,8 @@ components:
         example: active
         type: string
     contactidPath:
-      description: Unique contact identifier within the Neotoma Database, alone or comma separated.
+      description: Unique contact identifier within the Neotoma Database, alone or
+        comma separated.
       in: path
       name: contactid
       required: true
@@ -168,7 +172,8 @@ components:
         minimum: 1
         type: integer
     contactidQuery:
-      description: Unique contact identifier within the Neotoma Database, alone or comma separated.
+      description: Unique contact identifier within the Neotoma Database, alone or
+        comma separated.
       in: query
       name: contactid
       required: false
@@ -218,10 +223,12 @@ components:
           - Neotoma Charcoal Data
           - Pollen Monitoring Programme
           - PaleoVertebrates of Latin America
-          - St. Croix Watershed Research Station of the Science Museum of Minnesota
+          - St. Croix Watershed Research Station of the Science Museum of
+            Minnesota
         type: string
     datasetidPath:
-      description: Valid Neotoma dataset identifier (integer), either singly or in a comma separated list.
+      description: Valid Neotoma dataset identifier (integer), either singly or in a
+        comma separated list.
       in: path
       name: datasetid
       required: true
@@ -232,7 +239,8 @@ components:
         minimum: 1
         type: integer
     datasetidQuery:
-      description: Valid Neotoma dataset identifier (integer), either singly or in a comma separated list.
+      description: Valid Neotoma dataset identifier (integer), either singly or in a
+        comma separated list.
       in: query
       name: datasetid
       required: false
@@ -242,7 +250,8 @@ components:
         exclusiveMinimum: true
         type: integer
     doiQuery:
-      description: A valid DOI in the form 10.XXXX/XXXXX (i.e., excluding 'https://doi.org').
+      description: A valid DOI in the form 10.XXXX/XXXXX (i.e., excluding
+        'https://doi.org').
       in: query
       name: doi
       required: false
@@ -251,7 +260,8 @@ components:
         pattern: ^10.\d{4,9}/[-._;()/:A-Z0-9]+$
         example: 10.21233/J8P9-G487
     datasettypeQuery:
-      description: Neotoma contains data for a number of dataset types (see /dbtables/datasettypes.  This returns a subset of data types.
+      description: Neotoma contains data for a number of dataset types (see
+        /dbtables/datasettypes.  This returns a subset of data types.
       in: query
       name: datasettype
       required: false
@@ -300,7 +310,8 @@ components:
           - diatom bottom sample
           - Metabarcoding aeDNA
     ecolGroupQuery:
-      description: The ecological group of interest for the Neotoma taxon (from the Neotoma ecolgrouptypes table)
+      description: The ecological group of interest for the Neotoma taxon (from the
+        Neotoma ecolgrouptypes table)
       in: query
       name: ecolgroup
       required: false
@@ -325,7 +336,8 @@ components:
         minimum: 1
         type: integer
     gpidQuery:
-      description: Numeric ID for the geopolitical unit from the Neotoma geopoliticalunits table.
+      description: Numeric ID for the geopolitical unit from the Neotoma
+        geopoliticalunits table.
       in: query
       name: gpid
       required: false
@@ -337,7 +349,8 @@ components:
       examples:
         gpid:
           value: 756
-          summary: A valid unique identifier for geopolitical units from Neotoma's geopoliticalunits table.
+          summary: A valid unique identifier for geopolitical units from Neotoma's
+            geopoliticalunits table.
         gpids:
           value: 2155,313,5414
           summary: A set of unique identifiers, separated by commas.
@@ -356,7 +369,8 @@ components:
           value: Italy, austria, switzerland
           summary: The name of a set of locations, separated by commas.
     keywordQuery:
-      description: A valid keyword for samples within Neotoma. The list of valid names can be obtained through a call to the dbtables API call.
+      description: A valid keyword for samples within Neotoma. The list of valid names
+        can be obtained through a call to the dbtables API call.
       in: query
       name: keyword
       required: false
@@ -389,11 +403,14 @@ components:
         type: string
       examples:
         SouthAmericangeoJSON:
-          value: "{'type':'FeatureCollection','features':[{'type':'Feature','properties':{},'geometry':{'coordinates':[[[-73.300,-35.768],[-75.442,-43.787],[-64.059,-43.533],[-53.572,-38.844],[-55.043,-34.302],[-61.150,-33.904],[-68.248,-34.407],[-73.300,-35.768]]],'type':'Polygon'}}]}"
-          summary: A geoJSON representation of a polygon that includes Argentina and Chile.
+          value: '{''type'':''FeatureCollection'',''features'':[{''type'':''Feature'',''properties'':{},''geometry'':{''coordinates'':[[[-73.300,-35.768],[-75.442,-43.787],[-64.059,-43.533],[-53.572,-38.844],[-55.043,-34.302],[-61.150,-33.904],[-68.248,-34.407],[-73.300,-35.768]]],''type'':''Polygon''}}]}'
+          summary: A geoJSON representation of a polygon that includes Argentina and
+            Chile.
         EuropeanWKT:
-          value: POLYGON ((12.49 45.53, 9.847 42.879, 16.982 40.812, 20.549 44.03, 14.736 46.266, 12.49 45.53))
-          summary: A WKT formatted spatial polygon that includes land adjacent to the Adriatic sea.
+          value: POLYGON ((12.49 45.53, 9.847 42.879, 16.982 40.812, 20.549 44.03, 14.736
+            46.266, 12.49 45.53))
+          summary: A WKT formatted spatial polygon that includes land adjacent to the
+            Adriatic sea.
     lowergpQuery:
       description: Should all lower ranked units below the target unit be returned?
       in: query
@@ -403,7 +420,8 @@ components:
         default: false
         type: boolean
     occurrenceidPath:
-      description: Valid Neotoma occurrence identifier (integer), either singly or in a comma separated list.
+      description: Valid Neotoma occurrence identifier (integer), either singly or in
+        a comma separated list.
       in: path
       name: occurrenceid
       required: true
@@ -413,7 +431,8 @@ components:
         minimum: 1
         type: integer
     occurrenceidQuery:
-      description: Valid Neotoma occurrence identifier (integer), either singly or in a comma separated list.
+      description: Valid Neotoma occurrence identifier (integer), either singly or in
+        a comma separated list.
       in: query
       name: occurrenceid
       required: false
@@ -467,7 +486,8 @@ components:
         exclusiveMinimum: true
         type: integer
     pubsearchQuery:
-      description: A fulltext search string.  Either a literal portion of the article name, or keywords.
+      description: A fulltext search string.  Either a literal portion of the article
+        name, or keywords.
       in: query
       name: search
       required: false
@@ -495,7 +515,8 @@ components:
           - Undergraduate thesis
         type: string
     pubyearQuery:
-      description: The year of publication, either as a single value or comma separated string.
+      description: The year of publication, either as a single value or comma
+        separated string.
       in: query
       name: year
       required: false
@@ -522,7 +543,9 @@ components:
       schema:
         type: string
     sitenameQuery:
-      description: Name of the study site (may use the % wildcard). Note that Neotoma study site names are not unique. For example there are more than 15 sites in Neotoma named *Clear Lake*.
+      description: Name of the study site (may use the % wildcard). Note that Neotoma
+        study site names are not unique. For example there are more than 15
+        sites in Neotoma named *Clear Lake*.
       in: query
       name: sitename
       required: false
@@ -530,7 +553,8 @@ components:
         example: Stern Excavation Site
         type: string
     siteidPath:
-      description: Valid Neotoma site identifier (integer), either singly or in a comma separated list.
+      description: Valid Neotoma site identifier (integer), either singly or in a
+        comma separated list.
       in: path
       name: siteid
       required: true
@@ -551,7 +575,8 @@ components:
         default: 10000
         type: integer
     siteidQuery:
-      description: Valid Neotoma site identifier (integer), either singly or in a comma separated list.
+      description: Valid Neotoma site identifier (integer), either singly or in a
+        comma separated list.
       in: query
       name: siteid
       required: false
@@ -604,7 +629,11 @@ components:
       schema:
         example: 1
         type: string
-        enum: [0, 1, True, False]
+        enum:
+          - 0
+          - 1
+          - true
+          - false
     taxonidPath:
       description: |
         Unique taxonomic identifier (from the Neotoma taxon table).
@@ -642,7 +671,7 @@ components:
       type: object
       properties:
         status:
-            type: string
+          type: string
         message:
           type: string
         query:
@@ -656,11 +685,11 @@ components:
               description:
                 $ref: '#/components/schemas/constdbdescription'
               url:
-                $ref: "#/components/schemas/url"
+                $ref: '#/components/schemas/url'
               contactname:
-                $ref: "#/components/schemas/contactname"
+                $ref: '#/components/schemas/contactname'
               email:
-                $ref: "#/components/schemas/email"
+                $ref: '#/components/schemas/email'
               datasettypes:
                 description: |
                   An array of the unique dataset types for all datasets within the constituent database.
@@ -681,7 +710,7 @@ components:
         The age bounds of a dataset, as defined by the chronology, generally the oldest and youngest sample ages for the dataset, for a given age type (<sup>14</sup>C years, calibrated radiocarbon, calendar years, etc.)
       properties:
         status:
-            type: string
+          type: string
         message:
           type: string
         query:
@@ -750,7 +779,7 @@ components:
                 description: |
                   Total lake or reservoir volume, in million cubic meters (1*mcm* = 0.001 km^3^).<br>
                   For most polygons, this value represents the total lake volume as estimated using the geostatistical modeling approach by Messager et al. (2016). However, where either a reported lake volume (for lakes ≥ 500 km^2^) or a reported reservoir volume (from GRanD database) existed, the total volume represents this reported value. In cases of regulated lakes, the total volume represents the larger value between reported reservoir and modeled or reported lake volume. [source PDF](https://data.hydrosheds.org/file/technical-documentation/HydroLAKES_TechDoc_v10.pdf)
-              avgdepth: 
+              avgdepth:
                 type: number
                 description: |
                   Average lake depth, in meters.
@@ -1000,6 +1029,7 @@ components:
         modelType:
           example: linear interpolation
           type: string
+          pattern: .*
         preparedby:
           properties:
             contactid:
@@ -1050,6 +1080,7 @@ components:
               colltype:
                 example: Isolated specimen
                 type: string
+                pattern: .*
               colltypeid:
                 example: 8
                 type: integer
@@ -1057,10 +1088,10 @@ components:
           type: array
         message:
           type: string
-          pattern: '.*'
+          pattern: .*
         status:
           type: string
-          pattern: '.*'
+          pattern: .*
       type: object
     collectionunit:
       example: 15-1
@@ -1090,29 +1121,36 @@ components:
           nullable: true
         fax:
           type: string
+          pattern: .*
           nullable: true
         familyname:
           example: Goring
           type: string
+          pattern: .*
         givennames:
           example: Simon
           type: string
+          pattern: .*
           nullable: true
         leadinginitials:
           example: S. J.
           type: string
+          pattern: .*
           nullable: true
         notes:
           example: This user is a member of the Neotoma Leadership Team.
           type: string
+          pattern: .*
           nullable: true
         suffix:
           example: Esq.
           type: string
+          pattern: .*
           nullable: true
         title:
           example: Lord Mayor
           type: string
+          pattern: .*
           nullable: true
         url:
           $ref: '#/components/schemas/url'
@@ -1168,7 +1206,7 @@ components:
         data:
           type: array
           items:
-                $ref: '#/components/schemas/contact'
+            $ref: '#/components/schemas/contact'
         status:
           $ref: '#/components/schemas/status'
       type: object
@@ -1177,7 +1215,7 @@ components:
         data:
           type: array
           items:
-                $ref: '#/components/schemas/contact'
+            $ref: '#/components/schemas/contact'
         status:
           $ref: '#/components/schemas/status'
       type: object
@@ -1235,6 +1273,7 @@ components:
                     $ref: '#/components/schemas/sitenotes'
                   unittype:
                     type: string
+                    pattern: '.*'
                 type: object
             type: object
           type: array
@@ -1259,8 +1298,10 @@ components:
           type: array
         message:
           type: string
+          pattern: .*
         status:
           type: string
+          pattern: .*
       type: object
     datasetid:
       example: 666
@@ -1271,6 +1312,7 @@ components:
     datasetnotes:
       example: This dataset was digitized from an original publication in Finnish.
       type: string
+      pattern: '.*'
     siteresponse:
       type: object
     datasetresponsev2_0:
@@ -1331,6 +1373,7 @@ components:
     datasettype:
       example: geochemistry
       type: string
+      pattern: '.*'
     datasettyperesponse:
       properties:
         data:
@@ -1338,6 +1381,7 @@ components:
             properties:
               getdatasettypes:
                 type: string
+                pattern: '.*'
             type: object
           type: array
         message:
@@ -1378,6 +1422,7 @@ components:
                         doi:
                           items:
                             type: string
+                            pattern: '.*'
                           type: array
                       type: object
                     type: array
@@ -1406,10 +1451,12 @@ components:
       example: '2013-09-30'
       format: date
       type: string
+      pattern: '.*'
     datetime:
       example: '2013-09-30T21:02:51.000Z'
       format: dateTime
       type: string
+      pattern: '.*'
     dbtablenameresponse:
       properties:
         data:
@@ -1445,6 +1492,7 @@ components:
             properties:
               getdeptenvtypesroot:
                 type: string
+                pattern: '.*'
             type: object
           type: array
         message:
@@ -1455,6 +1503,7 @@ components:
     doi:
       example: 10.2157/abba1234
       type: string
+      pattern: '.*'
     doiresponse:
       properties:
         data:
@@ -1465,6 +1514,7 @@ components:
               dois:
                 nullable: true
                 type: string
+                pattern: '.*'
             type: object
           type: array
         message:
@@ -1499,6 +1549,7 @@ components:
                   type: array
                 samples:
                   type: string
+                  pattern: '.*'
               type: object
           type: object
         success:
@@ -1513,10 +1564,11 @@ components:
     geography:
       example: '{"type":"Point","crs":{"type":"name","properties":{"name":"EPSG:4326"}},"coordinates":[-75.25,55.09167]}'
       type: string
+      pattern: ([{\[]{1}([,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t]|".*?")+[}\]]{1})
     geopolitical:
       properties:
         data:
-          items: 
+          items:
             properties:
               geopoliticalid:
                 $ref: '#/components/schemas/geopoliticalid'
@@ -1544,9 +1596,11 @@ components:
     geopoliticalname:
       example: Canada
       type: string
+      pattern: '[A-Z]*[a-z \-A-Z]*'
     geopoliticalunit:
       example: province
       type: string
+      pattern: '[A-Z]*[a-z \-A-Z]*'
     geopoliticalv1_5:
       properties:
         data:
@@ -1557,6 +1611,7 @@ components:
               geopoliticalname:
                 example: Antarctica
                 type: string
+                pattern: '[A-Z]*[a-z \-A-Z]*'
             type: object
           type: array
         status:
@@ -1568,6 +1623,7 @@ components:
       example: HOSEHEAD
       nullable: true
       type: string
+      pattern: '[A-Z]*'
     highergeopoliticalid:
       example: 756
       format: int32
@@ -1579,6 +1635,7 @@ components:
             properties:
               keywords:
                 type: string
+                pattern: '.*'
           type: array
         message:
           $ref: '#/components/schemas/message'
@@ -1600,6 +1657,7 @@ components:
           type: object
         description:
           type: string
+          pattern: '.*'
         lithologyid:
           minimum: 1
           type: integer
@@ -1607,6 +1665,7 @@ components:
           example: gradational over 10 cm
           nullable: true
           type: string
+          pattern: '.*'
       type: object
     lithologyresponse:
       properties:
@@ -1627,6 +1686,7 @@ components:
     message:
       example: Returned a vaild response.
       type: string
+      pattern: .*
     occurrence:
       properties:
         data:
@@ -1664,12 +1724,14 @@ components:
                     type: integer
                   database:
                     type: string
+                    pattern: '.*'
                   datasetid:
                     $ref: '#/components/schemas/datasetid'
                   datasettype:
                     $ref: '#/components/schemas/datasettype'
                   location:
                     type: string
+                    pattern: '.*'
                   siteid:
                     $ref: '#/components/schemas/siteid'
                   sitename:
@@ -1682,13 +1744,16 @@ components:
                     type: integer
                   taxonname:
                     type: string
+                    pattern: '.*'
                 type: object
             type: object
           type: array
         message:
           type: string
+          pattern: '.*'
         status:
           type: string
+          pattern: '.*'
         success:
           type: integer
       type: object
@@ -1720,12 +1785,14 @@ components:
                     type: integer
                   database:
                     type: string
+                    pattern: '.*'
                   datasetid:
                     $ref: '#/components/schemas/datasetid'
                   datasettype:
                     $ref: '#/components/schemas/datasettype'
                   location:
                     type: string
+                    pattern: '.*'
                   siteid:
                     $ref: '#/components/schemas/siteid'
                   sitename:
@@ -1738,13 +1805,16 @@ components:
                     type: integer
                   taxonname:
                     type: string
+                    pattern: '.*'
                 type: object
             type: object
           type: array
         message:
           type: string
+          pattern: '.*'
         status:
           type: string
+          pattern: '.*'
         success:
           type: integer
       type: object
@@ -1756,9 +1826,11 @@ components:
       properties:
         Author:
           type: string
+          pattern: '.*'
         EcolGroups:
           items:
             type: string
+            pattern: '.*'
           type: array
         Extinct:
           type: boolean
@@ -1767,53 +1839,268 @@ components:
           type: integer
         Notes:
           type: string
+          pattern: '.*'
         PublicationID:
           format: int32
           type: integer
         TaxaGroupID:
           type: string
+          pattern: '.*'
         TaxonCode:
           type: string
+          pattern: '.*'
         TaxonID:
           format: int32
           type: integer
         TaxonName:
           type: string
+          pattern: '.*'
     publication:
       properties:
         Authors:
           items:
             type: string
+            pattern: '.*'
           type: array
         Citation:
           type: string
+          pattern: '.*'
         PubType:
           type: string
+          pattern: '.*'
         PublicationID:
           type: integer
         Year:
           type: string
+          pattern: '.*'
     publications:
       properties:
         Authors:
           items:
             type: string
+            pattern: '.*'
           type: array
         Citation:
           type: string
+          pattern: '.*'
         PubType:
           type: string
+          pattern: '.*'
         PublicationID:
           type: integer
         Year:
           type: string
+          pattern: '.*'
     sampleid:
       type: integer
     sampleunits:
       type: string
-      enum: ['μm', 'μm^2/ml', 'μm^2/pollen concentration', '1-5 scale', 'cm', 'cm^2', 'cm^2/ml', 'fragments/ml', 'g', 'g/ml', 'grains/aliquot', 'grains/g', 'grains/g sample', 'grains/ml', 'grains/tablet', 'mmho', 'ml', 'MNI', 'NISP', 'number', 'number/ml', 'particles/ml', 'percent', 'percent after LOI', 'percent dry mass', 'present/absent', 'units not specified', 'NISP digitized', 'percent digitized', '°C', 'μS', 'meq/L', 'mg/L', 'Spaulding scale', 'per mille', 'number/g', 'm', 'MNE', 'NISP/100 ml', 'g/m^2', 'mm^2/ml', 'particles/cm^2/yr', '1-4 scale', 'elemental ratio', 'ppm', 'individual specimen', 'mg/L CaCO3', 'μg/L', 'l', 'valves/g', 'NISP/ml', 'mS/cm', 'μg/g', 'mg N/L', 'μS/cm', 'NTU', 'μmho/cm', 'grains/mg', 'mg', 'number/1000', 'κ (SI) × 10^-6', 'κ (cgs) × 10^-6', 'grams', '1-2 scale', 'ratio', 'PTU', 'κ (cgs) × 10^-5', 'Pt-Co scale', 'ppb', 'μeq/L', 'Pt-Co units', 'μS/cm 25°C', 'TCU', '1-3 scale', 'particles/g', 'nl', 'mm', 'number×1000', 'mm^3', 'fraction total alkanes', 'response at m/z = 1302', 'response at m/z = 1050', 'response at m/z = 1292', 'response at m/z = 1018', 'response at m/z = 1020', 'response at m/z = 1022', 'response at m/z = 1032', 'response at m/z = 1034', 'response at m/z = 1036', 'response at m/z = 1046', 'response at m/z = 1048', 'spheres/mL', 'per mille VSMOW', 'peak area', 'cm^3', 'yr/cm', 'yr/m', 'yr', 'mm^2', 'kcps', 'kcps^2', 'valves/ml', 'Pt-Co', 'μmol/L', 'κ (SI) × 10^-5', 'concentration', 'mm^2/cm^2/yr', 'grains/cm^2*yr', 'NISP+', 'Unit', 'µS/cm 25°C', 'µg/L', 'units', 'µS/cm', 'mmol/L', 'µeq/L', 'Index', 'umol/L', 'cm^2/cm^3', 'C°', 'SD', '>2 mm', '>5 mm', 'fragment', '>1 mm', 'per mille VPDB', 'per mille air N', 'mg/ml', 'particles/cm^3', 'cm^2/yr', 'per mille VPDB/17O', 'atomic ratio', 'mg/100 mg', 'per mille VSMOV', 'error', '>10 mm', 'mm^3/cm^3', 'number/tablet', 'mg/g', 'mg/kg', 'm^2', 'present', 'SI', 'µS/cm 25C', 'cc', 'per mil, PDB', 'per mil, air', 'percent dry weight', 'µg/kg', 'Mean uM', 'uM', 'μS/cm25°C', 'fragments/l', 'particles/l', 'NISP/tablet', 'grains/cm²/yr', 'moisture weight %', 'particles', 'count', 'class', 'volume-percent', 'mm2', 'cm3', 'mm/year', 'promil', 'MS (SI)', '#/cm2/a', '#/cm3', '#/g', '#', '#/cc', '#/cm2/kyr', '% dry wt', 'cps', 'grains/cm3', 'particles/cm²/yr', 'g/L', 'cm²', 'g/cm3', 'g/cm2', 'pCi/g', 'Bg/g', 'Bg/kg', 'dpm/g', 'g/cm2/yr', 'g/m2/yr', 'kg/m2/yr', 'μm^2', 'grains/cm^3', 'presence/absence', '#/tablet', 'grains/cc', 'count of reads', 'count of PCR replicates', 'spores/tablet', 'cm/yr', 'presence/abence', 'cyst/cm2/yr', 'cysts/g']
+      enum:
+        - μm
+        - μm^2/ml
+        - μm^2/pollen concentration
+        - 1-5 scale
+        - cm
+        - cm^2
+        - cm^2/ml
+        - fragments/ml
+        - g
+        - g/ml
+        - grains/aliquot
+        - grains/g
+        - grains/g sample
+        - grains/ml
+        - grains/tablet
+        - mmho
+        - ml
+        - MNI
+        - NISP
+        - number
+        - number/ml
+        - particles/ml
+        - percent
+        - percent after LOI
+        - percent dry mass
+        - present/absent
+        - units not specified
+        - NISP digitized
+        - percent digitized
+        - °C
+        - μS
+        - meq/L
+        - mg/L
+        - Spaulding scale
+        - per mille
+        - number/g
+        - m
+        - MNE
+        - NISP/100 ml
+        - g/m^2
+        - mm^2/ml
+        - particles/cm^2/yr
+        - 1-4 scale
+        - elemental ratio
+        - ppm
+        - individual specimen
+        - mg/L CaCO3
+        - μg/L
+        - l
+        - valves/g
+        - NISP/ml
+        - mS/cm
+        - μg/g
+        - mg N/L
+        - μS/cm
+        - NTU
+        - μmho/cm
+        - grains/mg
+        - mg
+        - number/1000
+        - κ (SI) × 10^-6
+        - κ (cgs) × 10^-6
+        - grams
+        - 1-2 scale
+        - ratio
+        - PTU
+        - κ (cgs) × 10^-5
+        - Pt-Co scale
+        - ppb
+        - μeq/L
+        - Pt-Co units
+        - μS/cm 25°C
+        - TCU
+        - 1-3 scale
+        - particles/g
+        - nl
+        - mm
+        - number×1000
+        - mm^3
+        - fraction total alkanes
+        - response at m/z = 1302
+        - response at m/z = 1050
+        - response at m/z = 1292
+        - response at m/z = 1018
+        - response at m/z = 1020
+        - response at m/z = 1022
+        - response at m/z = 1032
+        - response at m/z = 1034
+        - response at m/z = 1036
+        - response at m/z = 1046
+        - response at m/z = 1048
+        - spheres/mL
+        - per mille VSMOW
+        - peak area
+        - cm^3
+        - yr/cm
+        - yr/m
+        - yr
+        - mm^2
+        - kcps
+        - kcps^2
+        - valves/ml
+        - Pt-Co
+        - μmol/L
+        - κ (SI) × 10^-5
+        - concentration
+        - mm^2/cm^2/yr
+        - grains/cm^2*yr
+        - NISP+
+        - Unit
+        - µS/cm 25°C
+        - µg/L
+        - units
+        - µS/cm
+        - mmol/L
+        - µeq/L
+        - Index
+        - umol/L
+        - cm^2/cm^3
+        - C°
+        - SD
+        - '>2 mm'
+        - '>5 mm'
+        - fragment
+        - '>1 mm'
+        - per mille VPDB
+        - per mille air N
+        - mg/ml
+        - particles/cm^3
+        - cm^2/yr
+        - per mille VPDB/17O
+        - atomic ratio
+        - mg/100 mg
+        - per mille VSMOV
+        - error
+        - '>10 mm'
+        - mm^3/cm^3
+        - number/tablet
+        - mg/g
+        - mg/kg
+        - m^2
+        - present
+        - SI
+        - µS/cm 25C
+        - cc
+        - per mil, PDB
+        - per mil, air
+        - percent dry weight
+        - µg/kg
+        - Mean uM
+        - uM
+        - μS/cm25°C
+        - fragments/l
+        - particles/l
+        - NISP/tablet
+        - grains/cm²/yr
+        - moisture weight %
+        - particles
+        - count
+        - class
+        - volume-percent
+        - mm2
+        - cm3
+        - mm/year
+        - promil
+        - MS (SI)
+        - '#/cm2/a'
+        - '#/cm3'
+        - '#/g'
+        - '#'
+        - '#/cc'
+        - '#/cm2/kyr'
+        - '% dry wt'
+        - cps
+        - grains/cm3
+        - particles/cm²/yr
+        - g/L
+        - cm²
+        - g/cm3
+        - g/cm2
+        - pCi/g
+        - Bg/g
+        - Bg/kg
+        - dpm/g
+        - g/cm2/yr
+        - g/m2/yr
+        - kg/m2/yr
+        - μm^2
+        - grains/cm^3
+        - presence/absence
+        - '#/tablet'
+        - grains/cc
+        - count of reads
+        - count of PCR replicates
+        - spores/tablet
+        - cm/yr
+        - presence/abence
+        - cyst/cm2/yr
+        - cysts/g
     sitedescription:
-      example: Lake is located in a pre-glacial gorge of the Wisconsin river cut through the Baraboo Hills, a bedrock high. The valley is dammed at both ends by terminal moraines deposited by the Green Bay lobe, which flowed around the Baraboo Hills. Lake is fed by groundwater. Surrounding vegetation, white-black-bur oak.
+      example: Lake is located in a pre-glacial gorge of the Wisconsin river cut
+        through the Baraboo Hills, a bedrock high. The valley is dammed at both
+        ends by terminal moraines deposited by the Green Bay lobe, which flowed
+        around the Baraboo Hills. Lake is fed by groundwater. Surrounding
+        vegetation, white-black-bur oak.
       nullable: true
       type: string
     siteid:
@@ -1909,6 +2196,7 @@ components:
           $ref: '#/components/schemas/status'
     status:
       type: string
+      pattern: .*
     success:
       enum:
         - 0
@@ -2112,22 +2400,12 @@ info:
     email: goring@wisc.edu
     name: Simon J Goring
     url: http://goring.org
-  description: >-
-    The [Neotoma Paleoecology Database](https://www.neotomadb.org) is a global database of fossils 
-    from the last 5.2 million years. All fossil records in Neotoma are reported with metadata that 
-    places the sample in space and in time, and provides additional information about taxonomy, 
-    publication history, and the models that are used to estimate the sample age.
-
-
-    The API is structured to provide users with reliable JSON responses from the live Neotoma Database. 
-    Neotoma provides several tools to work with researcher submitted data:
-
+  description: |-
+    The [Neotoma Paleoecology Database](https://www.neotomadb.org) is a global database of fossils  from the last 5.2 million years. All fossil records in Neotoma are reported with metadata that  places the sample in space and in time, and provides additional information about taxonomy,  publication history, and the models that are used to estimate the sample age.
+    The API is structured to provide users with reliable JSON responses from the live Neotoma Database.  Neotoma provides several tools to work with researcher submitted data:
       * [Neotoma Explorer](https://apps.neotomadb.org/explorer): A visual, interactive data explorer.
       * [neotoma2 R package](https://cran.r-project.org/web/packages/neotoma2/index.html): A tool for obtaining and manipulating paleoecological data in R.
-      
-    
     **Neotoma is funded by the National Sciences Foundation of the United States ([Award 1948962](https://nsf.gov/awardsearch/showAward?AWD_ID=1948926))**.
-
       <a href=https://localcontextshub.org/institutions/view/122/><img alt="Local Contexts Open to Collaborate Logo" src=https://storage.googleapis.com/local-contexts-hub.appspot.com/labels/notices/ci-open-to-collaborate.svg width=50 style="align:center;"/></a>
       <p>Our institution is committed to the development of new modes of collaboration, engagement, and partnership with Indigenous peoples for the care and stewardship of past and future heritage collections.
   license:
@@ -2146,8 +2424,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/constdbresponse'
-          description: |
-            Returns metadata about each constituent database in Neotoma, including Summary Informationrmation about dataset types within the database and the age spans of the records in the database.
+          description: 'Returns metadata about each [constituent
+            database](https://www.neotomadb.org/data/constituent-databases) in
+            Neotoma, including Summary Information about dataset types within
+            the database and the age spans of the records in the database.
+            Constituent databases '
       tags:
         - Database metadata
         - Summary Informationrmation
@@ -2213,7 +2494,8 @@ paths:
         - v1.5
   /v1.5/apps/TaxaInDatasets:
     get:
-      description: The set of all taxa, and a list of all the datasets in which each taxon appears.
+      description: The set of all taxa, and a list of all the datasets in which each
+        taxon appears.
       responses:
         '200':
           content:
@@ -2221,7 +2503,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/taxaInDatasetsv1_5'
           description: An array of taxon identities with associated dataset IDs.
-      summary: Lists all Neotoma taxa (alphebetically) and the dataset types in which the taxa appear.
+      summary: Lists all Neotoma taxa (alphebetically) and the dataset types in which
+        the taxa appear.
       tags:
         - Taxonomic metadata
         - v1.5
@@ -2328,7 +2611,9 @@ paths:
         - v1.5
   /v1.5/data/occurrence/{occurrenceid}:
     get:
-      description: Given a unique occurrence identifier associated with a unique occurrence in Neotoma, return individual occurrence information for the sample.
+      description: Given a unique occurrence identifier associated with a unique
+        occurrence in Neotoma, return individual occurrence information for the
+        sample.
       parameters:
         - $ref: '#/components/parameters/occurrenceidPath'
       responses:
@@ -2360,7 +2645,8 @@ paths:
         - v1.5
   /v1.5/dbtables/{table}:
     get:
-      description: Returns the named Neotoma Database table.  An empty query returns a list of all Neotoma tables.
+      description: Returns the named Neotoma Database table.  An empty query returns a
+        list of all Neotoma tables.
       parameters:
         - description: Neotoma database table name.
           example: geochrontypes
@@ -2553,13 +2839,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/taxaInDatasets'
-          description: A list of all taxa in neotoma and the datasets in which they are found.
+          description: A list of all taxa in neotoma and the datasets in which they are
+            found.
       tags:
         - Taxonomic metadata
         - v2.0
   /v2.0/data/chronologies/{chronid}:
     get:
-      description: Returns the chronology and chronological controls used for a dataset age model associated with a particular chronology ID.
+      description: Returns the chronology and chronological controls used for a
+        dataset age model associated with a particular chronology ID.
       parameters:
         - $ref: '#/components/parameters/chronidPath'
       responses:
@@ -2661,7 +2949,8 @@ paths:
         - v2.0
   /v2.0/data/datasets/db:
     get:
-      description: Returns datasets associated with a specific constituent database in Neotoma.
+      description: Returns datasets associated with a specific constituent database in
+        Neotoma.
       parameters:
         - $ref: '#/components/parameters/limitParam'
         - $ref: '#/components/parameters/offsetParam'
@@ -2903,7 +3192,8 @@ paths:
         - v2.0
   /v2.0/data/frozen/{datasetid}:
     get:
-      description: Returns the full metadata for a Neotoma record as it was when the DOI was minted.
+      description: Returns the full metadata for a Neotoma record as it was when the
+        DOI was minted.
       parameters:
         - $ref: '#/components/parameters/datasetidPath'
       responses:
@@ -2963,7 +3253,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/datasetv2'
           description: An array of datasets.
-      summary: Returns information about datasets based on the geopolitical unit in which they occur.
+      summary: Returns information about datasets based on the geopolitical unit in
+        which they occur.
       tags:
         - Site metadata
         - v2.0
@@ -2980,13 +3271,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/sitesv2response'
           description: An array of sites.
-      summary: Returns information about sites based on the geopolitical unit in which they occur.
+      summary: Returns information about sites based on the geopolitical unit in which
+        they occur.
       tags:
         - Site metadata
         - v2.0
   /v2.0/data/occurrences:
     get:
-      description: Returns occurrence information for a particular taxon, geographic region or temporal slice.
+      description: Returns occurrence information for a particular taxon, geographic
+        region or temporal slice.
       parameters:
         - $ref: '#/components/parameters/taxonNameQuery'
         - $ref: '#/components/parameters/taxonidQuery'
@@ -3014,7 +3307,8 @@ paths:
         - v2.0
   /v2.0/data/occurrences/{occurrenceid}:
     get:
-      description: Returns occurrence information for a particular taxon, geographic region or temporal slice.
+      description: Returns occurrence information for a particular taxon, geographic
+        region or temporal slice.
       parameters:
         - $ref: '#/components/parameters/occurrenceidPath'
         - $ref: '#/components/parameters/limitParam'
@@ -3187,7 +3481,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/contactfromsite'
           description: contact
-      summary: Contact information for Neotoma contributors based on a known Neotoma site.
+      summary: Contact information for Neotoma contributors based on a known Neotoma
+        site.
       tags:
         - Contact metadata
         - v2.0
@@ -3209,7 +3504,8 @@ paths:
         - v2.0
   /v2.0/data/sites/{siteid}/datasets_elc:
     get:
-      description: Returns information about Neotoma dataset, formatted for the EarthLifeConsortium
+      description: Returns information about Neotoma dataset, formatted for the
+        EarthLifeConsortium
       parameters:
         - $ref: '#/components/parameters/siteidPath'
       responses:
@@ -3242,9 +3538,11 @@ paths:
         - v2.0
   /v2.0/data/summary/dsdbmonth:
     get:
-      description: Returns summary statistics for the database as a whole, broken down by constituent database.
+      description: Returns summary statistics for the database as a whole, broken down
+        by constituent database.
       parameters:
-        - description: The starting month (from present == 0) for which to generate the summary.
+        - description: The starting month (from present == 0) for which to generate the
+            summary.
           example: 0
           in: query
           name: start
@@ -3254,7 +3552,8 @@ paths:
             maximum: 9999
             minimum: 0
             type: integer
-        - description: The ending month (from present == 0) for which to generate the summary.
+        - description: The ending month (from present == 0) for which to generate the
+            summary.
           example: 1
           in: query
           name: end
@@ -3277,9 +3576,11 @@ paths:
         - v2.0
   /v2.0/data/summary/dstypemonth:
     get:
-      description: Returns summary statistics for the database as a whole, broken down by dataset type.
+      description: Returns summary statistics for the database as a whole, broken down
+        by dataset type.
       parameters:
-        - description: The starting month (from present == 0) for which to generate the summary.
+        - description: The starting month (from present == 0) for which to generate the
+            summary.
           example: 0
           in: query
           name: start
@@ -3287,7 +3588,8 @@ paths:
           schema:
             default: 0
             type: integer
-        - description: The ending month (from present == 0) for which to generate the summary.
+        - description: The ending month (from present == 0) for which to generate the
+            summary.
           example: 1
           in: query
           name: end
@@ -3301,16 +3603,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/summarydatatype'
-          description: A count of the datasets added by datasettype for the requested period.
+          description: A count of the datasets added by datasettype for the requested
+            period.
       summary: Summary Information
       tags:
         - Summary Information
         - v2.0
   /v2.0/data/summary/rawbymonth:
     get:
-      description: Returns the count of sites, datasets, publications and other objects added to Neotoma during the requested time period.
+      description: Returns the count of sites, datasets, publications and other
+        objects added to Neotoma during the requested time period.
       parameters:
-        - description: The starting month (from present == 0) for which to generate the summary.
+        - description: The starting month (from present == 0) for which to generate the
+            summary.
           example: 0
           in: query
           name: start
@@ -3318,7 +3623,8 @@ paths:
           schema:
             default: 0
             type: integer
-        - description: The ending month (from present == 0) for which to generate the summary.
+        - description: The ending month (from present == 0) for which to generate the
+            summary.
           example: 1
           in: query
           name: end
@@ -3376,7 +3682,8 @@ paths:
         - v2.0
   /v2.0/data/taxa/{taxonid}/occurrences:
     get:
-      description: Returns occurrence information for a particular taxon, geographic region or temporal slice.
+      description: Returns occurrence information for a particular taxon, geographic
+        region or temporal slice.
       parameters:
         - $ref: '#/components/parameters/taxonidPath'
         - $ref: '#/components/parameters/limitParam'
@@ -3404,7 +3711,8 @@ tags:
     externalDocs:
       url: https://open.neotomadb.org/dbschema/ndb/index.html
     name: Database tables
-  - description: Information about chronological controls and the models used to add the temporal component to records.
+  - description: Information about chronological controls and the models used to add
+      the temporal component to records.
     externalDocs:
       url: https://open.neotomadb.org/manual/neotoma-tables.html#chronology-age-related-tables
     name: Chronology metadata
@@ -3412,7 +3720,8 @@ tags:
     externalDocs:
       url: https://open.neotomadb.org/manual/neotoma-tables.html#individual-related-tables
     name: Contact metadata
-  - description: Information about site location and metadata specific to the individual dataset.
+  - description: Information about site location and metadata specific to the
+      individual dataset.
     externalDocs:
       url: https://open.neotomadb.org/manual/neotoma-tables.html#dataset-collection-related-tables
     name: Dataset metadata
@@ -3424,9 +3733,11 @@ tags:
     externalDocs:
       url: https://open.neotomadb.org/manual/neotoma-tables.html#site-related-tables
     name: Geopolitical metadata
-  - description: A simplified data return, similar to the data download, but specific to a particular taxon, time or location.
+  - description: A simplified data return, similar to the data download, but
+      specific to a particular taxon, time or location.
     name: Occurrence metadata
-  - description: For ease of use in online applications, pre-calculated pollen percentages for taxa, location or temporal bins.
+  - description: For ease of use in online applications, pre-calculated pollen
+      percentages for taxa, location or temporal bins.
     name: Pollen proportions
   - description: Formatted publication data related to Neotoma records.
     externalDocs:
