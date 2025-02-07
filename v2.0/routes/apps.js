@@ -35,6 +35,7 @@ router.get('/constdb/datasetuploads', handlers.datasetuploads);
 router.get('/constdb/datasetages', handlers.datasetranges);
 router.get('/constdb', handlers.databasesummaries);
 router.get('/contactsummary/:datasetid', handlers.contactoverview);
-router.get('/orcids', handlers.contact_orcid);
+router.get('/orcids/contact', handlers.contact_orcid);
+router.get('/orcids/orcid', handlers.orcid_contact);
 
 module.exports = router;

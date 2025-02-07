@@ -33,6 +33,10 @@ module.exports = {
     const ct_orcid = require('../helpers/landing/landing.js');
     ct_orcid.orcid_by_contact_id(req, res, next);
   },
+  orcid_contact: function(req, res, next) {
+    const or_contact = require('../helpers/landing/landing.js');
+    or_contact.contact_by_orcid_id(req, res, next);
+  },
 };
 
 // Defining the query functions:
