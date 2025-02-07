@@ -560,7 +560,7 @@ components:
       required: true
       schema:
         format: int32
-        maximum: 30000
+        maximum: 50000
         minimum: 1
         type: integer
     bufferQuery:
@@ -582,7 +582,7 @@ components:
       required: false
       schema:
         format: int32
-        maximum: 30000
+        maximum: 50000
         minimum: 1
         type: integer
     tableQuery:
@@ -2401,11 +2401,13 @@ info:
     name: Simon J Goring
     url: http://goring.org
   description: |-
+    Neotoma is funded by the *National Sciences Foundation* of the United States ([Award 1948962](https://nsf.gov/awardsearch/showAward?AWD_ID=1948926)).
+    
     The [Neotoma Paleoecology Database](https://www.neotomadb.org) is a global database of fossils  from the last 5.2 million years. All fossil records in Neotoma are reported with metadata that  places the sample in space and in time, and provides additional information about taxonomy,  publication history, and the models that are used to estimate the sample age.
     The API is structured to provide users with reliable JSON responses from the live Neotoma Database.  Neotoma provides several tools to work with researcher submitted data:
       * [Neotoma Explorer](https://apps.neotomadb.org/explorer): A visual, interactive data explorer.
       * [neotoma2 R package](https://cran.r-project.org/web/packages/neotoma2/index.html): A tool for obtaining and manipulating paleoecological data in R.
-    **Neotoma is funded by the National Sciences Foundation of the United States ([Award 1948962](https://nsf.gov/awardsearch/showAward?AWD_ID=1948926))**.
+      
       <a href=https://localcontextshub.org/institutions/view/122/><img alt="Local Contexts Open to Collaborate Logo" src=https://storage.googleapis.com/local-contexts-hub.appspot.com/labels/notices/ci-open-to-collaborate.svg width=50 style="align:center;"/></a>
       <p>Our institution is committed to the development of new modes of collaboration, engagement, and partnership with Indigenous peoples for the care and stewardship of past and future heritage collections.
   license:
@@ -2416,6 +2418,7 @@ info:
   version: 2.0-oas3
 openapi: 3.0.0
 paths:
+  /v2.0/apps/
   /v2.0/apps/constdb:
     get:
       responses:
@@ -3700,18 +3703,24 @@ paths:
         - Occurrence metadata
         - v2.0
 servers:
-  - description: Neotoma production server.
+  - description: |-
+      The Neotoma production server. For most users, this is the server that they will be accessing data from.
     url: https://api.neotomadb.org/
   - description: Neotoma development server.
     url: https://api-dev.neotomadb.org/
-  - description: Local Neotoma server.
+  - description: |-
+      A local Neotoma server. Users who are developing with Neotoma locally will most likely be using this route.
     url: http://localhost:3001/
 tags:
-  - description: Endpoints that access tables from Neotoma verbatim.
+  - description: |-
+      Endpoints that access tables from Neotoma verbatim. Documentation for the database can be found in 
+      the [Neotoma Manual](https://open.neotomadb.org/manual), along with descriptions for individual tables.
+      _ONLY_ tables in the `ndb` schema can be accessed through this endpoint.
     externalDocs:
       url: https://open.neotomadb.org/dbschema/ndb/index.html
     name: Database tables
-  - description: Information about chronological controls and the models used to add
+  - description: |-
+      Information about chronological controls and the models used to add
       the temporal component to records.
     externalDocs:
       url: https://open.neotomadb.org/manual/neotoma-tables.html#chronology-age-related-tables
