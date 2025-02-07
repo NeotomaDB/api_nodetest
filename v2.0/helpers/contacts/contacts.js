@@ -161,12 +161,21 @@ function contactsbydataid(req, res, next) {
       });
 }
 
+/**
+ * Specific call to obtain contact information from the Neotoma Database
+ * using a dataset ID.
+ * @param {req} req An express.js `requests` object.
+ * @param {res} res An express.js `response` object.
+ * @param {next} next An express.js `next` object.
+ */
 function contactclassbydsid(req, res, next) {
   const contactclassbydsid = sql('../v2.0/helpers/contacts/contact_class.sql');
   const db = req.app.locals.db;
   const datasetIdUsed = !!req.params.datasetid;
+  let datasetid = null;
+
   if (datasetIdUsed) {
-    var datasetid = parseInt(req.params.datasetid);
+    datasetid = parseInt(req.params.datasetid);
   } else {
     res.status(500)
         .json({
@@ -179,7 +188,7 @@ function contactclassbydsid(req, res, next) {
       .then(function(data) {
         if (data.length === 0) {
         // We're returning the structure, but nothing inside it:
-          var returner = [];
+          let returner = [];
         } else {
           returner = data;
         };
@@ -200,6 +209,13 @@ function contactclassbydsid(req, res, next) {
       });
 }
 
+/**
+ * Specific call to obtain contact information from the Neotoma Database
+ * using site IDs.
+ * @param {req} req An express.js `requests` object.
+ * @param {res} res An express.js `response` object.
+ * @param {next} next An express.js `next` object.
+ */
 function contactsbysiteid(req, res, next) {
   const db = req.app.locals.db;
   const siteIdUsed = !!req.params.siteid;
