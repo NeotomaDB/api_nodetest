@@ -117,24 +117,28 @@ components:
         minimum: -500
         type: integer
     chronidPath:
-      description: Unique chronology identifier.
+      description: Unique chronology identifier. This is the internal identifier within the [`ndb.chronologies`](https://open.neotomadb.org/dbschema/ndb/tables/chronologies.html)
+        table. Note that although the chronology IDs are generated sequentially, not all chronology IDs are currently in use.
       in: path
       name: chronid
       required: true
       schema:
         format: int64
-        maximum: 40000
+        example: 17
+        maximum: 44000
         minimum: 0
         exclusiveMinimum: true
         type: integer
     contactNameQuery:
-      description: Last name of the researcher (may use the % wildcard)
+      description: Full name of the researcher using the "Last, Given Name(s)" structure.
+        You may use the % wildcard anywhere in the string.
       in: query
       name: contactname
       required: false
       schema:
         example: Grimm, Eric Christopher
         type: string
+        pattern: "^[-'a-zA-ZÀ-ÖØ-öø-ÿ, ]+$"
     countQuery:
       description: Should we return the row count for the table?
       in: query
@@ -157,7 +161,7 @@ components:
           - inactive
           - retired
           - unknown
-        example: active
+        example: deceased
         type: string
     contactidPath:
       description: Unique contact identifier within the Neotoma Database, alone or
@@ -249,7 +253,7 @@ components:
         minimum: 0
         exclusiveMinimum: true
         type: integer
-    doiQuery:
+    doidataQuery:
       description: A valid DOI in the form 10.XXXX/XXXXX (i.e., excluding
         'https://doi.org').
       in: query
@@ -319,12 +323,14 @@ components:
         type: string
         example: Charcoal
     familyNameQuery:
-      description: Family name (last name) of the the researcher (may use the % wildcard)
+      description: Family name (last name) of the the researcher (may use the % wildcard).
       in: query
       name: familyname
       required: false
       schema:
         type: string
+        example: Grimm
+        pattern: "^[-'a-zA-ZÀ-ÖØ-öø-ÿ% ]+$"
     gpidPath:
       description: Numeric ID for the geopolitical unit.
       in: path
@@ -389,6 +395,7 @@ components:
       required: false
       schema:
         default: 25
+        example: 25
         format: int32
         maximum: 10000
         minimum: 1
@@ -448,6 +455,7 @@ components:
       required: false
       schema:
         default: 0
+        example: 25
         format: int32
         minimum: 0
         type: integer
@@ -2810,13 +2818,16 @@ paths:
   /v2.0/apps/taphonomysystems:
     get:
       parameters:
-        - description: Unique dataset type identifier.
+        - description: Unique dataset type identifier. Note that not all dataset types have associated taphonomy systems, 
+            so a valid datasettype may result in an empty response. Users who require more information may use the `dbtables`
+            endpoints to access the [`taphonomicsystemsdatasettypes` table](https://open.neotomadb.org/dbschema/ndb/tables/taphonomicsystemsdatasettypes.html). This table will list all taphonomic systems
+            associated with each dataset type.
           in: query
           name: datasettypeid
           required: true
           schema:
             format: int64
-            maximum: 26
+            maximum: 44
             minimum: 1
             type: integer
       responses:
@@ -2936,7 +2947,7 @@ paths:
         - $ref: '#/components/parameters/locQuery'
         - $ref: '#/components/parameters/siteidQuery'
         - $ref: '#/components/parameters/datasetidQuery'
-        - $ref: '#/components/parameters/doiQuery'
+        - $ref: '#/components/parameters/doidataQuery'
         - $ref: '#/components/parameters/gpidQuery'
         - $ref: '#/components/parameters/keywordQuery'
         - $ref: '#/components/parameters/contactidQuery'
@@ -3426,7 +3437,7 @@ paths:
         - $ref: '#/components/parameters/locQuery'
         - $ref: '#/components/parameters/siteidQuery'
         - $ref: '#/components/parameters/datasetidQuery'
-        - $ref: '#/components/parameters/doiQuery'
+        - $ref: '#/components/parameters/doidataQuery'
         - $ref: '#/components/parameters/gpidQuery'
         - $ref: '#/components/parameters/keywordQuery'
         - $ref: '#/components/parameters/contactidQuery'
@@ -3723,6 +3734,9 @@ tags:
       Endpoints that access tables from Neotoma verbatim. Documentation for the database can be found in 
       the [Neotoma Manual](https://open.neotomadb.org/manual), along with descriptions for individual tables.
       _ONLY_ tables in the `ndb` schema can be accessed through this endpoint.
+      Users who wish to better understand how individual tables connect to one another may also find the
+      online [database schema](https://open.neotomadb.org/dbschema) of use, for a full listing of all database
+      tables and entity-relation diagrams for the various tables. 
     externalDocs:
       url: https://open.neotomadb.org/dbschema/ndb/index.html
     name: Database tables
