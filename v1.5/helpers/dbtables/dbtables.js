@@ -4,16 +4,6 @@ const {sql} = require('../../../src/neotomaapi.js');
 
 const dbtablesQuery = sql('../v1.5/helpers/dbtables/dbtablesQuery.sql');
 
-// Defining the query function:
-/**
- * Return the data table based on a set of query parameters
- * @param {req} req A request object passed from Express
- * @param {res} res A response object passed from Express.
- * @param {next} next A next object for Express.
- */
-function dbtables(req, res, next) {
-  const db = req.app.locals.db;
-
 /**
  * Return information about particular database tables.
  * @param {req} req An express.js `requests` object.
