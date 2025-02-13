@@ -695,7 +695,13 @@ components:
                   An array of the unique dataset types for all datasets within the constituent database.
                 type: array
                 items:
-                  type: string
+                  type: object
+                  properties:
+                    datasets:
+                      type: integer
+                    datasettype:
+                      type: string
+                      nullable: true
                   nullable: true
               older:
                 $ref: '#/components/schemas/ageold'
@@ -1462,7 +1468,7 @@ components:
         data:
           type: array
           items:
-            type: object
+            type: string
         message:
           $ref: '#/components/schemas/message'
         status:
@@ -1525,7 +1531,9 @@ components:
     downloadv1point5:
       properties:
         data:
-          type: object
+          type: array
+          items:
+            type: object
         message:
           $ref: '#/components/schemas/message'
         success:
