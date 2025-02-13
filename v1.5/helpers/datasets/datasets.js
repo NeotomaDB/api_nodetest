@@ -1,6 +1,6 @@
 'use strict';
 
-const {sql} = require('../../../src/neotomaapi.js');
+const {sql, ifUndef, getparam} = require('../../../src/neotomaapi.js');
 
 const datasetbyidsql = sql('../v1.5/helpers/datasets/datasetbyid.sql');
 const datasetsbysitesql = sql('../v1.5/helpers/datasets/datasetbysites.sql');
@@ -13,35 +13,37 @@ const datasetsbysitesql = sql('../v1.5/helpers/datasets/datasetbysites.sql');
  */
 function datasetbyid(req, res, next) {
   const db = req.app.locals.db;
-  let datasetid = req.query.datasetid;
-  // check if datasetid provided by query or URL slug
-  if (!req.query.datasetid) {
-    datasetid = req.query.datasetid;
-  } else if (!req.params.datasetid) {
-    datasetid = req.params.datasetid;
-  } else {
+  const paramgrab = getparam(req);
+
+  if (!paramgrab.success) {
     res.status(500)
-        .jsonp({
-          success: 0,
+        .json({
           status: 'failure',
           data: null,
-          message: 'Must pass either queries or an integer sequence.',
+          message: paramgrab.message,
+        });
+  } else {
+    const resultset = paramgrab.data;
+
+    // Get the input parameters:
+    const outobj = {
+      'datasetid': ifUndef(resultset.datasetid, 'sep'),
+    };
+    console.log(outobj);
+    db.any(datasetbyidsql, [outobj.datasetid])
+        .then(function(data) {
+          res.status(200)
+              .jsonp({
+                success: 1,
+                status: 'success',
+                data: data,
+                message: 'Retrieved all tables',
+              });
+        })
+        .catch(function(err) {
+          next(err);
         });
   }
-
-  db.any(datasetbyidsql, [datasetid])
-      .then(function(data) {
-        res.status(200)
-            .jsonp({
-              success: 1,
-              status: 'success',
-              data: data,
-              message: 'Retrieved all tables',
-            });
-      })
-      .catch(function(err) {
-        next(err);
-      });
 }
 
 /**

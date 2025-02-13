@@ -7,7 +7,7 @@ const expect = chakram.expect;
 describe('tests for /v2.0/data/chronologies/{chronid}', function() {
   describe('tests for get', function() {
     it('should respond 200 for "A Neotoma chronology object."', function() {
-      const response = request('get', 'http://localhost:3001/v2.0/data/chronologies/500', {
+      const response = request('get', 'http://localhost:3001/v2.0/data/chronologies/6545', {
         'time': true,
       });
 

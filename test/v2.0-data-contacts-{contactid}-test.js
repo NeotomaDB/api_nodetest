@@ -7,7 +7,7 @@ const expect = chakram.expect;
 describe('tests for /v2.0/data/contacts/{contactid}', function() {
   describe('tests for get', function() {
     it('should respond 200 for "A Neotoma contacts object."', function() {
-      const response = request('get', 'http://localhost:3001/v2.0/data/contacts/9506', {
+      const response = request('get', 'http://localhost:3001/v2.0/data/contacts/6313', {
         'time': true,
       });
 
