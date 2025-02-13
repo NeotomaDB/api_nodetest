@@ -1,5 +1,5 @@
 SELECT 
-    json_build_object(       'siteid', sts.siteid, 
+    distinct jsonb_build_object(       'siteid', sts.siteid, 
                               'sitename', sts.sitename,
                        'sitedescription', sts.sitedescription,
                              'sitenotes', sts.notes,
@@ -10,13 +10,13 @@ SELECT
                          'longitudewest', ST_XMin(ST_GeomFromText(ST_AsText(sts.geog),4326)),
                               'altitude', sts.altitude, 
                               'unittype', cts.colltype) as site,
-                 json_agg(
-                          json_build_object(
+                 jsonb_agg(Distinct 
+                          jsonb_build_object(
                              'contactid', cntct.contactid,
                            'contactname', cntct.contactname
                         )) as datasetpis,
-                 json_agg(
-                      json_build_object(
+                 jsonb_agg(distinct
+                      jsonb_build_object(
                         'submissiondate', dtssubs.submissiondate,
                         'submissiontype', dtssubtp.submissiontype
                           )) as subdates,       
@@ -31,7 +31,7 @@ SELECT
                          dst.datasettype,
                                dts.notes as "datasetnotes",
                       cstdb.databasename,
-                                 doi.doi
+                                 MAX(doi.doi)
                                    FROM
 ndb.datasets AS dts LEFT OUTER JOIN
 da.vbestdatasetages AS dsa ON dsa.datasetid = dts.datasetid LEFT OUTER JOIN
@@ -46,7 +46,6 @@ ndb.datasetdoi AS doi ON dts.datasetid = doi.datasetid LEFT OUTER JOIN
 ndb.collectiontypes as cts ON clu.colltypeid = cts.colltypeid LEFT OUTER JOIN
 ndb.datasetdatabases AS dsdb ON dsdb.datasetid = dts.datasetid LEFT OUTER JOIN
 ndb.constituentdatabases AS cstdb ON dsdb.databaseid = cstdb.databaseid 
-WHERE dts.datasetid IN ($1:csv)
+WHERE dts.datasetid = ANY($1)
 GROUP BY sts.siteid, clu.collectionunitid, cts.colltype, 
-dts.datasetname, dts.datasetid, dst.datasettype,cstdb.databasename,
-doi.doi,dsa.ageoldest,dsa.ageyoungest;
+dts.datasetname, dts.datasetid, dst.datasettype,cstdb.databasename,dsa.ageoldest,dsa.ageyoungest;
