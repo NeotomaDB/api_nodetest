@@ -100,7 +100,7 @@ components:
       name: altmax
       required: false
       schema:
-        example: 300
+        example: 60
         format: int64
         maximum: 8900
         minimum: -500
@@ -111,7 +111,7 @@ components:
       name: altmin
       required: false
       schema:
-        example: 200
+        example: 40
         format: int64
         maximum: 8900
         minimum: -500
@@ -172,7 +172,7 @@ components:
       schema:
         example: 44
         format: int64
-        maximum: 20000
+        maximum: 21000
         minimum: 1
         type: integer
     contactidQuery:
@@ -184,7 +184,7 @@ components:
       schema:
         example: 44
         format: int64
-        maximum: 20000
+        maximum: 21000
         minimum: 1
         type: integer
     databaseQuery:
@@ -193,6 +193,7 @@ components:
       name: database
       required: true
       schema:
+        example: European Pollen Database
         enum:
           - Cooperative Holocene Mapping Project
           - African Pollen Database
@@ -251,6 +252,7 @@ components:
       schema:
         format: int32
         minimum: 0
+        example: 12
         exclusiveMinimum: true
         type: integer
     doidataQuery:
@@ -262,7 +264,7 @@ components:
       schema:
         type: string
         pattern: ^10.\d{4,9}/[-._;()/:A-Z0-9]+$
-        example: 10.21233/J8P9-G487
+        example: 10.21233/znex-sp94
     datasettypeQuery:
       description: Neotoma contains data for a number of dataset types (see
         /dbtables/datasettypes.  This returns a subset of data types.
@@ -272,6 +274,7 @@ components:
       schema:
         type: string
         nullable: true
+        example: pollen
         enum:
           - geochronologic
           - loss-on-ignition
@@ -354,11 +357,11 @@ components:
         type: integer
       examples:
         gpid:
-          value: 756
+          value: 5392
           summary: A valid unique identifier for geopolitical units from Neotoma's
             geopoliticalunits table.
         gpids:
-          value: 2155,313,5414
+          value: 2155,5392,313,5414
           summary: A set of unique identifiers, separated by commas.
     gpnameQuery:
       description: Name for a geopolitical unit.
@@ -409,13 +412,12 @@ components:
       schema:
         type: string
       examples:
-        SouthAmericangeoJSON:
-          value: '{''type'':''FeatureCollection'',''features'':[{''type'':''Feature'',''properties'':{},''geometry'':{''coordinates'':[[[-73.300,-35.768],[-75.442,-43.787],[-64.059,-43.533],[-53.572,-38.844],[-55.043,-34.302],[-61.150,-33.904],[-68.248,-34.407],[-73.300,-35.768]]],''type'':''Polygon''}}]}'
+        MosseGeoJSON:
+          value: '{"type":"Polygon","crs":{"type":"name","properties":{"name":"EPSG:4326"}},"coordinates":[[[13.4,55.92],[13.5,55.92],[13.5,55.95],[13.4,55.95],[13.4,55.92]]]}'
           summary: A geoJSON representation of a polygon that includes Argentina and
             Chile.
         EuropeanWKT:
-          value: POLYGON ((12.49 45.53, 9.847 42.879, 16.982 40.812, 20.549 44.03, 14.736
-            46.266, 12.49 45.53))
+          value: POLYGON ((13.4 55.92,13.5 55.92,13.5 55.95,13.4 55.95,13.4 55.92))
           summary: A WKT formatted spatial polygon that includes land adjacent to the
             Adriatic sea.
     lowergpQuery:
@@ -558,7 +560,7 @@ components:
       name: sitename
       required: false
       schema:
-        example: Stern Excavation Site
+        example: Ageröds Mosse
         type: string
     siteidPath:
       description: Valid Neotoma site identifier (integer), either singly or in a
@@ -593,6 +595,7 @@ components:
         maximum: 50000
         minimum: 1
         type: integer
+        example: 12
     tableQuery:
       description: Valid name for a Neotoma Table
       in: query
@@ -2937,7 +2940,9 @@ paths:
         - v2.0
   /v2.0/data/datasets:
     get:
-      description: Returns information about Neotoma dataset
+      description: Returns information about Neotoma dataset. <b>Note</b> -- 
+        There are few datasets that use all of the example values below. Generally we search
+        using only one or two of these values, but provide them all to support flexible searching.
       parameters:
         - $ref: '#/components/parameters/sitenameQuery'
         - $ref: '#/components/parameters/databaseQuery'
