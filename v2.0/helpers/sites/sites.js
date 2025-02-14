@@ -1,7 +1,6 @@
 'use strict';
 
 // Sites query:
-const {any} = require('bluebird');
 const he = require('he');
 
 // Helper for linking to external query files:
@@ -85,6 +84,7 @@ function sitesquery(req, res, next) {
       'altmax': ifUndef(resultset.altmax, 'int'),
       'altmin': ifUndef(resultset.altmin, 'int'),
       'contacts': ifUndef(resultset.contacts, 'sep'),
+      'contactid': ifUndef(resultset.contactid, 'sep'),
       'database': ifUndef(resultset.database, 'sep'),
       'datasetid': ifUndef(resultset.datasetid, 'sep'),
       'datasettype': ifUndef(resultset.datasettype, 'string'),
@@ -231,12 +231,20 @@ function sitesbydataset(req, res, next) {
       });
 }
 
+/**
+ * Call sites using the geopolitical unit ID.
+ * @param {req} req An Express request object.
+ * @param {res} res An Express response object.
+ * @param {next} next An Express "next" object.
+ */
 function sitesbygeopol(req, res, next) {
   const db = req.app.locals.db;
   const goodgp = !!req.params.gpid;
 
+  let gpid = null;
+
   if (goodgp) {
-    var gpid = {gpid: commaSep(req.params.gpid)};
+    gpid = {gpid: commaSep(req.params.gpid)};
   } else {
     res.status(500)
         .json({
@@ -278,12 +286,20 @@ function sitesbygeopol(req, res, next) {
       });
 }
 
+/**
+ * Call sites using the contact ID of individuals 
+ * associated with datasets at the site.
+ * @param {req} req An Express request object.
+ * @param {res} res An Express response object.
+ * @param {next} next An Express "next" object.
+ */
 function sitesbycontact(req, res, next) {
   const db = req.app.locals.db;
   const goodctc = !!req.params.contactid;
+  let contactid = null;
 
   if (goodctc) {
-    var contactid = String(req.params.contactid).split(',').map(function(item) {
+    contactid = String(req.params.contactid).split(',').map(function(item) {
       return parseInt(item, 10);
     });
   } else {
