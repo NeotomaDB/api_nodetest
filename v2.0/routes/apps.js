@@ -35,7 +35,11 @@ router.get('/constdb/datasetuploads', handlers.datasetuploads);
 router.get('/constdb/datasetages', handlers.datasetranges);
 router.get('/constdb', handlers.databasesummaries);
 router.get('/contactsummary/:datasetid', handlers.contactoverview);
+<<<<<<< Updated upstream
 router.get('/orcids/contact', handlers.contact_orcid);
 router.get('/orcids/orcid', handlers.orcid_contact);
+=======
+router.get('/datasetpi',handlers.datasetsbypi);
+>>>>>>> Stashed changes
 
 module.exports = router;
