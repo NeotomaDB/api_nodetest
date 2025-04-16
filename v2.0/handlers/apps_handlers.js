@@ -17,6 +17,10 @@ module.exports = {
     const dsup = require('../helpers/landing/landing.js');
     dsup.dsuploadagg(req, res, next);
   },
+  datasetsbypi: function(req, res, next) {
+    const dataset = require('../helpers/datasets/datasets.js');
+    dataset.datasetbypi(req, res, next);
+  },
   datasetranges: function(req, res, next) {
     const dage = require('../helpers/landing/landing.js');
     dage.datasetagesbydbid(req, res, next);
@@ -264,4 +268,6 @@ function depositionalenvironments(req, res, next) {
               data: err.message,
             });
       });
-}
+}  
+
+
