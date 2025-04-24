@@ -231,13 +231,17 @@ function sitesbydataset(req, res, next) {
       });
 }
 
+/**
+ * Call sites using the geopolitical identifier.
+ * @param {req} req An Express request object.
+ * @param {res} res An Express response object.
+ * @param {next} next An Express "next" object.
+ */
 function sitesbygeopol(req, res, next) {
   const db = req.app.locals.db;
   const goodgp = !!req.params.gpid;
 
-  if (goodgp) {
-    var gpid = {gpid: commaSep(req.params.gpid)};
-  } else {
+  if (!goodgp) {
     res.status(500)
         .json({
           status: 'failure',
@@ -245,6 +249,8 @@ function sitesbygeopol(req, res, next) {
           message: 'Must pass either queries or an integer sequence.',
         });
   }
+
+  const gpid = {gpid: commaSep(req.params.gpid)};
 
   if (req.query.limit) {
     gpid.limit = req.query.limit;
@@ -278,15 +284,17 @@ function sitesbygeopol(req, res, next) {
       });
 }
 
+/**
+ * Call sites using a contact name.
+ * @param {req} req An Express request object.
+ * @param {res} res An Express response object.
+ * @param {next} next An Express "next" object.
+ */
 function sitesbycontact(req, res, next) {
   const db = req.app.locals.db;
   const goodctc = !!req.params.contactid;
 
-  if (goodctc) {
-    var contactid = String(req.params.contactid).split(',').map(function(item) {
-      return parseInt(item, 10);
-    });
-  } else {
+  if (!goodctc) {
     res.status(500)
         .json({
           status: 'failure',
@@ -294,6 +302,10 @@ function sitesbycontact(req, res, next) {
           message: 'Must pass either queries or an integer sequence.',
         });
   }
+
+  const contactid = String(req.params.contactid).split(',').map(function(item) {
+    return parseInt(item, 10);
+  });
 
   db.any(sitebyctid, [contactid])
       .then(function(data) {
