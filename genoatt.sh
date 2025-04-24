@@ -41,6 +41,9 @@ run_oatt() {
     find ./test -type f -exec sed -i -E "s/'limit':\ -*[0-9]+/'limit':\ 10/g" {} \;
     find ./test -type f -exec sed -i -E "s/'offset':\ -*[0-9]+/'offset':\ 0/g" {} \;
     find ./test -type f -exec sed -i "s/\/[0-9]\{5,\}/\/500/g" {} \;
+    find ./test -type f -exec sed -i -E "s/'prec':\ [0-9\.]*?/'prec': 1000/g" {} \;
+    find ./test -type f -exec sed -i -E "s/'proj':\ [0-9\.]*?/'proj': 4326/g" {} \;
+    
 }
 
  OPTIND=1
