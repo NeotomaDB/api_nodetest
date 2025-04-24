@@ -1,6 +1,7 @@
  SELECT
   	cnt.contactid AS contactid,
 	dts.datasetid AS datasetid,
+	dst.datasettype AS datasettype,
 	cnt.familyname AS familyname,
 	cnt.contactname AS contactname,
 	cnt.givennames AS givennames,
