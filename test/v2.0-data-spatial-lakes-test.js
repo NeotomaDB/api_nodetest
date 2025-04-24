@@ -8,11 +8,7 @@ describe('tests for /v2.0/data/spatial/lakes', function() {
   describe('tests for get', function() {
     it('should respond 200 for "An object containing all matched lakes within some buffer distance of a site. Data derived from the [HydroLakes database](https://www.hydrosheds.org/products/hydrolakes):<br> * Messager, M.L., Lehner, B., Grill, G., Nedeva, I., Schmitt, O. (2016). Estimating the volume and age of water stored in global lakes using a geo-statistical approach. *Nature Communications*, 7: 13603. doi: [10.1038/ncomms13603](https://doi.org/10.1038/ncomms13603) "', function() {
       const response = request('get', 'http://localhost:3001/v2.0/data/spatial/lakes', {
-<<<<<<< HEAD
-        'qs': {'siteid': 25604, 'buffer': 8267, 'prec': 770.3225835680857, 'proj': 13625},
-=======
-        'qs': {'siteid': 40351, 'buffer': 8751, 'prec': 1000, 'proj': 4326},
->>>>>>> production
+        'qs': {'siteid': 42480, 'buffer': 7935, 'prec': 1000, 'proj': 4326},
         'time': true,
       });
 
