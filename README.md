@@ -1,5 +1,5 @@
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/9788/badge)](https://www.bestpractices.dev/projects/9788)
-[![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental) [![DOI](https://zenodo.org/badge/91914528.svg)](https://zenodo.org/badge/latestdoi/91914528)
+[![lifecycle](https://img.shields.io/badge/lifecycle-active-orange.svg)] [![DOI](https://zenodo.org/badge/91914528.svg)](https://zenodo.org/badge/latestdoi/91914528)
 
 [![NSF-1550707](https://img.shields.io/badge/NSF-1550707-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1550707) [![NSF-1541002](https://img.shields.io/badge/NSF-1541002-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1541002)
 

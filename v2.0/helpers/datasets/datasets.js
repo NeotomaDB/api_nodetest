@@ -6,6 +6,7 @@ const { sql, ifUndef, checkObject, validateOut, getparam, parseLocations } = req
 
 const datasetquerysql = sql('../v2.0/helpers/datasets/datasetqueryfaster.sql');
 const datasetbyidsql = sql('../v2.0/helpers/datasets/datasetbyid.sql');
+const datasetbypisql = sql('../v2.0/helpers/datasets/datasetbypi.sql');
 const datasetbydbsql = sql('../v2.0/helpers/datasets/datasetbydb.sql');
 const datasetbysite = sql('../v2.0/helpers/datasets/datasetbysite.sql');
 const datasetbygpidsql = sql('../v2.0/helpers/datasets/datasetbygpid.sql');
@@ -190,6 +191,61 @@ function datasetbysiteid (req, res, next) {
     });
 }
 
+
+function datasetbypi (req, res, next) {
+
+  let db = req.app.locals.db
+  // First get all the inputs and parse them:
+  let paramgrab = getparam(req)
+
+  if (!paramgrab.success) {
+    res.status(500)
+      .json({
+        status: 'failure',
+        data: null,
+        message: paramgrab.message
+      });
+  } else {
+
+    var resultset = paramgrab.data
+    console.log(resultset)
+    // Get the input parameters:
+   
+    var outobj = {
+      'familyname': ifUndef(resultset.familyname, 'string'),
+      'givennames': ifUndef(resultset.givennames, 'string')
+    };
+  }
+
+
+  db.any(datasetbypisql, outobj)
+    .then(function (data) {
+      if (data.length === 0) {
+        // We're returning the structure, but nothing inside it:
+        var returner = [];
+      } else {
+        returner = data;
+      };
+      res.status(200)
+        .json({
+          status: 'success',
+          data: returner,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message,
+          message: 'Must pass either queries or a comma separated integer sequence.'
+        });
+      next(err)
+    });
+}
+
+
+
 function datasetquery (req, res, next) {
   let db = req.app.locals.db
   // First get all the inputs and parse them:
@@ -310,3 +366,4 @@ module.exports.datasetbysiteid = datasetbysiteid;
 module.exports.datasetquery = datasetquery;
 module.exports.datasetbydb = datasetbydb;
 module.exports.datasetsbygeopol = datasetsbygeopol;
+module.exports.datasetbypi = datasetbypi;
