@@ -13,6 +13,7 @@ WITH collunit AS (
     AND (${altmax} IS NULL OR bigq.altitude <= ${altmax})
     AND (${altmin} IS NULL OR bigq.altitude >= ${altmin})
     AND (${contacts} IS NULL OR bigq.contacts && ${contacts})
+    AND (${contactid} IS NULL OR bigq.contacts && ${contactid})
     AND (${database} IS NULL OR cdb.databasename ILIKE ANY(${database}))
     AND (${datasetid} IS NULL OR bigq.datasetid = ANY(${datasetid}))
     AND (${datasettype} IS NULL OR bigq.datasettype = ${datasettype})

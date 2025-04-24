@@ -1,7 +1,6 @@
 'use strict';
 
 // Sites query:
-const {any} = require('bluebird');
 const he = require('he');
 
 // Helper for linking to external query files:
@@ -85,6 +84,7 @@ function sitesquery(req, res, next) {
       'altmax': ifUndef(resultset.altmax, 'int'),
       'altmin': ifUndef(resultset.altmin, 'int'),
       'contacts': ifUndef(resultset.contacts, 'sep'),
+      'contactid': ifUndef(resultset.contactid, 'sep'),
       'database': ifUndef(resultset.database, 'sep'),
       'datasetid': ifUndef(resultset.datasetid, 'sep'),
       'datasettype': ifUndef(resultset.datasettype, 'string'),
@@ -232,7 +232,7 @@ function sitesbydataset(req, res, next) {
 }
 
 /**
- * Call sites using the geopolitical identifier.
+ * Call sites using the geopolitical unit ID.
  * @param {req} req An Express request object.
  * @param {res} res An Express response object.
  * @param {next} next An Express "next" object.
