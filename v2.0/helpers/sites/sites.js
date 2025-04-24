@@ -232,11 +232,7 @@ function sitesbydataset(req, res, next) {
 }
 
 /**
-<<<<<<< HEAD
  * Call sites using the geopolitical unit ID.
-=======
- * Call sites using the geopolitical identifier.
->>>>>>> production
  * @param {req} req An Express request object.
  * @param {res} res An Express response object.
  * @param {next} next An Express "next" object.
@@ -245,15 +241,7 @@ function sitesbygeopol(req, res, next) {
   const db = req.app.locals.db;
   const goodgp = !!req.params.gpid;
 
-<<<<<<< HEAD
-  let gpid = null;
-
-  if (goodgp) {
-    gpid = {gpid: commaSep(req.params.gpid)};
-  } else {
-=======
   if (!goodgp) {
->>>>>>> production
     res.status(500)
         .json({
           status: 'failure',
@@ -297,12 +285,7 @@ function sitesbygeopol(req, res, next) {
 }
 
 /**
-<<<<<<< HEAD
- * Call sites using the contact ID of individuals 
- * associated with datasets at the site.
-=======
  * Call sites using a contact name.
->>>>>>> production
  * @param {req} req An Express request object.
  * @param {res} res An Express response object.
  * @param {next} next An Express "next" object.
@@ -310,17 +293,8 @@ function sitesbygeopol(req, res, next) {
 function sitesbycontact(req, res, next) {
   const db = req.app.locals.db;
   const goodctc = !!req.params.contactid;
-  let contactid = null;
 
-<<<<<<< HEAD
-  if (goodctc) {
-    contactid = String(req.params.contactid).split(',').map(function(item) {
-      return parseInt(item, 10);
-    });
-  } else {
-=======
   if (!goodctc) {
->>>>>>> production
     res.status(500)
         .json({
           status: 'failure',
