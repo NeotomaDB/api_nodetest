@@ -42,7 +42,7 @@
     "node-postgres": "^0.6.2",
     "oatts": "^1.6.0",
     "object-sizeof": "^1.6.3",
-    "pg-promise": "^11.8.0",
+    "pg-promise": "^11.11.0",
     "request": "^2.88.2",
     "rotating-file-stream": "^2.1.5",
     "swagger-ui-express": "^4.3.0",
