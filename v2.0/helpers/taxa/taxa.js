@@ -7,6 +7,7 @@ const {getparam, checkObject} = require('../../../src/neotomaapi.js');
 const taxonsqlr = sql('../v2.0/helpers/taxa/taxonquery_recurs.sql');
 const taxonsql = sql('../v2.0/helpers/taxa/taxonquery.sql');
 const taxonbyds = sql('../v2.0/helpers/taxa/taxonquerydsid.sql');
+const exttxa = sql('../v2.0/helpers/taxa/externaltaxonquery.sql');
 
 /**
  * Actual functions:
@@ -155,5 +156,57 @@ function taxonquery(req, res, next) {
   }
 }
 
+function externaltaxonquery (req, res, next) {
+
+  let db = req.app.locals.db
+  // First get all the inputs and parse them:
+  let paramgrab = getparam(req)
+
+  if (!paramgrab.success) {
+    res.status(500)
+      .json({
+        status: 'failure',
+        data: null,
+        message: paramgrab.message
+      });
+  } else {
+
+    var resultset = paramgrab.data
+    console.log(resultset)
+    // Get the input parameters:
+   
+    var outobj = {
+      'taxonid': ifUndef(resultset.taxonid, 'int')
+    };
+  }
+
+
+  db.any(exttxa, outobj)
+    .then(function (data) {
+      if (data.length === 0) {
+        // We're returning the structure, but nothing inside it:
+        var returner = [];
+      } else {
+        returner = data;
+      };
+      res.status(200)
+        .json({
+          status: 'success',
+          data: returner,
+          message: 'Retrieved all tables'
+        });
+    })
+    .catch(function (err) {
+      res.status(500)
+        .json({
+          status: 'failure',
+          data: err.message,
+          message: 'Must pass either queries or a comma separated integer sequence.'
+        });
+      next(err)
+    });
+}
+
 module.exports.taxonquery = taxonquery;
 module.exports.taxonbydsid = taxonbydsid;
+module.exports.externaltaxonquery = externaltaxonquery

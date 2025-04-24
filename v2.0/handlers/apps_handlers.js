@@ -21,6 +21,10 @@ module.exports = {
     const dataset = require('../helpers/datasets/datasets.js');
     dataset.datasetbypi(req, res, next);
   },
+  externaltaxonquery: function(req, res,next) {
+    const taxa = require('../helpers/taxa/taxa.js');
+    taxa.externaltaxonquery(req, res, next);
+  },
   datasetranges: function(req, res, next) {
     const dage = require('../helpers/landing/landing.js');
     dage.datasetagesbydbid(req, res, next);
