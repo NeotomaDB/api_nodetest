@@ -7,7 +7,11 @@ const expect = chakram.expect;
 describe('tests for /v2.0/data/geopoliticalunits/{gpid}/datasets', function() {
   describe('tests for get', function() {
     it('should respond 200 for "An array of datasets."', function() {
+<<<<<<< HEAD
       const response = request('get', 'http://localhost:3001/v2.0/data/geopoliticalunits/9388/datasets', {
+=======
+      const response = request('get', 'http://localhost:3001/v2.0/data/geopoliticalunits/1492/datasets', {
+>>>>>>> production
         'qs': {'limit': 10, 'offset': 0},
         'time': true,
       });

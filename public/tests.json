@@ -11,8 +11,8 @@
     "testsRegistered": 212,
     "passPercent": 66.98113207547169,
     "pendingPercent": 0,
-    "other": 3,
-    "hasOther": true,
+    "other": 0,
+    "hasOther": false,
     "skipped": 0,
     "hasSkipped": false
   },
@@ -5281,7 +5281,7 @@
               "timedOut": false,
               "duration": 462,
               "state": "passed",
-              "speed": "fast",
+              "speed": "medium",
               "pass": true,
               "fail": false,
               "pending": false,
@@ -5570,7 +5570,7 @@
               "timedOut": false,
               "duration": 0,
               "state": "passed",
-              "speed": "fast",
+              "speed": "medium",
               "pass": true,
               "fail": false,
               "pending": false,
@@ -5671,8 +5671,8 @@
               "afterHooks": [],
               "tests": [
                 {
-                  "title": "should respond 200 for \"Returns the set of datasets contained within a constituent database, identified by the constituent database identifier. Used for quick landing page generation. \"",
-                  "fullTitle": "tests for /v2.0/apps/constdb/datasets tests for get should respond 200 for \"Returns the set of datasets contained within a constituent database, identified by the constituent database identifier. Used for quick landing page generation. \"",
+                  "title": "should respond 200 for TaphonomyTypes",
+                  "fullTitle": "Tests for Explorer App Services tests for get should respond 200 for TaphonomyTypes",
                   "timedOut": false,
                   "duration": 414,
                   "state": "passed",
@@ -5850,7 +5850,7 @@
                   "timedOut": false,
                   "duration": 164,
                   "state": "passed",
-                  "speed": "fast",
+                  "speed": "medium",
                   "pass": true,
                   "fail": false,
                   "pending": false,
@@ -6681,7 +6681,7 @@
               "duration": 78,
               "root": false,
               "rootEmpty": false,
-              "_timeout": 300000
+              "_timeout": 12000
             }
           ],
           "passes": [],
@@ -6691,7 +6691,7 @@
           "duration": 0,
           "root": false,
           "rootEmpty": false,
-          "_timeout": 300000
+          "_timeout": 12000
         },
         {
           "uuid": "bb0830be-4740-437d-a120-e5ac74a9ae69",
@@ -6702,8 +6702,8 @@
           "afterHooks": [],
           "tests": [
             {
-              "title": "Get site by singular id & return same id:",
-              "fullTitle": "Get site data any number of ways: Get site by singular id & return same id:",
+              "title": "An empty query returns a valid response.",
+              "fullTitle": "Get geopolitical data: An empty query returns a valid response.",
               "timedOut": false,
               "duration": 339,
               "state": "passed",
@@ -6712,7 +6712,7 @@
               "fail": false,
               "pending": false,
               "context": null,
-              "code": "api.get('v2.0/data/sites/12')\n    .set('Accept', 'application/json')\n    .end((err, res) => {\n      if (err) return done(err);\n      expect(res.body['data'][0]['siteid'] === 12 & Object.keys(res.body['data'][0]).length > 0);\n      done();\n    });",
+              "code": "api.get('v2.0/data/geopoliticalunits/')\n    .set('Accept', 'application/json')\n    .expect(200, done);",
               "err": {},
               "uuid": "47ab812b-0ff6-42d4-8b6c-0de680401c73",
               "parentUUID": "bb0830be-4740-437d-a120-e5ac74a9ae69",
@@ -6720,8 +6720,8 @@
               "skipped": false
             },
             {
-              "title": "Get site by altitude:",
-              "fullTitle": "Get site data any number of ways: Get site by altitude:",
+              "title": "The default limit of 25 should be reached for country level data:",
+              "fullTitle": "Get geopolitical data: The default limit of 25 should be reached for country level data:",
               "timedOut": false,
               "duration": 390,
               "state": "passed",
@@ -6730,7 +6730,7 @@
               "fail": false,
               "pending": false,
               "context": null,
-              "code": "api.get('v2.0/data/sites/?altmax=5000&altmin=3000')\n    .set('Accept', 'application/json')\n    .end((err, res) => {\n      if (err) return done(err);\n      expect(Object.keys(res.body['data'][0]).length > 0);\n      done();\n    });",
+              "code": "api.get('v2.0/data/geopoliticalunits/?rank=1')\n    .set('Accept', 'application/json')\n    .end(function(err, res) {\n      assert.equal(res.body.data.length, 25);\n      done();\n    });",
               "err": {},
               "uuid": "29c27cc2-cbe5-4feb-9575-8c286733a40e",
               "parentUUID": "bb0830be-4740-437d-a120-e5ac74a9ae69",
@@ -6738,8 +6738,8 @@
               "skipped": false
             },
             {
-              "title": "Break sites by flipping altitudes:",
-              "fullTitle": "Get site data any number of ways: Break sites by flipping altitudes:",
+              "title": "Changing the limit should change the number of countries retrieved:",
+              "fullTitle": "Get geopolitical data: Changing the limit should change the number of countries retrieved:",
               "timedOut": false,
               "duration": 330,
               "state": "passed",
@@ -6748,7 +6748,7 @@
               "fail": false,
               "pending": false,
               "context": null,
-              "code": "api.get('v2.0/data/sites/?altmax=3000&altmin=5000')\n    .set('Accept', 'application/json')\n    .end((err, res) => {\n      if (err) return done(err);\n      expect(res.body.status === 'failure');\n      done();\n    });",
+              "code": "api.get('v2.0/data/geopoliticalunits/?rank=1&limit=30')\n    .set('Accept', 'application/json')\n    .end(function(err, res) {\n      assert.equal(res.body.data.length, 30);\n      done();\n    });",
               "err": {},
               "uuid": "6fce209a-3be2-474c-9543-3d6c2da34f21",
               "parentUUID": "bb0830be-4740-437d-a120-e5ac74a9ae69",
@@ -6756,8 +6756,8 @@
               "skipped": false
             },
             {
-              "title": "Break sites by passing invalid siteid:",
-              "fullTitle": "Get site data any number of ways: Break sites by passing invalid siteid:",
+              "title": "A single geopolitical unit (12) should be returned.",
+              "fullTitle": "Get geopolitical data: A single geopolitical unit (12) should be returned.",
               "timedOut": false,
               "duration": 336,
               "state": "passed",
@@ -6766,7 +6766,7 @@
               "fail": false,
               "pending": false,
               "context": null,
-              "code": "api.get('v2.0/data/sites/abcd')\n    .set('Accept', 'application/json')\n    .end((err, res) => {\n      if (err) return done(err);\n      expect(500, done);\n      done();\n    });",
+              "code": "api.get('v2.0/data/geopoliticalunits/12')\n    .set('Accept', 'application/json')\n    .end(function(err, res) {\n      assert.equal(res.body.data[0]['geopoliticalid'], 12);\n      done();\n    });",
               "err": {},
               "uuid": "0ddb11c6-8173-4e8c-bf08-df67051954bb",
               "parentUUID": "bb0830be-4740-437d-a120-e5ac74a9ae69",
@@ -7231,7 +7231,7 @@
               "fail": false,
               "pending": false,
               "context": null,
-              "code": "api.get('v2.0/data/geopoliticalunits/')\n    .set('Accept', 'application/json')\n    .expect(200, done);",
+              "code": "api.get('v2.0/data/occurrences/?taxonname=Picea,Abies&limit=25&lower=true')\n    .set('Accept', 'application/json')\n    .expect(function(res) {\n      return (res.body.data.length > 0);\n    })\n    .expect(200);\ndone();",
               "err": {},
               "uuid": "70d5f108-1eeb-453b-83ea-9deadf177b8b",
               "parentUUID": "70ad9cbe-6147-4ce3-9f2a-2bd8d42d3e7b",
@@ -7239,8 +7239,8 @@
               "skipped": false
             },
             {
-              "title": "The default limit of 25 should be reached for country level data:",
-              "fullTitle": "Get geopolitical data: The default limit of 25 should be reached for country level data:",
+              "title": "Get occurrences returns lower taxa:",
+              "fullTitle": "Get occurrence data any number of ways: Get occurrences returns lower taxa:",
               "timedOut": false,
               "duration": 309,
               "state": "passed",
@@ -7249,7 +7249,7 @@
               "fail": false,
               "pending": false,
               "context": null,
-              "code": "api.get('v2.0/data/geopoliticalunits/?rank=1')\n    .set('Accept', 'application/json')\n    .end(function(err, res) {\n      assert.equal(res.body.data.length, 25);\n      done();\n    });",
+              "code": "api.get('v2.0/data/occurrences/?taxonname=Myrica&lower=true&limit=200')\n    .set('Accept', 'application/json')\n    .expect(function(res) {\n      const allTaxa = res.body['data'];\n      const taxaids = [];\n      for (let i = 0; i < allTaxa.length; i++) {\n        taxaids.push(allTaxa[i]['sample']['taxonname']);\n      };\n      const uniqueTaxa = Array.from(new Set(taxaids)).sort();\n      return uniqueTaxa.length > 1;\n    })\n    .expect(200);\ndone();",
               "err": {},
               "uuid": "a4e90def-b1ab-4629-bfa1-92ea6f838d18",
               "parentUUID": "70ad9cbe-6147-4ce3-9f2a-2bd8d42d3e7b",
@@ -7257,8 +7257,8 @@
               "skipped": false
             },
             {
-              "title": "Changing the limit should change the number of countries retrieved:",
-              "fullTitle": "Get geopolitical data: Changing the limit should change the number of countries retrieved:",
+              "title": "Get occurrences with mammals and lower taxa works:",
+              "fullTitle": "Get occurrence data any number of ways: Get occurrences with mammals and lower taxa works:",
               "timedOut": false,
               "duration": 329,
               "state": "passed",
@@ -7267,7 +7267,7 @@
               "fail": false,
               "pending": false,
               "context": null,
-              "code": "api.get('v2.0/data/geopoliticalunits/?rank=1&limit=30')\n    .set('Accept', 'application/json')\n    .end(function(err, res) {\n      assert.equal(res.body.data.length, 30);\n      done();\n    });",
+              "code": "api.get('v2.0/data/occurrences/?taxonname=Homo&lower=true&limit=25')\n    .set('Accept', 'application/json')\n    .expect(function(res) {\n      const allTaxa = res.body['data'];\n      const taxaids = [];\n      for (let i = 0; i < allTaxa.length; i++) {\n        taxaids.push(allTaxa[i]['sample']['taxonname']);\n      };\n      const uniqueTaxa = Array.from(new Set(taxaids)).sort();\n      return uniqueTaxa.length > 1 & allTaxa.length > 0;\n    })\n    .expect(200);\ndone();",
               "err": {},
               "uuid": "6e22e788-4ca6-41c2-82bd-30a69354262f",
               "parentUUID": "70ad9cbe-6147-4ce3-9f2a-2bd8d42d3e7b",
@@ -7275,8 +7275,8 @@
               "skipped": false
             },
             {
-              "title": "A single geopolitical unit (12) should be returned.",
-              "fullTitle": "Get geopolitical data: A single geopolitical unit (12) should be returned.",
+              "title": "Get occurrences using taxon and age bounds:",
+              "fullTitle": "Get occurrence data any number of ways: Get occurrences using taxon and age bounds:",
               "timedOut": false,
               "duration": 337,
               "state": "passed",
@@ -7285,7 +7285,7 @@
               "fail": false,
               "pending": false,
               "context": null,
-              "code": "api.get('v2.0/data/geopoliticalunits/12')\n    .set('Accept', 'application/json')\n    .end(function(err, res) {\n      assert.equal(res.body.data[0]['geopoliticalid'], 12);\n      done();\n    });",
+              "code": "api.get('v2.0/data/occurrences/?ageyoung=2000&ageold=3000&taxonname=Pinus')\n    .set('Accept', 'application/json')\n    .expect(function(res) {\n      return Object.keys(res.body['data'][0]).length > 0;\n    })\n    .expect(200);\ndone();",
               "err": {},
               "uuid": "f0c91b5e-1d75-48ee-8d02-376c7a617458",
               "parentUUID": "70ad9cbe-6147-4ce3-9f2a-2bd8d42d3e7b",
@@ -8669,6 +8669,702 @@
               "pending": [],
               "skipped": [],
               "duration": 84,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 300000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 300000
+        },
+        {
+          "uuid": "311e2c62-6a31-4fd5-be02-eb532dc73679",
+          "title": "tests for /v2.0/data/sites/{siteid}/datasets_elc",
+          "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-sites-{siteid}-datasets_elc-test.js",
+          "file": "/test/v2.0-data-sites-{siteid}-datasets_elc-test.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "9acce104-fed0-4fd3-a319-da1bee3f2eac",
+              "title": "tests for get",
+              "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-sites-{siteid}-datasets_elc-test.js",
+              "file": "/test/v2.0-data-sites-{siteid}-datasets_elc-test.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should respond 200 for \"An array of datasets.\"",
+                  "fullTitle": "tests for /v2.0/data/sites/{siteid}/datasets_elc tests for get should respond 200 for \"An array of datasets.\"",
+                  "timedOut": false,
+                  "duration": 158,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const response = request('get', 'http://localhost:3001/v2.0/data/sites/9277/datasets_elc', {\n  'time': true,\n});\nexpect(response).to.have.status(200);\nreturn chakram.wait();",
+                  "err": {},
+                  "uuid": "5223bf09-e773-4ad6-aef1-1b8fb381ac33",
+                  "parentUUID": "9acce104-fed0-4fd3-a319-da1bee3f2eac",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "5223bf09-e773-4ad6-aef1-1b8fb381ac33"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 158,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 300000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 300000
+        },
+        {
+          "uuid": "435fb3e6-a0bf-449d-a0b8-672a5fb49b2e",
+          "title": "tests for /v2.0/data/sites/{siteid}/geopoliticalunits",
+          "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-sites-{siteid}-geopoliticalunits-test.js",
+          "file": "/test/v2.0-data-sites-{siteid}-geopoliticalunits-test.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "58be36c1-00e4-45f2-abb4-cb09d565950b",
+              "title": "tests for get",
+              "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-sites-{siteid}-geopoliticalunits-test.js",
+              "file": "/test/v2.0-data-sites-{siteid}-geopoliticalunits-test.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should respond 200 for \"An array of geopolitical units.\"",
+                  "fullTitle": "tests for /v2.0/data/sites/{siteid}/geopoliticalunits tests for get should respond 200 for \"An array of geopolitical units.\"",
+                  "timedOut": false,
+                  "duration": 158,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const response = request('get', 'http://localhost:3001/v2.0/data/sites/500/geopoliticalunits', {\n  'qs': {'limit': 10, 'offset': 0},\n  'time': true,\n});\nexpect(response).to.have.status(200);\nreturn chakram.wait();",
+                  "err": {},
+                  "uuid": "2e8b8201-c7dd-4438-b704-41442246684c",
+                  "parentUUID": "58be36c1-00e4-45f2-abb4-cb09d565950b",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "2e8b8201-c7dd-4438-b704-41442246684c"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 158,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 300000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 300000
+        },
+        {
+          "uuid": "994844dc-70e9-4002-8d34-76213536e01d",
+          "title": "tests for /v2.0/data/sites/{siteid}",
+          "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-sites-{siteid}-test.js",
+          "file": "/test/v2.0-data-sites-{siteid}-test.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "7d35e1f4-3a38-47c0-97a9-95ece075b67e",
+              "title": "tests for get",
+              "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-sites-{siteid}-test.js",
+              "file": "/test/v2.0-data-sites-{siteid}-test.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should respond 200 for \"An array of sites.\"",
+                  "fullTitle": "tests for /v2.0/data/sites/{siteid} tests for get should respond 200 for \"An array of sites.\"",
+                  "timedOut": false,
+                  "duration": 158,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const response = request('get', 'http://localhost:3001/v2.0/data/sites/2889', {\n  'time': true,\n});\nexpect(response).to.have.status(200);\nreturn chakram.wait();",
+                  "err": {},
+                  "uuid": "5f9247f6-ad33-4257-a126-fdfd80118afe",
+                  "parentUUID": "7d35e1f4-3a38-47c0-97a9-95ece075b67e",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "5f9247f6-ad33-4257-a126-fdfd80118afe"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 158,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 300000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 300000
+        },
+        {
+          "uuid": "00587d10-a61c-44c1-ade1-117ad9d90de5",
+          "title": "tests for /v2.0/data/spatial/faunal",
+          "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-spatial-faunal-test.js",
+          "file": "/test/v2.0-data-spatial-faunal-test.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "465ecab0-913c-4971-8c82-8f323f7bc712",
+              "title": "tests for get",
+              "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-spatial-faunal-test.js",
+              "file": "/test/v2.0-data-spatial-faunal-test.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should respond 200 for \"An object containing all matched species names, identifiers and a GeoJSON polygon representing the UNIONed ranges for the selected species. All data is derived from:<br> * Mammal Diversity Database. (2020). Mammal Diversity Database (Version 1.2) [Data set]. Zenodo. DOI: [10.5281/zenodo.4139818](https://doi.org/10.5281/zenodo.4139818).<br> * Map of Life. (2021). Mammal range maps harmonised to the Mammals Diversity Database [Data set]. Map of Life. [10.48600/MOL-48VZ-P413](https://doi.org/10.48600/MOL-48VZ-P413) \"",
+                  "fullTitle": "tests for /v2.0/data/spatial/faunal tests for get should respond 200 for \"An object containing all matched species names, identifiers and a GeoJSON polygon representing the UNIONed ranges for the selected species. All data is derived from:<br> * Mammal Diversity Database. (2020). Mammal Diversity Database (Version 1.2) [Data set]. Zenodo. DOI: [10.5281/zenodo.4139818](https://doi.org/10.5281/zenodo.4139818).<br> * Map of Life. (2021). Mammal range maps harmonised to the Mammals Diversity Database [Data set]. Map of Life. [10.48600/MOL-48VZ-P413](https://doi.org/10.48600/MOL-48VZ-P413) \"",
+                  "timedOut": false,
+                  "duration": 161,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const response = request('get', 'http://localhost:3001/v2.0/data/spatial/faunal', {\n  'qs': {'sciname': 'consequat sunt cillum', 'proj': 4326, 'prec': 1000},\n  'time': true,\n});\nexpect(response).to.have.status(200);\nreturn chakram.wait();",
+                  "err": {},
+                  "uuid": "b91cfc2d-9bb7-4e4f-8b2f-1e678cb25e4f",
+                  "parentUUID": "465ecab0-913c-4971-8c82-8f323f7bc712",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "b91cfc2d-9bb7-4e4f-8b2f-1e678cb25e4f"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 161,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 300000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 300000
+        },
+        {
+          "uuid": "c5aa3201-cbfb-4181-87ea-cd530b52c642",
+          "title": "tests for /v2.0/data/spatial/icesheet",
+          "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-spatial-icesheet-test.js",
+          "file": "/test/v2.0-data-spatial-icesheet-test.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "2174b8bf-9076-4f0c-9485-da635b6e8ff1",
+              "title": "tests for get",
+              "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-spatial-icesheet-test.js",
+              "file": "/test/v2.0-data-spatial-icesheet-test.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should respond 200 for \"An object containing glacial extents for the selected time period (in **calibrated radiocarbon years**). \"",
+                  "fullTitle": "tests for /v2.0/data/spatial/icesheet tests for get should respond 200 for \"An object containing glacial extents for the selected time period (in **calibrated radiocarbon years**). \"",
+                  "timedOut": false,
+                  "duration": 159,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const response = request('get', 'http://localhost:3001/v2.0/data/spatial/icesheet', {\n  'qs': {'age': 6842, 'proj': 4326, 'prec': 1000},\n  'time': true,\n});\nexpect(response).to.have.status(200);\nreturn chakram.wait();",
+                  "err": {},
+                  "uuid": "819bf116-f1a2-4045-bcff-72f47fcbf525",
+                  "parentUUID": "2174b8bf-9076-4f0c-9485-da635b6e8ff1",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "819bf116-f1a2-4045-bcff-72f47fcbf525"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 159,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 300000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 300000
+        },
+        {
+          "uuid": "b5fe8d0f-4855-44ef-ae39-672fab8127a4",
+          "title": "tests for /v2.0/data/spatial/lakes",
+          "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-spatial-lakes-test.js",
+          "file": "/test/v2.0-data-spatial-lakes-test.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "d557070f-6332-4944-909d-b2cf45a0ee76",
+              "title": "tests for get",
+              "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-spatial-lakes-test.js",
+              "file": "/test/v2.0-data-spatial-lakes-test.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should respond 200 for \"An object containing all matched lakes within some buffer distance of a site. Data derived from the [HydroLakes database](https://www.hydrosheds.org/products/hydrolakes):<br> * Messager, M.L., Lehner, B., Grill, G., Nedeva, I., Schmitt, O. (2016). Estimating the volume and age of water stored in global lakes using a geo-statistical approach. *Nature Communications*, 7: 13603. doi: [10.1038/ncomms13603](https://doi.org/10.1038/ncomms13603) \"",
+                  "fullTitle": "tests for /v2.0/data/spatial/lakes tests for get should respond 200 for \"An object containing all matched lakes within some buffer distance of a site. Data derived from the [HydroLakes database](https://www.hydrosheds.org/products/hydrolakes):<br> * Messager, M.L., Lehner, B., Grill, G., Nedeva, I., Schmitt, O. (2016). Estimating the volume and age of water stored in global lakes using a geo-statistical approach. *Nature Communications*, 7: 13603. doi: [10.1038/ncomms13603](https://doi.org/10.1038/ncomms13603) \"",
+                  "timedOut": false,
+                  "duration": 155,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const response = request('get', 'http://localhost:3001/v2.0/data/spatial/lakes', {\n  'qs': {'siteid': 40351, 'buffer': 8751, 'prec': 1000, 'proj': 4326},\n  'time': true,\n});\nexpect(response).to.have.status(200);\nreturn chakram.wait();",
+                  "err": {},
+                  "uuid": "3172495a-a1fd-4018-a993-bbb8bfd9754d",
+                  "parentUUID": "d557070f-6332-4944-909d-b2cf45a0ee76",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "3172495a-a1fd-4018-a993-bbb8bfd9754d"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 155,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 300000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 300000
+        },
+        {
+          "uuid": "61c2e99b-4922-4e82-b99b-c4ae4cd011b0",
+          "title": "tests for /v2.0/data/summary/dsdbmonth",
+          "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-summary-dsdbmonth-test.js",
+          "file": "/test/v2.0-data-summary-dsdbmonth-test.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "8cabbfd4-879e-4a50-922c-2e263ada037a",
+              "title": "tests for get",
+              "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-summary-dsdbmonth-test.js",
+              "file": "/test/v2.0-data-summary-dsdbmonth-test.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should respond 200 for \"A count of the datasets added by database for the requested period.\"",
+                  "fullTitle": "tests for /v2.0/data/summary/dsdbmonth tests for get should respond 200 for \"A count of the datasets added by database for the requested period.\"",
+                  "timedOut": false,
+                  "duration": 235,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const response = request('get', 'http://localhost:3001/v2.0/data/summary/dsdbmonth', {\n  'qs': {'start': 1, 'end': 10},\n  'time': true,\n});\nexpect(response).to.have.status(200);\nreturn chakram.wait();",
+                  "err": {},
+                  "uuid": "ed7c4e75-7f3a-4dea-b651-524b8f30599c",
+                  "parentUUID": "8cabbfd4-879e-4a50-922c-2e263ada037a",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "ed7c4e75-7f3a-4dea-b651-524b8f30599c"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 235,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 300000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 300000
+        },
+        {
+          "uuid": "0c9ee865-7309-4565-917a-2732d4c530ab",
+          "title": "tests for /v2.0/data/summary/dstypemonth",
+          "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-summary-dstypemonth-test.js",
+          "file": "/test/v2.0-data-summary-dstypemonth-test.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "485545e3-38ff-4534-973d-ce6f42f225a3",
+              "title": "tests for get",
+              "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-summary-dstypemonth-test.js",
+              "file": "/test/v2.0-data-summary-dstypemonth-test.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should respond 200 for \"A count of the datasets added by datasettype for the requested period.\"",
+                  "fullTitle": "tests for /v2.0/data/summary/dstypemonth tests for get should respond 200 for \"A count of the datasets added by datasettype for the requested period.\"",
+                  "timedOut": false,
+                  "duration": 469,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const response = request('get', 'http://localhost:3001/v2.0/data/summary/dstypemonth', {\n  'qs': {'start': 1, 'end': 10},\n  'time': true,\n});\nexpect(response).to.have.status(200);\nreturn chakram.wait();",
+                  "err": {},
+                  "uuid": "e5212624-8405-498e-99ec-cf02ece0b114",
+                  "parentUUID": "485545e3-38ff-4534-973d-ce6f42f225a3",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "e5212624-8405-498e-99ec-cf02ece0b114"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 469,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 300000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 300000
+        },
+        {
+          "uuid": "b0782932-8613-4a26-9b76-2702cb4b70d3",
+          "title": "tests for /v2.0/data/summary/rawbymonth",
+          "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-summary-rawbymonth-test.js",
+          "file": "/test/v2.0-data-summary-rawbymonth-test.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "5e6fc482-45b6-4a0e-9937-08c63cd759b5",
+              "title": "tests for get",
+              "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-summary-rawbymonth-test.js",
+              "file": "/test/v2.0-data-summary-rawbymonth-test.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should respond 200 for \"A count of the data objects added to Neotoma.\"",
+                  "fullTitle": "tests for /v2.0/data/summary/rawbymonth tests for get should respond 200 for \"A count of the data objects added to Neotoma.\"",
+                  "timedOut": false,
+                  "duration": 4481,
+                  "state": "passed",
+                  "speed": "slow",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const response = request('get', 'http://localhost:3001/v2.0/data/summary/rawbymonth', {\n  'qs': {'start': 1, 'end': 10},\n  'time': true,\n});\nexpect(response).to.have.status(200);\nreturn chakram.wait();",
+                  "err": {},
+                  "uuid": "b489be93-79e1-4e1a-ab01-dbd915c45580",
+                  "parentUUID": "5e6fc482-45b6-4a0e-9937-08c63cd759b5",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "b489be93-79e1-4e1a-ab01-dbd915c45580"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 4481,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 300000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 300000
+        },
+        {
+          "uuid": "0fc750ef-f056-4e01-980e-6def9928bc56",
+          "title": "tests for /v2.0/data/taxa",
+          "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-taxa-test.js",
+          "file": "/test/v2.0-data-taxa-test.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "bd2c332d-e8cf-451e-9db2-81671e9e3804",
+              "title": "tests for get",
+              "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-taxa-test.js",
+              "file": "/test/v2.0-data-taxa-test.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should respond 200 for \"A taxon or array of taxa.\"",
+                  "fullTitle": "tests for /v2.0/data/taxa tests for get should respond 200 for \"A taxon or array of taxa.\"",
+                  "timedOut": false,
+                  "duration": 168,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const response = request('get', 'http://localhost:3001/v2.0/data/taxa', {\n  'qs': {'taxonname': 'voluptate dolore id', 'taxagroup': 'ad in', 'ecolgroup': 'est id Duis ullamco dolore', 'status': false, 'limit': 10, 'offset': 0},\n  'time': true,\n});\nexpect(response).to.have.status(200);\nreturn chakram.wait();",
+                  "err": {},
+                  "uuid": "4e28140b-fb2c-4f74-a160-0edaa3354466",
+                  "parentUUID": "bd2c332d-e8cf-451e-9db2-81671e9e3804",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "4e28140b-fb2c-4f74-a160-0edaa3354466"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 168,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 300000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 300000
+        },
+        {
+          "uuid": "c0668cf9-ce88-4bd1-9946-f3f79ee443b1",
+          "title": "tests for /v2.0/data/taxa/{taxonid}/occurrences",
+          "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-taxa-{taxonid}-occurrences-test.js",
+          "file": "/test/v2.0-data-taxa-{taxonid}-occurrences-test.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "484667fc-efbf-4def-80fb-cfb7b9e31d49",
+              "title": "tests for get",
+              "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-taxa-{taxonid}-occurrences-test.js",
+              "file": "/test/v2.0-data-taxa-{taxonid}-occurrences-test.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should respond 200 for \"occurrence\"",
+                  "fullTitle": "tests for /v2.0/data/taxa/{taxonid}/occurrences tests for get should respond 200 for \"occurrence\"",
+                  "timedOut": false,
+                  "duration": 97,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const response = request('get', 'http://localhost:3001/v2.0/data/taxa/2935/occurrences', {\n  'qs': {'limit': 10, 'offset': 0},\n  'time': true,\n});\nexpect(response).to.have.status(200);\nreturn chakram.wait();",
+                  "err": {},
+                  "uuid": "dc0bfe86-a394-47d3-bff5-4552c5cdd702",
+                  "parentUUID": "484667fc-efbf-4def-80fb-cfb7b9e31d49",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "dc0bfe86-a394-47d3-bff5-4552c5cdd702"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 97,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 300000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 300000
+        },
+        {
+          "uuid": "e033f67f-2d41-4e5b-9573-f56a9bc3af56",
+          "title": "tests for /v2.0/data/taxa/{taxonid}",
+          "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-taxa-{taxonid}-test.js",
+          "file": "/test/v2.0-data-taxa-{taxonid}-test.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "aa6ca285-b07d-48f2-8219-6adbb65d7f57",
+              "title": "tests for get",
+              "fullFile": "/home/simon/Documents/Neotoma/api_nodetest/test/v2.0-data-taxa-{taxonid}-test.js",
+              "file": "/test/v2.0-data-taxa-{taxonid}-test.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should respond 200 for \"A taxon or array of taxa.\"",
+                  "fullTitle": "tests for /v2.0/data/taxa/{taxonid} tests for get should respond 200 for \"A taxon or array of taxa.\"",
+                  "timedOut": false,
+                  "duration": 83,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const response = request('get', 'http://localhost:3001/v2.0/data/taxa/500', {\n  'time': true,\n});\nexpect(response).to.have.status(200);\nreturn chakram.wait();",
+                  "err": {},
+                  "uuid": "c33ba5d7-3068-4117-9f5c-bfe0c98576b6",
+                  "parentUUID": "aa6ca285-b07d-48f2-8219-6adbb65d7f57",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "c33ba5d7-3068-4117-9f5c-bfe0c98576b6"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 83,
               "root": false,
               "rootEmpty": false,
               "_timeout": 300000

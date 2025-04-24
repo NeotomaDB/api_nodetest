@@ -37,6 +37,11 @@ router.get('/constdb', handlers.databasesummaries);
 router.get('/contactsummary/:datasetid', handlers.contactoverview);
 router.get('/orcids/contact', handlers.contact_orcid);
 router.get('/orcids/orcid', handlers.orcid_contact);
+<<<<<<< HEAD
 router.get('/datasetpi', handlers.datasetsbypi);
+=======
+router.get('/datasetpi',handlers.datasetsbypi);
+router.get('/exttax',handlers.externaltaxonquery);
+>>>>>>> production
 
 module.exports = router;

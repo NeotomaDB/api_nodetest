@@ -7,7 +7,11 @@ const expect = chakram.expect;
 describe('tests for /v2.0/data/frozen/{datasetid}', function() {
   describe('tests for get', function() {
     it('should respond 200 for "Returned download object."', function() {
+<<<<<<< HEAD
       const response = request('get', 'http://localhost:3001/v2.0/data/frozen/5869', {
+=======
+      const response = request('get', 'http://localhost:3001/v2.0/data/frozen/5727', {
+>>>>>>> production
         'time': true,
       });
 
