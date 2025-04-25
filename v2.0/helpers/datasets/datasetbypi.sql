@@ -5,6 +5,7 @@
 	cnt.familyname AS familyname,
 	cnt.contactname AS contactname,
 	cnt.givennames AS givennames,
+	clu.collunitname AS collunitname,
 	sts.sitename AS sitename
 	FROM ndb.datasets AS dts
   LEFT JOIN ndb.datasetpis AS dspi ON dspi.datasetid = dts.datasetid
