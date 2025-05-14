@@ -1,10 +1,14 @@
  SELECT
   	cnt.contactid AS contactid,
 	dts.datasetid AS datasetid,
+	dst.datasettype AS datasettype,
 	cnt.familyname AS familyname,
 	cnt.contactname AS contactname,
 	cnt.givennames AS givennames,
-	sts.sitename AS sitename
+	clu.collunitname AS collunitname,
+	clu.collectionunitid AS collectionunitid,
+	sts.sitename AS sitename,
+	sts.siteid AS siteid
 	FROM ndb.datasets AS dts
   LEFT JOIN ndb.datasetpis AS dspi ON dspi.datasetid = dts.datasetid
   LEFT JOIN ndb.contacts AS cnt  ON cnt.contactid = dspi.contactid
