@@ -39,5 +39,6 @@ router.get('/orcids/contact', handlers.contact_orcid);
 router.get('/orcids/orcid', handlers.orcid_contact);
 router.get('/datasetpi', handlers.datasetsbypi);
 router.get('/exttax', handlers.externaltaxonquery);
+router.post('/orcids/validate', handlers.validateusers);
 
 module.exports = router;

@@ -9,6 +9,10 @@ module.exports = {
   authorpis: authorpis,
   taphonomysystems: taphonomysystems,
   depositionalenvironments: depositionalenvironments,
+  validateusers: function(req, res, next) {
+    const valuser = require('../helpers/validation/validateuser.js');
+    valuser.checktoken(req, res, next);
+  },
   datasetsummary: function(req, res, next) {
     const dssum = require('../helpers/landing/landing.js');
     dssum.datasetbydbid(req, res, next);
