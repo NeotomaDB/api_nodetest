@@ -3,7 +3,7 @@ WITH datasets AS (
     SELECT bigq.siteid, bigq.datasetid AS datasetid
     FROM ap.querytable AS bigq
     LEFT JOIN ndb.datasetdoi AS dsdoi ON dsdoi.datasetid = bigq.datasetid
-    INNER JOIN ndb.constituentdatabases AS cdb ON cdb.databaseid = bigq.databaseid
+    LEFT JOIN ndb.constituentdatabases AS cdb ON cdb.databaseid = bigq.databaseid
     WHERE
     (${sitename} IS NULL OR bigq.sitename ILIKE ANY(${sitename}))
     AND (${ageof} IS NULL OR        ${ageof} BETWEEN bigq.younger AND bigq.older)
