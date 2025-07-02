@@ -10,8 +10,8 @@ services:
       - "3001:3001"
     environment:
       - NODE_ENV=production
-      - RDS_HOSTNAME=db-proxy
-      - RDS_PORT=5432
+      - RDS_HOSTNAME=${RDS_HOSTNAME}
+      - RDS_PORT=${RDS_PORT}
       - RDS_DATABASE=${RDS_DATABASE}
       - RDS_USERNAME=${RDS_USERNAME}
       - RDS_PASSWORD=${RDS_PASSWORD}
@@ -29,22 +29,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-  db-proxy:
-    image: alpine/socat:latest
-    container_name: db-proxy
-    restart: unless-stopped
-    command: >
-      tcp-listen:5432,fork,reuseaddr
-      tcp-connect:host.docker.internal:${RDS_PORT}
-    networks:
-      - app-network
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-
-# Custom network configuration
-networks:
-  app-network:
-    driver: bridge
 
 # Named volumes for data persistence
 volumes:
