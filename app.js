@@ -76,7 +76,7 @@ const options = {
   customCssUrl: '/custom.css',
 };
 
-const swaggerDocument = YAML.load('./swagger.yaml');
+const swaggerDocument = YAML.load('./openapi.yaml');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 
 // Locations for v1.5 files:
