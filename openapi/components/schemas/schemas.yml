@@ -1,0 +1,1773 @@
+constdbdescription:
+  type: string
+  nullable: true
+  description: |
+    A description provided by the stewards for the constituent database describing the database and its intended use.
+constdbresponse:
+  type: object
+  properties:
+    status:
+      type: string
+    message:
+      type: string
+    query:
+      type: object
+      nullable: true
+    data:
+      type: array
+      items:
+        type: object
+        properties:
+          description:
+            $ref: '#/components/schemas/constdbdescription'
+          url:
+            $ref: '#/components/schemas/url'
+          contactname:
+            $ref: '#/components/schemas/contactname'
+          email:
+            $ref: '#/components/schemas/email'
+          datasettypes:
+            description: |
+              An array of the unique dataset types for all datasets within the constituent database.
+            type: array
+            items:
+              type: object
+              properties:
+                datasets:
+                  type: integer
+                datasettype:
+                  type: string
+                  nullable: true
+              nullable: true
+          older:
+            $ref: '#/components/schemas/ageold'
+          younger:
+            $ref: '#/components/schemas/ageyoung'
+          datasets:
+            description: |
+              A count of the number of unique datasets within the constituent database.
+            type: integer
+datasetagerangeresponse:
+  description: |
+    The age bounds of a dataset, as defined by the chronology, generally the oldest and youngest sample ages for the dataset, for a given age type (<sup>14</sup>C years, calibrated radiocarbon, calendar years, etc.)
+  properties:
+    status:
+      type: string
+    message:
+      type: string
+    query:
+      type: object
+    data:
+      type: array
+      items:
+        properties:
+          older:
+            $ref: '#/components/schemas/ageold'
+          younger:
+            $ref: '#/components/schemas/ageyoung'
+          agetype:
+            $ref: '#/components/schemas/agetype'
+datasetsShort:
+  description: |
+    A data response primarily for rapid access to site/dataset locations, providing only limited metadata.
+  properties:
+    status:
+      type: string
+    message:
+      type: string
+    data:
+      type: array
+      items:
+        properties:
+          siteid:
+            $ref: '#/components/schemas/siteid'
+          sitename:
+            $ref: '#/components/schemas/sitename'
+          datasetid:
+            $ref: '#/components/schemas/datasetid'
+          datasettype:
+            $ref: '#/components/schemas/datasetid'
+          coords:
+            type: array
+            items:
+              type: string
+lakesPoly:
+  properties:
+    status:
+      type: string
+    message:
+      type: string
+    data:
+      type: array
+      items:
+        properties:
+          hydrolakeid:
+            type: integer
+            description: |
+              Unique lake identifier in the [HydroLakes10k](https://www.hydrosheds.org/products/hydrolakes) database.
+          lakename:
+            type: string
+            description: |
+              Name of lake or reservoir.<br>
+              This field is currently only populated for lakes with an area of at least 500km^2^; for large reservoirs where a name was available in the GRanD database; and for smaller lakes where a name was available in the GLWD database. [source PDF](https://data.hydrosheds.org/file/technical-documentation/HydroLAKES_TechDoc_v10.pdf)
+          lakearea:
+            description: Lake area in square kilometers.
+            type: integer
+          shorelen:
+            description: Shore length/lake perimeter in kilometers.
+            type: integer
+          volume:
+            type: number
+            description: |
+              Total lake or reservoir volume, in million cubic meters (1*mcm* = 0.001 km^3^).<br>
+              For most polygons, this value represents the total lake volume as estimated using the geostatistical modeling approach by Messager et al. (2016). However, where either a reported lake volume (for lakes ≥ 500 km^2^) or a reported reservoir volume (from GRanD database) existed, the total volume represents this reported value. In cases of regulated lakes, the total volume represents the larger value between reported reservoir and modeled or reported lake volume. [source PDF](https://data.hydrosheds.org/file/technical-documentation/HydroLAKES_TechDoc_v10.pdf)
+          avgdepth:
+            type: number
+            description: |
+              Average lake depth, in meters.
+              Average lake depth is defined as the ratio between total lake volume (`volume`) and lake area (`lakearea`).
+          watershedarea:
+            type: number
+            description: |
+              Area of the watershed associated with the lake, in square kilometers.<br>
+              The watershed area is calculated by deriving and measuring the upstream contribution area to the lake pour point using the HydroSHEDS drainage network map at 15 arc-second resolution.<br>
+              **-9999**: no data as lake pour point is not on HydroSHEDS landmask
+          wkt_shape:
+            type: string
+            description: |
+              A Well-Known-Text representation of the lake, resolved to the appropriate precision.
+faunalPoly:
+  properties:
+    message:
+      type: string
+    data:
+      type: array
+      items:
+        properties:
+          gid:
+            type: array
+            items:
+              type: integer
+              format: int32
+            nullable: true
+          spid:
+            type: array
+            items:
+              type: integer
+              format: int32
+            nullable: true
+          sciname:
+            type: array
+            items:
+              type: string
+            nullable: true
+          geom:
+            type: string
+            nullable: true
+icesheetPoly:
+  properties:
+    message:
+      type: string
+    data:
+      type: object
+      properties:
+        gid:
+          type: array
+          items:
+            type: integer
+            format: int32
+        age:
+          type: integer
+          format: int32
+        calibrated:
+          type: integer
+          format: int32
+        geom:
+          type: string
+address:
+  description: A physical address, as a single string.
+  example: 550 N Park St, Madison WI, USA
+  type: string
+  nullable: true
+ageold:
+  example: 1000
+  nullable: true
+  type: number
+agerange:
+  description: |
+    The set of ages describing a sample age measured with uncertainty. Often described as the accepted age of the sample and then a younger and older age defined by ±1SD. The age range may be further defined in chronology or dataset notes.
+  properties:
+    ageold:
+      $ref: '#/components/schemas/ageold'
+    agetype:
+      $ref: '#/components/schemas/agetype'
+    ageyoung:
+      $ref: '#/components/schemas/ageyoung'
+  type: object
+agetype:
+  enum:
+    - Calendar years AD/BC
+    - Calendar years BP
+    - Calibrated radiocarbon years BP
+    - Radiocarbon years BP
+    - Varve years BP
+  type: string
+ageyoung:
+  example: -35
+  nullable: true
+  type: number
+altitude:
+  example: 0
+  format: int32
+  maximum: 9000
+  minimum: -500
+  type: integer
+pollenresponse:
+  type: object
+datasetelcresponse:
+  type: object
+publicationsresponse:
+  type: object
+authorpiresponse:
+  properties:
+    data:
+      items:
+        properties:
+          getpeople:
+            type: string
+        type: object
+      type: array
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+  type: object
+chronology:
+  properties:
+    agetype:
+      $ref: '#/components/schemas/agetype'
+    chronologyName:
+      example: NAPD 1
+      type: string
+    chronologyid:
+      example: 1
+      type: integer
+    controls:
+      properties:
+        age:
+          example: -45
+          type: number
+        chroncontrolid:
+          example: 5645
+          type: integer
+        controllimits:
+          properties:
+            ageolder:
+              $ref: '#/components/schemas/ageold'
+            ageyounger:
+              $ref: '#/components/schemas/ageyoung'
+          type: object
+        controltype:
+          example: Core top
+          type: string
+        depth:
+          example: 0.5
+          type: number
+        thickness:
+          example: 2
+          type: number
+      type: object
+    dataset:
+      properties:
+        datasetid:
+          $ref: '#/components/schemas/datasetid'
+        datasettype:
+          type: string
+      type: object
+    datePrepared:
+      $ref: '#/components/schemas/date'
+    default:
+      example: true
+      type: boolean
+    modelType:
+      example: linear interpolation
+      type: string
+    preparedby:
+      properties:
+        contactid:
+          example: 44
+          type: integer
+        contactname:
+          example: Grimm, Eric Christopher
+          type: string
+        familyname:
+          example: Grimm
+          type: string
+        firstname:
+          example: Eric
+          type: string
+        initials:
+          example: E.C.
+          type: string
+      type: object
+    reliableagespan:
+      properties:
+        older:
+          example: 6490
+          type: integer
+        younger:
+          example: -30
+          type: integer
+      type: object
+  type: object
+chronologyv2_0:
+  properties:
+    agetype:
+      example: Calibrated radiocarbon years BP
+      type: string
+    chronologyName:
+      example: NAPD 1
+      type: string
+    chronologyid:
+      example: 1
+      type: integer
+    controls:
+      properties:
+        age:
+          example: -45
+          type: number
+        chroncontrolid:
+          example: 5645
+          type: integer
+        controllimits:
+          properties:
+            ageolder:
+              $ref: '#/components/schemas/ageold'
+            ageyounger:
+              $ref: '#/components/schemas/ageyoung'
+          type: object
+        controltype:
+          example: Core top
+          type: string
+        depth:
+          example: 0.5
+          type: number
+        thickness:
+          example: 2
+          type: number
+      type: object
+    dataset:
+      properties:
+        datasetid:
+          $ref: '#/components/schemas/datasetid'
+        datasettype:
+          type: string
+      type: object
+    datePrepared:
+      $ref: '#/components/schemas/date'
+    default:
+      example: true
+      type: boolean
+    modelType:
+      example: linear interpolation
+      type: string
+      pattern: .*
+    preparedby:
+      properties:
+        contactid:
+          example: 44
+          type: integer
+        contactname:
+          example: Grimm, Eric Christopher
+          type: string
+        familyname:
+          example: Grimm
+          type: string
+        firstname:
+          example: Eric
+          type: string
+        initials:
+          example: E.C.
+          type: string
+      type: object
+    reliableagespan:
+      properties:
+        older:
+          example: 6490
+          type: integer
+        younger:
+          example: -30
+          type: integer
+      type: object
+  type: object
+chronologyv2response:
+  properties:
+    data:
+      items:
+        properties:
+          chronology:
+            $ref: '#/components/schemas/chronologyv2_0'
+        type: object
+      type: array
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+  type: object
+collectiontyperesponse:
+  properties:
+    data:
+      items:
+        properties:
+          colltype:
+            example: Isolated specimen
+            type: string
+            pattern: .*
+          colltypeid:
+            example: 8
+            type: integer
+        type: object
+      type: array
+    message:
+      type: string
+      pattern: .*
+    status:
+      type: string
+      pattern: .*
+  type: object
+collectionunit:
+  example: 15-1
+  nullable: true
+  type: string
+collectionunitid:
+  example: 666
+  format: int64
+  minimum: 1
+  type: integer
+contact:
+  properties:
+    address:
+      $ref: '#/components/schemas/address'
+    aliasid:
+      $ref: '#/components/schemas/aliasid'
+    contactid:
+      $ref: '#/components/schemas/contactid'
+    contactname:
+      $ref: '#/components/schemas/contactname'
+    contactstatus:
+      $ref: '#/components/schemas/contactstatus'
+    email:
+      $ref: '#/components/schemas/email'
+    phone:
+      type: string
+      nullable: true
+    fax:
+      type: string
+      pattern: .*
+      nullable: true
+    familyname:
+      example: Goring
+      type: string
+      pattern: .*
+    givennames:
+      example: Simon
+      type: string
+      pattern: .*
+      nullable: true
+    leadinginitials:
+      example: S. J.
+      type: string
+      pattern: .*
+      nullable: true
+    notes:
+      example: This user is a member of the Neotoma Leadership Team.
+      type: string
+      pattern: .*
+      nullable: true
+    suffix:
+      example: Esq.
+      type: string
+      pattern: .*
+      nullable: true
+    title:
+      example: Lord Mayor
+      type: string
+      pattern: .*
+      nullable: true
+    url:
+      $ref: '#/components/schemas/url'
+  type: object
+recdatemodified:
+  type: string
+recdatecreated:
+  type: string
+aliasid:
+  example: 123
+  format: int64
+  type: integer
+contactid:
+  example: 123
+  format: int64
+  minimum: 1
+  type: integer
+contactname:
+  example: Goring, Simon J
+  type: string
+  nullable: true
+contactresponsev15:
+  properties:
+    data:
+      type: array
+      items:
+        properties:
+          address:
+            $ref: '#/components/schemas/address'
+          contactid:
+            $ref: '#/components/schemas/contactid'
+          contactname:
+            $ref: '#/components/schemas/contactname'
+          familyname:
+            example: Goring
+            type: string
+          givennames:
+            example: Simon
+            type: string
+            nullable: true
+          url:
+            $ref: '#/components/schemas/url'
+        minItems: 0
+    status:
+      $ref: '#/components/schemas/status'
+    success:
+      $ref: '#/components/schemas/success'
+    message:
+      $ref: '#/components/schemas/message'
+  type: object
+contactresponse:
+  properties:
+    data:
+      type: array
+      items:
+        $ref: '#/components/schemas/contact'
+    status:
+      $ref: '#/components/schemas/status'
+  type: object
+contactfromsite:
+  properties:
+    data:
+      type: array
+      items:
+        $ref: '#/components/schemas/contact'
+    status:
+      $ref: '#/components/schemas/status'
+  type: object
+contactstatus:
+  type: string
+  nullable: true
+dataset:
+  properties:
+    data:
+      items:
+        properties:
+          dataset:
+            properties:
+              database:
+                type: string
+              datasetid:
+                $ref: '#/components/schemas/datasetid'
+              datasetnotes:
+                $ref: '#/components/schemas/datasetnotes'
+              datasetpi:
+                items:
+                  properties:
+                    contact:
+                      $ref: '#/components/schemas/contact'
+                type: array
+              datasettype:
+                $ref: '#/components/schemas/datasettype'
+              doi:
+                items:
+                  properties:
+                    doi:
+                      $ref: '#/components/schemas/doi'
+                type: array
+            type: object
+          site:
+            properties:
+              altitude:
+                type: integer
+              collectionunit:
+                type: string
+              collectionunitid:
+                $ref: '#/components/schemas/collectionunitid'
+              geography:
+                format: geoJSON
+                type: string
+              handle:
+                type: string
+              sitedescription:
+                type: string
+              siteid:
+                $ref: '#/components/schemas/siteid'
+              sitename:
+                $ref: '#/components/schemas/sitename'
+              sitenotes:
+                $ref: '#/components/schemas/sitenotes'
+              unittype:
+                type: string
+                pattern: '.*'
+            type: object
+        type: object
+      type: array
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+    success:
+      $ref: '#/components/schemas/success'
+  type: object
+datasetTypes:
+  properties:
+    data:
+      items:
+        properties:
+          datasettype:
+            $ref: '#/components/schemas/datasettype'
+          datasettypeid:
+            example: 14
+            type: integer
+        type: object
+      type: array
+    message:
+      type: string
+      pattern: .*
+    status:
+      type: string
+      pattern: .*
+  type: object
+datasetid:
+  example: 666
+  format: int64
+  maximum: 60000
+  minimum: 1
+  type: integer
+datasetnotes:
+  example: This dataset was digitized from an original publication in Finnish.
+  type: string
+  pattern: '.*'
+siteresponse:
+  type: object
+datasetresponsev2_0:
+  properties:
+    data:
+      $ref: '#/components/schemas/datasetv2'
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+  type: object
+datasetselcresponse:
+  properties:
+    data:
+      items:
+        properties:
+          site:
+            properties:
+              altitude:
+                $ref: '#/components/schemas/altitude'
+              collectionunit:
+                $ref: '#/components/schemas/collectionunit'
+              collectionunitid:
+                $ref: '#/components/schemas/collectionunitid'
+              datasets:
+                type: object
+              geography:
+                $ref: '#/components/schemas/geography'
+              handle:
+                $ref: '#/components/schemas/handle'
+              sitedescription:
+                $ref: '#/components/schemas/sitedescription'
+              siteid:
+                $ref: '#/components/schemas/siteid'
+              sitename:
+                $ref: '#/components/schemas/sitename'
+              sitenotes:
+                $ref: '#/components/schemas/sitenotes'
+              unittype:
+                $ref: '#/components/schemas/unittype'
+            type: object
+        type: object
+      type: array
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+  type: object
+datasetshort:
+  items:
+    properties:
+      datasetid:
+        $ref: '#/components/schemas/datasetid'
+      datasettype:
+        $ref: '#/components/schemas/datasettype'
+    type: object
+  type: array
+datasettype:
+  example: geochemistry
+  type: string
+  pattern: '.*'
+datasettyperesponse:
+  properties:
+    data:
+      items:
+        properties:
+          getdatasettypes:
+            type: string
+            pattern: '.*'
+        type: object
+      type: array
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+  type: object
+datasetv2:
+  properties:
+    data:
+      items:
+        properties:
+          site:
+            properties:
+              altitude:
+                $ref: '#/components/schemas/altitude'
+              collectionunit:
+                $ref: '#/components/schemas/collectionunit'
+              collectionunitid:
+                $ref: '#/components/schemas/collectionunitid'
+              dataset:
+                items:
+                  properties:
+                    agerange:
+                      $ref: '#/components/schemas/agerange'
+                    database:
+                      type: integer
+                    datasetid:
+                      $ref: '#/components/schemas/datasetid'
+                    datasetnotes:
+                      $ref: '#/components/schemas/datasetnotes'
+                    datasetpi:
+                      type: array
+                      items:
+                        type: object
+                    datasettype:
+                      $ref: '#/components/schemas/datasettype'
+                    doi:
+                      items:
+                        type: string
+                        pattern: '.*'
+                      type: array
+                  type: object
+                type: array
+              geography:
+                $ref: '#/components/schemas/geography'
+              handle:
+                $ref: '#/components/schemas/handle'
+              sitedescription:
+                $ref: '#/components/schemas/sitedescription'
+              siteid:
+                $ref: '#/components/schemas/siteid'
+              sitename:
+                $ref: '#/components/schemas/sitename'
+              sitenotes:
+                $ref: '#/components/schemas/sitenotes'
+              unittype:
+                $ref: '#/components/schemas/unittype'
+        type: object
+      type: array
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+  type: object
+date:
+  example: '2013-09-30'
+  format: date
+  type: string
+  pattern: '.*'
+datetime:
+  example: '2013-09-30T21:02:51.000Z'
+  format: dateTime
+  type: string
+  pattern: '.*'
+dbtablenameresponse:
+  properties:
+    data:
+      type: array
+      items:
+        type: string
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+  type: object
+dbtables:
+  type: object
+  properties:
+    data:
+      type: array
+      items:
+        type: object
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+dbtablesv1_5:
+  properties:
+    data:
+      items:
+        type: object
+      type: array
+depositionalresponse:
+  properties:
+    data:
+      items:
+        properties:
+          getdeptenvtypesroot:
+            type: string
+            pattern: '.*'
+        type: object
+      type: array
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+  type: object
+doi:
+  example: 10.2157/abba1234
+  type: string
+  pattern: '.*'
+doiresponse:
+  properties:
+    data:
+      items:
+        properties:
+          datasetid:
+            $ref: '#/components/schemas/datasetid'
+          dois:
+            nullable: true
+            type: string
+            pattern: '.*'
+        type: object
+      type: array
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+  type: object
+downloadv1point5:
+  properties:
+    data:
+      type: array
+      items:
+        type: object
+    message:
+      $ref: '#/components/schemas/message'
+    success:
+      $ref: '#/components/schemas/success'
+  type: object
+downloadv2:
+  properties:
+    datasetid:
+      $ref: '#/components/schemas/datasetid'
+    record:
+      properties:
+        chronologies:
+          items:
+            $ref: '#/components/schemas/chronology'
+          type: array
+        data:
+          properties:
+            dataset:
+              items:
+                $ref: '#/components/schemas/dataset'
+              type: array
+            samples:
+              type: string
+              pattern: '.*'
+          type: object
+      type: object
+    success:
+      $ref: '#/components/schemas/success'
+  type: object
+email:
+  example: goring@wisc.edu
+  format: email
+  nullable: true
+  type: string
+  pattern: (?:[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])
+geography:
+  example: '{"type":"Point","crs":{"type":"name","properties":{"name":"EPSG:4326"}},"coordinates":[-75.25,55.09167]}'
+  type: string
+  pattern: ([{\[]{1}([,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t]|".*?")+[}\]]{1})
+geopolitical:
+  properties:
+    data:
+      items:
+        properties:
+          geopoliticalid:
+            $ref: '#/components/schemas/geopoliticalid'
+          geopoliticalname:
+            $ref: '#/components/schemas/geopoliticalname'
+          geopoliticalunit:
+            $ref: '#/components/schemas/geopoliticalunit'
+          highergeopoliticalid:
+            $ref: '#/components/schemas/highergeopoliticalid'
+          rank:
+            example: 2
+            format: int32
+            type: integer
+          recdatecreated:
+            $ref: '#/components/schemas/datetime'
+          recdatemodified:
+            $ref: '#/components/schemas/datetime'
+      type: array
+    status:
+      $ref: '#/components/schemas/status'
+geopoliticalid:
+  example: 757
+  format: int32
+  type: integer
+geopoliticalname:
+  example: Canada
+  type: string
+  pattern: '[A-Z]*[a-z \-A-Z]*'
+geopoliticalunit:
+  example: province
+  type: string
+  pattern: '[A-Z]*[a-z \-A-Z]*'
+geopoliticalv1_5:
+  properties:
+    data:
+      items:
+        properties:
+          geopoliticalid:
+            $ref: '#/components/schemas/geopoliticalid'
+          geopoliticalname:
+            example: Antarctica
+            type: string
+            pattern: '[A-Z]*[a-z \-A-Z]*'
+        type: object
+      type: array
+    status:
+      $ref: '#/components/schemas/status'
+    success:
+      $ref: '#/components/schemas/success'
+  type: object
+handle:
+  example: HOSEHEAD
+  nullable: true
+  type: string
+  pattern: '[A-Z]*'
+highergeopoliticalid:
+  example: 756
+  format: int32
+  type: integer
+keywordresponse:
+  properties:
+    data:
+      items:
+        properties:
+          keywords:
+            type: string
+            pattern: '.*'
+      type: array
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+  type: object
+limit:
+  default: 25
+  minimum: 1
+  type: integer
+lithology:
+  properties:
+    depth:
+      properties:
+        bottom:
+          type: number
+        top:
+          type: number
+      type: object
+    description:
+      type: string
+      pattern: '.*'
+    lithologyid:
+      minimum: 1
+      type: integer
+    lowerboundary:
+      example: gradational over 10 cm
+      nullable: true
+      type: string
+      pattern: '.*'
+  type: object
+lithologyresponse:
+  properties:
+    data:
+      items:
+        properties:
+          datasetid:
+            $ref: '#/components/schemas/datasetid'
+          lithology:
+            $ref: '#/components/schemas/lithology'
+        type: object
+      type: array
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+  type: object
+message:
+  example: Returned a vaild response.
+  type: string
+  pattern: .*
+occurrence:
+  properties:
+    data:
+      items:
+        properties:
+          ages:
+            properties:
+              age:
+                format: int64
+                type: integer
+              ageolder:
+                $ref: '#/components/schemas/ageold'
+              ageyounger:
+                $ref: '#/components/schemas/ageyoung'
+            type: object
+          occurrence:
+            format: int64
+            type: integer
+          sample:
+            type: object
+            properties:
+              sampleid:
+                $ref: '#/components/schemas/sampleid'
+              taxonid:
+                $ref: '#/components/schemas/taxonid'
+              taxonname:
+                $ref: '#/components/schemas/taxonname'
+              value:
+                $ref: '#/components/schemas/value'
+              variableunits:
+                $ref: '#/components/schemas/sampleunits'
+          site:
+            properties:
+              altitude:
+                type: integer
+              database:
+                type: string
+                pattern: '.*'
+              datasetid:
+                $ref: '#/components/schemas/datasetid'
+              datasettype:
+                $ref: '#/components/schemas/datasettype'
+              location:
+                type: string
+                pattern: '.*'
+              siteid:
+                $ref: '#/components/schemas/siteid'
+              sitename:
+                $ref: '#/components/schemas/sitename'
+            type: object
+          taxon:
+            properties:
+              taxonid:
+                format: int64
+                type: integer
+              taxonname:
+                type: string
+                pattern: '.*'
+            type: object
+        type: object
+      type: array
+    message:
+      type: string
+      pattern: '.*'
+    status:
+      type: string
+      pattern: '.*'
+    success:
+      type: integer
+  type: object
+occurrencev1_5:
+  properties:
+    data:
+      items:
+        properties:
+          ages:
+            properties:
+              age:
+                format: int64
+                nullable: true
+                type: integer
+              ageolder:
+                $ref: '#/components/schemas/ageold'
+              ageyounger:
+                $ref: '#/components/schemas/ageyoung'
+            type: object
+          occurrence:
+            format: int64
+            type: integer
+          sample:
+            format: int64
+            type: integer
+          site:
+            properties:
+              altitude:
+                type: integer
+              database:
+                type: string
+                pattern: '.*'
+              datasetid:
+                $ref: '#/components/schemas/datasetid'
+              datasettype:
+                $ref: '#/components/schemas/datasettype'
+              location:
+                type: string
+                pattern: '.*'
+              siteid:
+                $ref: '#/components/schemas/siteid'
+              sitename:
+                $ref: '#/components/schemas/sitename'
+            type: object
+          taxon:
+            properties:
+              taxonid:
+                format: int64
+                type: integer
+              taxonname:
+                type: string
+                pattern: '.*'
+            type: object
+        type: object
+      type: array
+    message:
+      type: string
+      pattern: '.*'
+    status:
+      type: string
+      pattern: '.*'
+    success:
+      type: integer
+  type: object
+offset:
+  default: 0
+  minimum: 0
+  type: integer
+pollen:
+  properties:
+    Author:
+      type: string
+      pattern: '.*'
+    EcolGroups:
+      items:
+        type: string
+        pattern: '.*'
+      type: array
+    Extinct:
+      type: boolean
+    HigherTaxonID:
+      format: int32
+      type: integer
+    Notes:
+      type: string
+      pattern: '.*'
+    PublicationID:
+      format: int32
+      type: integer
+    TaxaGroupID:
+      type: string
+      pattern: '.*'
+    TaxonCode:
+      type: string
+      pattern: '.*'
+    TaxonID:
+      format: int32
+      type: integer
+    TaxonName:
+      type: string
+      pattern: '.*'
+publication:
+  properties:
+    Authors:
+      items:
+        type: string
+        pattern: '.*'
+      type: array
+    Citation:
+      type: string
+      pattern: '.*'
+    PubType:
+      type: string
+      pattern: '.*'
+    PublicationID:
+      type: integer
+    Year:
+      type: string
+      pattern: '.*'
+publications:
+  properties:
+    Authors:
+      items:
+        type: string
+        pattern: '.*'
+      type: array
+    Citation:
+      type: string
+      pattern: '.*'
+    PubType:
+      type: string
+      pattern: '.*'
+    PublicationID:
+      type: integer
+    Year:
+      type: string
+      pattern: '.*'
+sampleid:
+  type: integer
+sampleunits:
+  type: string
+  enum:
+    - μm
+    - μm^2/ml
+    - μm^2/pollen concentration
+    - 1-5 scale
+    - cm
+    - cm^2
+    - cm^2/ml
+    - fragments/ml
+    - g
+    - g/ml
+    - grains/aliquot
+    - grains/g
+    - grains/g sample
+    - grains/ml
+    - grains/tablet
+    - mmho
+    - ml
+    - MNI
+    - NISP
+    - number
+    - number/ml
+    - particles/ml
+    - percent
+    - percent after LOI
+    - percent dry mass
+    - present/absent
+    - units not specified
+    - NISP digitized
+    - percent digitized
+    - °C
+    - μS
+    - meq/L
+    - mg/L
+    - Spaulding scale
+    - per mille
+    - number/g
+    - m
+    - MNE
+    - NISP/100 ml
+    - g/m^2
+    - mm^2/ml
+    - particles/cm^2/yr
+    - 1-4 scale
+    - elemental ratio
+    - ppm
+    - individual specimen
+    - mg/L CaCO3
+    - μg/L
+    - l
+    - valves/g
+    - NISP/ml
+    - mS/cm
+    - μg/g
+    - mg N/L
+    - μS/cm
+    - NTU
+    - μmho/cm
+    - grains/mg
+    - mg
+    - number/1000
+    - κ (SI) × 10^-6
+    - κ (cgs) × 10^-6
+    - grams
+    - 1-2 scale
+    - ratio
+    - PTU
+    - κ (cgs) × 10^-5
+    - Pt-Co scale
+    - ppb
+    - μeq/L
+    - Pt-Co units
+    - μS/cm 25°C
+    - TCU
+    - 1-3 scale
+    - particles/g
+    - nl
+    - mm
+    - number×1000
+    - mm^3
+    - fraction total alkanes
+    - response at m/z = 1302
+    - response at m/z = 1050
+    - response at m/z = 1292
+    - response at m/z = 1018
+    - response at m/z = 1020
+    - response at m/z = 1022
+    - response at m/z = 1032
+    - response at m/z = 1034
+    - response at m/z = 1036
+    - response at m/z = 1046
+    - response at m/z = 1048
+    - spheres/mL
+    - per mille VSMOW
+    - peak area
+    - cm^3
+    - yr/cm
+    - yr/m
+    - yr
+    - mm^2
+    - kcps
+    - kcps^2
+    - valves/ml
+    - Pt-Co
+    - μmol/L
+    - κ (SI) × 10^-5
+    - concentration
+    - mm^2/cm^2/yr
+    - grains/cm^2*yr
+    - NISP+
+    - Unit
+    - µS/cm 25°C
+    - µg/L
+    - units
+    - µS/cm
+    - mmol/L
+    - µeq/L
+    - Index
+    - umol/L
+    - cm^2/cm^3
+    - C°
+    - SD
+    - '>2 mm'
+    - '>5 mm'
+    - fragment
+    - '>1 mm'
+    - per mille VPDB
+    - per mille air N
+    - mg/ml
+    - particles/cm^3
+    - cm^2/yr
+    - per mille VPDB/17O
+    - atomic ratio
+    - mg/100 mg
+    - per mille VSMOV
+    - error
+    - '>10 mm'
+    - mm^3/cm^3
+    - number/tablet
+    - mg/g
+    - mg/kg
+    - m^2
+    - present
+    - SI
+    - µS/cm 25C
+    - cc
+    - per mil, PDB
+    - per mil, air
+    - percent dry weight
+    - µg/kg
+    - Mean uM
+    - uM
+    - μS/cm25°C
+    - fragments/l
+    - particles/l
+    - NISP/tablet
+    - grains/cm²/yr
+    - moisture weight %
+    - particles
+    - count
+    - class
+    - volume-percent
+    - mm2
+    - cm3
+    - mm/year
+    - promil
+    - MS (SI)
+    - '#/cm2/a'
+    - '#/cm3'
+    - '#/g'
+    - '#'
+    - '#/cc'
+    - '#/cm2/kyr'
+    - '% dry wt'
+    - cps
+    - grains/cm3
+    - particles/cm²/yr
+    - g/L
+    - cm²
+    - g/cm3
+    - g/cm2
+    - pCi/g
+    - Bg/g
+    - Bg/kg
+    - dpm/g
+    - g/cm2/yr
+    - g/m2/yr
+    - kg/m2/yr
+    - μm^2
+    - grains/cm^3
+    - presence/absence
+    - '#/tablet'
+    - grains/cc
+    - count of reads
+    - count of PCR replicates
+    - spores/tablet
+    - cm/yr
+    - presence/abence
+    - cyst/cm2/yr
+    - cysts/g
+sitedescription:
+  example: Lake is located in a pre-glacial gorge of the Wisconsin river cut
+    through the Baraboo Hills, a bedrock high. The valley is dammed at both
+    ends by terminal moraines deposited by the Green Bay lobe, which flowed
+    around the Baraboo Hills. Lake is fed by groundwater. Surrounding
+    vegetation, white-black-bur oak.
+  nullable: true
+  type: string
+siteid:
+  description: |
+    A unique integer site identifier used internally within the Neotoma Database as a primary key for the `ndb.sites` data table, and as a foreign key in many other tables that relate to the sites table.
+  example: 666
+  format: int64
+  minimum: 1
+  type: integer
+sitename:
+  description: |
+    A non-unique name for the site. This may be inherited from the location (a lake name for example), or may be an author generated name, as used in a publication. There is no standardization for site names in Neotoma.
+  example: Devils Lake
+  type: string
+sitenotes:
+  description: |
+    An open text field used to describe additional information about the site.
+  example: This record has some little things that seem funny about it.
+  nullable: true
+  type: string
+sitesv1point5:
+  properties:
+    data:
+      items:
+        properties:
+          altitude:
+            $ref: '#/components/schemas/altitude'
+          collectionunit:
+            $ref: '#/components/schemas/collectionunit'
+          collectionunitid:
+            $ref: '#/components/schemas/collectionunitid'
+          datasetid:
+            $ref: '#/components/schemas/datasetid'
+          datasettype:
+            $ref: '#/components/schemas/datasettype'
+          geography:
+            $ref: '#/components/schemas/geography'
+          handle:
+            $ref: '#/components/schemas/handle'
+          sitedescription:
+            $ref: '#/components/schemas/sitedescription'
+          siteid:
+            $ref: '#/components/schemas/siteid'
+          sitename:
+            $ref: '#/components/schemas/sitename'
+          unittype:
+            $ref: '#/components/schemas/unittype'
+        type: object
+      type: array
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+    success:
+      $ref: '#/components/schemas/success'
+sitesv2:
+  properties:
+    altitude:
+      $ref: '#/components/schemas/altitude'
+    collectionunits:
+      items:
+        properties:
+          collectionunit:
+            $ref: '#/components/schemas/collectionunit'
+          collectionunitid:
+            $ref: '#/components/schemas/collectionunitid'
+          collectionunittype:
+            example: Core
+            type: string
+          datasets:
+            $ref: '#/components/schemas/datasetshort'
+          handle:
+            $ref: '#/components/schemas/handle'
+        type: object
+      type: array
+    geography:
+      $ref: '#/components/schemas/geography'
+    sitedescription:
+      $ref: '#/components/schemas/sitedescription'
+    siteid:
+      $ref: '#/components/schemas/siteid'
+    sitename:
+      $ref: '#/components/schemas/sitename'
+sitesv2response:
+  properties:
+    data:
+      items:
+        $ref: '#/components/schemas/sitesv2'
+      type: array
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+speleothem:
+  type: array
+  items:
+    properties:
+      siteid:
+        $ref: '#/components/schemas/siteid'
+      collectionunitid:
+        $ref: '#/components/schemas/collectionunitid'
+      entityid:
+        type: integer
+      entityname:
+        type: string
+      monitoring:
+        type: boolean
+      rockageid:
+        type: integer
+      entrancedistance:
+        type: number
+      entrancedistanceunits:
+        $ref: '#/components/schemas/unittype'
+      speleothemtypeid:
+        type: string
+speleothemv2Response:
+  properties:
+    data:
+      items:
+        $ref: '#/components/schemas/speleothem'
+      type: array
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+status:
+  type: string
+  pattern: .*
+success:
+  enum:
+    - 0
+    - 1
+  type: integer
+summaryalldata:
+  properties:
+    data:
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+        query:
+          type: object
+      type: object
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+  type: object
+summarydatabase:
+  properties:
+    data:
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+        query:
+          type: object
+      type: object
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+  type: object
+summarydatatype:
+  properties:
+    data:
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+        query:
+          type: object
+      type: object
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+  type: object
+taphonomyresponse:
+  properties:
+    data:
+      items:
+        nullable: true
+        properties:
+          gettaphonomicsystems:
+            type: string
+        type: object
+      minItems: 0
+      nullable: true
+      type: array
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+  type: object
+taxa:
+  properties:
+    author:
+      type: string
+      nullable: true
+    ecolgroup:
+      type: string
+    highertaxonid:
+      format: int32
+      type: integer
+    publicationid:
+      format: int32
+      type: integer
+      nullable: true
+    publication:
+      type: string
+      nullable: true
+    status:
+      type: string
+    taxonid:
+      format: int32
+      type: integer
+    taxonname:
+      type: string
+taxaInDatasets:
+  properties:
+    data:
+      items:
+        properties:
+          datasettypeids:
+            items:
+              type: integer
+            type: array
+          taxongroupid:
+            type: string
+          taxonid:
+            type: integer
+          taxonname:
+            type: string
+        type: object
+      type: array
+    message:
+      type: string
+    status:
+      type: string
+    success:
+      type: integer
+  type: object
+taxaInDatasetsv1_5:
+  properties:
+    data:
+      items:
+        properties:
+          datasettypeids:
+            items:
+              type: integer
+            type: array
+          taxongroupid:
+            type: string
+          taxonid:
+            type: integer
+          taxonname:
+            type: string
+        type: object
+      type: array
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+    success:
+      $ref: '#/components/schemas/success'
+  type: object
+datasetuploadresponse:
+  description: |
+    A data response from the API showing how many datasets were uploaded each month, generally by constituent database.
+  properties:
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+    data:
+      type: array
+      items:
+        properties:
+          count:
+            type: integer
+          month:
+            type: string
+taxagroupresponse:
+  properties:
+    data:
+      items:
+        properties:
+          gettaxagrouptypes:
+            type: string
+        type: object
+      type: array
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+  type: object
+taxonid:
+  type: integer
+  format: int64
+taxonname:
+  type: string
+taxonresponse:
+  properties:
+    data:
+      items:
+        $ref: '#/components/schemas/taxa'
+      type: array
+    message:
+      $ref: '#/components/schemas/message'
+    status:
+      $ref: '#/components/schemas/status'
+  type: object
+unittype:
+  example: Modern
+  type: string
+url:
+  example: http://neotomadb.org
+  format: url
+  type: string
+  nullable: true
+value:
+  type: number

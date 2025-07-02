@@ -1,0 +1,33 @@
+/v1.5/dbtables/{table}:
+  get:
+    description: Returns the named Neotoma Database table.  An empty query returns a
+      list of all Neotoma tables.
+    parameters:
+      - description: Neotoma database table name.
+        example: geochrontypes
+        in: path
+        name: table
+        required: true
+        schema:
+          example: agetypes
+          type: string
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              properties:
+                data:
+                  $ref: '#/components/schemas/dbtablesv1_5'
+                message:
+                  $ref: '#/components/schemas/message'
+                status:
+                  $ref: '#/components/schemas/status'
+                success:
+                  $ref: '#/components/schemas/success'
+              type: object
+        description: Returned table.
+    summary: Returns the named Neotoma Database table.
+    tags:
+      - Database tables
+      - v1.5
