@@ -1,5 +1,5 @@
 WITH collunit AS (
-  SELECT bigq.siteid,
+  SELECT DISTINCT bigq.siteid,
        bigq.collectionunit
   FROM
      ap.querytable AS bigq
@@ -25,6 +25,8 @@ WITH collunit AS (
     AND (${minage} IS NULL OR        ${minage} <= bigq.older)
     AND (${siteid} IS NULL OR bigq.siteid = ANY(${siteid}))
     AND (${taxa} IS NULL OR bigq.taxa && ${taxa})
+    ORDER BY bigq.siteid
+    LIMIT COALESCE(${limit}, 25) * 3
 )
 SELECT sts.siteid,
        sts.sitename as sitename,
@@ -36,9 +38,6 @@ FROM
    (SELECT * FROM collunit) AS cus
    LEFT JOIN ndb.sites AS sts ON cus.siteid = sts.siteid
 GROUP BY sts.siteid
-OFFSET (CASE WHEN ${offset} IS NULL THEN 0
-                 ELSE ${offset}
-            END)
-LIMIT (CASE WHEN ${limit} IS NULL THEN 25
-      ELSE ${limit}
-    END)
+ORDER BY sts.siteid
+LIMIT COALESCE(${limit}, 25)
+OFFSET COALESCE(${offset}, 0);
