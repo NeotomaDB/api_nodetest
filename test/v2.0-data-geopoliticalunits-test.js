@@ -8,7 +8,11 @@ describe('tests for /v2.0/data/geopoliticalunits', function() {
   describe('tests for get', function() {
     it('should respond 200 for "An array of geopolitical units."', function() {
       const response = request('get', 'http://localhost:3001/v2.0/data/geopoliticalunits', {
+<<<<<<< HEAD
         'qs': {'gpid': 5392, 'gpname': 'Canada', 'rank': 2, 'lower': true},
+=======
+        'qs': {'gpid': 5392, 'gpname': 'Canada', 'rank': 1, 'lower': false},
+>>>>>>> develop
         'time': true,
       });
 

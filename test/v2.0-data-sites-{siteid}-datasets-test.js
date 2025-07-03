@@ -7,7 +7,11 @@ const expect = chakram.expect;
 describe('tests for /v2.0/data/sites/{siteid}/datasets', function() {
   describe('tests for get', function() {
     it('should respond 200 for "An array of datasets."', function() {
+<<<<<<< HEAD
       const response = request('get', 'http://localhost:3001/v2.0/data/sites/7154/datasets', {
+=======
+      const response = request('get', 'http://localhost:3001/v2.0/data/sites/8757/datasets', {
+>>>>>>> develop
         'time': true,
       });
 
