@@ -12,9 +12,11 @@
   "private": true,
   "scripts": {
     "start": "NODE_ENV=production node ./bin/www",
-    "test": "node ./node_modules/mocha/bin/mocha --config=test/.mocharc.yml --reporter-options reportDir=public,reportFilename=tests"
+    "test": "node ./node_modules/mocha/bin/mocha --config=test/.mocharc.yml --reporter-options reportDir=public,reportFilename=tests",
+    "build:openapi": "(cd ./openapi && node ./scripts/build-openapi.js)",
+    "validate:openapi": "yarn build:openapi && bash genoatt.sh && sleep 2 && bash runmochabatch.sh"
   },
-  "pre-commit": "test",
+  "pre-commit": "validate:openapi",
   "dependencies": {
     "@terraformer/wkt": "^2.2.1",
     "acorn": "^6.4.2",
