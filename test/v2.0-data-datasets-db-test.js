@@ -8,7 +8,11 @@ describe('tests for /v2.0/data/datasets/db', function() {
   describe('tests for get', function() {
     it('should respond 200 for "Datasets"', function() {
       const response = request('get', 'http://localhost:3001/v2.0/data/datasets/db', {
+<<<<<<< HEAD
         'qs': {'limit': 10, 'offset': 0, 'database': 'Japanese Pollen Database'},
+=======
+        'qs': {'limit': 10, 'offset': 0, 'database': 'ANTIGUA'},
+>>>>>>> develop
         'time': true,
       });
 
