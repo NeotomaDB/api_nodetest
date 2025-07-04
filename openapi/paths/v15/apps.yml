@@ -1,0 +1,42 @@
+/v1.5/apps/DatasetTypes:
+  get:
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/datasetTypes'
+        description: Returns the set of dataset types supported by Neotoma.
+    tags:
+      - Database tables
+      - v1.5
+/v1.5/apps/TaxaInDatasets:
+  get:
+    description: The set of all taxa, and a list of all the datasets in which each
+      taxon appears.
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/taxaInDatasetsv1_5'
+        description: An array of taxon identities with associated dataset IDs.
+    summary: Lists all Neotoma taxa (alphebetically) and the dataset types in which
+      the taxa appear.
+    tags:
+      - Taxonomic metadata
+      - v1.5
+/v1.5/apps/collectionTypes:
+  get:
+    operationId: getCollTypes
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/collectiontyperesponse'
+        description: Returns the set of collectiontypes recorded in Neotoma.
+    summary: Return the list of collection types.
+    tags:
+      - Database tables
+      - v1.5

@@ -1,0 +1,121 @@
+/v1.5/data/contacts/{contactid}:
+  get:
+    description: Returns researcher contact information associated with a record.
+    parameters:
+      - description: Unique contact identifier.
+        in: path
+        name: contactid
+        required: true
+        schema:
+          format: int64
+          type: integer
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/contactresponsev15'
+        description: Contact
+    summary: Contact information for Neotoma contributors.
+    tags:
+      - Contact metadata
+      - v1.5
+/v1.5/data/datasets/{datasetid}:
+  get:
+    description: Returns information about Neotoma dataset
+    parameters:
+      - $ref: '#/components/parameters/datasetidPath'
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              type: object
+        description: An array of datasets.
+    summary: Dataset information.
+    tags:
+      - Dataset metadata
+      - v1.5
+/v1.5/data/downloads/{datasetid}:
+  get:
+    description: Returns the named Neotoma Database table.
+    parameters:
+      - $ref: '#/components/parameters/datasetidPath'
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/downloadv1point5'
+        description: Returned download object.
+    summary: Returns the named Neotoma Database table.
+    tags:
+      - Data download
+      - v1.5
+/v1.5/data/geopoliticalunits:
+  get:
+    parameters:
+      - $ref: '#/components/parameters/gpidQuery'
+      - $ref: '#/components/parameters/gpnameQuery'
+      - $ref: '#/components/parameters/rankQuery'
+      - $ref: '#/components/parameters/lowergpQuery'
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/geopoliticalv1_5'
+        description: An array of geopolitical units.
+    summary: Returns information about geopolitical units.
+    tags:
+      - Geopolitical metadata
+      - v1.5
+/v1.5/data/geopoliticalunits/{gpid}:
+  get:
+    parameters:
+      - $ref: '#/components/parameters/gpidPath'
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/geopolitical'
+        description: An array of geopolitical units.
+    summary: Returns information about geopolitical units.
+    tags:
+      - Geopolitical metadata
+      - v1.5
+/v1.5/data/occurrence/{occurrenceid}:
+  get:
+    description: Given a unique occurrence identifier associated with a unique
+      occurrence in Neotoma, return individual occurrence information for the
+      sample.
+    parameters:
+      - $ref: '#/components/parameters/occurrenceidPath'
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/occurrencev1_5'
+        description: A single occurrence object.
+    summary: Occurrence information for a taxon and sample.
+    tags:
+      - Occurrence metadata
+      - v1.5
+/v1.5/data/sites/{siteid}:
+  get:
+    description: Returns information about Neotoma publications
+    parameters:
+      - $ref: '#/components/parameters/siteidPath'
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/sitesv1point5'
+        description: An array of site elements.
+    summary: Site information.
+    tags:
+      - Site metadata
+      - v1.5

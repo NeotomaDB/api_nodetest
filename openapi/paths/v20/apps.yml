@@ -1,0 +1,174 @@
+/v2.0/apps/constdb:
+  get:
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/constdbresponse'
+        description: 'Returns metadata about each [constituent
+          database](https://www.neotomadb.org/data/constituent-databases) in
+          Neotoma, including Summary Information about dataset types within
+          the database and the age spans of the records in the database.
+          Constituent databases '
+    tags:
+      - Database metadata
+      - Summary Informationrmation
+      - v2.0
+/v2.0/apps/constdb/datasetages:
+  get:
+    parameters:
+      - $ref: '#/components/parameters/dbidQuery'
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/datasetagerangeresponse'
+        description: |
+          Returns an ordered array (from earliest to latest) of upload counts by month (YYYY/MM/DD; all days as 01). Months with no uploads are excluded.
+    tags:
+      - Dataset metadata
+      - Summary Information
+      - v2.0
+/v2.0/apps/constdb/datasetuploads:
+  get:
+    parameters:
+      - $ref: '#/components/parameters/dbidQuery'
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/datasetuploadresponse'
+        description: |
+          Returns an ordered array (from earliest to latest) of upload counts by month (YYYY/MM/DD; all days as 01). Months with no uploads are excluded.
+    tags:
+      - Dataset metadata
+      - Summary Information
+      - v2.0
+/v2.0/apps/constdb/datasets:
+  get:
+    parameters:
+      - $ref: '#/components/parameters/dbidQuery'
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/datasetsShort'
+        description: |
+          Returns the set of datasets contained within a constituent database, identified by the constituent database identifier. Used for quick landing page generation.
+    tags:
+      - Dataset metadata
+      - v2.0
+/v2.0/apps/authorpis:
+  get:
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/authorpiresponse'
+        description: A table of Neotoma collection types.
+    tags:
+      - Collection units
+      - v2.0
+/v2.0/apps/collectiontypes:
+  get:
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/collectiontyperesponse'
+        description: A table of Neotoma collection types.
+    tags:
+      - Collection units
+      - v2.0
+/v2.0/apps/datasettypes:
+  get:
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/datasettyperesponse'
+        description: A table of Neotoma collection types.
+    tags:
+      - Dataset metadata
+      - v2.0
+/v2.0/apps/depositionalenvironments/root:
+  get:
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/depositionalresponse'
+        description: A table of Neotoma collection types.
+    tags:
+      - Dataset metadata
+      - v2.0
+/v2.0/apps/keywords:
+  get:
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/keywordresponse'
+        description: A list of all keywords used for analysis units in the database.
+    tags:
+      - Analysis Unit Keywords
+      - v2.0
+/v2.0/apps/taphonomysystems:
+  get:
+    parameters:
+      - description: Unique dataset type identifier. Note that not all dataset types have associated taphonomy systems, 
+          so a valid datasettype may result in an empty response. Users who require more information may use the `dbtables`
+          endpoints to access the [`taphonomicsystemsdatasettypes` table](https://open.neotomadb.org/dbschema/ndb/tables/taphonomicsystemsdatasettypes.html). This table will list all taphonomic systems
+          associated with each dataset type.
+        in: query
+        name: datasettypeid
+        required: true
+        schema:
+          format: int64
+          maximum: 44
+          minimum: 1
+          type: integer
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/taphonomyresponse'
+        description: A table of Neotoma collection types.
+    tags:
+      - Dataset metadata
+      - v2.0
+/v2.0/apps/taxagrouptypes:
+  get:
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/taxagroupresponse'
+        description: A table of Neotoma collection types.
+    tags:
+      - Dataset metadata
+      - v2.0
+/v2.0/apps/taxaindatasets:
+  get:
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/taxaInDatasets'
+        description: A list of all taxa in neotoma and the datasets in which they are
+          found.
+    tags:
+      - Taxonomic metadata
+      - v2.0

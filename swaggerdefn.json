@@ -17,5 +17,5 @@
   "host": "api-dev.neotomadb.org",
   "scheme": "http",
   "basePath": "/",
-  "url": "/swagger.json"
+  "url": "/openapi.json"
 }
