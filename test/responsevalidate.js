@@ -17,7 +17,7 @@ if (typeof process.env.APIPATH === 'undefined') {
 console.log(testroute)
 var api = supertest(testroute);
 
-const fullPath = path.join(process.cwd(), 'swagger.yaml');
+const fullPath = path.join(process.cwd(), 'openapi.yaml');
 const apidoc = YAML.load(fullPath)
 
 // Import this plugin

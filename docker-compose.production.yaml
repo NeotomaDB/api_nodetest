@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  api:
+    build:
+      context: https://github.com/NeotomaDB/api_nodetest.git#feature/dockercompose
+      dockerfile: Dockerfile
+    container_name: node-express-api
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - RDS_HOSTNAME=${RDS_HOSTNAME}
+      - RDS_PORT=${RDS_PORT}
+      - RDS_DATABASE=${RDS_DATABASE}
+      - RDS_USERNAME=${RDS_USERNAME}
+      - RDS_PASSWORD=${RDS_PASSWORD}
+      - DB_SSL=true
+      - PORT=3001
+      - API_URL=http://localhost:3001
+    depends_on:
+      - db-proxy
+    networks:
+      - app-network
+    volumes:
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/v2.0/routes/healthwatch"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+# Named volumes for data persistence
+volumes:
+  app-logs:
+    driver: local

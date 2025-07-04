@@ -12,14 +12,16 @@
   "private": true,
   "scripts": {
     "start": "NODE_ENV=production node ./bin/www",
-    "test": "node ./node_modules/mocha/bin/mocha --config=test/.mocharc.yml --reporter-options reportDir=public,reportFilename=tests"
+    "test": "node ./node_modules/mocha/bin/mocha --config=test/.mocharc.yml --reporter-options reportDir=public,reportFilename=tests",
+    "build:openapi": "(cd ./openapi && node ./scripts/build-openapi.js)",
+    "validate:openapi": "yarn build:openapi && bash genoatt.sh && sleep 2 && bash runmochabatch.sh"
   },
-  "pre-commit": "test",
+  "pre-commit": "validate:openapi",
   "dependencies": {
     "@terraformer/wkt": "^2.2.1",
     "acorn": "^6.4.2",
     "apicache": "^1.6.2",
-    "axios": "^1.8.3",
+    "axios": "^1.9.0",
     "big-json": "^3.2.0",
     "bluebird": "^3.7.2",
     "body-parser": "^1.20.3",
@@ -36,7 +38,7 @@
     "express-rate-limit": "^7.5.0",
     "he": "^1.2.0",
     "helmet": "^7.2.0",
-    "jade": "^0.29.0",
+    "jade": "^1.11.0",
     "js2xmlparser": "^4.0.1",
     "morgan": "^1.10.0",
     "node-postgres": "^0.6.2",
@@ -65,7 +67,7 @@
     "gulp": "^5.0.0",
     "gulp-mocha": "^10.0.0",
     "gulp-nodemon": "^2.2.1",
-    "mocha": "^11.1.0",
+    "mocha": "^11.7.1",
     "mochawesome": "^7.1.3",
     "nodemon": "^3.1.4",
     "pre-commit": "^1.0.10",

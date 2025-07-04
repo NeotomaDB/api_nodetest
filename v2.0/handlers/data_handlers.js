@@ -218,4 +218,9 @@ module.exports = {
     const icesheet = require('../helpers/spatial/icesheet.js');
     icesheet.icesheetoverlay(req, res, next);
   },
+  // SPELEOTHEMS
+  speleothems: function(req, res, next) {
+    const speleothems = require('../helpers/speleothems/speleothems.js');
+    speleothems.speleothemsbycuid(req, res, next);
+  },
 };

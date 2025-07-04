@@ -1,0 +1,102 @@
+# openapi.yaml
+openapi: 3.0.0
+info:
+  title: Neotoma API
+  version: 2.0-oas3
+  description: |-
+    Neotoma is funded by the *National Sciences Foundation* of the United States ([Award 1948962](https://nsf.gov/awardsearch/showAward?AWD_ID=1948926)).
+    
+    The [Neotoma Paleoecology Database](https://www.neotomadb.org) is a global database of fossils  from the last 5.2 million years. All fossil records in Neotoma are reported with metadata that  places the sample in space and in time, and provides additional information about taxonomy,  publication history, and the models that are used to estimate the sample age.
+    The API is structured to provide users with reliable JSON responses from the live Neotoma Database.  Neotoma provides several tools to work with researcher submitted data:
+    
+      * [Neotoma Explorer](https://apps.neotomadb.org/explorer): A visual, interactive data explorer.
+      * [neotoma2 R package](https://cran.r-project.org/web/packages/neotoma2/index.html): A tool for obtaining and manipulating paleoecological data in R.
+      
+      <a href=https://localcontextshub.org/institutions/view/122/><img alt="Local Contexts Open to Collaborate Logo" src=https://storage.googleapis.com/local-contexts-hub.appspot.com/labels/notices/ci-open-to-collaborate.svg width=50 style="align:center;"/></a>
+      <p>Our institution is committed to the development of new modes of collaboration, engagement, and partnership with Indigenous peoples for the care and stewardship of past and future heritage collections.
+  contact:
+    name: Simon J Goring
+    email: goring@wisc.edu
+    url: http://goring.org
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - description: The Neotoma production server.
+    url: https://api.neotomadb.org/
+  - description: Neotoma development server.
+    url: https://api-dev.neotomadb.org/
+  - description: A local Neotoma server.
+    url: http://localhost:3001/
+
+# Reference external files
+components:
+  parameters: {}
+  schemas: {}
+  responses: {}
+
+paths: {}
+
+tags:
+  - description: |-
+      Endpoints that access tables from Neotoma verbatim. Documentation for the database can be found in 
+      the [Neotoma Manual](https://open.neotomadb.org/manual), along with descriptions for individual tables.
+      _ONLY_ tables in the `ndb` schema can be accessed through this endpoint.
+      Users who wish to better understand how individual tables connect to one another may also find the
+      online [database schema](https://open.neotomadb.org/dbschema) of use, for a full listing of all database
+      tables and entity-relation diagrams for the various tables.
+    externalDocs:
+      url: https://open.neotomadb.org/dbschema/ndb/index.html
+    name: Database tables
+  - description: |-
+      Information about chronological controls and the models used to add
+      the temporal component to records.
+    externalDocs:
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#chronology-age-related-tables
+    name: Chronology metadata
+  - description: Information about Neotoma data contributors, authors and data analysts.
+    externalDocs:
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#individual-related-tables
+    name: Contact metadata
+  - description: Information about site location and metadata specific to the
+      individual dataset.
+    externalDocs:
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#dataset-collection-related-tables
+    name: Dataset metadata
+  - description: Full dataset download, including all sample data for a particular dataset.
+    externalDocs:
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#sample-related-tables
+    name: Data download
+  - description: Information about the geopolitical units in which a site is located.
+    externalDocs:
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#site-related-tables
+    name: Geopolitical metadata
+  - description: A simplified data return, similar to the data download, but
+      specific to a particular taxon, time or location.
+    name: Occurrence metadata
+  - description: For ease of use in online applications, pre-calculated pollen
+      percentages for taxa, location or temporal bins.
+    name: Pollen proportions
+  - description: Formatted publication data related to Neotoma records.
+    externalDocs:
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#publication-related-tables
+    name: Publication metadata
+  - description: All metadata associated with a particular site with fossil records.
+    externalDocs:
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#site-related-tables
+    name: Site metadata
+  - description: All available information about a particular taxon.
+    externalDocs:
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#taxonomy-related-tables
+    name: Taxonomic metadata
+  - description: Summary statistics for the database as a whole.
+    name: Summary Information
+  - description: All API endpoints associated with v1.5 of the Neotoma API.
+    externalDocs:
+      url: http://github.com/NeotomaDB/api_nodetest
+    name: v1.5
+  - description: All API endpoints associated with v2.0 of the Neotoma API.
+    externalDocs:
+      url: http://github.com/NeotomaDB/api_nodetest
+    name: v2.0

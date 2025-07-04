@@ -82,4 +82,7 @@ router.post('/spatial/faunal', handlers.faunmap);
 router.get('/spatial/icesheet', handlers.icesheet);
 router.post('/spatial/icesheet', handlers.icesheet);
 
+// SPELEOTHEMS
+router.get('/speleothems/:collectionunitid', handlers.speleothems);
+
 module.exports = router;
