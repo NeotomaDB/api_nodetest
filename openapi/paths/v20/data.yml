@@ -193,7 +193,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/speleothem'
+              $ref: '#/components/schemas/speleothemv2Response'
         description: Metadata associated with speleothems submitted through SISAL.
     summary: Speleothem metadata.
     tags:

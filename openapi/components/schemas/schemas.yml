@@ -1561,6 +1561,7 @@ speleothem:
       speleothemtypeid:
         type: string
 speleothemv2Response:
+  type: object
   properties:
     data:
       items:

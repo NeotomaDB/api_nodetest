@@ -67,7 +67,7 @@ function publicationquery (req, res, next) {
 
   if (novalues === true) {
     if (!!req.accepts('json') & !req.accepts('html')) {
-      res.redirect('/swagger.json');
+      res.redirect('/openapi.json');
     } else {
       res.redirect('/api-docs');
     };

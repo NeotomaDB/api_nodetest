@@ -24,7 +24,7 @@ HELP
 run_oatt() {
 
     rm ./test/v*.js
-    oatts generate --host $remote -s ./swagger.yaml -w test
+    oatts generate --host $remote -s ./openapi.yaml -w test
     eslint --quiet --fix ./test > genoatt.log
 
     # oatts is a bit silly in picking its variables.  We need to make sure that we're
