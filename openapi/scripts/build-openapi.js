@@ -38,7 +38,8 @@ function buildOpenAPI() {
    * @return {array}
    */
   function findYamlElements(dir) {
-    let yamlElements = [];
+    // self note: you can `push()` to a const array.
+    const yamlElements = [];
     const items = fs.readdirSync(dir);
     items.forEach((item) => {
       const fullPath = path.join(dir, item);
