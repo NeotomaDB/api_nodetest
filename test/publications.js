@@ -71,7 +71,7 @@ describe('Get publication data any number of ways:', function() {
         .set('Accept', 'application/json')
         .expect(function(res) {
           const flatten = (list) => list.reduce(
-              (a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []
+              (a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [],
           );
           const sites = [12, 13, 14, 15];
           const siteids = flatten(res.body.data.map((x) => x.siteid));
@@ -85,7 +85,7 @@ describe('Get publication data any number of ways:', function() {
         .set('Accept', 'application/json')
         .expect(function(res) {
           const flatten = (list) => list.reduce(
-              (a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []
+              (a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [],
           );
           const datasets = [12, 6000, 13, 2201];
           const datasetids = flatten(res.body.data.map((x) => x.datasetid));
