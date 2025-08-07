@@ -45,4 +45,6 @@ router.post('/orcids/validate', handlers.validateusers);
 router.get('/contacts/:contactid/datasets', handlers.contact_datasets);
 router.get('/nativelands', handlers.sendNativeLands);
 
+router.get('/depenvt', handlers.depenvt);
+
 module.exports = router;
