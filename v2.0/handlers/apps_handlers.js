@@ -49,6 +49,10 @@ module.exports = {
     const or_contact = require('../helpers/landing/landing.js');
     or_contact.contact_by_orcid_id(req, res, next);
   },
+  depenvt: function(req, res, next) {
+    const depenvt = require('../helpers/depenvt/depenvt.js');
+    depenvt.depenvbyid(req, res, next);
+  },
 };
 
 // Defining the query functions:
