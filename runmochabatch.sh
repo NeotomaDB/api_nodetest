@@ -17,7 +17,7 @@ HELP
 }
 
 run_mocha() {
-    find ./test -name '*.js' | gshuf | xargs mocha --config=test/.mocharc.yml --reporter-options reportDir=public,reportFilename=tests
+    find ./test -name '*.js' | shuf | xargs mocha --config=test/.mocharc.yml --reporter-options reportDir=public,reportFilename=tests
 }
 
  OPTIND=1
