@@ -8,7 +8,11 @@ describe('tests for /v2.0/apps/constdb/datasetuploads', function() {
   describe('tests for get', function() {
     it('should respond 200 for "Returns an ordered array (from earliest to latest) of upload counts by month (YYYY/MM/DD; all days as 01). Months with no uploads are excluded. "', function() {
       const response = request('get', 'http://localhost:3001/v2.0/apps/constdb/datasetuploads', {
+<<<<<<< HEAD
         'qs': {'dbid': 14},
+=======
+        'qs': {'dbid': 31},
+>>>>>>> develop
         'time': true,
       });
 

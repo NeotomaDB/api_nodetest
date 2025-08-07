@@ -14,11 +14,11 @@ let testroute = process.env.APIPATH;
 if (typeof process.env.APIPATH === 'undefined') {
   testroute = 'http://localhost:' + process.env.APIPORT;
 }
-console.log(testroute)
-var api = supertest(testroute);
+console.log(testroute);
+const api = supertest(testroute);
 
 const fullPath = path.join(process.cwd(), 'openapi.yaml');
-const apidoc = YAML.load(fullPath)
+const apidoc = YAML.load(fullPath);
 
 // Import this plugin
 const chaiResponseValidator = require('chai-openapi-response-validator');
@@ -27,30 +27,30 @@ const chaiResponseValidator = require('chai-openapi-response-validator');
 chai.use(chaiResponseValidator(fullPath));
 
 const paths = Object.keys(apidoc.paths);
-var apipath = ''
-var description = ''
+let apipath = '';
+let description = '';
 
-function runTest (description, apipath) {
+function runTest(description, apipath) {
   describe(description, () => {
     it('should satisfy OpenAPI spec', async () => {
       // Get an HTTP response from your server (e.g. using axios)
-      console.log(testroute + apipath)
-      const res = await axios.get(testroute + apipath)
-      
+      console.log(testroute + apipath);
+      const res = await axios.get(testroute + apipath);
+
       expect(res.status).to.equal(200);
       expect(res).to.satisfyApiSpec;
     });
-  })
+  });
 }
 
 for (let step = 0; step < paths.length; step++) {
   apipath = paths[step];
-  description = 'GET ' + apipath
+  description = 'GET ' + apipath;
 
   if (apipath.includes('dbtables')) {
-    apipath = apipath.replace(/{.*}/, 'agetypes')
+    apipath = apipath.replace(/{.*}/, 'agetypes');
   } else {
-    apipath = apipath.replace(/{.*}/, 1)
+    apipath = apipath.replace(/{.*}/, 1);
   }
   runTest(description, apipath);
 }

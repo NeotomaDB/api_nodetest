@@ -49,7 +49,7 @@ components:
         maximum: 35
     ageQuery:
       description: |
-        Icesheet age (in calibrated radiocarbon years before present, with 0 at 1950CE). Ages range from 0 to 18000.
+        Ice-sheet age (in calibrated radiocarbon years before present, with 0 at 1950CE). Ages range from 0 to 18000.
       in: query
       name: age
       required: false
@@ -95,15 +95,13 @@ components:
         [WSG84](https://en.wikipedia.org/wiki/World_Geodetic_System#WGS84) model of the planet. For web mapping users
         may choose SRID *3857* if using projected features.
     precQuery:
-      description: >
+      description: >-
         Precision of points within a rendered polygon. Many spatial objects are generated statistically and may have
-        overly precise point coordinates. Often precisions to 100m is sufficient for rendering to map.<br>
-
-        **NOTE**: the precision is dependent on the projected units. For the default SRID=4326 projection, precision
-        units are in decimal degrees, where 0.1 degrees latitude = 11.1km and 0.0001 degrees latitude = 11.1m. For
-        metric precision, units will be in meters.<br>
-
-        The default value of *0.0001* represents a metric distance of 11.1m in the default 4326 projection.
+        overly precise point coordinates. Often precisions to 100m is sufficient for rendering to map.<br> **NOTE**: the
+        precision is dependent on the projected units. For the default SRID=4326 projection, precision units are in
+        decimal degrees, where 0.1 degrees latitude = 11.1km and 0.0001 degrees latitude = 11.1m. For metric precision,
+        units will be in meters.<br>The default value of *0.0001* represents a metric distance of 11.1m in the default
+        4326 projection.
       in: query
       name: prec
       required: false
@@ -2551,7 +2549,7 @@ components:
       example: Modern
       type: string
     url:
-      example: 'http://neotomadb.org'
+      example: https://www.neotomadb.org
       format: url
       type: string
       nullable: true
