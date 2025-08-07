@@ -1,15 +1,37 @@
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/9788/badge)](https://www.bestpractices.dev/projects/9788)
-[![lifecycle](https://img.shields.io/badge/lifecycle-active-orange.svg)] [![DOI](https://zenodo.org/badge/91914528.svg)](https://zenodo.org/badge/latestdoi/91914528)
+![lifecycle](https://img.shields.io/badge/lifecycle-active-orange.svg) [![DOI](https://zenodo.org/badge/91914528.svg)](https://zenodo.org/badge/latestdoi/91914528)
 
-[![NSF-1550707](https://img.shields.io/badge/NSF-1550707-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1550707) [![NSF-1541002](https://img.shields.io/badge/NSF-1541002-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1541002)
+[![NSF-1550707](https://img.shields.io/badge/NSF-1550707-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1550707) [![NSF-1541002](https://img.shields.io/badge/NSF-1541002-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1541002) [![NSF-2410961](https://img.shields.io/badge/NSF-2410961-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=2410961)
 
 # Neotoma API Implementation
 
-This repository is intended to act as the core repository for the Neotoma API version 1.5 and greater.  There are two main branches, `master` and `dev`.  Master is intended as the production branch, while `dev` is the main testing and development branch.  For documentation of the Neotoma Paleoecology Database see [this](http://neotoma-manual.readthedocs.io/en/latest/neotoma_introduction.html) and of the community see [this](https://www.neotomadb.org/).  Version 1 of the API is documented [here](http://wnapi.neotomadb.org/doc/home).
+This repository is intended to act as the core repository for the Neotoma API version 1.5 and greater.  The API acts as an interface between a user application and the Neotoma Postgres Database. This separation helps improve security, and lowers the data access barrier to users by providing simple URL paths, rather than requiring users to create individual SQL queries.
 
-Currently [https://api.neotomadb.org](https://api.neotomadb.org) is the home for the API, and will resolve to a [OpenAPI](http://swagger.io) landing page with API documentation and search functionality. The documentation is generated dynamically from the [openapi.json]() yaml file using the OpenAPI standard.
+![A simple overview of the Neotoma API. An image of a database is connected to an icon representing the API, which is connected to an icon representing end users.](assets/api_simple_diagram.svg)
 
-Tests for the API are implemented using mocha/chakram and also make use of `oatts`, which generates tests directly from the `swagger.json` documentation.  To autogenerate the test suite, we use the bash script `genoatt.sh`, which provides base-level implementation of the `oatts` module, along with some fixes to modify values in the testing suite to ensure consistency with the API.  Once the tests have been generated we use `runmochabatch.sh` which tests each module and returns an HTML file (placed in the `public/` folder) that can be used to examine individual structural errors in the API (or documentation).
+**Image Credits**: All images from the Noun Project (CC BY 3.0) -- API by SAM Designs; Database by Lewen Design; People by iconixr.
+
+For documentation of the Neotoma Paleoecology Database see [the user manual](http://neotoma-manual.readthedocs.io/en/latest/neotoma_introduction.html) and for more information about the Neotoma community, see the [Neotoma webpage](https://www.neotomadb.org/).  Version 1 of the API is now fully deprecated and no longer resolves.
+
+## Project Structure
+
+There are two main branches, `production` and `develop`.  `production` is intended to be the production branch, while `develop` is the main testing and development branch. We encourage developers to use a GitFlow model of development, building from the `develop` branch, and creating new branches for features and fixes, that are then merged back to the `develop` branch.
+
+### Project Documentation
+
+Documentation uses the [OpenAPI standard](https://www.openapis.org/). Currently [https://api.neotomadb.org](https://api.neotomadb.org) is the home for the API, and will resolve to an [OpenAPI](https://www.openapis.org/) landing page with API documentation and search functionality. The documentation is generated dynamically from the [openapi.yaml](openapi.yaml) yaml file using the OpenAPI standard.
+
+The full yaml file is over 3000 lines long. To help with maintainability each sub-component is found within the [`openapi`](./openapi/) folder, further subdivided by version number, path, and parameters. The JavaScript file [`build-openapi.js`](./openapi/scripts/build-openapi.js) is used to compile these files together using the [OpenAPI template](./openapi/openapi-template.yaml), saving it as `openapi.yaml`. A user can automatically re-build the OpenAPI documentation using:
+
+```bash
+yarn run build:openapi
+```
+
+The final `openapi.yaml` is the file that is used for documentation and for testing.
+
+### Testing
+
+Tests for the API are implemented using mocha/chakram and also make use of [`oatts`](https://github.com/google/oatts), which generates tests directly from the [openapi.yaml](openapi.yaml) documentation. To autogenerate the test suite, we use the bash script `genoatt.sh`, which provides base-level implementation of the `oatts` module, along with some fixes to modify values in the testing suite to ensure consistency with the API.  Once the tests have been generated we use `runmochabatch.sh` which tests each module and returns an HTML file (placed in the `public/` folder) that can be used to examine individual structural errors in the API (or documentation).
 
 ## Development
 
@@ -24,8 +46,6 @@ We welcome user contributions to this project.  All contributors are expected to
 
 This codebase is generated using `node.js`, `express` and `pg-promise` to interact with the Neotoma `postgres` database. The API endpoints are organized conceptually by applications (apps), data, and direct access to specific tables (dbtables). This project is based on and replaces an existing API implemented with .NET and SQLServer.
 
-This code is currently in preliminary release.
-
 ### Required Files/Services
 
 #### Database Snapshot
@@ -34,28 +54,31 @@ The code in this repository is run directly against the production database on t
 
 #### Connection File
 
-Along with the files in this repository a user will need a file called `db_connect.json`, to be located in the database directory.
+Along with the files in this repository a user will need a file called `.env`, to be located in the main directory. We include a `.env-template` file for convenience.
 
-```json
-{
-   "host": "localhost",
-   "port": 5432,
-   "database": "YOUR_DATABASE_NAME",
-   "user": "postgres",
-   "password": "postgres"
-}
+```bash
+NODE_ENV=development
+APIPORT=3001
+RDS_HOSTNAME=localhost
+RDS_USERNAME=your_postgres_username
+RDS_DATABASE=neotoma
+RDS_PASSWORD=your_postgres_password
+RDS_PORT=your_postgres_port
+LOCALLIMIT=false
+SSL_CERT=true
+NATIVELANDKEY=your_key_for_native-lands.ca
 ```
 
-For security reasons this file is not included in the GitHub repository, but can be made available.
+Enter your secure information into the `.env-template` file, and then save it as `.env` to enable your connection to the Neotoma Database.
 
 ### To Run
 
-To start the server locally you must first clone the repository.  Once the repository is cloned you must use the `npm` package installer to download the required packages.  The required packages are listed in `package.json`.  You can use the command `npm install` to install the packages locally.
+To start the server locally you must first clone the repository.  Once the repository is cloned you must use the `yarn` package installer to download the required packages.  The required packages are listed in `package.json`.  You can use the command `yarn install` to install the packages locally.
 
-Once the directory is set up and the packages have been installed, use `npm start` to start the server locally.  This will create a local server, serving data to `localhost:3000`.
+Once the directory is set up and the packages have been installed, use `yarn run start` to start the server locally.  This will create a local server, serving data to `localhost:3001`.
 
 ```
-$ npm start
+$ yarn start
 
 > api-nodetest@0.0.0 start /home/simon/Documents/GitHub/api_nodetest
 > node ./bin/www
@@ -89,8 +112,10 @@ The existing files and folders in the `helpers` directory can easily be used as 
 
 Once the desired SQL query is written and the `js` file to access it from nod/express is implemented we then need to edit the file that handles requests to the `data` route.  We can find this file in `[v2.0/handlers/data_handlers.js](https://github.com/NeotomaDB/api_nodetest/blob/master/v2.0/handlers/data_handlers.js)`.  You are defining a function name here, that will be called by the router.
 
-The router is in `[routes/data.js](https://github.com/NeotomaDB/api_nodetest/blob/master/v2.0/routes/data.js)`. It lets us know what function and parameters are associated with each URL route.  For example, someone calling our API using: `http://api-dev.neotomadb.org/v2.0/data/sites/132/contacts` would be directed to the function defined in the `handler.js` file called `contactsbysiteid`, since our routing file includes the call: `[router.get('/sites/:siteid/contacts', handlers.contactsbysiteid);](https://github.com/NeotomaDB/api_nodetest/blob/master/v2.0/routes/data.js#L20)`.  We also know that within the `contactsbysiteid()` function (in `helpers/contacts`) there would be a parameter called `siteid`
+The router is in [`routes/data.js`](https://github.com/NeotomaDB/api_nodetest/blob/master/v2.0/routes/data.js). It lets us know what function and parameters are associated with each URL route.
+
+For example, someone calling our API using: [`https://api.neotomadb.org/v2.0/data/sites/132/contacts`](http://api.neotomadb.org/v2.0/data/sites/132/contacts) would be directed to the function defined in the `handler.js` file called `contactsbysiteid`, since our routing file includes the call: [`router.get('/sites/:siteid/contacts', handlers.contactsbysiteid);`](https://github.com/NeotomaDB/api_nodetest/blob/master/v2.0/routes/data.js#L20).  We also know that within the `contactsbysiteid()` function (in `helpers/contacts`) there would be a parameter called `siteid`.
 
 ## Funding
 
-This work is funded by NSF grants to Neotoma: NSF Geoinformatics - [1550707](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1550707&HistoricalAwards=false)/[1948926](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1948926&HistoricalAwards=false) and NSF EarthCube [1541002](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1541002&HistoricalAwards=false).
+This work is funded by NSF grants to Neotoma: NSF Geoinformatics - [1550707](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1550707&HistoricalAwards=false)/[1948926](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1948926&HistoricalAwards=false)/[2410961](https://nsf.gov/awardsearch/showAward?AWD_ID=2410961) and NSF EarthCube [1541002](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1541002&HistoricalAwards=false).
