@@ -49,6 +49,14 @@ module.exports = {
     const or_contact = require('../helpers/landing/landing.js');
     or_contact.contact_by_orcid_id(req, res, next);
   },
+  contact_datasets: function(req, res, next) {
+    const ds_cnt = require('../helpers/landing/landing.js');
+    ds_cnt.datasetsByContact(req, res, next);
+  },
+  sendNativeLands: function(req, res, next) {
+    const sendNL = require('../helpers/landing/landing.js');
+    sendNL.sendNativeLands(req, res, next);
+  },
   depenvt: function(req, res, next) {
     const depenvt = require('../helpers/depenvt/depenvt.js');
     depenvt.depenvbyid(req, res, next);
