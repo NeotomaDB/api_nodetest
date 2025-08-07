@@ -1,5 +1,6 @@
+---
 dbidQuery:
-  description: |
+  description: >
     Unique constituent database identifier from the `ndb.constituentdatabases` table. Each of the Neotoma constituent databases is identified uniquely with an integer primary key.
   in: query
   name: dbid
@@ -9,8 +10,8 @@ dbidQuery:
     minimum: 1
     maximum: 35
 ageQuery:
-  description: |
-    Icesheet age (in calibrated radiocarbon years before present, with 0 at 1950CE). Ages range from 0 to 18000.
+  description: >
+    Ice-sheet age (in calibrated radiocarbon years before present, with 0 at 1950CE). Ages range from 0 to 18000.
   in: query
   name: age
   required: false
@@ -21,8 +22,7 @@ ageQuery:
     minimum: 1000
     type: integer
 ageOfQuery:
-  description: Dataset age ranges must span this age (in calibrated years before
-    present, with 0 at 1950CE)
+  description: Dataset age ranges must span this age (in calibrated years before present, with 0 at 1950CE)
   in: query
   name: ageof
   required: false
@@ -33,8 +33,7 @@ ageOfQuery:
     minimum: -100
     type: integer
 scinameQuery:
-  description: The scientific name for a mammal taxon. May be the complete name or
-    use the `%` wildcard for the name.
+  description: The scientific name for a mammal taxon. May be the complete name or use the `%` wildcard for the name.
   in: query
   name: sciname
   required: true
@@ -54,10 +53,8 @@ projQuery:
   description: |
     A valid integer [spatial reference identifier](https://en.wikipedia.org/wiki/Spatial_reference_system#Identifier) value. By default Neotoma returns all data with the SRID 4326 (standard lat/long), representing the [WSG84](https://en.wikipedia.org/wiki/World_Geodetic_System#WGS84) model of the planet. For web mapping users may choose SRID *3857* if using projected features.
 precQuery:
-  description: |
-    Precision of points within a rendered polygon. Many spatial objects are generated statistically and may have overly precise point coordinates. Often precisions to 100m is sufficient for rendering to map.<br>
-    **NOTE**: the precision is dependent on the projected units. For the default SRID=4326 projection, precision units are in decimal degrees, where 0.1 degrees latitude = 11.1km and 0.0001 degrees latitude = 11.1m. For metric precision, units will be in meters.<br>
-    The default value of *0.0001* represents a metric distance of 11.1m in the default 4326 projection.
+  description: "Precision of points within a rendered polygon. Many spatial objects are generated statistically and may have overly precise point coordinates. Often precisions to 100m is sufficient for rendering to map.<br> **NOTE**: the precision is dependent on the projected units. For the default SRID=4326 projection, precision units are in decimal degrees, where 0.1 degrees latitude = 11.1km and 0.0001 degrees latitude = 11.1m. For metric precision, units will be in meters.<br>The default value of
+    *0.0001* represents a metric distance of 11.1m in the default 4326 projection."
   in: query
   name: prec
   required: false
@@ -69,8 +66,7 @@ precQuery:
     type: number
     default: 0.0001
 ageOldQuery:
-  description: Oldest age that intercepts with the dataset (in calibrated years
-    before present, with 0 at 1950CE)
+  description: Oldest age that intercepts with the dataset (in calibrated years before present, with 0 at 1950CE)
   in: query
   name: ageold
   required: false
@@ -81,8 +77,7 @@ ageOldQuery:
     minimum: -100
     type: integer
 ageYoungQuery:
-  description: Youngest age that intercepts with the dataset (in calibrated years
-    before present, with 0 at 1950CE)
+  description: Youngest age that intercepts with the dataset (in calibrated years before present, with 0 at 1950CE)
   in: query
   name: ageyoung
   required: false
@@ -115,9 +110,7 @@ altMinQuery:
     minimum: -500
     type: integer
 collectionunitidPath:
-  description: A valid collection unit identifer from the Neotoma database. This is the internal identifier within the 
-    [`ndb.collectionunits`](https://open.neotomadb.org/dbschema/ndb/tables/collectionunits.html) table. If the collection unit ID contains no
-    speleothem data, then the result will be an empty dataset.
+  description: A valid collection unit identifer from the Neotoma database. This is the internal identifier within the [`ndb.collectionunits`](https://open.neotomadb.org/dbschema/ndb/tables/collectionunits.html) table. If the collection unit ID contains no speleothem data, then the result will be an empty dataset.
   in: path
   name: collectionunitid
   required: true
@@ -127,8 +120,7 @@ collectionunitidPath:
     minimum: 0
     exclusiveMinimum: true
 chronidPath:
-  description: Unique chronology identifier. This is the internal identifier within the [`ndb.chronologies`](https://open.neotomadb.org/dbschema/ndb/tables/chronologies.html)
-    table. Note that although the chronology IDs are generated sequentially, not all chronology IDs are currently in use.
+  description: Unique chronology identifier. This is the internal identifier within the [`ndb.chronologies`](https://open.neotomadb.org/dbschema/ndb/tables/chronologies.html) table. Note that although the chronology IDs are generated sequentially, not all chronology IDs are currently in use.
   in: path
   name: chronid
   required: true
@@ -140,15 +132,14 @@ chronidPath:
     exclusiveMinimum: true
     type: integer
 contactNameQuery:
-  description: Full name of the researcher using the "Last, Given Name(s)" structure.
-    You may use the % wildcard anywhere in the string.
+  description: Full name of the researcher using the "Last, Given Name(s)" structure. You may use the % wildcard anywhere in the string.
   in: query
   name: contactname
   required: false
   schema:
     example: Grimm, Eric Christopher
     type: string
-    pattern: "^[-'a-zA-ZÀ-ÖØ-öø-ÿ, ]+$"
+    pattern: ^[-'a-zA-ZÀ-ÖØ-öø-ÿ, ]+$
 countQuery:
   description: Should we return the row count for the table?
   in: query
@@ -174,8 +165,7 @@ contactStatusQuery:
     example: deceased
     type: string
 contactidPath:
-  description: Unique contact identifier within the Neotoma Database, alone or
-    comma separated.
+  description: Unique contact identifier within the Neotoma Database, alone or comma separated.
   in: path
   name: contactid
   required: true
@@ -186,8 +176,7 @@ contactidPath:
     minimum: 1
     type: integer
 contactidQuery:
-  description: Unique contact identifier within the Neotoma Database, alone or
-    comma separated.
+  description: Unique contact identifier within the Neotoma Database, alone or comma separated.
   in: query
   name: contactid
   required: false
@@ -238,12 +227,10 @@ databaseQuery:
       - Neotoma Charcoal Data
       - Pollen Monitoring Programme
       - PaleoVertebrates of Latin America
-      - St. Croix Watershed Research Station of the Science Museum of
-        Minnesota
+      - St. Croix Watershed Research Station of the Science Museum of Minnesota
     type: string
 datasetidPath:
-  description: Valid Neotoma dataset identifier (integer), either singly or in a
-    comma separated list.
+  description: Valid Neotoma dataset identifier (integer), either singly or in a comma separated list.
   in: path
   name: datasetid
   required: true
@@ -254,8 +241,7 @@ datasetidPath:
     minimum: 1
     type: integer
 datasetidQuery:
-  description: Valid Neotoma dataset identifier (integer), either singly or in a
-    comma separated list.
+  description: Valid Neotoma dataset identifier (integer), either singly or in a comma separated list.
   in: query
   name: datasetid
   required: false
@@ -266,8 +252,7 @@ datasetidQuery:
     exclusiveMinimum: true
     type: integer
 doidataQuery:
-  description: A valid DOI in the form 10.XXXX/XXXXX (i.e., excluding
-    'https://doi.org').
+  description: A valid DOI in the form 10.XXXX/XXXXX (i.e., excluding 'https://doi.org').
   in: query
   name: doi
   required: false
@@ -276,8 +261,7 @@ doidataQuery:
     pattern: ^10.\d{4,9}/[-._;()/:A-Z0-9]+$
     example: 10.21233/znex-sp94
 datasettypeQuery:
-  description: Neotoma contains data for a number of dataset types (see
-    /dbtables/datasettypes.  This returns a subset of data types.
+  description: Neotoma contains data for a number of dataset types (see /dbtables/datasettypes.  This returns a subset of data types.
   in: query
   name: datasettype
   required: false
@@ -327,8 +311,7 @@ datasettypeQuery:
       - diatom bottom sample
       - Metabarcoding aeDNA
 ecolGroupQuery:
-  description: The ecological group of interest for the Neotoma taxon (from the
-    Neotoma ecolgrouptypes table)
+  description: The ecological group of interest for the Neotoma taxon (from the Neotoma ecolgrouptypes table)
   in: query
   name: ecolgroup
   required: false
@@ -343,7 +326,7 @@ familyNameQuery:
   schema:
     type: string
     example: Grimm
-    pattern: "^[-'a-zA-ZÀ-ÖØ-öø-ÿ% ]+$"
+    pattern: ^[-'a-zA-ZÀ-ÖØ-öø-ÿ% ]+$
 gpidPath:
   description: Numeric ID for the geopolitical unit.
   in: path
@@ -355,8 +338,7 @@ gpidPath:
     minimum: 1
     type: integer
 gpidQuery:
-  description: Numeric ID for the geopolitical unit from the Neotoma
-    geopoliticalunits table.
+  description: Numeric ID for the geopolitical unit from the Neotoma geopoliticalunits table.
   in: query
   name: gpid
   required: false
@@ -368,8 +350,7 @@ gpidQuery:
   examples:
     gpid:
       value: 5392
-      summary: A valid unique identifier for geopolitical units from Neotoma's
-        geopoliticalunits table.
+      summary: A valid unique identifier for geopolitical units from Neotoma's geopoliticalunits table.
     gpids:
       value: 2155,5392,313,5414
       summary: A set of unique identifiers, separated by commas.
@@ -388,8 +369,7 @@ gpnameQuery:
       value: Italy, austria, switzerland
       summary: The name of a set of locations, separated by commas.
 keywordQuery:
-  description: A valid keyword for samples within Neotoma. The list of valid names
-    can be obtained through a call to the dbtables API call.
+  description: A valid keyword for samples within Neotoma. The list of valid names can be obtained through a call to the dbtables API call.
   in: query
   name: keyword
   required: false
@@ -425,12 +405,10 @@ locQuery:
   examples:
     MosseGeoJSON:
       value: '{"type":"Polygon","crs":{"type":"name","properties":{"name":"EPSG:4326"}},"coordinates":[[[13.4,55.92],[13.5,55.92],[13.5,55.95],[13.4,55.95],[13.4,55.92]]]}'
-      summary: A geoJSON representation of a polygon that includes Argentina and
-        Chile.
+      summary: A geoJSON representation of a polygon that includes Argentina and Chile.
     EuropeanWKT:
       value: POLYGON ((13.4 55.92,13.5 55.92,13.5 55.95,13.4 55.95,13.4 55.92))
-      summary: A WKT formatted spatial polygon that includes land adjacent to the
-        Adriatic sea.
+      summary: A WKT formatted spatial polygon that includes land adjacent to the Adriatic sea.
 lowergpQuery:
   description: Should all lower ranked units below the target unit be returned?
   in: query
@@ -440,8 +418,7 @@ lowergpQuery:
     default: false
     type: boolean
 occurrenceidPath:
-  description: Valid Neotoma occurrence identifier (integer), either singly or in
-    a comma separated list.
+  description: Valid Neotoma occurrence identifier (integer), either singly or in a comma separated list.
   in: path
   name: occurrenceid
   required: true
@@ -451,8 +428,7 @@ occurrenceidPath:
     minimum: 1
     type: integer
 occurrenceidQuery:
-  description: Valid Neotoma occurrence identifier (integer), either singly or in
-    a comma separated list.
+  description: Valid Neotoma occurrence identifier (integer), either singly or in a comma separated list.
   in: query
   name: occurrenceid
   required: false
@@ -507,8 +483,7 @@ publicationidQuery:
     exclusiveMinimum: true
     type: integer
 pubsearchQuery:
-  description: A fulltext search string.  Either a literal portion of the article
-    name, or keywords.
+  description: A fulltext search string.  Either a literal portion of the article name, or keywords.
   in: query
   name: search
   required: false
@@ -536,8 +511,7 @@ pubtypeQuery:
       - Undergraduate thesis
     type: string
 pubyearQuery:
-  description: The year of publication, either as a single value or comma
-    separated string.
+  description: The year of publication, either as a single value or comma separated string.
   in: query
   name: year
   required: false
@@ -564,9 +538,7 @@ taxaQuery:
   schema:
     type: string
 sitenameQuery:
-  description: Name of the study site (may use the % wildcard). Note that Neotoma
-    study site names are not unique. For example there are more than 15
-    sites in Neotoma named *Clear Lake*.
+  description: Name of the study site (may use the % wildcard). Note that Neotoma study site names are not unique. For example there are more than 15 sites in Neotoma named *Clear Lake*.
   in: query
   name: sitename
   required: false
@@ -574,8 +546,7 @@ sitenameQuery:
     example: Ageröds Mosse
     type: string
 siteidPath:
-  description: Valid Neotoma site identifier (integer), either singly or in a
-    comma separated list.
+  description: Valid Neotoma site identifier (integer), either singly or in a comma separated list.
   in: path
   name: siteid
   required: true
@@ -596,8 +567,7 @@ bufferQuery:
     default: 10000
     type: integer
 siteidQuery:
-  description: Valid Neotoma site identifier (integer), either singly or in a
-    comma separated list.
+  description: Valid Neotoma site identifier (integer), either singly or in a comma separated list.
   in: query
   name: siteid
   required: false
