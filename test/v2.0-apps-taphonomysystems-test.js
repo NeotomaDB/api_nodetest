@@ -8,11 +8,7 @@ describe('tests for /v2.0/apps/taphonomysystems', function() {
   describe('tests for get', function() {
     it('should respond 200 for "A table of Neotoma collection types."', function() {
       const response = request('get', 'http://localhost:3001/v2.0/apps/taphonomysystems', {
-<<<<<<< HEAD
-        'qs': {'datasettypeid': 29},
-=======
-        'qs': {'datasettypeid': 10},
->>>>>>> develop
+        'qs': {'datasettypeid': 17},
         'time': true,
       });
 
