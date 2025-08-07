@@ -827,6 +827,27 @@ dbtablesv1_5:
       items:
         type: object
       type: array
+depenvbyid:
+  type: object
+  properties:
+    data:
+      type: array
+      items:
+        type: object
+        properties:
+          datasetid:
+            $ref: '#/components/schemas/datasetid'
+          siteid:
+            $ref: '#/components/schemas/siteid'
+          collectionunitid:
+            $ref: '#/components/schemas/collectionunitid'
+          depenvt:
+            $ref: '#/components/schemas/depositionalenvironment'
+    status:
+      $ref: '#/components/schemas/status'
+depositionalenvironment:
+  type: string
+  pattern: '.*'
 depositionalresponse:
   properties:
     data:
