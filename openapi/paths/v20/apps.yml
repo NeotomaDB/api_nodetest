@@ -1,3 +1,21 @@
+/v2.0/apps/depenvt:
+  get:
+    parameters:
+      - $ref: '#/components/parameters/siteidQuery'
+      - $ref: '#/components/parameters/datasetidQuery'
+      - $ref: '#/components/parameters/collectionunitidQuery'
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/depenvbyid' 
+        description: 'This returns the information about depositional
+          environment for selected dataset/collention unit/site.'
+    tags:
+      - v2.0
+      - depositional environment
+    
 /v2.0/apps/constdb:
   get:
     responses:
