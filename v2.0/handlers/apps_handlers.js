@@ -57,6 +57,10 @@ module.exports = {
     const sendNL = require('../helpers/landing/landing.js');
     sendNL.sendNativeLands(req, res, next);
   },
+  depenvt: function(req, res, next) {
+    const depenvt = require('../helpers/depenvt/depenvt.js');
+    depenvt.depenvbyid(req, res, next);
+  },
 };
 
 // Defining the query functions:

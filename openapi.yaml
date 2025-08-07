@@ -169,6 +169,19 @@ components:
         type: integer
         minimum: 0
         exclusiveMinimum: true
+    collectionunitidQuery:
+      description: >-
+        A valid collection unit identifer from the Neotoma database. This is the internal identifier within the
+        [`ndb.collectionunits`](https://open.neotomadb.org/dbschema/ndb/tables/collectionunits.html) table. If the
+        collection unit ID contains no speleothem data, then the result will be an empty dataset.
+      in: query
+      name: collectionunitid
+      required: true
+      schema:
+        format: int64
+        type: integer
+        minimum: 0
+        exclusiveMinimum: true
     chronidPath:
       description: >-
         Unique chronology identifier. This is the internal identifier within the
@@ -1573,6 +1586,27 @@ components:
           items:
             type: object
           type: array
+    depenvbyid:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              datasetid:
+                $ref: '#/components/schemas/datasetid'
+              siteid:
+                $ref: '#/components/schemas/siteid'
+              collectionunitid:
+                $ref: '#/components/schemas/collectionunitid'
+              depenvt:
+                $ref: '#/components/schemas/depositionalenvironment'
+        status:
+          $ref: '#/components/schemas/status'
+    depositionalenvironment:
+      type: string
+      pattern: .*
     depositionalresponse:
       properties:
         data:
@@ -2716,6 +2750,22 @@ paths:
       tags:
         - Database tables
         - v1.5
+  /v2.0/apps/depenvt:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/siteidQuery'
+        - $ref: '#/components/parameters/datasetidQuery'
+        - $ref: '#/components/parameters/collectionunitidQuery'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/depenvbyid'
+          description: This returns the information about depositional environment for selected dataset/collention unit/site.
+      tags:
+        - v2.0
+        - depositional environment
   /v2.0/apps/constdb:
     get:
       responses:
