@@ -1766,7 +1766,7 @@ unittype:
   example: Modern
   type: string
 url:
-  example: http://neotomadb.org
+  example: https://www.neotomadb.org
   format: url
   type: string
   nullable: true
