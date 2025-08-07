@@ -41,4 +41,6 @@ router.get('/datasetpi', handlers.datasetsbypi);
 router.get('/exttax', handlers.externaltaxonquery);
 router.post('/orcids/validate', handlers.validateusers);
 
+router.get('/depenvt', handlers.depenvt);
+
 module.exports = router;
