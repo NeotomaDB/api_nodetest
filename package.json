@@ -30,7 +30,7 @@
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "csv": "^6.4.0",
+    "csv": "^6.4.1",
     "csv-transform": "^0.0.8",
     "dotenv": "^8.6.0",
     "ejs": "^3.1.10",
