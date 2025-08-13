@@ -87,7 +87,7 @@ Enter your secure information into the `.env-template` file, and then save it as
 
 ### Local Development
 
-The code in this repository is run directly against the production database on the Neotoma servers at the Center for Environmental Informatics at Penn State.  It is possible to run this repository on a local server (on your own machine) or on a remote server (using cloud services or a university server) by installing Postgres and restoring one of the [Neotoma Database Snapshots](https://www.neotomadb.org/snapshots).  If you are planning to run the application in this way, please ensure that you have set appropriate security measures, and have these documented in the `.env` file, as described below.
+The code in this repository is run directly against the production database on the Neotoma servers at the Center for Environmental Informatics at Penn State.  It is possible to run this repository on a local server (on your own machine) or on a remote server (using cloud services or a university server) by installing Postgres and restoring one of the [Neotoma Database Snapshots](https://www.neotomadb.org/data/db-snapshots).  If you are planning to run the application in this way, please ensure that you have set appropriate security measures, and have these documented in the `.env` file, as described below.
 
 ### To Run
 
