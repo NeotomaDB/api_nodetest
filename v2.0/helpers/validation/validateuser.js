@@ -34,6 +34,7 @@ const checktoken = async function(req, res, next) {
       },
     });
     if (postresponse.status === 200) {
+      console.log(postresponse.text());
       const result = JSON.parse(postresponse.text());
       if (Object.keys(result).includes('error')) {
         const msg = 'The ORCID token passed to Neotoma is not valid:' +
