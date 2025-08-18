@@ -52,7 +52,7 @@ const checktoken = async function(req, res, next) {
             .json({
               status: 'success',
               data: {
-                user: result,
+                user: result['user'],
                 neotoken: uuidres,
               },
               message: 'Neotoma token expires in 1wk',
