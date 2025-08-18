@@ -10,7 +10,7 @@ const options = {
   capSQL: true,
   query(e) {
     const date = new Date();
-    let messageout = {'hasExecuted': e.client.hasExecuted};
+    const messageout = {'hasExecuted': e.client.hasExecuted};
     // Exclude the big chunky query:
     if (e.query.match(/CONCAT.*pronamespace = n.oid/)) {
       messageout.query = 'List all functions';
@@ -48,7 +48,7 @@ const {geojsonToWKT, wktToGeoJSON} = require('@terraformer/wkt');
  * @return {object} An object with all empty elements removed.
  */
 function removeEmpty(obj) {
-  let output = Object.keys(obj).forEach((key) => {
+  const output = Object.keys(obj).forEach((key) => {
     if (obj[key] && typeof obj[key] === 'object') removeEmpty(obj[key]);
     else if (obj[key] == null) delete obj[key];
   });
@@ -201,7 +201,7 @@ function failure(query, msg) {
  * @param {string} msg
  * @return {object}
  */
-function success (query, data, msg) {
+function success(query, data, msg) {
   const success = {'status': 1,
     'data': data,
     'query': query,
@@ -314,6 +314,27 @@ function parseLocations(location) {
   }
 }
 
+/**
+ * Take in a location string that may be either WKT or geojson
+ * and parse it to valid WKT. Best case scenario is that it's a
+ * valid WKT string and we can just keep going:
+ * @param {req} location A string that contains either a
+ * valid geoJSON or WKT string.
+ * @param {res} resolve A resolve object from express.
+ * @param {next} next The next for express.
+ * @return {bool} Is the user logged in?
+ */
+
+const checkCookies = function(req, res, next) {
+  const ippaddr = req.socket.remoteAddress;
+  const cookies = req.cookies;
+  console.log(cookies);
+  console.log(ippaddr);
+  return cookies;
+};
+
+
+module.exports.checkCookies = checkCookies;
 module.exports.failure = failure;
 module.exports.success = success;
 module.exports.validateOut = validateOut;

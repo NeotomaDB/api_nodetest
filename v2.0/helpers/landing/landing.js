@@ -4,7 +4,7 @@
 const {any} = require('bluebird');
 
 // Helper for linking to external query files:
-const {sql, ifUndef, getparam} = require('../../../src/neotomaapi.js');
+const {sql, ifUndef, getparam, checkCookies} = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
 const datasetsum = sql('../v2.0/helpers/landing/datasetsummary.sql');

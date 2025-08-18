@@ -8,8 +8,8 @@ const express = require('express');
 const router = express.Router();
 const apicache = require('apicache');
 const cache = apicache.middleware;
-const onlyStatus200 = (req, res) => res.statusCode === 200
-const cacheSuccesses = cache('5 minutes', onlyStatus200)
+const onlyStatus200 = (req, res) => res.statusCode === 200;
+const cacheSuccesses = cache('5 minutes', onlyStatus200);
 
 const handlers = require('../handlers/data_handlers');
 
@@ -18,12 +18,11 @@ router.get('/contacts/:contactid', handlers.contactsbyid);
 router.get('/contacts/', handlers.contactquery);
 
 router.get(['/datasets_elc/', '/datasets_elc/:datasetid'],
-  handlers.datasetquery_elc);
+    handlers.datasetquery_elc);
 
 router.get(['/sites/:siteid/datasets', '/datasets/:datasetid',
   '/geopoliticalunits/:gpid/datasets', '/datasets',
-  '/datasets/:datasetid'],
-  cacheSuccesses, handlers.datasetquery);
+  '/datasets/:datasetid'], cacheSuccesses, handlers.datasetquery);
 router.post(['/sites/:siteid/datasets',
   '/geopoliticalunits/:gpid/datasets', '/datasets',
   '/datasets/:datasetid', '/datasets/db'], handlers.datasetquery);
@@ -37,14 +36,16 @@ router.get(['/dbtables/:table', '/dbtables'], handlers.dbtables);
 
 router.post(['/downloads'], handlers.downloadbyid);
 router.get(['/downloads/:datasetid', '/downloads/'],
-  cacheSuccesses, handlers.downloadbyid);
+    cacheSuccesses, handlers.downloadbyid);
 
 router.get('/frozen/:datasetid', handlers.frozen);
 router.get('/geopoliticalunits', handlers.geopoliticalunits);
 router.get('/geopoliticalunits/:gpid', handlers.geopoliticalbyid);
+
 router.get(['/occurrences', '/occurrences/:occurrenceid',
   '/taxa/:taxonid/occurrences', '/taxa/:taxonid/occurrences'],
-  cacheSuccesses, handlers.occurrencequery);
+cacheSuccesses, handlers.occurrencequery);
+
 // router.get('/oxcal/calibrate', handlers.oxcalibrate)
 router.get('/pollen/:id', handlers.pollen);
 router.get('/pollen/', handlers.pollen);
@@ -53,7 +54,7 @@ router.get('/publications/:pubid', handlers.publicationid);
 router.get('/sites/:siteid/chronologies', handlers.chronologiesbystid);
 router.get('/sites/:siteid/contacts', handlers.contactsbysiteid);
 router.get('/sites/:siteid/datasets_elc',
-  handlers.datasetsbysite_elc); // Takes integers, including comma separated
+    handlers.datasetsbysite_elc); // Takes integers, including comma separated
 
 router.get('/sites/:siteid/geopoliticalunits', handlers.geopolbysite);
 router.get('/sites/:siteid/publications', handlers.publicationbysite);
