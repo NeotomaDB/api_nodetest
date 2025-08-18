@@ -1,8 +1,12 @@
+'use strict';
+
 // get global database object
-const he = require('he')
+const he = require('he');
 // get global database object
 
-const { sql, ifUndef, checkObject, validateOut, getparam, parseLocations } = require('../../../src/neotomaapi.js');
+const {sql, ifUndef, checkObject,
+  validateOut, getparam,
+  parseLocations, checkCookies} = require('../../../src/neotomaapi.js');
 
 const datasetquerysql = sql('../v2.0/helpers/datasets/datasetqueryfaster.sql');
 const datasetbyidsql = sql('../v2.0/helpers/datasets/datasetbyid.sql');
@@ -11,8 +15,14 @@ const datasetbydbsql = sql('../v2.0/helpers/datasets/datasetbydb.sql');
 const datasetbysite = sql('../v2.0/helpers/datasets/datasetbysite.sql');
 const datasetbygpidsql = sql('../v2.0/helpers/datasets/datasetbygpid.sql');
 
-function datasetsbygeopol (req, res, next) {
-  let db = req.app.locals.db
+/**
+ * Return a dataset object when the query uses a geopolitical identifier:
+ * @param {object} req An object passed through Express
+ * @param {object} res A resolve object passed through Express
+ * @param {object} next A next object passed through Express *
+ * **/
+function datasetsbygeopol(req, res, next) {
+  const db = req.app.locals.db;
   var gpIdUsed = !!req.params.gpid;
 
   if (gpIdUsed) {
@@ -59,6 +69,12 @@ function datasetsbygeopol (req, res, next) {
     });
 }
 
+/**
+ * Return a dataset object when the query uses a datasetid:
+ * @param {object} req An object passed through Express
+ * @param {object} res A resolve object passed through Express
+ * @param {object} next A next object passed through Express *
+ * **/
 function datasetbyid (req, res, next) {
   let db = req.app.locals.db
   var dsIdUsed = !!req.params.datasetid;
@@ -104,7 +120,13 @@ function datasetbyid (req, res, next) {
     });
 }
 
-function datasetbydb (req, res, next) {
+/**
+ * Return dataset objects when you are passed a database identifier:
+ * @param {object} req An object passed through Express
+ * @param {object} res A resolve object passed through Express
+ * @param {object} next A next object passed through Express *
+ * **/
+function datasetbydb(req, res, next) {
   let db = req.app.locals.db
   var dbUsed = !!req.query.database;
 
@@ -148,7 +170,13 @@ function datasetbydb (req, res, next) {
     });
 }
 
-function datasetbysiteid (req, res, next) {
+/**
+ * Return dataset objects when you are passed a site identifier:
+ * @param {object} req An object passed through Express
+ * @param {object} res A resolve object passed through Express
+ * @param {object} next A next object passed through Express *
+ * **/
+function datasetbysiteid(req, res, next) {
   let db = req.app.locals.db
   var stIdUsed = !!req.params.siteid;
 
@@ -191,9 +219,14 @@ function datasetbysiteid (req, res, next) {
     });
 }
 
-
-function datasetbypi (req, res, next) {
-
+/**
+ * Return dataset objects when you are passed a principal investigator
+ * identifier:
+ * @param {object} req An object passed through Express
+ * @param {object} res A resolve object passed through Express
+ * @param {object} next A next object passed through Express *
+ * **/
+function datasetbypi(req, res, next) {
   let db = req.app.locals.db
   // First get all the inputs and parse them:
   let paramgrab = getparam(req)
@@ -244,9 +277,14 @@ function datasetbypi (req, res, next) {
     });
 }
 
-
-
-function datasetquery (req, res, next) {
+/**
+ * Pass in one of a set of parameters to the datasets query:
+ * @param {object} req An object passed through Express
+ * @param {object} res A resolve object passed through Express
+ * @param {object} next A next object passed through Express *
+ * **/
+function datasetquery(req, res, next) {
+  const thing = checkCookies(req, res, next);
   let db = req.app.locals.db
   // First get all the inputs and parse them:
   let paramgrab = getparam(req)

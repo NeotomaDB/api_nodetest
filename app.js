@@ -106,6 +106,7 @@ app.use(express.urlencoded({
 }));
 app.use(express.json());
 app.use(cookieParser());
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // optionally, re-factor route paths here to strip version string and
