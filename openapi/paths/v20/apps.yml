@@ -14,8 +14,7 @@
           environment for selected dataset/collention unit/site.'
     tags:
       - v2.0
-      - depositional environment
-    
+      - depositional environment 
 /v2.0/apps/constdb:
   get:
     responses:
