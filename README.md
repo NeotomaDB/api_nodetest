@@ -5,7 +5,7 @@
 
 # Neotoma API Implementation
 
-This repository is intended to act as the core repository for the Neotoma API version 1.5 and greater.  The API acts as an interface between a user application and the Neotoma Postgres Database. This separation helps improve security, and lowers the data access barrier to users by providing simple URL paths, rather than requiring users to create individual SQL queries.
+This repository is intended to act as the core repository for the Neotoma API versions 1.5 and greater.  The API acts as an interface between a user application and the Neotoma Postgres Database. The separation of the raw data and the logic helps improve security, and lowers the data access barrier to users by providing simple URL paths, rather than requiring users to create individual SQL queries.
 
 ![A simple overview of the Neotoma API. An image of a database is connected to an icon representing the API, which is connected to an icon representing end users.](assets/api_simple_diagram.svg)
 
