@@ -2,7 +2,7 @@ name: Deploy Neotoma API
 
 on:
   push:
-    branches: [main, deveop]
+    branches: [production, develop]
   
 env:
   AWS_REGION: us-east-2
