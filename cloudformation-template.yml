@@ -1,0 +1,172 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Neotoma API infrastructure'
+
+Parameters:
+  Environment:
+    Type: String
+    AllowedValues: [dev, prod]
+    Description: Environment name
+  
+  ImageUri:
+    Type: String
+    Description: ECR image URI
+  
+  RDSHostname:
+    Type: String
+    Description: RDS endpoint
+  
+  RDSPort:
+    Type: String
+    Default: '5432'
+  
+  RDSDatabase:
+    Type: String
+    Description: Database name
+  
+  VPCId:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID where resources will be created
+  
+  PrivateSubnets:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: Private subnets for VPC connector
+
+Resources:
+  # ECR Repository
+  ECRRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Sub 'neotoma-api-${Environment}'
+      ImageScanningConfiguration:
+        ScanOnPush: true
+      LifecyclePolicy:
+        LifecyclePolicyText: |
+          {
+            "rules": [
+              {
+                "rulePriority": 1,
+                "selection": {
+                  "tagStatus": "untagged",
+                  "countType": "sinceImagePushed",
+                  "countUnit": "days",
+                  "countNumber": 1
+                },
+                "action": {
+                  "type": "expire"
+                }
+              }
+            ]
+          }
+
+  # Secrets for database credentials
+  DatabaseSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: !Sub 'neotoma-api/${Environment}/rds-credentials'
+      Description: RDS credentials for Neotoma API
+      GenerateSecretString:
+        SecretStringTemplate: '{"username": "your-username"}'
+        GenerateStringKey: 'password'
+        PasswordLength: 32
+        ExcludeCharacters: '"@/\'
+
+  # Security Group for App Runner
+  AppRunnerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub 'apprunner-neotoma-${Environment}-sg'
+      GroupDescription: Security group for Neotoma App Runner service
+      VpcId: !Ref VPCId
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 5432
+          ToPort: 5432
+          CidrIp: 10.0.0.0/8
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+
+  # VPC Connector for App Runner
+  VPCConnector:
+    Type: AWS::AppRunner::VpcConnector
+    Properties:
+      VpcConnectorName: !Sub 'neotoma-vpc-connector-${Environment}'
+      Subnets: !Ref PrivateSubnets
+      SecurityGroups:
+        - !Ref AppRunnerSecurityGroup
+
+  # App Runner Service
+  AppRunnerService:
+    Type: AWS::AppRunner::Service
+    Properties:
+      ServiceName: !Sub 'neotoma-api-${Environment}'
+      SourceConfiguration:
+        ImageRepository:
+          ImageIdentifier: !Ref ImageUri
+          ImageConfiguration:
+            Port: '3001'
+            RuntimeEnvironmentVariables:
+              NODE_ENV: !Ref Environment
+              RDS_HOSTNAME: !Ref RDSHostname
+              RDS_PORT: !Ref RDSPort
+              RDS_DATABASE: !Ref RDSDatabase
+              DB_SSL: 'true'
+              PORT: '3001'
+            RuntimeEnvironmentSecrets:
+              RDS_USERNAME: !Sub '${DatabaseSecret}:username::'
+              RDS_PASSWORD: !Sub '${DatabaseSecret}:password::'
+          ImageRepositoryType: ECR
+        AutoDeploymentsEnabled: true
+      InstanceConfiguration:
+        Cpu: 0.25 vCPU
+        Memory: 0.5 GB
+        InstanceRoleArn: !GetAtt AppRunnerInstanceRole.Arn
+      NetworkConfiguration:
+        EgressConfiguration:
+          EgressType: VPC
+          VpcConnectorArn: !GetAtt VPCConnector.VpcConnectorArn
+      HealthCheckConfiguration:
+        Protocol: HTTP
+        Path: /v2.0/routes/healthwatch
+        Interval: 20
+        Timeout: 5
+        HealthyThreshold: 1
+        UnhealthyThreshold: 5
+
+  # IAM Role for App Runner Instance
+  AppRunnerInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub 'AppRunnerInstanceRole-${Environment}'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: tasks.apprunner.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSAppRunnerServicePolicyForECRAccess
+      Policies:
+        - PolicyName: SecretsManagerAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
+                Resource: !Ref DatabaseSecret
+
+Outputs:
+  ServiceUrl:
+    Description: App Runner service URL
+    Value: !Sub 'https://${AppRunnerService.ServiceUrl}'
+    Export:
+      Name: !Sub '${AWS::StackName}-ServiceUrl'
+  
+  ECRRepository:
+    Description: ECR Repository URI
+    Value: !Sub '${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${ECRRepository}'
+    Export:
+      Name: !Sub '${AWS::StackName}-ECRRepository'

@@ -1,0 +1,89 @@
+name: Deploy Neotoma API
+
+on:
+  push:
+    branches: [main, deveop]
+  
+env:
+  AWS_REGION: us-east-2
+  
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set environment based on branch
+      run: |
+        if [[ ${{ github.ref }} == 'refs/heads/main' ]]; then
+          echo "ENVIRONMENT=prod" >> $GITHUB_ENV
+          echo "STACK_NAME=neotoma-api-prod" >> $GITHUB_ENV
+        else
+          echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+          echo "STACK_NAME=neotoma-api-dev" >> $GITHUB_ENV
+        fi
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+    
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+    
+    - name: Deploy CloudFormation stack
+      run: |
+        aws cloudformation deploy \
+          --template-file infrastructure/cloudformation-template.yaml \
+          --stack-name ${{ env.STACK_NAME }} \
+          --parameter-overrides \
+            Environment=${{ env.ENVIRONMENT }} \
+            ImageUri="placeholder" \
+            RDSHostname=${{ secrets.RDS_HOSTNAME }} \
+            RDSDatabase=${{ secrets.RDS_DATABASE }} \
+            VPCId=${{ secrets.VPC_ID }} \
+            PrivateSubnets=${{ secrets.PRIVATE_SUBNETS }} \
+          --capabilities CAPABILITY_NAMED_IAM \
+          --region ${{ env.AWS_REGION }}
+    
+    - name: Get ECR repository URI
+      run: |
+        ECR_URI=$(aws cloudformation describe-stacks \
+          --stack-name ${{ env.STACK_NAME }} \
+          --query 'Stacks[0].Outputs[?OutputKey==`ECRRepository`].OutputValue' \
+          --output text \
+          --region ${{ env.AWS_REGION }})
+        echo "ECR_REPOSITORY=$ECR_URI" >> $GITHUB_ENV
+    
+    - name: Build, tag, and push image to Amazon ECR
+      run: |
+        IMAGE_TAG=${{ github.sha }}
+        docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
+        docker tag $ECR_REPOSITORY:$IMAGE_TAG $ECR_REPOSITORY:latest
+        docker push $ECR_REPOSITORY:$IMAGE_TAG
+        docker push $ECR_REPOSITORY:latest
+        echo "IMAGE_URI=$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
+    
+    - name: Update App Runner service with new image
+      run: |
+        aws cloudformation update-stack \
+          --stack-name ${{ env.STACK_NAME }} \
+          --use-previous-template \
+          --parameters \
+            ParameterKey=Environment,UsePreviousValue=true \
+            ParameterKey=ImageUri,ParameterValue=${{ env.IMAGE_URI }} \
+            ParameterKey=RDSHostname,UsePreviousValue=true \
+            ParameterKey=RDSDatabase,UsePreviousValue=true \
+            ParameterKey=VPCId,UsePreviousValue=true \
+            ParameterKey=PrivateSubnets,UsePreviousValue=true \
+          --capabilities CAPABILITY_NAMED_IAM \
+          --region ${{ env.AWS_REGION }}
+        
+        aws cloudformation wait stack-update-complete \
+          --stack-name ${{ env.STACK_NAME }} \
+          --region ${{ env.AWS_REGION }}
