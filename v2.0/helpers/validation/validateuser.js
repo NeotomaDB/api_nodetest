@@ -36,7 +36,6 @@ const checktoken = async function(req, res, next) {
     if (postresponse.status === 200) {
       const responsetext = await postresponse.text();
       const result = await JSON.parse(responsetext);
-      console.log(result);
       if (Object.keys(result).includes('error')) {
         const msg = 'The ORCID token passed to Neotoma is not valid:' +
           token;
@@ -48,13 +47,13 @@ const checktoken = async function(req, res, next) {
             });
       } else {
         const dbpush = await db.one(insertuserlogin,
-            {'orcidid': result['user']['id'], 'ipaddr': ipaddr});
+            {'orcidid': result['id'], 'ipaddr': ipaddr});
         const uuidres = await dbpush;
         res.status(200)
             .json({
               status: 'success',
               data: {
-                user: result['user'],
+                user: result,
                 neotoken: uuidres,
               },
               message: 'Neotoma token expires in 1wk',
