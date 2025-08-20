@@ -108,14 +108,22 @@ Resources:
           ImageConfiguration:
             Port: '3001'
             RuntimeEnvironmentVariables:
-              NODE_ENV: !Ref Environment
-              RDS_HOSTNAME: !Ref RDSHostname
-              RDS_PORT: !Ref RDSPort
-              RDS_DATABASE: !Ref RDSDatabase
-              RDS_USERNAME: !Ref RDSUsername
-              RDS_PASSWORD: !Ref RDSPassword
-              DB_SSL: 'true'
-              PORT: '3001'
+            - Name: NODE_ENV
+              Value: !Ref Environment
+            - Name: RDS_HOSTNAME
+              Value: !Ref RDSHostname
+            - Name: RDS_PORT
+              Value: !Ref RDSPort
+            - Name: RDS_DATABASE
+              Value: !Ref RDSDatabase
+            - Name: RDS_USERNAME
+              Value: !Ref RDSUsername
+            - Name: RDS_PASSWORD
+              Value: !Ref RDSPassword
+            - Name: DB_SSL
+              Value: 'true'
+            - Name: PORT
+              Value: '3001'
           ImageRepositoryType: ECR
         AutoDeploymentsEnabled: true
       AuthenticationConfiguration:
