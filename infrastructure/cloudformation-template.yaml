@@ -68,6 +68,35 @@ Resources:
       SecurityGroups:
         - !Ref AppRunnerSecurityGroup
 
+  AppRunnerAccessRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub 'AppRunnerAccessRole-${Environment}'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: build.apprunner.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSAppRunnerServicePolicyForECRAccess
+
+  # App Runner Instance Role (for runtime)
+  AppRunnerInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub 'AppRunnerInstanceRole-${Environment}'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: tasks.apprunner.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSAppRunnerServicePolicyForECRAccess
+
   # App Runner Service
   AppRunnerService:
     Type: AWS::AppRunner::Service
@@ -79,24 +108,18 @@ Resources:
           ImageConfiguration:
             Port: '3001'
             RuntimeEnvironmentVariables:
-              - Name: NODE_ENV
-                Value: !Ref Environment
-              - Name: RDS_HOSTNAME
-                Value: !Ref RDSHostname
-              - Name: RDS_PORT
-                Value: !Ref RDSPort
-              - Name: RDS_DATABASE
-                Value: !Ref RDSDatabase
-              - Name: RDS_USERNAME
-                Value: !Ref RDSUsername
-              - Name: RDS_PASSWORD
-                Value: !Ref RDSPassword
-              - Name: DB_SSL
-                Value: 'true'
-              - Name: PORT
-                Value: '3001'
+              NODE_ENV: !Ref Environment
+              RDS_HOSTNAME: !Ref RDSHostname
+              RDS_PORT: !Ref RDSPort
+              RDS_DATABASE: !Ref RDSDatabase
+              RDS_USERNAME: !Ref RDSUsername
+              RDS_PASSWORD: !Ref RDSPassword
+              DB_SSL: 'true'
+              PORT: '3001'
           ImageRepositoryType: ECR
         AutoDeploymentsEnabled: true
+      AuthenticationConfiguration:
+        AccessRoleArn: !GetAtt AppRunnerAccessRole.Arn
       InstanceConfiguration:
         Cpu: "0.25 vCPU"
         Memory: "0.5 GB"
@@ -112,21 +135,6 @@ Resources:
         Timeout: 5
         HealthyThreshold: 1
         UnhealthyThreshold: 5
-
-  # IAM Role for App Runner Instance
-  AppRunnerInstanceRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: !Sub 'AppRunnerInstanceRole-${Environment}'
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: tasks.apprunner.amazonaws.com
-            Action: sts:AssumeRole
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/service-role/AWSAppRunnerServicePolicyForECRAccess
 
 Outputs:
   ServiceUrl:
