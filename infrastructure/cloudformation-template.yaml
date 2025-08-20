@@ -126,8 +126,6 @@ Resources:
               Value: '3001'
           ImageRepositoryType: ECR
         AutoDeploymentsEnabled: true
-      AuthenticationConfiguration:
-        AccessRoleArn: !GetAtt AppRunnerAccessRole.Arn
       InstanceConfiguration:
         Cpu: "0.25 vCPU"
         Memory: "0.5 GB"
