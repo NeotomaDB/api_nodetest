@@ -31,6 +31,16 @@ Parameters:
     Type: List<AWS::EC2::Subnet::Id>
     Description: Private subnets for VPC connector
 
+  RDSUsername:
+    Type: String
+    NoEcho: true
+    Description: RDS username
+  
+  RDSPassword:
+    Type: String
+    NoEcho: true
+    Description: RDS password
+
 Resources:
   # ECR Repository
   ECRRepository:
@@ -57,18 +67,6 @@ Resources:
               }
             ]
           }
-
-  # Secrets for database credentials
-  DatabaseSecret:
-    Type: AWS::SecretsManager::Secret
-    Properties:
-      Name: !Sub 'neotoma-api/${Environment}/rds-credentials'
-      Description: RDS credentials for Neotoma API
-      GenerateSecretString:
-        SecretStringTemplate: '{"username": "your-username"}'
-        GenerateStringKey: 'password'
-        PasswordLength: 32
-        ExcludeCharacters: '"@/\'
 
   # Security Group for App Runner
   AppRunnerSecurityGroup:
@@ -111,6 +109,8 @@ Resources:
               RDS_HOSTNAME: !Ref RDSHostname
               RDS_PORT: !Ref RDSPort
               RDS_DATABASE: !Ref RDSDatabase
+              RDS_USERNAME: !Ref RDSUsername
+              RDS_PASSWORD: !Ref RDSPassword
               DB_SSL: 'true'
               PORT: '3001'
             RuntimeEnvironmentSecrets:

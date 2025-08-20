@@ -46,6 +46,8 @@ jobs:
             ImageUri="placeholder" \
             RDSHostname=${{ secrets.RDS_HOSTNAME }} \
             RDSDatabase=${{ secrets.RDS_DATABASE }} \
+            RDSUsername=${{ secrets.RDS_USERNAME }} \
+            RDSPassword=${{ secrets.RDS_PASSWORD }} \
             VPCId=${{ secrets.VPC_ID }} \
             PrivateSubnets=${{ secrets.PRIVATE_SUBNETS }} \
           --capabilities CAPABILITY_NAMED_IAM \
