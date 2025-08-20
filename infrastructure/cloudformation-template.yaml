@@ -42,32 +42,6 @@ Parameters:
     Description: RDS password
 
 Resources:
-  # ECR Repository
-  ECRRepository:
-    Type: AWS::ECR::Repository
-    Properties:
-      RepositoryName: !Sub 'neoapi-${Environment}'
-      ImageScanningConfiguration:
-        ScanOnPush: true
-      LifecyclePolicy:
-        LifecyclePolicyText: |
-          {
-            "rules": [
-              {
-                "rulePriority": 1,
-                "selection": {
-                  "tagStatus": "untagged",
-                  "countType": "sinceImagePushed",
-                  "countUnit": "days",
-                  "countNumber": 1
-                },
-                "action": {
-                  "type": "expire"
-                }
-              }
-            ]
-          }
-
   # Security Group for App Runner
   AppRunnerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -161,8 +135,9 @@ Outputs:
     Export:
       Name: !Sub '${AWS::StackName}-ServiceUrl'
   
+  # Remove or update this output since ECRRepository resource no longer exists
   ECRRepository:
     Description: ECR Repository URI
-    Value: !Sub '${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${ECRRepository}'
+    Value: !Sub '${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/neoapi-${Environment}'
     Export:
       Name: !Sub '${AWS::StackName}-ECRRepository'
