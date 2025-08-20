@@ -113,9 +113,6 @@ Resources:
               RDS_PASSWORD: !Ref RDSPassword
               DB_SSL: 'true'
               PORT: '3001'
-            RuntimeEnvironmentSecrets:
-              RDS_USERNAME: !Sub '${DatabaseSecret}:username::'
-              RDS_PASSWORD: !Sub '${DatabaseSecret}:password::'
           ImageRepositoryType: ECR
         AutoDeploymentsEnabled: true
       InstanceConfiguration:
@@ -148,15 +145,6 @@ Resources:
             Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSAppRunnerServicePolicyForECRAccess
-      Policies:
-        - PolicyName: SecretsManagerAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - secretsmanager:GetSecretValue
-                Resource: !Ref DatabaseSecret
 
 Outputs:
   ServiceUrl:
