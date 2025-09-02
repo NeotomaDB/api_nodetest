@@ -223,4 +223,8 @@ module.exports = {
     const speleothems = require('../helpers/speleothems/speleothems.js');
     speleothems.speleothemsbycuid(req, res, next);
   },
+  aggregatedatasets: function(req, res, next) {
+    const aggregatedatasets = require('../helpers/datasets/datasets.js');
+    aggregatedatasets.datasetsbyaggid(req, res, next);
+  },
 };

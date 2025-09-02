@@ -19,8 +19,8 @@ WITH dspiagg AS (
                                  AS dataset
 	FROM
   	ndb.datasets AS dts
-  	LEFT JOIN ndb.samples              AS smp      ON smp.datasetid = ds.datasetid
-    LEFT JOIN ndb.aggregatesamples     AS agsm     ON agsm.sampleid = smp.sampleid 
+  	LEFT OUTER JOIN ndb.samples              AS smp      ON smp.datasetid = dts.datasetid
+    LEFT OUTER JOIN ndb.aggregatesamples     AS agsm     ON agsm.sampleid = smp.sampleid 
   	LEFT OUTER JOIN ndb.collectionunits      AS clu      ON clu.collectionunitid = dts.collectionunitid
     LEFT OUTER JOIN ndb.datasettypes         AS dst      ON dst.datasettypeid = dts.datasettypeid
     LEFT OUTER JOIN ndb.datasetdoi           AS doi      ON dts.datasetid = doi.datasetid
@@ -31,7 +31,7 @@ WITH dspiagg AS (
   	LEFT OUTER JOIN ndb.agetypes             AS agetypes ON agetypes.agetypeid = agerange.agetypeid
   	LEFT OUTER JOIN ndb.constituentdatabases AS cstdb    ON dsdb.databaseid = cstdb.databaseid
   	LEFT OUTER JOIN ndb.sites                AS sts      ON sts.siteid = clu.siteid
-  WHERE agsm.datasetid = ANY ($1)
+  WHERE agsm.aggregatedatasetid = ANY ($1)
   GROUP BY
     clu.collectionunitid,
     dts.datasetid,
@@ -53,10 +53,12 @@ SELECT json_build_object(       'siteid', sts.siteid,
 						'datasets', json_agg(dspi.dataset)) as site
 FROM ndb.datasets AS dts
   LEFT OUTER JOIN dspiagg             AS dspi ON dspi.datasetid = dts.datasetid
+  LEFT OUTER JOIN ndb.samples              AS smp      ON smp.datasetid = dspi.datasetid
+  LEFT OUTER JOIN ndb.aggregatesamples     AS agsm     ON agsm.sampleid = smp.sampleid 
   LEFT OUTER JOIN ndb.collectionunits AS clu  ON clu.collectionunitid = dts.collectionunitid
   LEFT OUTER JOIN ndb.sites           AS sts  ON sts.siteid = clu.siteid
   LEFT OUTER JOIN ndb.collectiontypes as cts  ON clu.colltypeid = cts.colltypeid
-WHERE dts.datasetid = ANY ($1)
+  WHERE agsm.aggregatedatasetid = ANY($1)
 GROUP BY
   sts.siteid,
   clu.collectionunitid,

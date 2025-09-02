@@ -27,6 +27,8 @@ router.post(['/sites/:siteid/datasets',
   '/geopoliticalunits/:gpid/datasets', '/datasets',
   '/datasets/:datasetid', '/datasets/db'], handlers.datasetquery);
 
+router.get('/aggregatedatasets/:aggdatasetid', handlers.aggregatedatasets);
+
 router.get('/datasets/:datasetid/chronologies', handlers.chronologiesbydsid);
 router.get('/datasets/:datasetid/contacts', handlers.contactsbydataid);
 router.get('/datasets/:datasetid/doi', handlers.doibydsid);
