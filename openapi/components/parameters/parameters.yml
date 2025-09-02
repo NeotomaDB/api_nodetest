@@ -241,6 +241,17 @@ databaseQuery:
       - PaleoVertebrates of Latin America
       - St. Croix Watershed Research Station of the Science Museum of Minnesota
     type: string
+aggdatasetidPath:
+  description: Valid Neotoma aggregate dataset identifier (integer), either singly or in a comma separated list.
+  in: path
+  name: aggdatasetid
+  required: true
+  schema:
+    example: 100
+    format: int32
+    maximum: 60000
+    minimum: 1
+    type: integer
 datasetidPath:
   description: Valid Neotoma dataset identifier (integer), either singly or in a comma separated list.
   in: path

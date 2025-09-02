@@ -216,6 +216,22 @@
     tags:
       - Dataset metadata
       - v2.0
+/v2.0/data/aggregatedatasets/{aggdatasetid}:
+  get:
+    description: Returns information about Neotoma datasets within an aggregate dataset.
+    parameters:
+      - $ref: '#/components/parameters/aggdatasetidPath'
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/dataset'
+        description: An array of datasets.
+    summary: Dataset information.
+    tags:
+      - Dataset metadata
+      - v2.0
 /v2.0/data/datasets/{datasetid}/chronologies:
   get:
     description: Returns the set of chronologies associated with a dataset.
