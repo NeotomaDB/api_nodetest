@@ -10,6 +10,7 @@ const {sql, ifUndef, checkObject,
 
 const datasetquerysql = sql('../v2.0/helpers/datasets/datasetqueryfaster.sql');
 const datasetbyidsql = sql('../v2.0/helpers/datasets/datasetbyid.sql');
+const datasetbyaggidsql = sql('../v2.0/helpers/datasets/datasetbyaggid.sql');
 const datasetbypisql = sql('../v2.0/helpers/datasets/datasetbypi.sql');
 const datasetbydbsql = sql('../v2.0/helpers/datasets/datasetbydb.sql');
 const datasetbysite = sql('../v2.0/helpers/datasets/datasetbysite.sql');
@@ -23,50 +24,52 @@ const datasetbygpidsql = sql('../v2.0/helpers/datasets/datasetbygpid.sql');
  * **/
 function datasetsbygeopol(req, res, next) {
   const db = req.app.locals.db;
-  var gpIdUsed = !!req.params.gpid;
+  const gpIdUsed = !!req.params.gpid;
+  let gpData = {};
 
   if (gpIdUsed) {
-    var gpData = { 'gpid': String(req.params.gpid)
-      .split(',')
-      .map(function (item) {
-        return parseInt(item, 10);
-      }),
+    gpData = { 'gpid': String(req.params.gpid)
+        .split(',')
+        .map(function (item) {
+          return parseInt(item, 10);
+        }),
     'limit': parseInt(req.query.limit || 25),
     'offset': parseInt(req.query.offset || 0)
-    }
-    gpData = validateOut(gpData)
+    };
+    gpData = validateOut(gpData);
   } else {
     res.status(500)
-      .json({
-        status: 'failure',
-        data: null,
-        message: 'Must pass either queries or a comma separated integer sequence.'
-      });
+        .json({
+          status: 'failure',
+          data: null,
+          message: 'Must pass either queries or a comma separated integer sequence.'
+        });
   }
 
   db.any(datasetbygpidsql, gpData)
-    .then(function (data) {
-      if (data.length === 0) {
-        // We're returning the structure, but nothing inside it:
-        var returner = [];
-      } else {
-        returner = data;
-      };
-      res.status(200)
-        .json({
-          status: 'success',
-          data: returner,
-          message: 'Retrieved results'
-        });
-    })
-    .catch(function (err) {
-      res.status(500)
-        .json({
-          status: 'failure',
-          data: err.message,
-          message: 'Error in passing query.'
-        });
-    });
+      .then(function(data) {
+        let returner = []
+        if (data.length === 0) {
+          // We're returning the structure, but nothing inside it:
+          returner = [];
+        } else {
+          returner = data;
+        };
+        res.status(200)
+            .json({
+              status: 'success',
+              data: returner,
+              message: 'Retrieved results',
+            });
+      })
+      .catch(function(err) {
+        res.status(500)
+            .json({
+              status: 'failure',
+              data: err.message,
+              message: 'Error in passing query.',
+            });
+      });
 }
 
 /**
@@ -75,7 +78,7 @@ function datasetsbygeopol(req, res, next) {
  * @param {object} res A resolve object passed through Express
  * @param {object} next A next object passed through Express *
  * **/
-function datasetbyid (req, res, next) {
+function datasetbyid(req, res, next) {
   let db = req.app.locals.db
   var dsIdUsed = !!req.params.datasetid;
 
@@ -118,6 +121,58 @@ function datasetbyid (req, res, next) {
         });
       next(err)
     });
+}
+
+/**
+ * Return a dataset object when the query uses a datasetid:
+ * @param {object} req An object passed through Express
+ * @param {object} res A resolve object passed through Express
+ * @param {object} next A next object passed through Express *
+ * **/
+function datasetsbyaggid(req, res, next) {
+  const db = req.app.locals.db;
+  let dsIdUsed = !!req.params.aggdatasetid;
+
+  if (!dsIdUsed) {
+    res.status(500)
+        .json({
+          status: 'failure',
+          data: null,
+          message: 'Must pass either queries or a comma separated integer sequence.',
+        });
+  }
+
+  const aggdatasetid = String(req.params.aggdatasetid)
+      .split(',')
+      .map(function(item) {
+        return parseInt(item, 10);
+      });
+
+  db.any(datasetbyaggidsql, [aggdatasetid])
+      .then(function(data) {
+        let returner = [];
+        if (data.length === 0) {
+          // We're returning the structure, but nothing inside it:
+          returner = [];
+        } else {
+          returner = data;
+        };
+        res.status(200)
+            .json({
+              status: 'success',
+              data: returner,
+              message: 'Retrieved all tables',
+            });
+      })
+      .catch(function(err) {
+        res.status(500)
+            .json({
+              status: 'failure',
+              data: err.message,
+              message: 'Must pass either queries or a comma separated integer sequence.',
+            });
+        next(err);
+      });
 }
 
 /**
@@ -227,54 +282,51 @@ function datasetbysiteid(req, res, next) {
  * @param {object} next A next object passed through Express *
  * **/
 function datasetbypi(req, res, next) {
-  let db = req.app.locals.db
+  const db = req.app.locals.db
   // First get all the inputs and parse them:
-  let paramgrab = getparam(req)
+  const paramgrab = getparam(req);
 
   if (!paramgrab.success) {
     res.status(500)
-      .json({
-        status: 'failure',
-        data: null,
-        message: paramgrab.message
-      });
-  } else {
-
-    var resultset = paramgrab.data
-    console.log(resultset)
-    // Get the input parameters:
-   
-    var outobj = {
-      'familyname': ifUndef(resultset.familyname, 'string'),
-      'givennames': ifUndef(resultset.givennames, 'string')
-    };
-  }
-
-
-  db.any(datasetbypisql, outobj)
-    .then(function (data) {
-      if (data.length === 0) {
-        // We're returning the structure, but nothing inside it:
-        var returner = [];
-      } else {
-        returner = data;
-      };
-      res.status(200)
-        .json({
-          status: 'success',
-          data: returner,
-          message: 'Retrieved all tables'
-        });
-    })
-    .catch(function (err) {
-      res.status(500)
         .json({
           status: 'failure',
-          data: err.message,
-          message: 'Must pass either queries or a comma separated integer sequence.'
+          data: null,
+          message: paramgrab.message,
         });
-      next(err)
-    });
+  }
+
+  const resultset = paramgrab.data;
+  // Get the input parameters:
+  const outobj = {
+    'familyname': ifUndef(resultset.familyname, 'string'),
+    'givennames': ifUndef(resultset.givennames, 'string'),
+  };
+
+  db.any(datasetbypisql, outobj)
+      .then(function(data) {
+        let returner = []
+        if (data.length === 0) {
+          // We're returning the structure, but nothing inside it:
+          returner = [];
+        } else {
+          returner = data;
+        };
+        res.status(200)
+            .json({
+              status: 'success',
+              data: returner,
+              message: 'Retrieved all tables',
+            });
+      })
+      .catch(function(err) {
+        res.status(500)
+            .json({
+              status: 'failure',
+              data: err.message,
+              message: 'Must pass either queries or a comma separated integer sequence.',
+            });
+        next(err);
+      });
 }
 
 /**
@@ -405,3 +457,4 @@ module.exports.datasetquery = datasetquery;
 module.exports.datasetbydb = datasetbydb;
 module.exports.datasetsbygeopol = datasetsbygeopol;
 module.exports.datasetbypi = datasetbypi;
+module.exports.datasetsbyaggid = datasetsbyaggid;
