@@ -41,7 +41,7 @@ ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPOSITORY_NAME}:${IMAGE
 echo "Pushing image to ECR..."
 docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPOSITORY_NAME}:${IMAGE_TAG}
 
-log_step "Ensuring App Runner service-linked role exists"
+echo "Ensuring App Runner service-linked role exists"
 aws iam create-service-linked-role --aws-service-name apprunner.amazonaws.com 2>/dev/null || echo "Service-linked role already exists"
 
 aws cloudformation deploy \

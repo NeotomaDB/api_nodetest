@@ -103,6 +103,8 @@ Resources:
     Properties:
       ServiceName: !Sub 'neoapi-${Environment}'
       SourceConfiguration:
+        AuthenticationConfiguration:
+          AccessRoleArn: !GetAtt AppRunnerAccessRole.Arn
         ImageRepository:
           ImageIdentifier: !Ref ImageUri
           ImageConfiguration:
