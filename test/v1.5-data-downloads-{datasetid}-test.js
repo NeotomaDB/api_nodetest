@@ -7,7 +7,7 @@ const expect = chakram.expect;
 describe('tests for /v1.5/data/downloads/{datasetid}', function() {
   describe('tests for get', function() {
     it('should respond 200 for "Returned download object."', function() {
-      const response = request('get', 'http://localhost:3001/v1.5/data/downloads/228', {
+      const response = request('get', 'http://localhost:3001/v1.5/data/downloads/500', {
         'time': true,
       });
 
