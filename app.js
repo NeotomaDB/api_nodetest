@@ -77,7 +77,9 @@ const options = {
 };
 
 const swaggerDocument = YAML.load('./openapi.yaml');
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
+app.use('/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerDocument, options));
 
 // Locations for v1.5 files:
 const v15index = require('./v1.5/routes/index'); // default route
