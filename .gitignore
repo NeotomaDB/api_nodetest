@@ -103,3 +103,5 @@ sandworm/
 
 .DS_Store
 clearcloudformation.sh
+
+build_deploy.sh
