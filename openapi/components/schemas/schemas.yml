@@ -295,11 +295,9 @@ chronology:
     preparedby:
       properties:
         contactid:
-          example: 44
-          type: integer
+          $ref: '#/components/schemas/contactid'
         contactname:
-          example: Grimm, Eric Christopher
-          type: string
+          $ref: '#/components/schemas/contactname'
         familyname:
           example: Grimm
           type: string
@@ -597,7 +595,7 @@ dataset:
               altitude:
                 type: integer
               collectionunit:
-                type: string
+                $ref: '#/components/schemas/collectionunit'
               collectionunitid:
                 $ref: '#/components/schemas/collectionunitid'
               geography:
