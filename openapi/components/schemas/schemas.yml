@@ -1567,19 +1567,39 @@ speleothem:
         $ref: '#/components/schemas/siteid'
       collectionunitid:
         $ref: '#/components/schemas/collectionunitid'
+      datasetid:
+        $ref: '#/components/schemas/datasetid'
       entityid:
         type: integer
       entityname:
         type: string
+      speleothemdriptype:
+        type: string
+      dripheight:
+        type: number
+      dripheightunits:
+        $ref: '#/components/schemas/unittype'
+      entitycovertype:
+        type: string
+      entitycoverthickness:
+        type: number
+      landusecovertype:
+        type: string
+      landusecoverpercent:
+        type: number
+      vegetationcovertype:
+        type: string
+      vegetationcoverpercent:
+        type: number
       monitoring:
         type: boolean
-      rockageid:
-        type: integer
+      relativeage:
+        type: string
       entrancedistance:
         type: number
       entrancedistanceunits:
         $ref: '#/components/schemas/unittype'
-      speleothemtypeid:
+      speleothemtype:
         type: string
 speleothemv2Response:
   type: object

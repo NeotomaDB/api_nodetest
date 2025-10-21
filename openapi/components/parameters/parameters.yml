@@ -109,10 +109,10 @@ altMinQuery:
     maximum: 8900
     minimum: -500
     type: integer
-collectionunitidPath:
-  description: A valid collection unit identifer from the Neotoma database. This is the internal identifier within the [`ndb.collectionunits`](https://open.neotomadb.org/dbschema/ndb/tables/collectionunits.html) table. If the collection unit ID contains no speleothem data, then the result will be an empty dataset.
+datasetidPath:
+  description: A valid datasetid identifer from the Neotoma database. This is the internal identifier within the [`ndb.datasets`](https://open.neotomadb.org/dbschema/ndb/tables/datasets.html) table. If the dataset ID contains no speleothem data, then the result will be an empty dataset.
   in: path
-  name: collectionunitid
+  name: datasetid
   required: true
   schema:
     format: int64

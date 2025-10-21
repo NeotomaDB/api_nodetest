@@ -183,11 +183,11 @@
     tags:
       - Dataset metadata
       - v2.0
-/v2.0/data/speleothems/{collectionunitid}:
+/v2.0/data/speleothems/{datasetid}:
   get:
-    description: Returns information about speleothem specific metadata given a collection unit ID.
+    description: Returns information about speleothem specific metadata given a dataset ID.
     parameters:
-      - $ref: '#/components/parameters/collectionunitidPath'
+      - $ref: '#/components/parameters/datasetidPath'
     responses:
       '200':
         content:
