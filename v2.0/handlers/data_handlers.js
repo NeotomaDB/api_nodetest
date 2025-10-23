@@ -221,7 +221,7 @@ module.exports = {
   // SPELEOTHEMS
   speleothems: function(req, res, next) {
     const speleothems = require('../helpers/speleothems/speleothems.js');
-    speleothems.speleothemsbydsid(req, res, next);
+    speleothems.speleothemsbycuid(req, res, next);
   },
   aggregatedatasets: function(req, res, next) {
     const aggregatedatasets = require('../helpers/datasets/datasets.js');

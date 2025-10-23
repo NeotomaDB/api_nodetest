@@ -86,7 +86,6 @@ router.get('/spatial/icesheet', handlers.icesheet);
 router.post('/spatial/icesheet', handlers.icesheet);
 
 // SPELEOTHEMS
-// router.get('/speleothems/:collectionunitid', handlers.speleothems);
-router.get('/speleothems/:datasetid', handlers.speleothems);
+router.get('/speleothems/:collectionunitid', handlers.speleothems);
 
 module.exports = router;

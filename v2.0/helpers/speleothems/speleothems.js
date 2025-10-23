@@ -94,4 +94,4 @@ function speleothemsbydsid(req, res, next) {
 }
 
 // module.exports.speleothemsbycuid = speleothemsbycuid;
-module.exports.speleothemsbydsid = speleothemsbydsid;
+module.exports.speleothemsbycuid = speleothemsbycuid;
