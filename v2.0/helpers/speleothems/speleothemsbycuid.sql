@@ -9,6 +9,6 @@ jsonb_build_object(   'siteid', sp.siteid,
                        'entrancedistanceunits', sp.entrancedistanceunits,
                        'speleothemtypeid', sp.speleothemtypeid) AS speleothem -- create a join to extract the type rather than just the id
 FROM ndb.speleothems sp
-LEFT JOIN ndb.speleothemcollectionunit scu
+LEFT JOIN ndb.speleothemcollectionunits scu
 ON sp.entityid = scu.entityid
 WHERE scu.collectionunitid IN ($1:csv);

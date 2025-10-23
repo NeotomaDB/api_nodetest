@@ -31,7 +31,7 @@ SELECT
                          dst.datasettype,
                                dts.notes as "datasetnotes",
                       cstdb.databasename,
-                                 MAX(doi.doi)
+                                 MAX(doi.doi) as "doi"
                                    FROM
 ndb.datasets AS dts LEFT OUTER JOIN
 da.vbestdatasetages AS dsa ON dsa.datasetid = dts.datasetid LEFT OUTER JOIN
