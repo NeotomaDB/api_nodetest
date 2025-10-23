@@ -252,17 +252,6 @@ aggdatasetidPath:
     maximum: 60000
     minimum: 1
     type: integer
-datasetidPath:
-  description: Valid Neotoma dataset identifier (integer), either singly or in a comma separated list.
-  in: path
-  name: datasetid
-  required: true
-  schema:
-    example: 100
-    format: int32
-    maximum: 60000
-    minimum: 1
-    type: integer
 datasetidQuery:
   description: Valid Neotoma dataset identifier (integer), either singly or in a comma separated list.
   in: query

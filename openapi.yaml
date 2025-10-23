@@ -35,7 +35,707 @@ servers:
   - description: A local Neotoma server.
     url: 'http://localhost:3001/'
 components:
-  parameters: {}
+  parameters:
+    dbidQuery:
+      description: >
+        Unique constituent database identifier from the `ndb.constituentdatabases` table. Each of the Neotoma
+        constituent databases is identified uniquely with an integer primary key.
+      in: query
+      name: dbid
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 35
+    ageQuery:
+      description: |
+        Ice-sheet age (in calibrated radiocarbon years before present, with 0 at 1950CE). Ages range from 0 to 18000.
+      in: query
+      name: age
+      required: false
+      schema:
+        example: 6700
+        format: int64
+        maximum: 18000
+        minimum: 1000
+        type: integer
+    ageOfQuery:
+      description: 'Dataset age ranges must span this age (in calibrated years before present, with 0 at 1950CE)'
+      in: query
+      name: ageof
+      required: false
+      schema:
+        example: 6700
+        format: int64
+        maximum: 23900000
+        minimum: -100
+        type: integer
+    scinameQuery:
+      description: The scientific name for a mammal taxon. May be the complete name or use the `%` wildcard for the name.
+      in: query
+      name: sciname
+      required: true
+      schema:
+        example: canis%
+        type: string
+    projQuery:
+      in: query
+      name: proj
+      required: false
+      schema:
+        type: integer
+        minimum: 2000
+        maximum: 32767
+        default: 4326
+        example: 3857
+      description: >
+        A valid integer [spatial reference
+        identifier](https://en.wikipedia.org/wiki/Spatial_reference_system#Identifier) value. By default Neotoma returns
+        all data with the SRID 4326 (standard lat/long), representing the
+        [WSG84](https://en.wikipedia.org/wiki/World_Geodetic_System#WGS84) model of the planet. For web mapping users
+        may choose SRID *3857* if using projected features.
+    precQuery:
+      description: >-
+        Precision of points within a rendered polygon. Many spatial objects are generated statistically and may have
+        overly precise point coordinates. Often precisions to 100m is sufficient for rendering to map.<br> **NOTE**: the
+        precision is dependent on the projected units. For the default SRID=4326 projection, precision units are in
+        decimal degrees, where 0.1 degrees latitude = 11.1km and 0.0001 degrees latitude = 11.1m. For metric precision,
+        units will be in meters.<br>The default value of *0.0001* represents a metric distance of 11.1m in the default
+        4326 projection.
+      in: query
+      name: prec
+      required: false
+      schema:
+        example: 100
+        minimum: 0
+        maximum: 1000
+        exclusiveMinimum: true
+        type: number
+        default: 0.0001
+    ageOldQuery:
+      description: 'Oldest age that intercepts with the dataset (in calibrated years before present, with 0 at 1950CE)'
+      in: query
+      name: ageold
+      required: false
+      schema:
+        example: 11430
+        format: int64
+        maximum: 23900000
+        minimum: -100
+        type: integer
+    ageYoungQuery:
+      description: 'Youngest age that intercepts with the dataset (in calibrated years before present, with 0 at 1950CE)'
+      in: query
+      name: ageyoung
+      required: false
+      schema:
+        example: -60
+        format: int64
+        maximum: 23900000
+        minimum: -100
+        type: integer
+    altMaxQuery:
+      description: Maximum altitude of the dataset site location (in meters)
+      in: query
+      name: altmax
+      required: false
+      schema:
+        example: 60
+        format: int64
+        maximum: 8900
+        minimum: -500
+        type: integer
+    altMinQuery:
+      description: Minimum altitude of the dataset site location (in meters)
+      in: query
+      name: altmin
+      required: false
+      schema:
+        example: 40
+        format: int64
+        maximum: 8900
+        minimum: -500
+        type: integer
+    datasetidPath:
+      description: >-
+        A valid datasetid identifer from the Neotoma database. This is the internal identifier within the
+        [`ndb.datasets`](https://open.neotomadb.org/dbschema/ndb/tables/datasets.html) table. If the dataset ID contains
+        no speleothem data, then the result will be an empty dataset.
+      in: path
+      name: datasetid
+      required: true
+      schema:
+        format: int64
+        type: integer
+        minimum: 0
+        exclusiveMinimum: true
+    collectionunitidQuery:
+      description: >-
+        A valid collection unit identifer from the Neotoma database. This is the internal identifier within the
+        [`ndb.collectionunits`](https://open.neotomadb.org/dbschema/ndb/tables/collectionunits.html) table. If the
+        collection unit ID contains no speleothem data, then the result will be an empty dataset.
+      in: query
+      name: collectionunitid
+      required: true
+      schema:
+        format: int64
+        type: integer
+        minimum: 0
+        exclusiveMinimum: true
+    chronidPath:
+      description: >-
+        Unique chronology identifier. This is the internal identifier within the
+        [`ndb.chronologies`](https://open.neotomadb.org/dbschema/ndb/tables/chronologies.html) table. Note that although
+        the chronology IDs are generated sequentially, not all chronology IDs are currently in use.
+      in: path
+      name: chronid
+      required: true
+      schema:
+        format: int64
+        example: 17
+        maximum: 44000
+        minimum: 0
+        exclusiveMinimum: true
+        type: integer
+    contactNameQuery:
+      description: >-
+        Full name of the researcher using the "Last, Given Name(s)" structure. You may use the % wildcard anywhere in
+        the string.
+      in: query
+      name: contactname
+      required: false
+      schema:
+        example: 'Grimm, Eric Christopher'
+        type: string
+        pattern: '^[-''a-zA-ZÀ-ÖØ-öø-ÿ, ]+$'
+    countQuery:
+      description: Should we return the row count for the table?
+      in: query
+      name: count
+      required: false
+      schema:
+        type: boolean
+        default: false
+    contactStatusQuery:
+      description: Current employment status
+      in: query
+      name: contactstatus
+      required: false
+      schema:
+        enum:
+          - active
+          - deceased
+          - defunct
+          - extant
+          - inactive
+          - retired
+          - unknown
+        example: deceased
+        type: string
+    contactidPath:
+      description: 'Unique contact identifier within the Neotoma Database, alone or comma separated.'
+      in: path
+      name: contactid
+      required: true
+      schema:
+        example: 44
+        format: int64
+        maximum: 21000
+        minimum: 1
+        type: integer
+    contactidQuery:
+      description: 'Unique contact identifier within the Neotoma Database, alone or comma separated.'
+      in: query
+      name: contactid
+      required: false
+      schema:
+        example: 44
+        format: int64
+        maximum: 21000
+        minimum: 1
+        type: integer
+    databaseQuery:
+      description: One of the constituent databases within Neotoma
+      in: query
+      name: database
+      required: true
+      schema:
+        example: European Pollen Database
+        enum:
+          - Cooperative Holocene Mapping Project
+          - African Pollen Database
+          - European Pollen Database
+          - Indo-Pacific Pollen Database
+          - Latin American Pollen Database
+          - North American Pollen Database
+          - Pollen Database of Siberia and the Russian Far East
+          - Canadian Pollen Database
+          - FAUNMAP
+          - Neotoma
+          - North American Plant Macrofossil Database
+          - Academy of Natural Sciences of Drexel University
+          - NDSU Insect Database
+          - North American Non-Marine Ostracode Database Project (NANODe)
+          - MioMap
+          - Alaskan Archaeofaunas
+          - French Institute of Pondicherry Palynology and Paleoecology Database
+          - Japanese Pollen Database
+          - Neotoma Midden Database
+          - Chinese Pollen Database
+          - Holocene Perspective on Peatland Biogeochemistry
+          - ANTIGUA
+          - Neotoma Testate Amoebae Database
+          - Deep-Time Palynology Database
+          - Neotoma Biomarker Database
+          - Alpine Pollen Database
+          - Canadian Museum of Nature-Delorme Ostracoda-Surface Samples
+          - Diatom Paleolimnology Data Cooperative (DPDC)
+          - Neotoma Ostracode Database
+          - Faunal Isotope Database
+          - Neotoma Charcoal Data
+          - Pollen Monitoring Programme
+          - PaleoVertebrates of Latin America
+          - St. Croix Watershed Research Station of the Science Museum of Minnesota
+        type: string
+    aggdatasetidPath:
+      description: 'Valid Neotoma aggregate dataset identifier (integer), either singly or in a comma separated list.'
+      in: path
+      name: aggdatasetid
+      required: true
+      schema:
+        example: 100
+        format: int32
+        maximum: 60000
+        minimum: 1
+        type: integer
+    datasetidQuery:
+      description: 'Valid Neotoma dataset identifier (integer), either singly or in a comma separated list.'
+      in: query
+      name: datasetid
+      required: false
+      schema:
+        format: int32
+        minimum: 0
+        example: 12
+        exclusiveMinimum: true
+        type: integer
+    doidataQuery:
+      description: 'A valid DOI in the form 10.XXXX/XXXXX (i.e., excluding ''https://doi.org'').'
+      in: query
+      name: doi
+      required: false
+      schema:
+        type: string
+        pattern: '^10.\d{4,9}/[-._;()/:A-Z0-9]+$'
+        example: 10.21233/znex-sp94
+    datasettypeQuery:
+      description: >-
+        Neotoma contains data for a number of dataset types (see /dbtables/datasettypes.  This returns a subset of data
+        types.
+      in: query
+      name: datasettype
+      required: false
+      schema:
+        type: string
+        nullable: true
+        example: pollen
+        enum:
+          - geochronologic
+          - loss-on-ignition
+          - pollen
+          - plant macrofossil
+          - vertebrate fauna
+          - macroinvertebrate
+          - pollen surface sample
+          - insect
+          - ostracode
+          - water chemistry
+          - diatom
+          - ostracode surface sample
+          - diatom surface sample
+          - geochemistry
+          - physical sedimentology
+          - charcoal
+          - testate amoebae
+          - X-ray fluorescence (XRF)
+          - X-ray diffraction (XRD)
+          - energy dispersive X-ray spectroscopy (EDS/EDX)
+          - biomarker
+          - modern plant biomarker
+          - phytolith
+          - specimen stable isotope
+          - 'paleomagnetic,biochemistry'
+          - modern biochemistry
+          - organic carbon
+          - insect modern
+          - chironomid
+          - stable isotope
+          - testate amoebae surface sample
+          - charcoal surface sample
+          - cladocera
+          - diatom top-bottom
+          - microcharcoal
+          - macrocharcoal
+          - pollen trap
+          - dinoflagellates
+          - diatom bottom sample
+          - Metabarcoding aeDNA
+    ecolGroupQuery:
+      description: The ecological group of interest for the Neotoma taxon (from the Neotoma ecolgrouptypes table)
+      in: query
+      name: ecolgroup
+      required: false
+      schema:
+        type: string
+        example: Charcoal
+    familyNameQuery:
+      description: Family name (last name) of the the researcher (may use the % wildcard).
+      in: query
+      name: familyname
+      required: false
+      schema:
+        type: string
+        example: Grimm
+        pattern: '^[-''a-zA-ZÀ-ÖØ-öø-ÿ% ]+$'
+    gpidPath:
+      description: Numeric ID for the geopolitical unit.
+      in: path
+      name: gpid
+      required: true
+      schema:
+        format: int32
+        maximum: 11000
+        minimum: 1
+        type: integer
+    gpidQuery:
+      description: Numeric ID for the geopolitical unit from the Neotoma geopoliticalunits table.
+      in: query
+      name: gpid
+      required: false
+      schema:
+        format: int32
+        maximum: 11000
+        minimum: 1
+        type: integer
+      examples:
+        gpid:
+          value: 5392
+          summary: A valid unique identifier for geopolitical units from Neotoma's geopoliticalunits table.
+        gpids:
+          value: '2155,5392,313,5414'
+          summary: 'A set of unique identifiers, separated by commas.'
+    gpnameQuery:
+      description: Name for a geopolitical unit.
+      in: query
+      name: gpname
+      required: false
+      schema:
+        type: string
+      examples:
+        countryname:
+          value: Canada
+          summary: 'The name of a country, state or other region.'
+        countrynames:
+          value: 'Italy, austria, switzerland'
+          summary: 'The name of a set of locations, separated by commas.'
+    keywordQuery:
+      description: >-
+        A valid keyword for samples within Neotoma. The list of valid names can be obtained through a call to the
+        dbtables API call.
+      in: query
+      name: keyword
+      required: false
+      schema:
+        format: string
+        enum:
+          - modern
+          - pre-European
+          - interglacial
+          - bottom
+          - beyond radiocarbon
+          - null
+    limitParam:
+      description: 'The maximum number of records to be returned, default is 25.'
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 25
+        example: 25
+        format: int32
+        maximum: 10000
+        minimum: 1
+        type: integer
+    locQuery:
+      description: >
+        The geographic region of interest for the site, as a GeoJSON string or valid Well Known Text (WKT).  Assumed
+        projection of EPSG:4376 unless otherwise defined.
+      in: query
+      name: loc
+      required: false
+      schema:
+        type: string
+      examples:
+        MosseGeoJSON:
+          value: >-
+            {"type":"Polygon","crs":{"type":"name","properties":{"name":"EPSG:4326"}},"coordinates":[[[13.4,55.92],[13.5,55.92],[13.5,55.95],[13.4,55.95],[13.4,55.92]]]}
+          summary: A geoJSON representation of a polygon that includes Argentina and Chile.
+        EuropeanWKT:
+          value: 'POLYGON ((13.4 55.92,13.5 55.92,13.5 55.95,13.4 55.95,13.4 55.92))'
+          summary: A WKT formatted spatial polygon that includes land adjacent to the Adriatic sea.
+    lowergpQuery:
+      description: Should all lower ranked units below the target unit be returned?
+      in: query
+      name: lower
+      required: false
+      schema:
+        default: false
+        type: boolean
+    occurrenceidPath:
+      description: 'Valid Neotoma occurrence identifier (integer), either singly or in a comma separated list.'
+      in: path
+      name: occurrenceid
+      required: true
+      schema:
+        format: int32
+        maximum: 10000000
+        minimum: 1
+        type: integer
+    occurrenceidQuery:
+      description: 'Valid Neotoma occurrence identifier (integer), either singly or in a comma separated list.'
+      in: query
+      name: occurrenceid
+      required: false
+      schema:
+        format: int32
+        maximum: 10000000
+        minimum: 0
+        type: integer
+    offsetParam:
+      description: The offset for returned records when a limit is present.  Default is 0.
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        example: 25
+        format: int32
+        minimum: 0
+        type: integer
+    pollenidPath:
+      description: |
+        Unique pollen taxon identifier (from the Neotoma taxa table).
+      in: path
+      name: id
+      required: true
+      schema:
+        format: int32
+        maximum: 50000
+        minimum: 1
+        type: integer
+    publicationidPath:
+      description: |
+        Unique publication identifier (from the Neotoma publication table).
+      in: path
+      name: publicationid
+      required: true
+      schema:
+        format: int32
+        maximum: 20000
+        minimum: 1
+        type: integer
+    publicationidQuery:
+      description: |
+        Unique publication identifier (from the Neotoma publication table).
+      in: query
+      name: publicationid
+      required: false
+      schema:
+        format: int32
+        maximum: 20000
+        minimum: 0
+        exclusiveMinimum: true
+        type: integer
+    pubsearchQuery:
+      description: 'A fulltext search string.  Either a literal portion of the article name, or keywords.'
+      in: query
+      name: search
+      required: false
+      schema:
+        type: string
+    pubtypeQuery:
+      description: The type of publication requested.
+      in: query
+      name: pubtype
+      required: false
+      schema:
+        enum:
+          - Legacy
+          - Journal Article
+          - Book Chapter
+          - Authored Book
+          - Edited Book
+          - Master's Thesis
+          - Doctoral Dissertation
+          - Authored Report
+          - Edited Report
+          - Other Authored
+          - Other Edited
+          - Website
+          - Undergraduate thesis
+        type: string
+    pubyearQuery:
+      description: 'The year of publication, either as a single value or comma separated string.'
+      in: query
+      name: year
+      required: false
+      schema:
+        format: int32
+        maximum: 2100
+        minimum: 1500
+        type: integer
+    rankQuery:
+      description: 'The unit rank.  Ranges from 1 (country) - 4 (e.g., parks).'
+      in: query
+      name: rank
+      required: false
+      schema:
+        maximum: 4
+        minimum: 1
+        type: integer
+    taxaQuery:
+      description: >
+        The name of a taxon, or a unique taxon identifier within Neotoma (obtained from a call to tables). May be a
+        comma separated list of taxonomic names or numeric identifiers. As elsewhere, the `%` sign can be used as a
+        wildcard.
+      name: taxa
+      in: query
+      required: false
+      schema:
+        type: string
+    sitenameQuery:
+      description: >-
+        Name of the study site (may use the % wildcard). Note that Neotoma study site names are not unique. For example
+        there are more than 15 sites in Neotoma named *Clear Lake*.
+      in: query
+      name: sitename
+      required: false
+      schema:
+        example: Ageröds Mosse
+        type: string
+    siteidPath:
+      description: 'Valid Neotoma site identifier (integer), either singly or in a comma separated list.'
+      in: path
+      name: siteid
+      required: true
+      schema:
+        format: int32
+        maximum: 50000
+        minimum: 1
+        type: integer
+    bufferQuery:
+      description: Buffer distance for point of polygon in meters.
+      in: query
+      name: buffer
+      required: false
+      schema:
+        format: int64
+        minimum: 0
+        maximum: 10000
+        default: 10000
+        type: integer
+    siteidQuery:
+      description: 'Valid Neotoma site identifier (integer), either singly or in a comma separated list.'
+      in: query
+      name: siteid
+      required: false
+      schema:
+        format: int32
+        maximum: 50000
+        minimum: 1
+        type: integer
+        example: 12
+    tableQuery:
+      description: Valid name for a Neotoma Table
+      in: query
+      name: table
+      required: false
+      schema:
+        example: agetypes
+        type: string
+    tablePath:
+      description: Valid name for a Neotoma Table
+      in: path
+      name: table
+      required: true
+      schema:
+        example: agetypes
+        type: string
+    taxonNameQuery:
+      description: >
+        Taxon name or partial name. You can pass wildcard characters using `%`. For example, `%anis` will match
+
+        with *Canis* as well as the plant taxon *Triodanis*. It will not match `Canis lupus` because there is no
+        terminal wildcard. This can be accompished using `%anis%`.
+      in: query
+      name: taxonname
+      required: false
+      schema:
+        example: Canis
+        type: string
+    taxaGroupQuery:
+      description: >
+        The taxonomic grouping the taxon belongs to, from the Neotoma taxagrouptypes table. You can get the list of
+        acceptable taxa group types using the [dbtables API
+        call](https://api.neotomadb.org/api-docs/#/Database%20tables/get_v2_0_data_dbtables) and passing
+        *taxagrouptypes* as the table.
+      in: query
+      name: taxagroup
+      required: false
+      schema:
+        example: Algae
+        type: string
+    taxastatusQuery:
+      description: |
+        The taxonomic extinction status of the taxon, either extinct (1, True) or extant (0, False).
+      in: query
+      name: status
+      required: false
+      schema:
+        example: 1
+        type: string
+        enum:
+          - 0
+          - 1
+          - true
+          - false
+    taxonidPath:
+      description: |
+        Unique taxonomic identifier (from the Neotoma taxon table).
+      in: path
+      name: taxonid
+      required: true
+      schema:
+        format: int32
+        maximum: 50000
+        minimum: 1
+        type: integer
+    taxonidQuery:
+      description: Unique taxonomic identifier (from the Neotoma taxon table).
+      in: query
+      name: taxonid
+      required: false
+      schema:
+        maximum: 50000
+        minimum: 1
+        type: integer
+    taxonnameQuery:
+      description: Unique taxonomic name (from the Neotoma taxon table).
+      in: query
+      name: taxonname
+      required: false
+      schema:
+        type: string
   schemas:
     constdbdescription:
       type: string

@@ -7,11 +7,7 @@ const expect = chakram.expect;
 describe('tests for /v2.0/data/pollen/{id}', function() {
   describe('tests for get', function() {
     it('should respond 200 for "A record of all pollen samples in time/space for a particular taxon."', function() {
-<<<<<<< HEAD
-      const response = request('get', 'http://localhost:3001/v2.0/data/pollen/3706', {
-=======
-      const response = request('get', 'http://localhost:3001/v2.0/data/pollen/2108', {
->>>>>>> develop
+      const response = request('get', 'http://localhost:3001/v2.0/data/pollen/7851', {
         'time': true,
       });
 
