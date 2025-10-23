@@ -7,11 +7,7 @@ const expect = chakram.expect;
 describe('tests for /v2.0/data/datasets/{datasetid}/doi', function() {
   describe('tests for get', function() {
     it('should respond 200 for "DOI"', function() {
-<<<<<<< HEAD
-      const response = request('get', 'http://localhost:3001/v2.0/data/datasets/9617/doi', {
-=======
       const response = request('get', 'http://localhost:3001/v2.0/data/datasets/500/doi', {
->>>>>>> production
         'time': true,
       });
 
