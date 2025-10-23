@@ -8,7 +8,11 @@ describe('tests for /v2.0/data/dbtables', function() {
   describe('tests for get', function() {
     it('should respond 200 for "Returned table."', function() {
       const response = request('get', 'http://localhost:3001/v2.0/data/dbtables', {
+<<<<<<< HEAD
         'qs': {'table': 'sint exercitation', 'count': true, 'limit': 10, 'offset': 0},
+=======
+        'qs': {'table': 'laborum', 'count': false, 'limit': 10, 'offset': 0},
+>>>>>>> production
         'time': true,
       });
 
