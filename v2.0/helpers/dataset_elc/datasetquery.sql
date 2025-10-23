@@ -16,6 +16,7 @@ SELECT
                      'datasetnotes', dts.notes,
                          'database', cstdb.databasename,
                               'doi', doi.doi,
+                        'recdatecreated', dts.recdatecreated,
                         'datasetpi', json_build_object(  'contactid', cnt.contactid,
                                                        'contactname', cnt.contactname,
                                                         'familyname', cnt.familyname,

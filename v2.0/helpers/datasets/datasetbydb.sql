@@ -44,6 +44,7 @@ dspiagg AS (
                        'datasetnotes', dts.notes,
                        'database', cstdb.databasename,
                        'doi', json_agg(DISTINCT doi.doi),
+                       'recdatecreated', dts.recdatecreated,
                        'datasetpi', json_agg(json_build_object('contactid', cnt.contactid,
                                                             'contactname', cnt.contactname,
                                                             'familyname', cnt.familyname,

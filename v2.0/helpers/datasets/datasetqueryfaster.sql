@@ -94,6 +94,7 @@ SELECT json_build_object(
             'datasetnotes', dts.notes,
             'database', cstdb.databasename,
             'doi', COALESCE(ddoi.dois, '[]'::json),
+            'recdatecreated', dts.recdatecreated,
             'datasetpi', COALESCE(dpis.pis, '[]'::json),
             'agerange', COALESCE(dage.ageranges, '[]'::json)
         )
