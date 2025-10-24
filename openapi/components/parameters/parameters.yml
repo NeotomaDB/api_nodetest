@@ -110,7 +110,7 @@ altMinQuery:
     minimum: -500
     type: integer
 datasetidPath:
-  description: A valid datasetid identifer from the Neotoma database. This is the internal identifier within the [`ndb.datasets`](https://open.neotomadb.org/dbschema/ndb/tables/datasets.html) table. If the dataset ID contains no speleothem data, then the result will be an empty dataset.
+  description: A valid datasetid identifer from the Neotoma database. This is the internal identifier within the [`ndb.datasets`](https://open.neotomadb.org/dbschema/ndb/tables/datasets.html) table.
   in: path
   name: datasetid
   required: true

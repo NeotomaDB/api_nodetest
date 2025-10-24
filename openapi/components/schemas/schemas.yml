@@ -1565,8 +1565,6 @@ speleothem:
         $ref: '#/components/schemas/siteid'
       collectionunitid:
         $ref: '#/components/schemas/collectionunitid'
-      datasetid:
-        $ref: '#/components/schemas/datasetid'
       entityid:
         type: integer
       entityname:
