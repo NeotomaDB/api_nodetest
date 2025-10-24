@@ -159,8 +159,7 @@ components:
     datasetidPath:
       description: >-
         A valid datasetid identifer from the Neotoma database. This is the internal identifier within the
-        [`ndb.datasets`](https://open.neotomadb.org/dbschema/ndb/tables/datasets.html) table. If the dataset ID contains
-        no speleothem data, then the result will be an empty dataset.
+        [`ndb.datasets`](https://open.neotomadb.org/dbschema/ndb/tables/datasets.html) table.
       in: path
       name: datasetid
       required: true
@@ -3154,11 +3153,11 @@ paths:
       tags:
         - Dataset metadata
         - v2.0
-  '/v2.0/data/speleothems/{datasetid}':
+  '/v2.0/data/speleothems/{collectionunitid}':
     get:
-      description: Returns information about speleothem specific metadata given a dataset ID.
+      description: Returns information about speleothem specific metadata given a collectionunit ID.
       parameters:
-        - $ref: '#/components/parameters/datasetidPath'
+        - $ref: '#/components/parameters/collectionunitidQuery'
       responses:
         '200':
           content:
