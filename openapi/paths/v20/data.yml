@@ -187,7 +187,7 @@
   get:
     description: Returns information about speleothem specific metadata given a collectionunit ID.
     parameters:
-      - $ref: '#/components/parameters/collectionunitidQuery'
+      - $ref: '#/components/parameters/collectionunitidPath'
     responses:
       '200':
         content:

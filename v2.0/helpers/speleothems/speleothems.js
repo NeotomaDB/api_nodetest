@@ -4,12 +4,10 @@
 const he = require('he');
 
 // Helper for linking to external query files:
-const {sql, commaSep} = require('../../../src/neotomaapi.js');
+const {sql, commaSep, getparam, ifUndef} = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
 const speleothembycuid = sql('../v2.0/helpers/speleothems/speleothemsbycuid.sql');
-// const speleothembydsid = sql('../v2.0/helpers/speleothems/speleothemsbydsid.sql');
-
 
 /**
  * Call speleothems by using the CollectionUnit ID.
@@ -19,13 +17,22 @@ const speleothembycuid = sql('../v2.0/helpers/speleothems/speleothemsbycuid.sql'
  */
 function speleothemsbycuid(req, res, next) {
   const db = req.app.locals.db;
-  console.log('speleothems', req.params);
-  const goodstid = !!req.params.collectionunitid;
-  console.log('speleothemsbycuid', req.params.collectionunitid);
+  const paramgrab = getparam(req);
 
-  if (goodstid) {
-    const cuid = commaSep(req.params.collectionunitid);
-    db.any(speleothembycuid, [cuid])
+  if (!paramgrab.success) {
+    res.status(500)
+        .json({
+          status: 'failure',
+          data: null,
+          message: paramgrab.message,
+        });
+  } else {
+    const resultset = paramgrab.data;
+    const outobj = {
+      'collectionunitid': ifUndef(resultset.collectionunitid, 'sep'),
+    };
+    console.log(outobj)
+    db.any(speleothembycuid, outobj)
         .then(function(data) {
           res.status(200)
               .json({
@@ -39,15 +46,8 @@ function speleothemsbycuid(req, res, next) {
               .json({
                 status: 'failure',
                 message: err.message,
-                query: [cuid],
+                query: paramgrab.data,
               });
-        });
-  } else {
-    res.status(500)
-        .json({
-          status: 'failure',
-          data: null,
-          message: 'Must pass either queries or an integer sequence.',
         });
   }
 }

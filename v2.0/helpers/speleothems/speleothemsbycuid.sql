@@ -72,4 +72,4 @@ LEFT JOIN rockage ra ON ra.entityid = sp.entityid
 LEFT JOIN geology g ON g.entityid = sp.entityid
 LEFT JOIN landusecover luc ON luc.entityid = sp.entityid
 LEFT JOIN vegetationcovertypes vct ON vct.entityid = sp.entityid
-WHERE cu.collectionunitid IN ($1:csv) AND dt.datasettypeid = 44;
+WHERE cu.collectionunitid = ANY(${collectionunitid}) AND dt.datasettypeid = 44;
