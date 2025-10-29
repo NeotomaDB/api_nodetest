@@ -3,128 +3,130 @@ name: Deploy Neotoma API
 on:
   push:
     branches: [production, develop]
-  
+
 env:
   AWS_REGION: us-east-2
-  
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Set environment based on branch
-      run: |
-        if [[ ${{ github.ref }} == 'refs/heads/production' ]]; then
-          echo "ENVIRONMENT=prod" >> $GITHUB_ENV
-          echo "STACK_NAME=neoapi-prod" >> $GITHUB_ENV
-        else
-          echo "ENVIRONMENT=dev" >> $GITHUB_ENV
-          echo "STACK_NAME=neoapi-dev" >> $GITHUB_ENV
-        fi
-    
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_REGION }}
-    
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v2
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Create ECR repository if it doesn't exist
-      run: |
-        aws ecr describe-repositories --repository-names neoapi-${{ env.ENVIRONMENT }} --region ${{ env.AWS_REGION }} 2>/dev/null || \
-        aws ecr create-repository \
-          --repository-name neoapi-${{ env.ENVIRONMENT }} \
-          --region ${{ env.AWS_REGION }} \
-          --image-scanning-configuration scanOnPush=true
-
-    - name: Build, tag, and push image to Amazon ECR
-      run: |
-        ECR_REPOSITORY=${{ steps.login-ecr.outputs.registry }}/neoapi-${{ env.ENVIRONMENT }}
-        IMAGE_TAG=${{ github.sha }}
-        
-        echo "Building Docker image..."
-        docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
-        docker tag $ECR_REPOSITORY:$IMAGE_TAG $ECR_REPOSITORY:latest
-        
-        echo "Pushing to ECR..."
-        docker push $ECR_REPOSITORY:$IMAGE_TAG
-        docker push $ECR_REPOSITORY:latest
-        
-        echo "IMAGE_URI=$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
-        echo "ECR_REPOSITORY=$ECR_REPOSITORY" >> $GITHUB_ENV
-
-    - name: Deploy CloudFormation stack
-      run: |
-        echo "Deploying infrastructure with image: ${{ env.IMAGE_URI }}"
-        
-        aws cloudformation deploy \
-          --template-file infrastructure/cloudformation-template.yaml \
-          --stack-name ${{ env.STACK_NAME }} \
-          --parameter-overrides \
-            Environment=${{ env.ENVIRONMENT }} \
-            ImageUri=${{ env.IMAGE_URI }} \
-            RDSHostname=${{ secrets.RDS_HOSTNAME }} \
-            RDSDatabase=${{ secrets.RDS_DATABASE }} \
-            RDSUsername=${{ secrets.RDS_USERNAME }} \
-            RDSPassword=${{ secrets.RDS_PASSWORD }} \
-            VPCId=${{ secrets.VPC_ID }} \
-            PrivateSubnets=${{ secrets.PRIVATE_SUBNETS }} \
-          --capabilities CAPABILITY_NAMED_IAM \
-          --region ${{ env.AWS_REGION }}
-
-    - name: Wait for deployment to complete
-      run: |
-        echo "Waiting for CloudFormation stack to complete..."
-        aws cloudformation wait stack-deploy-complete \
-          --stack-name ${{ env.STACK_NAME }} \
-          --region ${{ env.AWS_REGION }}
-    
-    - name: Get ECR repository URI
-      run: |
-        ECR_URI=$(aws cloudformation describe-stacks \
-          --stack-name ${{ env.STACK_NAME }} \
-          --query 'Stacks[0].Outputs[?OutputKey==`ECRRepository`].OutputValue' \
-          --output text \
-          --region ${{ env.AWS_REGION }})
-        echo "ECR_REPOSITORY=$ECR_URI" >> $GITHUB_ENV
-
-    - name: Get service URL
-      run: |
-        SERVICE_URL=$(aws cloudformation describe-stacks \
-          --stack-name ${{ env.STACK_NAME }} \
-          --query 'Stacks[0].Outputs[?OutputKey==`ServiceUrl`].OutputValue' \
-          --output text \
-          --region ${{ env.AWS_REGION }})
-        
-        echo "🚀 Deployment complete!"
-        echo "Service URL: $SERVICE_URL"
-        echo "Environment: ${{ env.ENVIRONMENT }}"
-        echo "Image: ${{ env.IMAGE_URI }}"
-    
-    - name: Health check
-      run: |
-        SERVICE_URL=$(aws cloudformation describe-stacks \
-          --stack-name ${{ env.STACK_NAME }} \
-          --query 'Stacks[0].Outputs[?OutputKey==`ServiceUrl`].OutputValue' \
-          --output text \
-          --region ${{ env.AWS_REGION }})
-        
-        echo "Performing health check..."
-        sleep 30  # Give the service time to start
-        
-        for i in {1..5}; do
-          if curl -f -s "${SERVICE_URL}/v2.0/routes/healthwatch" > /dev/null; then
-            echo "✅ Health check passed!"
-            exit 0
+      - name: Set environment based on branch
+        run: |
+          if [[ ${{ github.ref }} == 'refs/heads/production' ]]; then
+            echo "ENVIRONMENT=prod" >> $GITHUB_ENV
+            echo "STACK_NAME=neoapi-prod" >> $GITHUB_ENV
+            echo "RDSDB=neotoma" >> $GITHUB_ENV
           else
-            echo "⏳ Health check attempt $i/5 failed, retrying in 30 seconds..."
-            sleep 30
+            echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+            echo "STACK_NAME=neoapi-dev" >> $GITHUB_ENV
+            echo "RDSDB=neotomatank" >> $GITHUB_ENV
           fi
-        done
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Create ECR repository if it doesn't exist
+        run: |
+          aws ecr describe-repositories --repository-names neoapi-${{ env.ENVIRONMENT }} --region ${{ env.AWS_REGION }} 2>/dev/null || \
+          aws ecr create-repository \
+            --repository-name neoapi-${{ env.ENVIRONMENT }} \
+            --region ${{ env.AWS_REGION }} \
+            --image-scanning-configuration scanOnPush=true
+
+      - name: Build, tag, and push image to Amazon ECR
+        run: |
+          ECR_REPOSITORY=${{ steps.login-ecr.outputs.registry }}/neoapi-${{ env.ENVIRONMENT }}
+          IMAGE_TAG=${{ github.sha }}
+
+          echo "Building Docker image..."
+          docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
+          docker tag $ECR_REPOSITORY:$IMAGE_TAG $ECR_REPOSITORY:latest
+
+          echo "Pushing to ECR..."
+          docker push $ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REPOSITORY:latest
+
+          echo "IMAGE_URI=$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY=$ECR_REPOSITORY" >> $GITHUB_ENV
+
+      - name: Deploy CloudFormation stack
+        run: |
+          echo "Deploying infrastructure with image: ${{ env.IMAGE_URI }}"
+
+          aws cloudformation deploy \
+            --template-file infrastructure/cloudformation-template.yaml \
+            --stack-name ${{ env.STACK_NAME }} \
+            --parameter-overrides \
+              Environment=${{ env.ENVIRONMENT }} \
+              ImageUri=${{ env.IMAGE_URI }} \
+              RDSHostname=${{ secrets.RDS_HOSTNAME }} \
+              RDSDatabase=${{ env.RDSDB }} \
+              RDSUsername=${{ secrets.RDS_USERNAME }} \
+              RDSPassword=${{ secrets.RDS_PASSWORD }} \
+              VPCId=${{ secrets.VPC_ID }} \
+              PrivateSubnets=${{ secrets.PRIVATE_SUBNETS }} \
+            --capabilities CAPABILITY_NAMED_IAM \
+            --region ${{ env.AWS_REGION }}
+
+      - name: Wait for deployment to complete
+        run: |
+          echo "Waiting for CloudFormation stack to complete..."
+          aws cloudformation wait stack-deploy-complete \
+            --stack-name ${{ env.STACK_NAME }} \
+            --region ${{ env.AWS_REGION }}
+
+      - name: Get ECR repository URI
+        run: |
+          ECR_URI=$(aws cloudformation describe-stacks \
+            --stack-name ${{ env.STACK_NAME }} \
+            --query 'Stacks[0].Outputs[?OutputKey==`ECRRepository`].OutputValue' \
+            --output text \
+            --region ${{ env.AWS_REGION }})
+          echo "ECR_REPOSITORY=$ECR_URI" >> $GITHUB_ENV
+
+      - name: Get service URL
+        run: |
+          SERVICE_URL=$(aws cloudformation describe-stacks \
+            --stack-name ${{ env.STACK_NAME }} \
+            --query 'Stacks[0].Outputs[?OutputKey==`ServiceUrl`].OutputValue' \
+            --output text \
+            --region ${{ env.AWS_REGION }})
+
+          echo "🚀 Deployment complete!"
+          echo "Service URL: $SERVICE_URL"
+          echo "Environment: ${{ env.ENVIRONMENT }}"
+          echo "Image: ${{ env.IMAGE_URI }}"
+
+      - name: Health check
+        run: |
+          SERVICE_URL=$(aws cloudformation describe-stacks \
+            --stack-name ${{ env.STACK_NAME }} \
+            --query 'Stacks[0].Outputs[?OutputKey==`ServiceUrl`].OutputValue' \
+            --output text \
+            --region ${{ env.AWS_REGION }})
+
+          echo "Performing health check..."
+          sleep 30  # Give the service time to start
+
+          for i in {1..5}; do
+            if curl -f -s "${SERVICE_URL}/v2.0/routes/healthwatch" > /dev/null; then
+              echo "✅ Health check passed!"
+              exit 0
+            else
+              echo "⏳ Health check attempt $i/5 failed, retrying in 30 seconds..."
+              sleep 30
+            fi
+          done
