@@ -8,7 +8,7 @@ describe('tests for /v2.0/data/contacts', function() {
   describe('tests for get', function() {
     it('should respond 200 for "contact"', function() {
       const response = request('get', 'http://localhost:3001/v2.0/data/contacts', {
-        'qs': {'contactid': 8699, 'familyname': 'SSwkRXcOsSe', 'contactname': 'U,ZsoqnH', 'contactstatus': 'inactive', 'limit': 10, 'offset': 0},
+        'qs': {'contactid': 11754, 'familyname': 'U', 'contactname': 'R', 'contactstatus': 'extant', 'limit': 10, 'offset': 0},
         'time': true,
       });
 
