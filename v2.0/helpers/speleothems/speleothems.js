@@ -8,7 +8,7 @@ const {sql, commaSep} = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
 const speleothembycuid = sql('../v2.0/helpers/speleothems/speleothemsbycuid.sql');
-const speleothembydsid = sql('../v2.0/helpers/speleothems/speleothemsbydsid.sql');
+// const speleothembydsid = sql('../v2.0/helpers/speleothems/speleothemsbydsid.sql');
 
 
 /**

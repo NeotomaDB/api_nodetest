@@ -20,9 +20,14 @@ entitycovers AS (
     LEFT JOIN ndb.entitycovertypes ect ON ec.entitycoverid = ect.entitycoverid
 ),
 geology AS (
-    SELECT g.entityid, ra.relativeage
+    SELECT g.entityid, ra.rocktype
     FROM ndb.entitygeology g
-    LEFT JOIN ndb.relativeages ra ON g.speleothemgeologyid = ra.relativeageid
+    LEFT JOIN ndb.rocktypes ra ON g.speleothemgeologyid = ra.rocktypeid
+),
+rockage AS (
+    SELECT sp.entityid, sp.rockageid, ra.relativeage
+    FROM ndb.speleothems sp
+    LEFT JOIN ndb.relativeages ra ON sp.rockageid = ra.relativeageid
 ),
 landusecover AS (
     SELECT luc.entityid, vct.vegetationcovertype, luc.landusecoverpercent
@@ -45,7 +50,8 @@ jsonb_build_object(   'siteid', sp.siteid,
                        'dripheightunits', sdt.dripheightunits,
                        'entitycovertype', ec.entitycovertype,
                        'entitycoverthickness', ec.entitycoverthickness,
-                       'relativeage', g.relativeage,
+                       'rockage', ra.relativeage,
+                       'geology', g.rocktype,
                        'vegetationcovertype', vct.vegetationcovertype,
                        'vegetationcoverpercent', vct.vegetationcoverpercent,
                        'landusecovertype', luc.vegetationcovertype,
@@ -57,11 +63,13 @@ FROM ndb.speleothems sp
 LEFT JOIN ndb.speleothemcollectionunits scu ON scu.entityid = sp.entityid
 LEFT JOIN ndb.collectionunits cu ON scu.collectionunitid = cu.collectionunitid
 LEFT JOIN ndb.datasets ds ON cu.collectionunitid = ds.collectionunitid
+LEFT JOIN ndb.datasettypes dt ON dt.datasettypeid = ds.datasettypeid
 LEFT JOIN dist_units du ON du.entityid = sp.entityid
 LEFT JOIN speleothem_type st ON st.entityid = sp.entityid
 LEFT JOIN speleothem_dt sdt ON sdt.entityid = sp.entityid
 LEFT JOIN entitycovers ec ON ec.entityid = sp.entityid
+LEFT JOIN rockage ra ON ra.entityid = sp.entityid
 LEFT JOIN geology g ON g.entityid = sp.entityid
 LEFT JOIN landusecover luc ON luc.entityid = sp.entityid
 LEFT JOIN vegetationcovertypes vct ON vct.entityid = sp.entityid
-WHERE cu.collectionunitid IN ($1:csv);
+WHERE cu.collectionunitid IN ($1:csv) AND dt.datasettypeid = 44;

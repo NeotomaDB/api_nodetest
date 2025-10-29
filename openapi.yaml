@@ -2349,7 +2349,9 @@ components:
             type: number
           monitoring:
             type: boolean
-          relativeage:
+          rockage:
+            type: string
+          geology:
             type: string
           entrancedistance:
             type: number
