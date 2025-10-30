@@ -31,7 +31,6 @@ function speleothemsbycuid(req, res, next) {
     const outobj = {
       'collectionunitid': ifUndef(resultset.collectionunitid, 'sep'),
     };
-    console.log(outobj)
     db.any(speleothembycuid, outobj)
         .then(function(data) {
           res.status(200)
