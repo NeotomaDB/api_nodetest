@@ -69,6 +69,12 @@ jobs:
         run: |
           echo "Deploying infrastructure with image: ${{ env.IMAGE_URI }}"
 
+          # The secret is formatted as `subnet-xxxx1,subnet-xxxx2` so we have to make sure the CLI recognizes
+          # it as a comma separated list.
+
+          PRIVATE_SUBNETS="${{ secrets.PRIVATE_SUBNETS }}"
+          PRIVATE_SUBNETS_ESCAPED="${PRIVATE_SUBNETS//,/\\,}"
+
           aws cloudformation deploy \
             --template-file infrastructure/cloudformation-template.yaml \
             --stack-name ${{ env.STACK_NAME }} \
@@ -80,7 +86,7 @@ jobs:
               RDSUsername=${{ secrets.RDS_USERNAME }} \
               RDSPassword=${{ secrets.RDS_PASSWORD }} \
               VPCId=${{ secrets.VPC_ID }} \
-              PrivateSubnets=${{ secrets.PRIVATE_SUBNETS }} \
+              PrivateSubnets=${{ secrets.PRIVATE_SUBNETS_ESCAPED }} \
             --capabilities CAPABILITY_NAMED_IAM \
             --region ${{ env.AWS_REGION }} \
             --no-fail-on-empty-changeset
