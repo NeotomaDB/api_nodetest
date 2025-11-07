@@ -74,6 +74,7 @@ jobs:
             echo "ERROR: PRIVATE_SUBNETS is empty!"
             exit 1
           fi
+          echo "SUBNET_LIST=subnet-0e66614ca7e9e7247,subnet-013f8ff069404c987" >> $GITHUB_ENV
 
       - name: Deploy CloudFormation stack
         run: |
@@ -81,9 +82,6 @@ jobs:
 
           # The secret is formatted as `subnet-xxxx1,subnet-xxxx2` so we have to make sure the CLI recognizes
           # it as a comma separated list.
-
-          PRIVATE_SUBNETS="${{ secrets.PRIVATE_SUBNETS }}"
-          PRIVATE_SUBNETS_ESCAPED="${PRIVATE_SUBNETS//,/\\,}"
 
           aws cloudformation deploy \
             --template-file infrastructure/cloudformation-template.yaml \
@@ -96,7 +94,7 @@ jobs:
               "RDSUsername=${{ secrets.RDS_USERNAME }}" \
               "RDSPassword=${{ secrets.RDS_PASSWORD }}" \
               "VPCId=${{ secrets.VPC_ID }}" \
-              "PrivateSubnets=${{ secrets.PRIVATE_SUBNETS }}" \
+              "PrivateSubnets=${{ env.SUBNET_LIST }}" \
             --capabilities CAPABILITY_NAMED_IAM \
             --region ${{ env.AWS_REGION }} \
             --no-fail-on-empty-changeset
