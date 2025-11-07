@@ -82,7 +82,7 @@ jobs:
               VPCId=${{ secrets.VPC_ID }} \
               PrivateSubnets=${{ secrets.PRIVATE_SUBNETS }} \
             --capabilities CAPABILITY_NAMED_IAM \
-            --region ${{ env.AWS_REGION }}
+            --region ${{ env.AWS_REGION }} \
             --no-fail-on-empty-changeset
 
       - name: Get ECR repository URI
@@ -102,6 +102,9 @@ jobs:
             --output text \
             --region ${{ env.AWS_REGION }})
 
+          echo "SERVICE_URL=$SERVICE_URL" >> $GITHUB_ENV
+          echo "service_url=$SERVICE_URL" >> $GITHUB_OUTPUT
+
           echo "🚀 Deployment complete!"
           echo "Service URL: $SERVICE_URL"
           echo "Environment: ${{ env.ENVIRONMENT }}"
@@ -109,7 +112,7 @@ jobs:
 
       - name: Health check
         run: |
-          SERVICE_URL="${{ steps.outputs.outputs.service_url }}"
+          SERVICE_URL="${{ env.SERVICE_URL }}"
           HEALTH_ENDPOINT="${SERVICE_URL}/v2.0/routes/healthwatch"
 
           echo "Performing health check on: $HEALTH_ENDPOINT"
