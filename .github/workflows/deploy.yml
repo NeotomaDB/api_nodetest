@@ -65,6 +65,16 @@ jobs:
           echo "IMAGE_URI=$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
           echo "ECR_REPOSITORY=$ECR_REPOSITORY" >> $GITHUB_ENV
 
+      - name: Debug parameters
+        run: |
+          echo "Subnets value: '${{ secrets.PRIVATE_SUBNETS }}'"
+          echo "Length: ${#PRIVATE_SUBNETS}"
+          PRIVATE_SUBNETS="${{ secrets.PRIVATE_SUBNETS }}"
+          if [ -z "$PRIVATE_SUBNETS" ]; then
+            echo "ERROR: PRIVATE_SUBNETS is empty!"
+            exit 1
+          fi
+
       - name: Deploy CloudFormation stack
         run: |
           echo "Deploying infrastructure with image: ${{ env.IMAGE_URI }}"
@@ -79,14 +89,14 @@ jobs:
             --template-file infrastructure/cloudformation-template.yaml \
             --stack-name ${{ env.STACK_NAME }} \
             --parameter-overrides \
-              Environment=${{ env.ENVIRONMENT }} \
-              ImageUri=${{ env.IMAGE_URI }} \
-              RDSHostname=${{ secrets.RDS_HOSTNAME }} \
-              RDSDatabase=${{ env.RDSDB }} \
-              RDSUsername=${{ secrets.RDS_USERNAME }} \
-              RDSPassword=${{ secrets.RDS_PASSWORD }} \
-              VPCId=${{ secrets.VPC_ID }} \
-              PrivateSubnets=${{ secrets.PRIVATE_SUBNETS_ESCAPED }} \
+              "Environment=${{ env.ENVIRONMENT }}" \
+              "ImageUri=${{ env.IMAGE_URI }}" \
+              "RDSHostname=${{ secrets.RDS_HOSTNAME }}" \
+              "RDSDatabase=${{ env.RDSDB }}" \
+              "RDSUsername=${{ secrets.RDS_USERNAME }}" \
+              "RDSPassword=${{ secrets.RDS_PASSWORD }}" \
+              "VPCId=${{ secrets.VPC_ID }}" \
+              "PrivateSubnets=${{ secrets.PRIVATE_SUBNETS }}" \
             --capabilities CAPABILITY_NAMED_IAM \
             --region ${{ env.AWS_REGION }} \
             --no-fail-on-empty-changeset
