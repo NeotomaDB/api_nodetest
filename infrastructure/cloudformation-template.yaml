@@ -148,7 +148,7 @@ Resources:
           VpcConnectorArn: !GetAtt VPCConnector.VpcConnectorArn
       HealthCheckConfiguration:
         Protocol: HTTP
-        Path: /v2.0/routes/healthwatch
+        Path: /healthcheck
         Interval: 20
         Timeout: 5
         HealthyThreshold: 1
