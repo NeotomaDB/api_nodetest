@@ -10,6 +10,7 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout code
@@ -21,10 +22,12 @@ jobs:
             echo "ENVIRONMENT=prod" >> $GITHUB_ENV
             echo "STACK_NAME=neoapi-prod" >> $GITHUB_ENV
             echo "RDSDB=neotoma" >> $GITHUB_ENV
+            echo "ENDPOINT=api.neotomadb.org" >> $GITHUB_ENV
           else
             echo "ENVIRONMENT=dev" >> $GITHUB_ENV
             echo "STACK_NAME=neoapi-dev" >> $GITHUB_ENV
             echo "RDSDB=neotomatank" >> $GITHUB_ENV
+            echo "ENDPOINT=api-dev.neotomadb.org" >> $GITHUB_ENV
           fi
 
       - name: Configure AWS credentials
@@ -40,12 +43,14 @@ jobs:
 
       - name: Create ECR repository if it doesn't exist
         run: |
-          aws ecr describe-repositories --repository-names neoapi-${{ env.ENVIRONMENT }} --region ${{ env.AWS_REGION }} 2>/dev/null || \
+          aws ecr describe-repositories \
+            --repository-names neoapi-${{ env.ENVIRONMENT }} \
+            --region ${{ env.AWS_REGION }} 2>/dev/null || \
           aws ecr create-repository \
             --repository-name neoapi-${{ env.ENVIRONMENT }} \
             --region ${{ env.AWS_REGION }} \
-            --image-scanning-configuration scanOnPush=true
-
+            --image-scanning-configuration scanOnPush=true \
+            --encryption-configuration encryptionType=AES256
       - name: Build, tag, and push image to Amazon ECR
         run: |
           ECR_REPOSITORY=${{ steps.login-ecr.outputs.registry }}/neoapi-${{ env.ENVIRONMENT }}
@@ -62,6 +67,17 @@ jobs:
           echo "IMAGE_URI=$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
           echo "ECR_REPOSITORY=$ECR_REPOSITORY" >> $GITHUB_ENV
 
+      - name: Debug parameters
+        run: |
+          echo "Subnets value: '${{ secrets.PRIVATE_SUBNETS }}'"
+          echo "Length: ${#PRIVATE_SUBNETS}"
+          PRIVATE_SUBNETS="${{ secrets.PRIVATE_SUBNETS }}"
+          if [ -z "$PRIVATE_SUBNETS" ]; then
+            echo "ERROR: PRIVATE_SUBNETS is empty!"
+            exit 1
+          fi
+          echo "SUBNET_LIST=subnet-0e66614ca7e9e7247,subnet-013f8ff069404c987" >> $GITHUB_ENV
+
       - name: Deploy CloudFormation stack
         run: |
           echo "Deploying infrastructure with image: ${{ env.IMAGE_URI }}"
@@ -70,23 +86,18 @@ jobs:
             --template-file infrastructure/cloudformation-template.yaml \
             --stack-name ${{ env.STACK_NAME }} \
             --parameter-overrides \
-              Environment=${{ env.ENVIRONMENT }} \
-              ImageUri=${{ env.IMAGE_URI }} \
-              RDSHostname=${{ secrets.RDS_HOSTNAME }} \
-              RDSDatabase=${{ env.RDSDB }} \
-              RDSUsername=${{ secrets.RDS_USERNAME }} \
-              RDSPassword=${{ secrets.RDS_PASSWORD }} \
-              VPCId=${{ secrets.VPC_ID }} \
-              PrivateSubnets=${{ secrets.PRIVATE_SUBNETS }} \
+              "Environment=${{ env.ENVIRONMENT }}" \
+              "ImageUri=${{ env.IMAGE_URI }}" \
+              "RDSHostname=${{ secrets.RDS_HOSTNAME }}" \
+              "RDSDatabase=${{ env.RDSDB }}" \
+              "RDSUsername=${{ secrets.RDS_USERNAME }}" \
+              "RDSPassword=${{ secrets.RDS_PASSWORD }}" \
+              "VPCId=${{ secrets.VPC_ID }}" \
+              "PrivateSubnets=${{ env.SUBNET_LIST }}" \
+              "DomainName=${{ env.ENDPOINT }}" \
             --capabilities CAPABILITY_NAMED_IAM \
-            --region ${{ env.AWS_REGION }}
-
-      - name: Wait for deployment to complete
-        run: |
-          echo "Waiting for CloudFormation stack to complete..."
-          aws cloudformation wait stack-create-complete \
-            --stack-name ${{ env.STACK_NAME }} \
-            --region ${{ env.AWS_REGION }}
+            --region ${{ env.AWS_REGION }} \
+            --no-fail-on-empty-changeset
 
       - name: Get ECR repository URI
         run: |
@@ -105,6 +116,9 @@ jobs:
             --output text \
             --region ${{ env.AWS_REGION }})
 
+          echo "SERVICE_URL=$SERVICE_URL" >> $GITHUB_ENV
+          echo "service_url=$SERVICE_URL" >> $GITHUB_OUTPUT
+
           echo "🚀 Deployment complete!"
           echo "Service URL: $SERVICE_URL"
           echo "Environment: ${{ env.ENVIRONMENT }}"
@@ -112,21 +126,53 @@ jobs:
 
       - name: Health check
         run: |
-          SERVICE_URL=$(aws cloudformation describe-stacks \
-            --stack-name ${{ env.STACK_NAME }} \
-            --query 'Stacks[0].Outputs[?OutputKey==`ServiceUrl`].OutputValue' \
-            --output text \
-            --region ${{ env.AWS_REGION }})
+          SERVICE_URL="${{ env.SERVICE_URL }}"
+          HEALTH_ENDPOINT="${SERVICE_URL}/healthcheck"
 
-          echo "Performing health check..."
-          sleep 30  # Give the service time to start
+          echo "Performing health check on: $HEALTH_ENDPOINT"
+          echo "Waiting 60 seconds for App Runner to start..."
+          sleep 60
 
-          for i in {1..5}; do
-            if curl -f -s "${SERVICE_URL}/v2.0/routes/healthwatch" > /dev/null; then
-              echo "✅ Health check passed!"
+          MAX_ATTEMPTS=10
+          ATTEMPT=1
+
+          while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
+            echo "Health check attempt $ATTEMPT/$MAX_ATTEMPTS..."
+            
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$HEALTH_ENDPOINT" || echo "000")
+            
+            if [ "$HTTP_CODE" = "200" ]; then
+              echo "✅ Health check passed! (HTTP $HTTP_CODE)"
               exit 0
             else
-              echo "⏳ Health check attempt $i/5 failed, retrying in 30 seconds..."
+              echo "⏳ Health check failed with HTTP code: $HTTP_CODE"
+              
+              if [ $ATTEMPT -eq $MAX_ATTEMPTS ]; then
+                echo "❌ Health check failed after $MAX_ATTEMPTS attempts"
+                exit 1
+              fi
+              
+              echo "Retrying in 30 seconds..."
               sleep 30
             fi
+            
+            ATTEMPT=$((ATTEMPT + 1))
           done
+
+      - name: Notify deployment status
+        if: always()
+        run: |
+          if [ "${{ job.status }}" = "success" ]; then
+            echo "✅ Deployment successful for ${{ env.ENVIRONMENT }}"
+            echo "URL: ${{ env.SERVICE_URL }}"
+          else
+            echo "❌ Deployment failed for ${{ env.ENVIRONMENT }}"
+          fi
+
+      - name: Rollback on failure
+        if: failure()
+        run: |
+          echo "Deployment failed, initiating rollback..."
+          aws cloudformation cancel-update-stack \
+            --stack-name ${{ env.STACK_NAME }} \
+            --region ${{ env.AWS_REGION }} || true
