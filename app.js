@@ -23,7 +23,7 @@ const onlyStatus200 = (req, res) => res.statusCode === 200;
 const cacheSuccesses = cache('5 minutes', onlyStatus200);
 
 const limiter = rateLimiter({
-  max: 50,
+  max: 5000,
   windowMS: 10000, // 1 second
   message: 'You can\'t make any more requests at the moment. Try again later',
   statusCode: 429,

@@ -7,6 +7,16 @@ Parameters:
     AllowedValues: [dev, prod]
     Description: Environment name
   
+  HostedZoneId:
+    Type: String
+    Description: Route 53 Hosted Zone ID
+    Default: "Z06678132YXCZ3LP39MIP"
+  
+  DomainName:
+    Type: String
+    Description: Domain name for the API
+    Default: "api-dev.neotoma.org"
+
   ImageUri:
     Type: String
     Description: ECR image URI
@@ -143,6 +153,17 @@ Resources:
         Timeout: 5
         HealthyThreshold: 1
         UnhealthyThreshold: 5
+  
+  ApiDNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: !Ref DomainName
+      Type: A
+      AliasTarget:
+        DNSName: !GetAtt AppRunnerService.ServiceUrl
+        HostedZoneId: Z0548130EFKXY74PMQGW  # App Runner's hosted zone (us-east-2)
+        EvaluateTargetHealth: true
 
 Outputs:
   ServiceUrl:
@@ -157,3 +178,7 @@ Outputs:
     Value: !Sub '${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/neoapi-${Environment}'
     Export:
       Name: !Sub '${AWS::StackName}-ECRRepository'
+  
+  CustomDomainURL:
+    Description: Custom domain URL
+    Value: !Sub 'https://${DomainName}'

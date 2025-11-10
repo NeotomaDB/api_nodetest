@@ -22,10 +22,12 @@ jobs:
             echo "ENVIRONMENT=prod" >> $GITHUB_ENV
             echo "STACK_NAME=neoapi-prod" >> $GITHUB_ENV
             echo "RDSDB=neotoma" >> $GITHUB_ENV
+            echo "ENDPOINT=api.neotomadb.org" >> $GITHUB_ENV
           else
             echo "ENVIRONMENT=dev" >> $GITHUB_ENV
             echo "STACK_NAME=neoapi-dev" >> $GITHUB_ENV
             echo "RDSDB=neotomatank" >> $GITHUB_ENV
+            echo "ENDPOINT=api-dev.neotomadb.org" >> $GITHUB_ENV
           fi
 
       - name: Configure AWS credentials
@@ -80,9 +82,6 @@ jobs:
         run: |
           echo "Deploying infrastructure with image: ${{ env.IMAGE_URI }}"
 
-          # The secret is formatted as `subnet-xxxx1,subnet-xxxx2` so we have to make sure the CLI recognizes
-          # it as a comma separated list.
-
           aws cloudformation deploy \
             --template-file infrastructure/cloudformation-template.yaml \
             --stack-name ${{ env.STACK_NAME }} \
@@ -95,6 +94,7 @@ jobs:
               "RDSPassword=${{ secrets.RDS_PASSWORD }}" \
               "VPCId=${{ secrets.VPC_ID }}" \
               "PrivateSubnets=${{ env.SUBNET_LIST }}" \
+              "DomainName=${{ env.ENDPOINT }}" \
             --capabilities CAPABILITY_NAMED_IAM \
             --region ${{ env.AWS_REGION }} \
             --no-fail-on-empty-changeset
