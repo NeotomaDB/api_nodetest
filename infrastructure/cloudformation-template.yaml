@@ -160,14 +160,7 @@ Outputs:
     Value: !Sub 'https://${AppRunnerService.ServiceUrl}'
     Export:
       Name: !Sub '${AWS::StackName}-ServiceUrl'
-  
-  # Remove or update this output since ECRRepository resource no longer exists
-  ECRRepository:
-    Description: ECR Repository URI
-    Value: !Sub '${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/neoapi-${Environment}'
-    Export:
-      Name: !Sub '${AWS::StackName}-ECRRepository'
-  
+
   CustomDomainURL:
     Description: Custom domain URL
     Value: !Sub 'https://${DomainName}'
