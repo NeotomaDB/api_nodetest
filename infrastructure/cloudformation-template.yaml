@@ -154,17 +154,6 @@ Resources:
         HealthyThreshold: 1
         UnhealthyThreshold: 5
   
-  ApiDNSRecord:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      HostedZoneId: !Ref HostedZoneId
-      Name: !Ref DomainName
-      Type: A
-      AliasTarget:
-        DNSName: !GetAtt AppRunnerService.ServiceUrl
-        HostedZoneId: Z0548130EFKXY74PMQGW  # App Runner's hosted zone (us-east-2)
-        EvaluateTargetHealth: true
-
 Outputs:
   ServiceUrl:
     Description: App Runner service URL
