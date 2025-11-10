@@ -127,7 +127,7 @@ jobs:
       - name: Health check
         run: |
           SERVICE_URL="${{ env.SERVICE_URL }}"
-          HEALTH_ENDPOINT="${SERVICE_URL}/v2.0/healthcheck"
+          HEALTH_ENDPOINT="${SERVICE_URL}/healthcheck"
 
           echo "Performing health check on: $HEALTH_ENDPOINT"
           echo "Waiting 60 seconds for App Runner to start..."
