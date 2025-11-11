@@ -18,6 +18,7 @@ services:
       - DB_SSL=true
       - PORT=3001
       - API_URL=http://localhost:3001
+      - NATIVELANDKEY=${NATIVELANDKEY}
     depends_on:
       - db-proxy
     networks:

@@ -399,12 +399,13 @@ const sendNativeLands = async function(req, res, next) {
       'key': process.env.NATIVELANDKEY,
       'maps': 'territories',
     };
-    const searchParams = new URLSearchParams(outobj)
+    const searchParams = new URLSearchParams(outobj);
     const maps = await fetch(`https://native-land.ca/api/index.php?${searchParams}`, {
       method: 'GET',
       headers: {
         'User-Agent': 'Neotoma Paleoecology Database API',
       },
+      signal: AbortSignal.timeout(5000),
     });
     if (!maps.ok) {
       res.status(500)
