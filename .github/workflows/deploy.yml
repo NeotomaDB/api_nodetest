@@ -96,6 +96,7 @@ jobs:
               "VPCId=${{ secrets.VPC_ID }}" \
               "PrivateSubnets=${{ env.SUBNET_LIST }}" \
               "DomainName=${{ env.ENDPOINT }}" \
+              "NativeLandKey=${{ secrets.NATIVELANDKEY }}" \
             --capabilities CAPABILITY_NAMED_IAM \
             --region ${{ env.AWS_REGION }} \
             --no-fail-on-empty-changeset

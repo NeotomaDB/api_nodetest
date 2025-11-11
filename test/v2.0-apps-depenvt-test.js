@@ -8,7 +8,7 @@ describe('tests for /v2.0/apps/depenvt', function() {
   describe('tests for get', function() {
     it('should respond 200 for "This returns the information about depositional environment for selected dataset/collention unit/site."', function() {
       const response = request('get', 'http://localhost:3001/v2.0/apps/depenvt', {
-        'qs': {'siteid': 47687, 'datasetid': 13433785, 'collectionunitid': 10901},
+        'qs': {'siteid': 35936, 'datasetid': 8123885, 'collectionunitid': 4062},
         'time': true,
       });
 

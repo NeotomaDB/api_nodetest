@@ -50,6 +50,11 @@ Parameters:
     Type: String
     NoEcho: true
     Description: RDS password
+  
+  NativeLandKey:
+    Type: String
+    NoEcho: true
+    Description: The API key for the Native Lands API
 
 Resources:
   # Security Group for App Runner
@@ -120,6 +125,8 @@ Resources:
           ImageConfiguration:
             Port: '3001'
             RuntimeEnvironmentVariables:
+            - Name: NATIVELANDKEY
+              Value: !Ref NativeLandKey
             - Name: NODE_ENV
               Value: !Ref Environment
             - Name: RDS_HOSTNAME
