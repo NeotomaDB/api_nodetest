@@ -421,15 +421,16 @@ const sendNativeLands = async function(req, res, next) {
             data: null,
             message: maps.error,
           });
+    } else {
+      const natland = await maps.json();
+      res.status(200)
+          .json({
+            status: 'success',
+            data: natland,
+            message: 'Retrieved all datasets',
+            query: outobj,
+          });
     }
-    const natland = await maps.json();
-    res.status(200)
-        .json({
-          status: 'success',
-          data: natland,
-          message: 'Retrieved all datasets',
-          query: outobj,
-        });
   };
 };
 
