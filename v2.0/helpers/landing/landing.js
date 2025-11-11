@@ -406,6 +406,13 @@ const sendNativeLands = async function(req, res, next) {
         'User-Agent': 'Neotoma Paleoecology Database API',
       },
       signal: AbortSignal.timeout(5000),
+    }).catch((err) => {
+      res.status(500)
+          .json({
+            status: 'failure',
+            data: null,
+            message: err.message,
+          });
     });
     if (!maps.ok) {
       res.status(500)
