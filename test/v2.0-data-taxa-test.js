@@ -8,7 +8,7 @@ describe('tests for /v2.0/data/taxa', function() {
   describe('tests for get', function() {
     it('should respond 200 for "A taxon or array of taxa."', function() {
       const response = request('get', 'http://localhost:3001/v2.0/data/taxa', {
-        'qs': {'taxonname': 'dolor sunt', 'taxagroup': 'officia', 'ecolgroup': 'id qui incididunt dolor deserunt', 'status': 0, 'limit': 10, 'offset': 0},
+        'qs': {'taxonname': 'qui Lorem nostrud adipisicing eu', 'taxagroup': 'sint dolor', 'ecolgroup': 'deserunt consequat sed do', 'status': true, 'limit': 10, 'offset': 0},
         'time': true,
       });
 
