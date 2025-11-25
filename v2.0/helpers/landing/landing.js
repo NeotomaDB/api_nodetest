@@ -413,6 +413,8 @@ const sendNativeLands = async function(req, res, next) {
             data: null,
             message: err.message,
           });
+      console.log(process.env.NATIVELANDKEY);
+      return;
     });
 
     const httpResponse = await (maps.ok);
