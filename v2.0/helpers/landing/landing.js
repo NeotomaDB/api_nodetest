@@ -414,7 +414,10 @@ const sendNativeLands = async function(req, res, next) {
             message: err.message,
           });
     });
-    if (!maps.ok) {
+
+    const httpResponse = await (maps.ok);
+
+    if (!httpResponse) {
       res.status(500)
           .json({
             status: 'failure',
@@ -433,7 +436,6 @@ const sendNativeLands = async function(req, res, next) {
     }
   };
 };
-
 
 module.exports.datasetbydbid = datasetbydbid;
 module.exports.dsuploadagg = dsuploadagg;
