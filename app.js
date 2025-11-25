@@ -177,4 +177,8 @@ if (process.env.NODE_ENV === 'development') {
   app.listen(3005);
 }
 
+if (process.env.NODE_ENV === 'production') {
+  app.listen(3001);
+}
+
 module.exports = app;

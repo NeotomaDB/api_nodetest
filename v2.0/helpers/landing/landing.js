@@ -417,15 +417,21 @@ const sendNativeLands = async function(req, res, next) {
       return;
     });
 
-    const httpResponse = await (maps.ok);
+    // Add this check right after the fetch
+    if (!maps) {
+      return; // Exit the function if fetch failed
+    }
 
-    if (!httpResponse) {
+    const httpResponse = await (maps);
+
+    if (!httpResponse.ok) {
       res.status(500)
           .json({
             status: 'failure',
             data: null,
             message: maps.error,
           });
+      return;
     } else {
       const natland = await maps.json();
       res.status(200)
