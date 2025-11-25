@@ -400,6 +400,7 @@ const sendNativeLands = async function(req, res, next) {
       'maps': 'territories',
     };
     const searchParams = new URLSearchParams(outobj);
+
     const maps = await fetch(`https://native-land.ca/api/index.php?${searchParams}`, {
       method: 'GET',
       headers: {
@@ -407,6 +408,10 @@ const sendNativeLands = async function(req, res, next) {
       },
       signal: AbortSignal.timeout(5000),
     }).catch((err) => {
+        console.log('Fetch error caught:', err.name, err.message);
+        console.log('Full error object:', err); // Add this
+        console.log('Error cause:', err.cause); // Add this - often has the real error!
+
       res.status(500)
           .json({
             status: 'failure',
