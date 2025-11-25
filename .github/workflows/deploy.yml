@@ -78,6 +78,7 @@ jobs:
             exit 1
           fi
           echo "SUBNET_LIST=subnet-0e66614ca7e9e7247,subnet-013f8ff069404c987" >> $GITHUB_ENV
+          echo "PUBSUB_LIST=subnet-0f5812eb0691aca6a,subnet-0045ed0716dc4461c" >> $GITHUB_ENV
 
       - name: Deploy CloudFormation stack
         run: |
@@ -95,6 +96,7 @@ jobs:
               "RDSPassword=${{ secrets.RDS_PASSWORD }}" \
               "VPCId=${{ secrets.VPC_ID }}" \
               "PrivateSubnets=${{ env.SUBNET_LIST }}" \
+              "PublicSubnets=${{ env.PUBSUB_LIST }}" \
               "DomainName=${{ env.ENDPOINT }}" \
               "NativeLandKey=${{ secrets.NATIVELANDKEY }}" \
             --capabilities CAPABILITY_NAMED_IAM \
