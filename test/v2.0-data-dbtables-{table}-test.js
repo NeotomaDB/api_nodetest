@@ -7,8 +7,8 @@ const expect = chakram.expect;
 describe('tests for /v2.0/data/dbtables/{table}', function() {
   describe('tests for get', function() {
     it('should respond 200 for "Returned table."', function() {
-      const response = request('get', 'http://localhost:3001/v2.0/data/dbtables/officia', {
-        'qs': {'count': true, 'limit': 10, 'offset': 0},
+      const response = request('get', 'http://localhost:3001/v2.0/data/dbtables/consecteturex', {
+        'qs': {'count': false, 'limit': 10, 'offset': 0},
         'time': true,
       });
 
