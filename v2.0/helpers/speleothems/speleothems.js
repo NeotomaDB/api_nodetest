@@ -59,9 +59,9 @@ function speleothemsbycuid(req, res, next) {
  */
 function speleothemsbydsid(req, res, next) {
   const db = req.app.locals.db;
-  console.log('speleothems', req.params);
+  // console.log('speleothems', req.params);
   const goodstid = !!req.params.datasetid;
-  console.log('speleothemsbydsid', req.params.datasetid);
+  // console.log('speleothemsbydsid', req.params.datasetid);
 
   if (goodstid) {
     const dsid = commaSep(req.params.datasetid);
