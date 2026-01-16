@@ -14,12 +14,12 @@
     "start": "NODE_ENV=production nodemon --legacy-watch app.js",
     "test": "node ./node_modules/mocha/bin/mocha --config=test/.mocharc.yml --reporter-options reportDir=public,reportFilename=tests",
     "build:openapi": "(cd ./openapi && node ./scripts/build-openapi.js)",
-    "validate:openapi": "yarn build:openapi && bash genoatt.sh && sleep 2 && bash runmochabatch.sh"
+    "validate:openapi": "yarn build:openapi && bash genoatt.sh && sleep 4 && bash runmochabatch.sh"
   },
   "pre-commit": "validate:openapi",
   "dependencies": {
     "@terraformer/wkt": "^2.2.1",
-    "acorn": "^6.4.2",
+    "acorn": "^8.15.0",
     "apicache": "^1.6.2",
     "axios": "^1.12.0",
     "big-json": "^3.2.0",
@@ -37,7 +37,7 @@
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.1",
     "he": "^1.2.0",
-    "helmet": "^7.2.0",
+    "helmet": "^8.1.0",
     "jade": "^1.11.0",
     "js2xmlparser": "^4.0.1",
     "morgan": "^1.10.1",
@@ -55,7 +55,7 @@
   },
   "devDependencies": {
     "chai": "^4.3.6",
-    "chai-openapi-response-validator": "^0.13.0",
+    "chai-openapi-response-validator": "^0.14.2",
     "eslint": "^8.56.0",
     "eslint-config-google": "^0.11.0",
     "eslint-config-standard": "^12.0.0",

@@ -12,7 +12,7 @@ const path = require('path');
  * is up to date as we develop.
  */
 function buildOpenAPI() {
-  console.log('🔄 Building OpenAPI specification...');
+  console.log('Building OpenAPI specification...');
 
   // Create the `dist` folder (for distribution) if the
   // `dist` folder does not exist.
@@ -56,19 +56,19 @@ function buildOpenAPI() {
   // This will give us `useFiles` which tells us which files are associated
   // with each section.
   Object.keys(toBuild).forEach((key) => {
-    console.log(`📝 Loading paths for the ${key} section...`);
+    console.log(`Loading paths for the ${key} section...`);
     const outputs = findYamlElements(toBuild[key]).flat();
     outputs.forEach((file) => {
-      console.log(`  📝 Loading paths from ${file}...`);
+      console.log(`Loading paths from ${file}...`);
       try {
         const pathSpec = yaml.load(fs.readFileSync(file, 'utf8'));
         if (pathSpec && typeof pathSpec === 'object') {
           if (key === 'paths') {
             Object.assign(mainSpec[key], pathSpec);
-            console.log(`✅ Added ${Object.keys(pathSpec).length} paths from ${file}`);
+            console.log(`Added ${Object.keys(pathSpec).length} paths from ${file}`);
           } else {
             Object.assign(mainSpec.components[key], pathSpec);
-            console.log(`✅ Added ${Object.keys(pathSpec).length} components from ${file}`);
+            console.log(`Added ${Object.keys(pathSpec).length} components from ${file}`);
           }
         }
       } catch (error) {

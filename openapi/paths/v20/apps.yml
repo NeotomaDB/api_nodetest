@@ -11,10 +11,15 @@
             schema:
               $ref: '#/components/schemas/depenvbyid' 
         description: 'This returns the information about depositional
-          environment for selected dataset/collention unit/site.'
+          environment for selected dataset/collection unit/site.'
     tags:
       - v2.0
-      - depositional environment 
+      - depositional environment
+    x-database-tables: 
+      - sites
+      - datasets
+      - collectionunits
+      - depenvttypes
 /v2.0/apps/constdb:
   get:
     responses:
@@ -32,6 +37,8 @@
       - Database metadata
       - Summary Informationrmation
       - v2.0
+    x-database-tables:
+      - constituentdatabases
 /v2.0/apps/constdb/datasetages:
   get:
     parameters:
@@ -48,6 +55,9 @@
       - Dataset metadata
       - Summary Information
       - v2.0
+    x-database-tables:
+      - constituentdatabases
+      - datasets
 /v2.0/apps/constdb/datasetuploads:
   get:
     parameters:
@@ -64,6 +74,9 @@
       - Dataset metadata
       - Summary Information
       - v2.0
+    x-database-tables:
+      - datasets
+      - constituentdatabases
 /v2.0/apps/constdb/datasets:
   get:
     parameters:
