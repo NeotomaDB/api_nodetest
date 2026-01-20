@@ -23,11 +23,15 @@ jobs:
             echo "STACK_NAME=neoapi-prod" >> $GITHUB_ENV
             echo "RDSDB=neotoma" >> $GITHUB_ENV
             echo "ENDPOINT=api.neotomadb.org" >> $GITHUB_ENV
+            echo "RDSUsername=${{ secrets.RDS_USERNAME }}" >> $GITHUB_ENV
+            echo "RDSPassword=${{ secrets.RDS_PASSWORD }}" >> $GITHUB_ENV
           else
             echo "ENVIRONMENT=dev" >> $GITHUB_ENV
             echo "STACK_NAME=neoapi-dev" >> $GITHUB_ENV
             echo "RDSDB=neotomatank" >> $GITHUB_ENV
             echo "ENDPOINT=api-dev.neotomadb.org" >> $GITHUB_ENV
+            echo "RDSUsername=${{ secrets.RDS_USERNAME_DEV }}" >> $GITHUB_ENV
+            echo "RDSPassword=${{ secrets.RDS_PASSWORD_DEV }}" >> $GITHUB_ENV
           fi
 
       - name: Configure AWS credentials
@@ -92,8 +96,8 @@ jobs:
               "ImageUri=${{ env.IMAGE_URI }}" \
               "RDSHostname=${{ secrets.RDS_HOSTNAME }}" \
               "RDSDatabase=${{ env.RDSDB }}" \
-              "RDSUsername=${{ secrets.RDS_USERNAME }}" \
-              "RDSPassword=${{ secrets.RDS_PASSWORD }}" \
+              "RDSUsername=${{ env.RDSUsername }}" \
+              "RDSPassword=${{ env.RDSPassword }}" \
               "VPCId=${{ secrets.VPC_ID }}" \
               "PrivateSubnets=${{ env.SUBNET_LIST }}" \
               "PublicSubnets=${{ env.PUBSUB_LIST }}" \
