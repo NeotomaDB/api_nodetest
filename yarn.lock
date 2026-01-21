@@ -3768,10 +3768,10 @@ js-yaml@^4.0.0, js-yaml@^4.1.0, js-yaml@^4.1.1:
   dependencies:
     argparse "^2.0.1"
 
-js2xmlparser@^4.0.1:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/js2xmlparser/-/js2xmlparser-4.0.2.tgz#2a1fdf01e90585ef2ae872a01bc169c6a8d5e60a"
-  integrity sha512-6n4D8gLlLf1n5mNLQPRfViYzu9RATblzPEtm1SthMX1Pjao0r9YI9nw7ZIfRxQMERS87mcswrg+r/OYrPRX6jA==
+js2xmlparser@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/js2xmlparser/-/js2xmlparser-5.0.0.tgz#2c969c136762b567402a605f3931eb2e98bce1b9"
+  integrity sha512-ckXs0Fzd6icWurbeAXuqo+3Mhq2m8pOPygsQjTPh8K5UWgKaUgDSHrdDxAfexmT11xvBKOQ6sgYwPkYc5RW/bg==
   dependencies:
     xmlcreate "^2.0.4"
 
