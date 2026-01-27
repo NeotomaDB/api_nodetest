@@ -55,7 +55,7 @@ function publicationquery (req, res, next) {
     'offset': parseInt(req.query.offset || 0)
   };
 
-  if (!!outobj.year) {
+  if (outobj.year) {
     outobj.year = outobj.year.map(x => String(x))
   }
 

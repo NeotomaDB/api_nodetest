@@ -110,3 +110,5 @@ build_deploy.sh
 .github/instructions/snyk_rules.instructions.md
 
 output.txt
+
+.yarn/

@@ -8,7 +8,7 @@ const sitebygpid = sql('../v1.5/helpers/sites/sitebygpid.sql');
 
 function sitesbyid(req, res, next) {
   let db = req.app.locals.db
-  if (!!req.params.siteid) {
+  if (req.params.siteid) {
     var siteid = String(req.params.siteid).split(',').map(function(item) {
       return parseInt(item, 10);
     });
@@ -82,7 +82,7 @@ function sitesquery(req, res, next) {
 
 function sitesbydataset(req, res, next) {
   let db = req.app.locals.db
-  if (!!req.params.datasetid) {
+  if (req.params.datasetid) {
     var datasetid = String(req.params.datasetid).split(',').map(function(item) {
       return parseInt(item, 10);
     });
@@ -113,7 +113,7 @@ function sitesbydataset(req, res, next) {
 
 function sitesbygeopol(req, res, next) {
   let db = req.app.locals.db
-  if (!!req.params.gpid) {
+  if (req.params.gpid) {
     var gpid = String(req.params.gpid).split(',').map(function(item) {
       return parseInt(item, 10);
     });
