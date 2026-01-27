@@ -14,7 +14,7 @@ const gpuid = sql('../v1.5/helpers/geopoliticalunits/gpubyid.sql');
 function geopoliticalbyid(req, res, next) {
   const db = req.app.locals.db;
   let gpid = [];
-  if (!!req.params.gpid) {
+  if (req.params.gpid) {
     gpid = String(req.params.gpid).split(',').map(function(item) {
       return parseInt(item, 10);
     });

@@ -96,7 +96,7 @@ function calibrate(req, res, next) {
 
           // Now parse the ages:
           let outputs = ocd.map(function(x) {
-            if (!!x.likelihood.range) {
+            if (x.likelihood.range) {
               let result = {name: x.name,
                 input: {date: x.date, error: x.error, curve: curve},
                 ref: x.ref,

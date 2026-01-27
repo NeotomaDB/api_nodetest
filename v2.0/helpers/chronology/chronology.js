@@ -83,7 +83,7 @@ function chronologybydsid (req, res, next) {
 
 function chronologybystid (req, res, next) {
   let db = req.app.locals.db
-  if (!!req.params.siteid) {
+  if (req.params.siteid) {
     var siteid = String(req.params.siteid)
       .split(',')
       .map(function (item) {

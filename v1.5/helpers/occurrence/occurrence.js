@@ -7,7 +7,7 @@ const occurrencebyidsql = sql('../v1.5/helpers/occurrence/occurrencebyid.sql');
 
 function occurrencebyid(req, res, next) {
   let db = req.app.locals.db
-  if (!!req.params.occurrenceid) {
+  if (req.params.occurrenceid) {
     var occurrenceid = String(req.params.occurrenceid).split(',').map(function(item) {
       return parseInt(item, 10);
     });
@@ -118,7 +118,7 @@ function occurrencequery (req, res, next) {
 
 function occurrencebytaxon(req, res, next) {
   let db = req.app.locals.db
-  if (!!req.params.taxonid) {
+  if (req.params.taxonid) {
     var taxonlist = String(req.params.taxonid).split(',').map(function(item) {
       return parseInt(item, 10);
     });

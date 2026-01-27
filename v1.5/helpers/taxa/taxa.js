@@ -66,7 +66,7 @@ function taxonbyid (req, res, next) {
     return parseInt(item, 10);
   });
 
-  if (!!taxonid) {
+  if (taxonid) {
     var query = 'SELECT * FROM ndb.taxa WHERE taxa.taxonid IN ($1:csv)';
   } else {
     res.status(500)
@@ -93,7 +93,7 @@ function taxonbyid (req, res, next) {
 
 function gettaxonquery(req, res, next) {
   let db = req.app.locals.db
-  if (!!req.query.taxonid) {
+  if (req.query.taxonid) {
     var taxonid = String(req.query.taxonid).split(',').map(function (item) {
       return parseInt(item, 10);
     });
