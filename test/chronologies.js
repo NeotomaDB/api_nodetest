@@ -27,10 +27,10 @@ describe('Get chronology data by datasetid:', function() {
   this.timeout(5000);
   it('A call to two datasets returns two datasets of data:', function(done) {
     api.get('v2.0/data/datasets/684,1001/chronologies')
-        .set('Accept', 'application/json')
-        .expect(function(res) {
-          return res.body['data'].length === 4;
-        })
-        .expect(200, done());
+      .set('Accept', 'application/json')
+      .expect(function(res) {
+        return res.body['data'].length === 4;
+      })
+      .expect(200, done());
   });
 });

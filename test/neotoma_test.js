@@ -21,7 +21,7 @@ const api = supertest(testroute);
 describe('Any path goes to the api documentation:', function() {
   it('`api-docs` redirects to the api documentation.', function(done) {
     api.get('v2')
-        .set('Accept', 'application/json')
-        .expect(302, done);
+      .set('Accept', 'application/json')
+      .expect(302, done);
   });
 });

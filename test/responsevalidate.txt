@@ -16,14 +16,14 @@ let testroute = process.env.APIPATH;
 if (typeof process.env.APIPATH === 'undefined') {
   testroute = 'http://localhost:' + process.env.APIPORT;
 }
-console.log(testroute);
+
 const api = supertest(testroute);
 
 const fullPath = path.join(process.cwd(), 'openapi.yaml');
 const apidoc = YAML.load(fullPath);
 
 // Import this plugin
-const chaiResponseValidator = require('chai-openapi-response-validator');
+const chaiResponseValidator = require('chai-openapi-response-validator').default;
 
 // Load an OpenAPI file (YAML or JSON) into this plugin
 chai.use(chaiResponseValidator(fullPath));
@@ -34,7 +34,7 @@ let description = '';
 
 function runTest(description, apipath) {
   describe(description, () => {
-    it('should satisfy OpenAPI spec', async () => {
+    it('should satisfy OpenAPI spec', async() => {
       // Get an HTTP response from your server (e.g. using axios)
       console.log(testroute + apipath);
       const res = await axios.get(testroute + apipath);
