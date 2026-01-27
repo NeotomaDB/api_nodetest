@@ -23,17 +23,17 @@ info:
   contact:
     name: Simon J Goring
     email: goring@wisc.edu
-    url: 'http://goring.org'
+    url: http://goring.org
   license:
     name: MIT
-    url: 'https://opensource.org/licenses/MIT'
+    url: https://opensource.org/licenses/MIT
 servers:
   - description: The Neotoma production server.
-    url: 'https://api.neotomadb.org/'
+    url: https://api.neotomadb.org/
   - description: Neotoma development server.
-    url: 'https://api-dev.neotomadb.org/'
+    url: https://api-dev.neotomadb.org/
   - description: A local Neotoma server.
-    url: 'http://localhost:3001/'
+    url: http://localhost:3001/
 components:
   parameters:
     dbidQuery:
@@ -60,7 +60,7 @@ components:
         minimum: 1000
         type: integer
     ageOfQuery:
-      description: 'Dataset age ranges must span this age (in calibrated years before present, with 0 at 1950CE)'
+      description: Dataset age ranges must span this age (in calibrated years before present, with 0 at 1950CE)
       in: query
       name: ageof
       required: false
@@ -84,8 +84,14 @@ components:
       required: false
       schema:
         type: integer
-        minimum: 2000
-        maximum: 32767
+        enum:
+          - 3031
+          - 3857
+          - 3995
+          - 4326
+          - 9989
+          - 32633
+          - 32733
         default: 4326
         example: 3857
       description: >
@@ -113,7 +119,7 @@ components:
         type: number
         default: 0.0001
     ageOldQuery:
-      description: 'Oldest age that intercepts with the dataset (in calibrated years before present, with 0 at 1950CE)'
+      description: Oldest age that intercepts with the dataset (in calibrated years before present, with 0 at 1950CE)
       in: query
       name: ageold
       required: false
@@ -124,7 +130,7 @@ components:
         minimum: -100
         type: integer
     ageYoungQuery:
-      description: 'Youngest age that intercepts with the dataset (in calibrated years before present, with 0 at 1950CE)'
+      description: Youngest age that intercepts with the dataset (in calibrated years before present, with 0 at 1950CE)
       in: query
       name: ageyoung
       required: false
@@ -219,9 +225,9 @@ components:
       name: contactname
       required: false
       schema:
-        example: 'Grimm, Eric Christopher'
+        example: Grimm, Eric Christopher
         type: string
-        pattern: '^[-''a-zA-ZÀ-ÖØ-öø-ÿ, ]+$'
+        pattern: ^[-'a-zA-ZÀ-ÖØ-öø-ÿ, ]+$
     countQuery:
       description: Should we return the row count for the table?
       in: query
@@ -247,7 +253,7 @@ components:
         example: deceased
         type: string
     contactidPath:
-      description: 'Unique contact identifier within the Neotoma Database, alone or comma separated.'
+      description: Unique contact identifier within the Neotoma Database, alone or comma separated.
       in: path
       name: contactid
       required: true
@@ -258,7 +264,7 @@ components:
         minimum: 1
         type: integer
     contactidQuery:
-      description: 'Unique contact identifier within the Neotoma Database, alone or comma separated.'
+      description: Unique contact identifier within the Neotoma Database, alone or comma separated.
       in: query
       name: contactid
       required: false
@@ -312,7 +318,7 @@ components:
           - St. Croix Watershed Research Station of the Science Museum of Minnesota
         type: string
     aggdatasetidPath:
-      description: 'Valid Neotoma aggregate dataset identifier (integer), either singly or in a comma separated list.'
+      description: Valid Neotoma aggregate dataset identifier (integer), either singly or in a comma separated list.
       in: path
       name: aggdatasetid
       required: true
@@ -323,7 +329,7 @@ components:
         minimum: 1
         type: integer
     datasetidQuery:
-      description: 'Valid Neotoma dataset identifier (integer), either singly or in a comma separated list.'
+      description: Valid Neotoma dataset identifier (integer), either singly or in a comma separated list.
       in: query
       name: datasetid
       required: false
@@ -334,13 +340,13 @@ components:
         exclusiveMinimum: true
         type: integer
     doidataQuery:
-      description: 'A valid DOI in the form 10.XXXX/XXXXX (i.e., excluding ''https://doi.org'').'
+      description: A valid DOI in the form 10.XXXX/XXXXX (i.e., excluding 'https://doi.org').
       in: query
       name: doi
       required: false
       schema:
         type: string
-        pattern: '^10.\d{4,9}/[-._;()/:A-Z0-9]+$'
+        pattern: ^10.\d{4,9}/[-._;()/:A-Z0-9]+$
         example: 10.21233/znex-sp94
     datasettypeQuery:
       description: >-
@@ -378,7 +384,7 @@ components:
           - modern plant biomarker
           - phytolith
           - specimen stable isotope
-          - 'paleomagnetic,biochemistry'
+          - paleomagnetic,biochemistry
           - modern biochemistry
           - organic carbon
           - insect modern
@@ -410,7 +416,7 @@ components:
       schema:
         type: string
         example: Grimm
-        pattern: '^[-''a-zA-ZÀ-ÖØ-öø-ÿ% ]+$'
+        pattern: ^[-'a-zA-ZÀ-ÖØ-öø-ÿ% ]+$
     gpidPath:
       description: Numeric ID for the geopolitical unit.
       in: path
@@ -436,8 +442,8 @@ components:
           value: 5392
           summary: A valid unique identifier for geopolitical units from Neotoma's geopoliticalunits table.
         gpids:
-          value: '2155,5392,313,5414'
-          summary: 'A set of unique identifiers, separated by commas.'
+          value: 2155,5392,313,5414
+          summary: A set of unique identifiers, separated by commas.
     gpnameQuery:
       description: Name for a geopolitical unit.
       in: query
@@ -448,10 +454,10 @@ components:
       examples:
         countryname:
           value: Canada
-          summary: 'The name of a country, state or other region.'
+          summary: The name of a country, state or other region.
         countrynames:
-          value: 'Italy, austria, switzerland'
-          summary: 'The name of a set of locations, separated by commas.'
+          value: Italy, austria, switzerland
+          summary: The name of a set of locations, separated by commas.
     keywordQuery:
       description: >-
         A valid keyword for samples within Neotoma. The list of valid names can be obtained through a call to the
@@ -469,7 +475,7 @@ components:
           - beyond radiocarbon
           - null
     limitParam:
-      description: 'The maximum number of records to be returned, default is 25.'
+      description: The maximum number of records to be returned, default is 25.
       in: query
       name: limit
       required: false
@@ -495,7 +501,7 @@ components:
             {"type":"Polygon","crs":{"type":"name","properties":{"name":"EPSG:4326"}},"coordinates":[[[13.4,55.92],[13.5,55.92],[13.5,55.95],[13.4,55.95],[13.4,55.92]]]}
           summary: A geoJSON representation of a polygon that includes Argentina and Chile.
         EuropeanWKT:
-          value: 'POLYGON ((13.4 55.92,13.5 55.92,13.5 55.95,13.4 55.95,13.4 55.92))'
+          value: POLYGON ((13.4 55.92,13.5 55.92,13.5 55.95,13.4 55.95,13.4 55.92))
           summary: A WKT formatted spatial polygon that includes land adjacent to the Adriatic sea.
     lowergpQuery:
       description: Should all lower ranked units below the target unit be returned?
@@ -506,7 +512,7 @@ components:
         default: false
         type: boolean
     occurrenceidPath:
-      description: 'Valid Neotoma occurrence identifier (integer), either singly or in a comma separated list.'
+      description: Valid Neotoma occurrence identifier (integer), either singly or in a comma separated list.
       in: path
       name: occurrenceid
       required: true
@@ -516,7 +522,7 @@ components:
         minimum: 1
         type: integer
     occurrenceidQuery:
-      description: 'Valid Neotoma occurrence identifier (integer), either singly or in a comma separated list.'
+      description: Valid Neotoma occurrence identifier (integer), either singly or in a comma separated list.
       in: query
       name: occurrenceid
       required: false
@@ -571,7 +577,7 @@ components:
         exclusiveMinimum: true
         type: integer
     pubsearchQuery:
-      description: 'A fulltext search string.  Either a literal portion of the article name, or keywords.'
+      description: A fulltext search string.  Either a literal portion of the article name, or keywords.
       in: query
       name: search
       required: false
@@ -599,7 +605,7 @@ components:
           - Undergraduate thesis
         type: string
     pubyearQuery:
-      description: 'The year of publication, either as a single value or comma separated string.'
+      description: The year of publication, either as a single value or comma separated string.
       in: query
       name: year
       required: false
@@ -609,7 +615,7 @@ components:
         minimum: 1500
         type: integer
     rankQuery:
-      description: 'The unit rank.  Ranges from 1 (country) - 4 (e.g., parks).'
+      description: The unit rank.  Ranges from 1 (country) - 4 (e.g., parks).
       in: query
       name: rank
       required: false
@@ -638,7 +644,7 @@ components:
         example: Ageröds Mosse
         type: string
     siteidPath:
-      description: 'Valid Neotoma site identifier (integer), either singly or in a comma separated list.'
+      description: Valid Neotoma site identifier (integer), either singly or in a comma separated list.
       in: path
       name: siteid
       required: true
@@ -659,7 +665,7 @@ components:
         default: 10000
         type: integer
     siteidQuery:
-      description: 'Valid Neotoma site identifier (integer), either singly or in a comma separated list.'
+      description: Valid Neotoma site identifier (integer), either singly or in a comma separated list.
       in: query
       name: siteid
       required: false
@@ -752,8 +758,8 @@ components:
         type: string
   schemas:
     address:
-      description: 'A physical address, as a single string.'
-      example: '550 N Park St, Madison WI, USA'
+      description: A physical address, as a single string.
+      example: 550 N Park St, Madison WI, USA
       nullable: true
       type: string
     ageold:
@@ -949,7 +955,7 @@ components:
               example: 44
               type: integer
             contactname:
-              example: 'Grimm, Eric Christopher'
+              example: Grimm, Eric Christopher
               type: string
             familyname:
               example: Grimm
@@ -1132,7 +1138,7 @@ components:
       minimum: 1
       type: integer
     contactname:
-      example: 'Goring, Simon J'
+      example: Goring, Simon J
       nullable: true
       type: string
     contactresponse:
@@ -1635,7 +1641,7 @@ components:
           type: string
     geography:
       example: '{"type":"Point","crs":{"type":"name","properties":{"name":"EPSG:4326"}},"coordinates":[-75.25,55.09167]}'
-      pattern: '([{\[]{1}([,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t]|".*?")+[}\]]{1})'
+      pattern: ([{\[]{1}([,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t]|".*?")+[}\]]{1})
       type: string
     geopolitical:
       properties:
@@ -2198,8 +2204,8 @@ components:
         - SI
         - µS/cm 25C
         - cc
-        - 'per mil, PDB'
-        - 'per mil, air'
+        - per mil, PDB
+        - per mil, air
         - percent dry weight
         - µg/kg
         - Mean uM
@@ -2587,7 +2593,7 @@ components:
       example: Modern
       type: string
     url:
-      example: 'https://www.neotomadb.org'
+      example: https://www.neotomadb.org
       format: url
       nullable: true
       type: string
@@ -2609,7 +2615,7 @@ paths:
         - v1.5
   /v1.5/apps/TaxaInDatasets:
     get:
-      description: 'The set of all taxa, and a list of all the datasets in which each taxon appears.'
+      description: The set of all taxa, and a list of all the datasets in which each taxon appears.
       responses:
         '200':
           content:
@@ -2635,7 +2641,7 @@ paths:
       tags:
         - Database tables
         - v1.5
-  '/v1.5/data/contacts/{contactid}':
+  /v1.5/data/contacts/{contactid}:
     get:
       description: Returns researcher contact information associated with a record.
       parameters:
@@ -2657,7 +2663,7 @@ paths:
       tags:
         - Contact metadata
         - v1.5
-  '/v1.5/data/datasets/{datasetid}':
+  /v1.5/data/datasets/{datasetid}:
     get:
       description: Returns information about Neotoma dataset
       parameters:
@@ -2673,7 +2679,7 @@ paths:
       tags:
         - Dataset metadata
         - v1.5
-  '/v1.5/data/downloads/{datasetid}':
+  /v1.5/data/downloads/{datasetid}:
     get:
       description: Returns the named Neotoma Database table.
       parameters:
@@ -2707,7 +2713,7 @@ paths:
       tags:
         - Geopolitical metadata
         - v1.5
-  '/v1.5/data/geopoliticalunits/{gpid}':
+  /v1.5/data/geopoliticalunits/{gpid}:
     get:
       parameters:
         - $ref: '#/components/parameters/gpidPath'
@@ -2722,7 +2728,7 @@ paths:
       tags:
         - Geopolitical metadata
         - v1.5
-  '/v1.5/data/occurrence/{occurrenceid}':
+  /v1.5/data/occurrence/{occurrenceid}:
     get:
       description: >-
         Given a unique occurrence identifier associated with a unique occurrence in Neotoma, return individual
@@ -2740,7 +2746,7 @@ paths:
       tags:
         - Occurrence metadata
         - v1.5
-  '/v1.5/data/sites/{siteid}':
+  /v1.5/data/sites/{siteid}:
     get:
       description: Returns information about Neotoma publications
       parameters:
@@ -2756,7 +2762,7 @@ paths:
       tags:
         - Site metadata
         - v1.5
-  '/v1.5/dbtables/{table}':
+  /v1.5/dbtables/{table}:
     get:
       description: Returns the named Neotoma Database table.  An empty query returns a list of all Neotoma tables.
       parameters:
@@ -3064,7 +3070,7 @@ paths:
         - v2.0
         - Lake morphometry
         - Spatial
-  '/v2.0/data/chronologies/{chronid}':
+  /v2.0/data/chronologies/{chronid}:
     get:
       description: >-
         Returns the chronology and chronological controls used for a dataset age model associated with a particular
@@ -3103,7 +3109,7 @@ paths:
       tags:
         - Contact metadata
         - v2.0
-  '/v2.0/data/contacts/{contactid}':
+  /v2.0/data/contacts/{contactid}:
     get:
       description: Returns contact information for an individaul in the database.
       parameters:
@@ -3119,7 +3125,7 @@ paths:
       tags:
         - Contact metadata
         - v2.0
-  '/v2.0/data/contacts/{contactid}/sites':
+  /v2.0/data/contacts/{contactid}/sites:
     get:
       description: Returns the set of sites associated with an individual (or individuals).
       parameters:
@@ -3189,7 +3195,7 @@ paths:
       tags:
         - Dataset metadata
         - v2.0
-  '/v2.0/data/speleothems/{collectionunitid}':
+  /v2.0/data/speleothems/{collectionunitid}:
     get:
       description: Returns information about speleothem specific metadata given a collectionunit ID.
       parameters:
@@ -3206,7 +3212,7 @@ paths:
         - Speleothem metadata
         - SISAL
         - v2.0
-  '/v2.0/data/datasets/{datasetid}':
+  /v2.0/data/datasets/{datasetid}:
     get:
       description: Returns information about Neotoma dataset
       parameters:
@@ -3222,7 +3228,7 @@ paths:
       tags:
         - Dataset metadata
         - v2.0
-  '/v2.0/data/aggregatedatasets/{aggdatasetid}':
+  /v2.0/data/aggregatedatasets/{aggdatasetid}:
     get:
       description: Returns information about Neotoma datasets within an aggregate dataset.
       parameters:
@@ -3238,7 +3244,7 @@ paths:
       tags:
         - Dataset metadata
         - v2.0
-  '/v2.0/data/datasets/{datasetid}/chronologies':
+  /v2.0/data/datasets/{datasetid}/chronologies:
     get:
       description: Returns the set of chronologies associated with a dataset.
       parameters:
@@ -3254,7 +3260,7 @@ paths:
       tags:
         - Chronology metadata
         - v2.0
-  '/v2.0/data/datasets/{datasetid}/contacts':
+  /v2.0/data/datasets/{datasetid}/contacts:
     get:
       description: Returns researcher contact information associated with a record.
       parameters:
@@ -3270,7 +3276,7 @@ paths:
       tags:
         - Contact metadata
         - v2.0
-  '/v2.0/data/datasets/{datasetid}/doi':
+  /v2.0/data/datasets/{datasetid}/doi:
     get:
       description: Returns Digital Object Identifiers associated with specific datasets.
       parameters:
@@ -3286,7 +3292,7 @@ paths:
       tags:
         - DOI metadata
         - v2.0
-  '/v2.0/data/datasets/{datasetid}/lithology':
+  /v2.0/data/datasets/{datasetid}/lithology:
     get:
       description: Returns the lithology associated with specific datasets.
       parameters:
@@ -3302,7 +3308,7 @@ paths:
       tags:
         - Lithology metadata
         - v2.0
-  '/v2.0/data/datasets/{datasetid}/publications':
+  /v2.0/data/datasets/{datasetid}/publications:
     get:
       description: Returns publications data associated with specific datasets.
       parameters:
@@ -3318,7 +3324,7 @@ paths:
       tags:
         - Publication metadata
         - v2.0
-  '/v2.0/data/datasets/{datasetid}/sites':
+  /v2.0/data/datasets/{datasetid}/sites:
     get:
       description: Returns site data associated with specific datasets.
       parameters:
@@ -3334,7 +3340,7 @@ paths:
       tags:
         - Site metadata
         - v2.0
-  '/v2.0/data/datasets/{datasetid}/taxa':
+  /v2.0/data/datasets/{datasetid}/taxa:
     get:
       description: Returns the set of taxa associated with a specific dataset.
       parameters:
@@ -3374,7 +3380,7 @@ paths:
       tags:
         - Dataset metadata
         - v2.0
-  '/v2.0/data/datasets_elc/{datasetid}':
+  /v2.0/data/datasets_elc/{datasetid}:
     get:
       description: Returns the dataset information based on a dataset ID for the ELC API.
       parameters:
@@ -3410,7 +3416,7 @@ paths:
       tags:
         - Database tables
         - v2.0
-  '/v2.0/data/dbtables/{table}':
+  /v2.0/data/dbtables/{table}:
     get:
       description: >
         Returns the named Neotoma Database table.  An empty query will return a list of tables. Uses a default limit of
@@ -3431,7 +3437,7 @@ paths:
       tags:
         - Database tables
         - v2.0
-  '/v2.0/data/downloads/{datasetid}':
+  /v2.0/data/downloads/{datasetid}:
     get:
       description: Returns the named Neotoma Database table.
       parameters:
@@ -3447,7 +3453,7 @@ paths:
       tags:
         - Data download
         - v2.0
-  '/v2.0/data/frozen/{datasetid}':
+  /v2.0/data/frozen/{datasetid}:
     get:
       description: Returns the full metadata for a Neotoma record as it was when the DOI was minted.
       parameters:
@@ -3481,7 +3487,7 @@ paths:
       tags:
         - Geopolitical metadata
         - v2.0
-  '/v2.0/data/geopoliticalunits/{gpid}':
+  /v2.0/data/geopoliticalunits/{gpid}:
     get:
       parameters:
         - $ref: '#/components/parameters/gpidPath'
@@ -3496,7 +3502,7 @@ paths:
       tags:
         - Geopolitical metadata
         - v2.0
-  '/v2.0/data/geopoliticalunits/{gpid}/datasets':
+  /v2.0/data/geopoliticalunits/{gpid}/datasets:
     get:
       parameters:
         - $ref: '#/components/parameters/gpidPath'
@@ -3513,7 +3519,7 @@ paths:
       tags:
         - Site metadata
         - v2.0
-  '/v2.0/data/geopoliticalunits/{gpid}/sites':
+  /v2.0/data/geopoliticalunits/{gpid}/sites:
     get:
       parameters:
         - $ref: '#/components/parameters/gpidPath'
@@ -3532,7 +3538,7 @@ paths:
         - v2.0
   /v2.0/data/occurrences:
     get:
-      description: 'Returns occurrence information for a particular taxon, geographic region or temporal slice.'
+      description: Returns occurrence information for a particular taxon, geographic region or temporal slice.
       parameters:
         - $ref: '#/components/parameters/taxonNameQuery'
         - $ref: '#/components/parameters/taxonidQuery'
@@ -3558,9 +3564,9 @@ paths:
       tags:
         - Occurrence metadata
         - v2.0
-  '/v2.0/data/occurrences/{occurrenceid}':
+  /v2.0/data/occurrences/{occurrenceid}:
     get:
-      description: 'Returns occurrence information for a particular taxon, geographic region or temporal slice.'
+      description: Returns occurrence information for a particular taxon, geographic region or temporal slice.
       parameters:
         - $ref: '#/components/parameters/occurrenceidPath'
         - $ref: '#/components/parameters/limitParam'
@@ -3602,7 +3608,7 @@ paths:
       tags:
         - Pollen
         - v2.0
-  '/v2.0/data/pollen/{id}':
+  /v2.0/data/pollen/{id}:
     get:
       parameters:
         - $ref: '#/components/parameters/pollenidPath'
@@ -3640,7 +3646,7 @@ paths:
       tags:
         - Publication metadata
         - v2.0
-  '/v2.0/data/publications/{publicationid}':
+  /v2.0/data/publications/{publicationid}:
     get:
       description: Returns information about Neotoma publications
       parameters:
@@ -3689,7 +3695,7 @@ paths:
       tags:
         - Site metadata
         - v2.0
-  '/v2.0/data/sites/{siteid}':
+  /v2.0/data/sites/{siteid}:
     get:
       description: Returns information about Neotoma sites.
       parameters:
@@ -3705,9 +3711,9 @@ paths:
       tags:
         - Site metadata
         - v2.0
-  '/v2.0/data/sites/{siteid}/chronologies':
+  /v2.0/data/sites/{siteid}/chronologies:
     get:
-      description: 'Given a Neotoma siteid, return all associated chronologies.'
+      description: Given a Neotoma siteid, return all associated chronologies.
       parameters:
         - $ref: '#/components/parameters/siteidPath'
       responses:
@@ -3721,9 +3727,9 @@ paths:
       tags:
         - Chronology metadata
         - v2.0
-  '/v2.0/data/sites/{siteid}/contacts':
+  /v2.0/data/sites/{siteid}/contacts:
     get:
-      description: 'Given a Neotoma siteid, return all associated contacts.'
+      description: Given a Neotoma siteid, return all associated contacts.
       parameters:
         - $ref: '#/components/parameters/siteidPath'
       responses:
@@ -3737,7 +3743,7 @@ paths:
       tags:
         - Contact metadata
         - v2.0
-  '/v2.0/data/sites/{siteid}/datasets':
+  /v2.0/data/sites/{siteid}/datasets:
     get:
       description: Returns information about Neotoma dataset
       parameters:
@@ -3753,9 +3759,9 @@ paths:
       tags:
         - Dataset metadata
         - v2.0
-  '/v2.0/data/sites/{siteid}/datasets_elc':
+  /v2.0/data/sites/{siteid}/datasets_elc:
     get:
-      description: 'Returns information about Neotoma dataset, formatted for the EarthLifeConsortium'
+      description: Returns information about Neotoma dataset, formatted for the EarthLifeConsortium
       parameters:
         - $ref: '#/components/parameters/siteidPath'
       responses:
@@ -3769,7 +3775,7 @@ paths:
       tags:
         - Dataset metadata
         - v2.0
-  '/v2.0/data/sites/{siteid}/geopoliticalunits':
+  /v2.0/data/sites/{siteid}/geopoliticalunits:
     get:
       parameters:
         - $ref: '#/components/parameters/siteidPath'
@@ -3788,7 +3794,7 @@ paths:
         - v2.0
   /v2.0/data/summary/dsdbmonth:
     get:
-      description: 'Returns summary statistics for the database as a whole, broken down by constituent database.'
+      description: Returns summary statistics for the database as a whole, broken down by constituent database.
       parameters:
         - description: The starting month (from present == 0) for which to generate the summary.
           example: 0
@@ -3823,7 +3829,7 @@ paths:
         - v2.0
   /v2.0/data/summary/dstypemonth:
     get:
-      description: 'Returns summary statistics for the database as a whole, broken down by dataset type.'
+      description: Returns summary statistics for the database as a whole, broken down by dataset type.
       parameters:
         - description: The starting month (from present == 0) for which to generate the summary.
           example: 0
@@ -3906,7 +3912,7 @@ paths:
       tags:
         - Taxonomic metadata
         - v2.0
-  '/v2.0/data/taxa/{taxonid}':
+  /v2.0/data/taxa/{taxonid}:
     get:
       description: Returns information about a taxon and (if requested) related taxa.
       parameters:
@@ -3922,9 +3928,9 @@ paths:
       tags:
         - Taxonomic metadata
         - v2.0
-  '/v2.0/data/taxa/{taxonid}/occurrences':
+  /v2.0/data/taxa/{taxonid}/occurrences:
     get:
-      description: 'Returns occurrence information for a particular taxon, geographic region or temporal slice.'
+      description: Returns occurrence information for a particular taxon, geographic region or temporal slice.
       parameters:
         - $ref: '#/components/parameters/taxonidPath'
         - $ref: '#/components/parameters/limitParam'
@@ -3949,53 +3955,53 @@ tags:
       online [database schema](https://open.neotomadb.org/dbschema) of use, for a full listing of all database
       tables and entity-relation diagrams for the various tables.
     externalDocs:
-      url: 'https://open.neotomadb.org/dbschema/ndb/index.html'
+      url: https://open.neotomadb.org/dbschema/ndb/index.html
     name: Database tables
   - description: |-
       Information about chronological controls and the models used to add
       the temporal component to records.
     externalDocs:
-      url: 'https://open.neotomadb.org/manual/neotoma-tables.html#chronology-age-related-tables'
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#chronology-age-related-tables
     name: Chronology metadata
-  - description: 'Information about Neotoma data contributors, authors and data analysts.'
+  - description: Information about Neotoma data contributors, authors and data analysts.
     externalDocs:
-      url: 'https://open.neotomadb.org/manual/neotoma-tables.html#individual-related-tables'
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#individual-related-tables
     name: Contact metadata
   - description: Information about site location and metadata specific to the individual dataset.
     externalDocs:
-      url: 'https://open.neotomadb.org/manual/neotoma-tables.html#dataset-collection-related-tables'
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#dataset-collection-related-tables
     name: Dataset metadata
-  - description: 'Full dataset download, including all sample data for a particular dataset.'
+  - description: Full dataset download, including all sample data for a particular dataset.
     externalDocs:
-      url: 'https://open.neotomadb.org/manual/neotoma-tables.html#sample-related-tables'
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#sample-related-tables
     name: Data download
   - description: Information about the geopolitical units in which a site is located.
     externalDocs:
-      url: 'https://open.neotomadb.org/manual/neotoma-tables.html#site-related-tables'
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#site-related-tables
     name: Geopolitical metadata
-  - description: 'A simplified data return, similar to the data download, but specific to a particular taxon, time or location.'
+  - description: A simplified data return, similar to the data download, but specific to a particular taxon, time or location.
     name: Occurrence metadata
-  - description: 'For ease of use in online applications, pre-calculated pollen percentages for taxa, location or temporal bins.'
+  - description: For ease of use in online applications, pre-calculated pollen percentages for taxa, location or temporal bins.
     name: Pollen proportions
   - description: Formatted publication data related to Neotoma records.
     externalDocs:
-      url: 'https://open.neotomadb.org/manual/neotoma-tables.html#publication-related-tables'
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#publication-related-tables
     name: Publication metadata
   - description: All metadata associated with a particular site with fossil records.
     externalDocs:
-      url: 'https://open.neotomadb.org/manual/neotoma-tables.html#site-related-tables'
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#site-related-tables
     name: Site metadata
   - description: All available information about a particular taxon.
     externalDocs:
-      url: 'https://open.neotomadb.org/manual/neotoma-tables.html#taxonomy-related-tables'
+      url: https://open.neotomadb.org/manual/neotoma-tables.html#taxonomy-related-tables
     name: Taxonomic metadata
   - description: Summary statistics for the database as a whole.
     name: Summary Information
   - description: All API endpoints associated with v1.5 of the Neotoma API.
     externalDocs:
-      url: 'http://github.com/NeotomaDB/api_nodetest'
+      url: http://github.com/NeotomaDB/api_nodetest
     name: v1.5
   - description: All API endpoints associated with v2.0 of the Neotoma API.
     externalDocs:
-      url: 'http://github.com/NeotomaDB/api_nodetest'
+      url: http://github.com/NeotomaDB/api_nodetest
     name: v2.0

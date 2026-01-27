@@ -46,8 +46,7 @@ projQuery:
   required: false
   schema:
     type: integer
-    minimum: 2000
-    maximum: 32767
+    enum: [3031,3857,3995,4326,9989,32633, 32733]
     default: 4326
     example: 3857
   description: |
