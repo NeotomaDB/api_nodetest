@@ -21,7 +21,7 @@ describe('Tests for Explorer App Services', function() {
   describe('tests for get', function() {
     it('should respond 200 for TaxaGroupTypes', function() {
       const response = request('get', appServicesLocation + '/TaxaGroupTypes', {
-        'time': true,
+        time: true,
       });
       expect(response).to.have.status(200);
       return chakram.wait();
@@ -29,10 +29,10 @@ describe('Tests for Explorer App Services', function() {
 
     it('should respond 200 for TaphonomyTypes', function() {
       const response = request('get', appServicesLocation + '/TaphonomyTypes', {
-        'qs': {
+        qs: {
           taphonomicSystemId: 1,
         },
-        'time': true,
+        time: true,
       });
       expect(response).to.have.status(200);
       return chakram.wait();
@@ -40,10 +40,10 @@ describe('Tests for Explorer App Services', function() {
 
     it('should respond 200 for TaphonomySystems', function() {
       const response = request('get', appServicesLocation + '/TaphonomySystems', {
-        'qs': {
+        qs: {
           datasetTypeId: 1,
         },
-        'time': true,
+        time: true,
       });
       expect(response).to.have.status(200);
       return chakram.wait();
@@ -51,10 +51,10 @@ describe('Tests for Explorer App Services', function() {
 
     it('should respond 200 for ElementTypes', function() {
       const response = request('get', appServicesLocation + '/ElementTypes', {
-        'qs': {
+        qs: {
           taxagroupid: 1,
         },
-        'time': true,
+        time: true,
       });
       expect(response).to.have.status(200);
       return chakram.wait();
@@ -62,7 +62,7 @@ describe('Tests for Explorer App Services', function() {
 
     it('should respond 200 for TaxaInDatasets (a slow service)', function() {
       const response = request('get', appServicesLocation + '/TaxaInDatasets', {
-        'time': true,
+        time: true,
       });
 
       expect(response).to.have.status(200);
@@ -71,7 +71,7 @@ describe('Tests for Explorer App Services', function() {
 
     it('should respond 200 for collectionTypes', function() {
       const response = request('get', appServicesLocation + '/collectionTypes', {
-        'time': true,
+        time: true,
       });
 
       expect(response).to.have.status(200);
@@ -80,7 +80,7 @@ describe('Tests for Explorer App Services', function() {
 
     it('should respond 200 for keywords', function() {
       const response = request('get', appServicesLocation + '/keywords', {
-        'time': true,
+        time: true,
       });
 
       expect(response).to.have.status(200);
@@ -89,7 +89,7 @@ describe('Tests for Explorer App Services', function() {
 
     it('should respond 200 for authorpis', function() {
       const response = request('get', appServicesLocation + '/authorpis', {
-        'time': true,
+        time: true,
       });
 
       expect(response).to.have.status(200);
@@ -98,8 +98,8 @@ describe('Tests for Explorer App Services', function() {
 
     it('should respond 200 for DepositionalEnvironments', function() {
       const response = request('get', appServicesLocation + '/DepositionalEnvironments', {
-        'qs': {idProperty: 1},
-        'time': true,
+        qs: {idProperty: 1},
+        time: true,
       });
 
       expect(response).to.have.status(200);
@@ -107,8 +107,8 @@ describe('Tests for Explorer App Services', function() {
     });
     it('should respond 200 for Search', function() {
       const response = request('post', appServicesLocation + '/Search', {
-        'qs': {'search': '{"datasetTypeId":21}',
-          'time': true},
+        qs: {search: '{"datasetTypeId":21}',
+          time: true},
       });
 
       expect(response).to.have.status(200);
@@ -116,7 +116,7 @@ describe('Tests for Explorer App Services', function() {
     });
     it('should respond 200 for DatasetTypes', function() {
       const response = request('get', appServicesLocation + '/DatasetTypes', {
-        'time': true,
+        time: true,
       });
 
       expect(response).to.have.status(200);
@@ -124,8 +124,8 @@ describe('Tests for Explorer App Services', function() {
     });
     it('should respond 200 for RelativeAges', function() {
       const response = request('get', appServicesLocation + '/RelativeAges', {
-        'qs': {agescaleid: 1},
-        'time': true,
+        qs: {agescaleid: 1},
+        time: true,
       });
 
       expect(response).to.have.status(200);
@@ -133,8 +133,8 @@ describe('Tests for Explorer App Services', function() {
     });
     it('should respond 200 for Geochronologies', function() {
       const response = request('get', appServicesLocation + '/Geochronologies', {
-        'qs': {datasetId: 1001},
-        'time': true,
+        qs: {datasetId: 1001},
+        time: true,
       });
 
       expect(response).to.have.status(200);

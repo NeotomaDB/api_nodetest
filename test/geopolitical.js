@@ -23,34 +23,34 @@ describe('Get geopolitical data:', function() {
   this.timeout(5000);
   it('An empty query returns a valid response.', function(done) {
     api.get('v2.0/data/geopoliticalunits/')
-        .set('Accept', 'application/json')
-        .expect(200, done);
+      .set('Accept', 'application/json')
+      .expect(200, done);
   });
 
   it('The default limit of 25 should be reached for country level data:', function(done) {
     api.get('v2.0/data/geopoliticalunits/?rank=1')
-        .set('Accept', 'application/json')
-        .end(function(err, res) {
-          assert.equal(res.body.data.length, 25);
-          done();
-        });
+      .set('Accept', 'application/json')
+      .end(function(err, res) {
+        assert.equal(res.body.data.length, 25);
+        done();
+      });
   });
 
   it('Changing the limit should change the number of countries retrieved:', function(done) {
     api.get('v2.0/data/geopoliticalunits/?rank=1&limit=30')
-        .set('Accept', 'application/json')
-        .end(function(err, res) {
-          assert.equal(res.body.data.length, 30);
-          done();
-        });
+      .set('Accept', 'application/json')
+      .end(function(err, res) {
+        assert.equal(res.body.data.length, 30);
+        done();
+      });
   });
 
   it('A single geopolitical unit (12) should be returned.', function(done) {
     api.get('v2.0/data/geopoliticalunits/12')
-        .set('Accept', 'application/json')
-        .end(function(err, res) {
-          assert.equal(res.body.data[0]['geopoliticalid'], 12);
-          done();
-        });
+      .set('Accept', 'application/json')
+      .end(function(err, res) {
+        assert.equal(res.body.data[0]['geopoliticalid'], 12);
+        done();
+      });
   });
 });

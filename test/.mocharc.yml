@@ -1,5 +1,5 @@
-exit: false
-bail: false
+exit: true
+bail: true
 check-leaks: true
 allow-uncaught: false
 slow: 1000

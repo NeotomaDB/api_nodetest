@@ -1,18 +1,19 @@
 'use strict';
-const mocha = require('mocha');
-const chakram = require('chakram');
-const request = chakram.request;
-const expect = chakram.expect;
+var mocha = require('mocha');
+var chakram = require('chakram');
+var request = chakram.request;
+var expect = chakram.expect;
 
 describe('tests for /v2.0/apps/depositionalenvironments/root', function() {
-  describe('tests for get', function() {
-    it('should respond 200 for "A table of Neotoma collection types."', function() {
-      const response = request('get', 'http://localhost:3001/v2.0/apps/depositionalenvironments/root', {
-        'time': true,
-      });
+    describe('tests for get', function() {
+        it('should respond 200 for "A table of Neotoma collection types."', function() {
+            var response = request('get', 'http://localhost:3001/v2.0/apps/depositionalenvironments/root', { 
+                'time': true
+            });
 
-      expect(response).to.have.status(200);
-      return chakram.wait();
+            expect(response).to.have.status(200);
+            return chakram.wait();
+        });
+    
     });
-  });
 });
