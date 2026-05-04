@@ -10,9 +10,38 @@ Last Updated: Aug 19, 2021
 const express = require('express');
 const router = express.Router();
 const handlers = require('../handlers/apps_handlers');
+const {requireAuth} = require('../helpers/validation/sessionauth'); // requireAuth middleware
 
 router.get('/', function(req, res, next) {
   res.send('NeotomaDB apps API: please provide a valid request');
+});
+
+router.get('/whoami', requireAuth, function(req, res) {
+  res.status(200).json({
+    status: 'success',
+    data: {
+      orcidid: req.user.orcidid,
+      sessionuuid: req.user.sessionuuid,
+      expiresat: req.user.expiresat,
+    },
+    message: 'Authenticated session',
+  });
+});
+
+router.post('/logout', requireAuth, async function(req, res) {
+  const db = req.app.locals.db;
+  try {
+    await db.none(
+      `UPDATE ap.orcidlogins
+          SET expiresat = now(),
+          loggedoutat = now()
+        WHERE sessionuuid = $1`,
+      [req.user.sessionuuid]
+    );
+    res.status(200).json({status: 'success', message: 'Session ended'});
+  } catch (err) {
+    res.status(500).json({status: 'error', message: 'Logout failed'});
+  }
 });
 
 router.get('/authorpis', handlers.authorpis);

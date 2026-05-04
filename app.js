@@ -15,7 +15,11 @@ const dbtest = require('./database/pgp_db').dbheader;
 const rateLimiter = require('express-rate-limit');
 const dotenv = require('dotenv');
 
-dotenv.config();
+const env = process.env.NODE_ENV || 'development';
+dotenv.config({ path: `.env.${env}` });
+console.log(`Loaded environment from .env.${env}`);
+
+const apiPort = parseInt(process.env.APIPORT, 10) || 3001;
 
 const app = express();
 const cache = apicache.middleware;
@@ -33,18 +37,47 @@ const limiter = rateLimiter({
 
 app.engine('html', require('ejs').renderFile);
 
-// app.use(helmet());
-app.use(cors());
+const {optionalAuth} = require('./v2.0/helpers/validation/sessionauth');
+const corsOptions = {
+  origin: function(origin, callback) {
+    // Allow requests with no Origin header (server-to-server, R package, curl, etc.)
+    if (!origin) return callback(null, true);
+
+    const allowed = [
+      'http://localhost:5173',
+      'http://127.0.0.1:5173',
+      'https://data.neotomadb.org',
+      // add other frontends as needed
+    ];
+
+    if (allowed.includes(origin)) {
+      return callback(null, true);
+    }
+    // For now, log and allow — Neotoma data is public.
+    // Tighten this later if you ever return user-specific data based on Origin.
+    console.warn('CORS: unrecognized origin allowed:', origin);
+    return callback(null, true);
+  },
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+app.use(cors(corsOptions));
 app.use(limiter);
 app.use(express.json());
-// app.use(cache('5 minutes'));
-app.use(express.static('mochawesome-report'));
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(compression());
+app.use(express.static('public'));
+app.use(express.static('mochawesome-report'));
+app.use(express.static(path.join(__dirname, 'public')));
+// Attach req.user (or null) on every request.
+// Routes that need to *require* auth use requireAuth instead.
+app.use(optionalAuth);
 
 app.locals.db = dbtest();
 
 // test trigger watch restart - 09/12/20
-//
 // create a write stream (in append mode)
 
 const pad = (num) => (num > 9 ? '' : '0') + num;
@@ -72,7 +105,7 @@ app.use(morgan(':date[iso]\t:remote-addr\t:method\t:url\t:status\t:res[content-l
 }));
 
 const options = {
-  swaggerUrl: 'http://localhost:3005/api-docs',
+  swaggerUrl: `http://localhost:${apiPort}/api-docs`,
   customCssUrl: '/custom.css',
 };
 
@@ -99,17 +132,6 @@ const healthwatch = require('./v2.0/routes/healthwatch');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
-// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-
-app.use(express.static('public'));
-app.use(express.urlencoded({
-  extended: false,
-}));
-app.use(express.json());
-app.use(cookieParser());
-
-app.use(express.static(path.join(__dirname, 'public')));
 
 // optionally, re-factor route paths here to strip version string and
 // identify version from header; still requires version directory paths in
@@ -173,12 +195,8 @@ app.all('*', function(req, res) {
 // in production, port is 3001 and server started in script 'www'
 // The variable is stored in the gitignored `.env` file.
 // This is managed in the www folder.
-if (process.env.NODE_ENV === 'development') {
-  app.listen(3005);
-}
-
-if (process.env.NODE_ENV === 'production') {
-  app.listen(3001);
-}
+app.listen(apiPort, () => {
+  console.log(`Neotoma API listening on port ${apiPort} (NODE_ENV=${process.env.NODE_ENV})`);
+});
 
 module.exports = app;
