@@ -75,6 +75,8 @@ typings/
 
 # dotenv environment variables file
 .env
+.env.*
+!.env-template
 
 # Adding the swagger project files:
 api_project.sublime-project

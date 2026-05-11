@@ -2,6 +2,10 @@
   "ext": "sql js json yaml",
   "ignore": [
     ".git",
-    "node_modules/**/node_modules"
+    "node_modules/**/node_modules",
+    "test/**",
+    "public/**",
+    "openapi.yaml",
+    "*.old"
   ]
 }

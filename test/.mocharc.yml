@@ -1,13 +1,13 @@
 exit: true
-bail: true
+bail: false
 check-leaks: true
 allow-uncaught: false
 slow: 1000
-timeout: 300000
+timeout: 900000
 recursive: true
 color: true
 full-trace: true
 ui: 'bdd'
 reporter: 'node_modules/mochawesome'
-retries: 3
-jobs: 2
+retries: 0
+jobs: 1

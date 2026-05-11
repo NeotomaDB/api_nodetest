@@ -12,6 +12,7 @@
   "private": true,
   "scripts": {
     "start": "NODE_ENV=production nodemon --legacy-watch app.js",
+    "dev": "NODE_ENV=development nodemon --legacy-watch app.js",
     "test": "node ./node_modules/mocha/bin/mocha --config=test/.mocharc.yml --reporter-options reportDir=public,reportFilename=tests",
     "build:openapi": "(cd ./openapi && node ./scripts/build-openapi.js)",
     "validate:openapi": "yarn build:openapi && bash genoatt.sh && sleep 4 && bash runmochabatch.sh"
@@ -72,5 +73,6 @@
     "nodemon": "^3.1.4",
     "pre-commit": "^1.0.10",
     "supertest": "^7.2.2"
-  }
+  },
+  "packageManager": "yarn@4.12.0+sha512.f45ab632439a67f8bc759bf32ead036a1f413287b9042726b7cc4818b7b49e14e9423ba49b18f9e06ea4941c1ad062385b1d8760a8d5091a1a31e5f6219afca8"
 }
