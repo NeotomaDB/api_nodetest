@@ -17,6 +17,7 @@ HELP
 }
 
 run_mocha() {
+    # Only run v2.0 tests locally 'v2.0-*.js' — v1.5 endpoints are slow and trip chakram's default timeout
     find ./test -name '*.js' | shuf | xargs mocha --config=test/.mocharc.yml --reporter-options reportDir=public,reportFilename=tests
 }
 
@@ -26,23 +27,28 @@ run_mocha() {
  
 test=0
 
+# Default target: local production-mode API. Flags below override.
+# Must be set BEFORE getopts because getopts skips its loop when no flags are passed.
+export APIPATH='http://localhost:3001/'
+
  while getopts "hdpa" opt; do
      case $opt in
          h)
              show_help
              exit 0
              ;;
-         d)            
+         d)
              export APIPATH='https://api-dev.neotomadb.org/'
              ;;
          p)
              export APIPATH='https://api.neotomadb.org/'
              ;;
-         a)  
+         a)
              export APIPATH='http://neotomaapi-env.eba-wd29jtvf.us-east-2.elasticbeanstalk.com/'
              ;;
          *)
-             export APIPATH='http://localhost:3001/'
+             show_help
+             exit 1
              ;;
      esac
  done
