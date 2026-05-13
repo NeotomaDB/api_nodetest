@@ -38,28 +38,19 @@ const limiter = rateLimiter({
 app.engine('html', require('ejs').renderFile);
 
 const {optionalAuth} = require('./v2.0/helpers/validation/sessionauth');
+const allowedOrigins = env === 'production'
+  ? ['https://data.neotomadb.org']
+  : ['http://localhost:5173', 'http://127.0.0.1:5173'];
+
 const corsOptions = {
   origin: function(origin, callback) {
-    // Allow requests with no Origin header (server-to-server, R package, curl, etc.)
-    if (!origin) return callback(null, true);
-
-    const allowed = [
-      'http://localhost:5173',
-      'http://127.0.0.1:5173',
-      'https://data.neotomadb.org',
-      // add other frontends as needed
-    ];
-
-    if (allowed.includes(origin)) {
-      return callback(null, true);
-    }
-    // For now, log and allow — Neotoma data is public.
-    // Tighten this later if you ever return user-specific data based on Origin.
-    console.warn('CORS: unrecognized origin allowed:', origin);
-    return callback(null, true);
+    if (!origin) return callback(null, true); // server-to-server, curl, R package
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error(`CORS: origin ${origin} not allowed`));
   },
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization'],
+  maxAge: 600,
 };
 
 app.use(cors(corsOptions));
@@ -105,11 +96,15 @@ app.use(morgan(':date[iso]\t:remote-addr\t:method\t:url\t:status\t:res[content-l
 }));
 
 const options = {
-  swaggerUrl: `http://localhost:${apiPort}/api-docs`,
+  // swaggerUrl: `http://localhost:${apiPort}/api-docs`,
   customCssUrl: '/custom.css',
 };
 
 const swaggerDocument = YAML.load('./openapi.yaml');
+// Serve the raw spec at /swagger.json so Swagger UI can find it
+// (it falls back to this URL when the inline embed doesn't catch).
+app.get('/swagger.json', (req, res) => res.json(swaggerDocument));
+
 app.use('/api-docs',
     swaggerUi.serve,
     swaggerUi.setup(swaggerDocument, options));
