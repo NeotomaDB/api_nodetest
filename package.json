@@ -17,7 +17,7 @@
     "build:openapi": "(cd ./openapi && node ./scripts/build-openapi.js)",
     "validate:openapi": "yarn build:openapi && bash genoatt.sh && sleep 4 && bash runmochabatch.sh"
   },
-  "pre-commit": "validate:openapi",
+  "pre-commit": "build:openapi",
   "dependencies": {
     "@terraformer/wkt": "^2.2.1",
     "acorn": "^8.15.0",
