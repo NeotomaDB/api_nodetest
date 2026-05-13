@@ -40,7 +40,9 @@ app.engine('html', require('ejs').renderFile);
 const {optionalAuth} = require('./v2.0/helpers/validation/sessionauth');
 const allowedOrigins = env === 'production'
   ? ['https://data.neotomadb.org', 'https://apps.neotomadb.org']
-  : ['http://localhost:5173', 'http://127.0.0.1:5173'];
+  : [ 'http://localhost:5173', 'http://127.0.0.1:5173',
+      'http://localhost:3305', 'http://127.0.0.1:3305'
+    ];
 
 const corsOptions = {
   origin: function(origin, callback) {
@@ -49,7 +51,7 @@ const corsOptions = {
     return callback(new Error(`CORS: origin ${origin} not allowed`));
   },
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization',  'X-Requested-With'],
   maxAge: 600,
 };
 
