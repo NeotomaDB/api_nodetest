@@ -10,7 +10,7 @@ Last Updated: Aug 19, 2021
 const express = require('express');
 const router = express.Router();
 const handlers = require('../handlers/apps_handlers');
-const {requireAuth} = require('../helpers/validation/sessionauth'); // requireAuth middleware
+const {requireAuth} = require('../helpers/validation/sessionauth');
 
 router.get('/', function(req, res, next) {
   res.send('NeotomaDB apps API: please provide a valid request');
@@ -66,6 +66,8 @@ router.get('/constdb', handlers.databasesummaries);
 router.get('/contactsummary/:datasetid', handlers.contactoverview);
 // Gives the orcid by the contactid.
 router.get('/orcids/contact', handlers.contact_orcid);
+// Gives the logged in user their orcid and contactid.
+router.get('/orcids/me', requireAuth, handlers.meHandler);
 // Gives the contact with an orcid.
 router.get('/orcids/orcid', handlers.orcid_contact);
 router.get('/datasetpi', handlers.datasetsbypi);
