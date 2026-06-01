@@ -114,3 +114,4 @@ build_deploy.sh
 output.txt
 
 .yarn/
+tasks/
