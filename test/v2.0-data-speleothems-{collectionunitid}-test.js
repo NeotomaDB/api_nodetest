@@ -7,7 +7,7 @@ var expect = chakram.expect;
 describe('tests for /v2.0/data/speleothems/{collectionunitid}', function() {
     describe('tests for get', function() {
         it('should respond 200 for "Metadata associated with speleothems submitted through SISAL."', function() {
-            var response = request('get', 'http://localhost:3001/v2.0/data/speleothems/7950', { 
+            var response = request('get', 'http://localhost:3001/v2.0/data/speleothems/500', { 
                 'time': true
             });
 
