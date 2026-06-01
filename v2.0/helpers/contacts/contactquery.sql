@@ -6,6 +6,7 @@ WITH tightnames AS (
     GROUP BY ct.contactid)
 SELECT
   cnt.contactid,
+  stw.stewardid,
   cnt.contactname,
   cnt.familyname,
   cnt.leadinginitials,
@@ -18,11 +19,12 @@ SELECT
   cnt.url,
   cnt.address,
   cnt.notes,
-	cst.contactstatus
+  cst.contactstatus
 FROM
   ndb.contacts AS cnt
   INNER JOIN ndb.contactstatuses AS cst ON cnt.contactstatusid = cst.contactstatusid
   INNER JOIN tightnames AS tn ON tn.contactid = cnt.contactid
+  LEFT JOIN ti.stewards AS stw ON stw.contactid = cnt.contactid
 WHERE
   (${familyname} IS NULL OR LOWER(cnt.familyname) LIKE LOWER(${familyname}))
   AND (${contactid} IS NULL OR cnt.contactid = ANY(${contactid}))
