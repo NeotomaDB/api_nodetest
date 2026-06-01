@@ -3,6 +3,7 @@
 const { sql, getparam, ifUndef } = require('../../../src/neotomaapi.js');
 
 const downloadsql = sql('../v2.0/helpers/download/downloadbydsid.sql');
+const sequencesql = sql('../v2.0/helpers/download/sequencebydata.sql');
 
 function getdefault (chron) {
   function quickrank (chronrank) {
@@ -81,11 +82,61 @@ function downloadbyid (req, res, next) {
             }
             return returner;
           })
-          res.status(200)
-            .json({
+
+          // Collect all dataids from datum objects to look up sequenceids
+          var allDataIds = [];
+          returner.forEach(function (item) {
+            try {
+              var samples = item.site.collectionunit.dataset.samples;
+              if (Array.isArray(samples)) {
+                samples.forEach(function (sample) {
+                  if (Array.isArray(sample.datum)) {
+                    sample.datum.forEach(function (d) {
+                      if (d.dataid) { allDataIds.push(d.dataid); }
+                    });
+                  }
+                });
+              }
+            } catch (e) { /* skip items without samples */ }
+          });
+
+          if (allDataIds.length === 0) {
+            return res.status(200).json({
               status: 'success',
               data: returner,
               message: 'Retrieved all tables'
+            });
+          }
+
+          return db.any(sequencesql, {dataids: allDataIds})
+            .then(function (seqData) {
+              var seqMap = {};
+              seqData.forEach(function (row) {
+                seqMap[row.dataid] = row.sequence;
+              });
+
+              returner.forEach(function (item) {
+                try {
+                  var samples = item.site.collectionunit.dataset.samples;
+                  if (Array.isArray(samples)) {
+                    samples.forEach(function (sample) {
+                      if (Array.isArray(sample.datum)) {
+                        sample.datum.forEach(function (d) {
+                          if (d.dataid && seqMap[d.dataid] !== undefined) {
+                            d.sequence = seqMap[d.dataid];
+                          }
+                        });
+                      }
+                    });
+                  }
+                } catch (e) { /* skip */ }
+              });
+
+              return res.status(200).json({
+                status: 'success',
+                data: returner,
+                message: 'Retrieved all tables'
+              });
             });
         })
         .catch(function (err) {

@@ -301,16 +301,21 @@ async function meHandler(req, res) {
     const sql = `
       SELECT
         l.orcidid,
+        l.expiresat,
         c.contactid,
-        COALESCE(c.contactname, l.orcidname) AS contactname
+        COALESCE(c.contactname, l.orcidname) AS contactname,
+        s.stewardid
       FROM ap.orcidlogins l
       LEFT JOIN ndb.externalcontacts ec
         ON ec.identifier = l.orcidid AND ec.extdatabaseid = 7
       LEFT JOIN ndb.contacts c
         ON ec.contactid = c.contactid
+      LEFT JOIN ti.stewards s
+        ON s.contactid = c.contactid
       WHERE l.sessionuuid = $1
       LIMIT 1
     `;
+
     const rows = await db.any(sql, [sessionuuid]);
 
     if (rows.length === 0) {
@@ -324,7 +329,9 @@ async function meHandler(req, res) {
         orcid: rows[0].orcidid,
         name: rows[0].contactname,
         contactid: rows[0].contactid,   // null if no link
+        stewardid: rows[0].stewardid,   // null if not a steward
         sessionuuid,
+        expiresat: rows[0].expiresat,
       },
     });
   } catch (err) {
