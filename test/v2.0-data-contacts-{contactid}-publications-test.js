@@ -4,11 +4,10 @@ var chakram = require('chakram');
 var request = chakram.request;
 var expect = chakram.expect;
 
-describe('tests for /v2.0/data/geopoliticalunits', function() {
+describe('tests for /v2.0/data/contacts/{contactid}/publications', function() {
     describe('tests for get', function() {
-        it('should respond 200 for "An array of geopolitical units."', function() {
-            var response = request('get', 'http://localhost:3001/v2.0/data/geopoliticalunits', { 
-                'qs': {"gpid":5392,"gpname":"Canada","rank":2,"lower":false},
+        it('should respond 200 for "An array of publications associated with the contact."', function() {
+            var response = request('get', 'http://localhost:3001/v2.0/data/contacts/2594/publications', { 
                 'time': true
             });
 
