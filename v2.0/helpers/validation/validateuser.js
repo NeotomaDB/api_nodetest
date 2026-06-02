@@ -47,7 +47,10 @@ const checktoken = async function(req, res, next) {
             });
       } else {
         const dbpush = await db.one(insertuserlogin,
-            {'orcidid': result['id'], 'ipaddr': ipaddr});
+            {'orcidid': result['id'], 'ipaddr': ipaddr,
+              'orcidname': result['name'] ||
+                [result['given_name'], result['family_name']].filter(Boolean).join(' ') ||
+                null});
         const uuidres = await dbpush;
         res.status(200)
             .json({

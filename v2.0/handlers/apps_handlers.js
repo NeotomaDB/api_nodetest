@@ -9,6 +9,7 @@ module.exports = {
   authorpis: authorpis,
   taphonomysystems: taphonomysystems,
   depositionalenvironments: depositionalenvironments,
+  meHandler: meHandler,
   validateusers: function(req, res, next) {
     const valuser = require('../helpers/validation/validateuser.js');
     valuser.checktoken(req, res, next);
@@ -290,4 +291,45 @@ function depositionalenvironments(req, res, next) {
       });
 }  
 
+async function meHandler(req, res) {
+  const { orcid, sessionuuid } = req.user;
+  const db = req.app.locals.db;
+
+  try {
+    // Look up the latest cached user info from ap.orcidlogins,
+    // and try to find a linked Neotoma contact (if any).
+    const sql = `
+      SELECT
+        l.orcidid,
+        c.contactid,
+        COALESCE(c.contactname, l.orcidname) AS contactname
+      FROM ap.orcidlogins l
+      LEFT JOIN ndb.externalcontacts ec
+        ON ec.identifier = l.orcidid AND ec.extdatabaseid = 7
+      LEFT JOIN ndb.contacts c
+        ON ec.contactid = c.contactid
+      WHERE l.sessionuuid = $1
+      LIMIT 1
+    `;
+    const rows = await db.any(sql, [sessionuuid]);
+
+    if (rows.length === 0) {
+      // shouldn't happen — requireAuth already validated
+      return res.status(401).json({ status: 'unauthorized' });
+    }
+
+    return res.json({
+      status: 'success',
+      data: {
+        orcid: rows[0].orcidid,
+        name: rows[0].contactname,
+        contactid: rows[0].contactid,   // null if no link
+        sessionuuid,
+      },
+    });
+  } catch (err) {
+    console.error('meHandler failed:', err);
+    return res.status(500).json({ status: 'error', message: 'Failed to load user' });
+  }
+}
 
