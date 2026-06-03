@@ -16,17 +16,6 @@ router.get('/', function(req, res, next) {
   res.send('NeotomaDB apps API: please provide a valid request');
 });
 
-router.get('/whoami', requireAuth, function(req, res) {
-  res.status(200).json({
-    status: 'success',
-    data: {
-      orcidid: req.user.orcidid,
-      sessionuuid: req.user.sessionuuid,
-      expiresat: req.user.expiresat,
-    },
-    message: 'Authenticated session',
-  });
-});
 
 router.post('/logout', requireAuth, async function(req, res) {
   const db = req.app.locals.db;

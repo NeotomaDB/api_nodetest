@@ -113,6 +113,43 @@
     tags:
       - Contact metadata
       - v2.0
+/v2.0/data/contacts/{contactid}/publications:
+  get:
+    description: Returns publications authored by a specific contact.
+    parameters:
+      - $ref: '#/components/parameters/contactidPath'
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  example: success
+                data:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      publicationid:
+                        type: integer
+                      citation:
+                        type: string
+                      year:
+                        type: integer
+                      doi:
+                        type: string
+                        nullable: true
+                message:
+                  type: string
+        description: An array of publications associated with the contact.
+    summary: Publications by a contact.
+    tags:
+      - Contact metadata
+      - Publication metadata
+      - v2.0
 /v2.0/data/contacts/{contactid}/sites:
   get:
     description: Returns the set of sites associated with an individual (or individuals).
@@ -948,4 +985,105 @@
     summary: Individual occurrence records for Neotoma records.
     tags:
       - Occurrence metadata
+      - v2.0
+/v2.0/data/aedna/sequences/{datasetid}:
+  get:
+    description: Returns aeDNA sequences for a given dataset, grouped by taxon. Includes the taxonomic hierarchy chain, model information, primer name, and publication DOI. Only returns the most recent (non-superseded) model assignments.
+    parameters:
+      - $ref: '#/components/parameters/datasetidPath'
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  example: success
+                data:
+                  type: object
+                  properties:
+                    datasetid:
+                      type: integer
+                    sequences:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          taxonid:
+                            type: integer
+                          taxonname:
+                            type: string
+                          taxonchain:
+                            type: array
+                            items:
+                              type: string
+                            description: Taxonomic hierarchy from highest rank to the taxon itself.
+                          sequences:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                sequenceid:
+                                  type: integer
+                                sequence:
+                                  type: string
+                                  description: The DNA sequence string.
+                                model:
+                                  type: string
+                                  description: The bioinformatics model used for taxonomic assignment (e.g. DADA2).
+                                primername:
+                                  type: string
+                                  nullable: true
+                                publicationdoi:
+                                  type: string
+                                  nullable: true
+                message:
+                  type: string
+        description: aeDNA sequences grouped by taxon for the dataset.
+    summary: aeDNA sequences for a dataset.
+    tags:
+      - aeDNA
+      - v2.0
+/v2.0/data/aedna/taxa/{taxonid}/sequences:
+  get:
+    description: Returns all aeDNA sequences associated with a given taxon. Only returns the most recent (non-superseded) model assignments.
+    parameters:
+      - $ref: '#/components/parameters/taxonidPath'
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  example: success
+                data:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      sequenceid:
+                        type: integer
+                      sequence:
+                        type: string
+                        description: The DNA sequence string.
+                      model:
+                        type: string
+                        description: The bioinformatics model used for taxonomic assignment.
+                      primername:
+                        type: string
+                        nullable: true
+                      publicationdoi:
+                        type: string
+                        nullable: true
+                message:
+                  type: string
+        description: An array of aeDNA sequences for the taxon.
+    summary: aeDNA sequences for a taxon.
+    tags:
+      - aeDNA
       - v2.0

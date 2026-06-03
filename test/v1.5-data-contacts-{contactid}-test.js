@@ -7,7 +7,7 @@ var expect = chakram.expect;
 describe('tests for /v1.5/data/contacts/{contactid}', function() {
     describe('tests for get', function() {
         it('should respond 200 for "Contact"', function() {
-            var response = request('get', 'http://localhost:3001/v1.5/data/contacts/-45400452', { 
+            var response = request('get', 'http://localhost:3001/v1.5/data/contacts/-2097676', { 
                 'time': true
             });
 

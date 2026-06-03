@@ -155,6 +155,10 @@ module.exports = {
     const contact = require('../helpers/contacts/contacts.js');
     contact.contactsbysiteid(req, res, next);
   },
+  publicationsbycontactid: function(req, res, next) {
+    const contact = require('../helpers/contacts/contacts.js');
+    contact.publicationsbycontactid(req, res, next);
+  },
   // Chronologies
   chronologiesbyid: function(req, res, next) {
     const chronology = require('../helpers/chronology/chronology.js');
@@ -226,5 +230,14 @@ module.exports = {
   aggregatedatasets: function(req, res, next) {
     const aggregatedatasets = require('../helpers/datasets/datasets.js');
     aggregatedatasets.datasetsbyaggid(req, res, next);
+  },
+  // AEDNA
+  aednasequences: function(req, res, next) {
+    const aedna = require('../helpers/aedna/aedna.js');
+    aedna.sequencesbydsid(req, res, next);
+  },
+  aednasequencesbytaxon: function(req, res, next) {
+    const aedna = require('../helpers/aedna/aedna.js');
+    aedna.sequencesbytaxonid(req, res, next);
   },
 };
