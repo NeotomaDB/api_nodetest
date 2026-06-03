@@ -108,7 +108,9 @@ function downloadbyid (req, res, next) {
             });
           }
 
-          return db.any(sequencesql, {dataids: allDataIds})
+          var uniqueDataIds = [...new Set(allDataIds)];
+
+          return db.any(sequencesql, {dataids: uniqueDataIds})
             .then(function (seqData) {
               var seqMap = {};
               seqData.forEach(function (row) {
