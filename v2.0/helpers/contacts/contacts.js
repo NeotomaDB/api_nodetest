@@ -7,6 +7,7 @@ const contactbyid = sql('../v2.0/helpers/contacts/contactbyid.sql');
 const contactquery = sql('../v2.0/helpers/contacts/contactquery.sql');
 const contactbydsid = sql('../v2.0/helpers/contacts/contactbydsid.sql');
 const contactbystid = sql('../v2.0/helpers/contacts/contactbysiteid.sql');
+const pubbycontactid = sql('../v2.0/helpers/contacts/pubbycontactid.sql');
 
 /**
  * General call to obtain contact information from the Neotoma Database.
@@ -256,8 +257,43 @@ function contactsbysiteid(req, res, next) {
       });
 }
 
+/**
+ * Return publications for a contact by contact ID.
+ * @param {req} req An express.js `requests` object.
+ * @param {res} res An express.js `response` object.
+ * @param {next} next An express.js `next` object.
+ */
+function publicationsbycontactid(req, res, next) {
+  const db = req.app.locals.db;
+  const contactid = parseInt(req.params.contactid);
+
+  if (!contactid || isNaN(contactid)) {
+    return res.status(400).json({
+      status: 'failure',
+      data: null,
+      message: 'A valid integer contact ID is required.',
+    });
+  }
+
+  db.any(pubbycontactid, {contactid})
+      .then(function(data) {
+        res.status(200).json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved publications for contact.',
+        });
+      })
+      .catch(function(err) {
+        res.status(500).json({
+          status: 'failure',
+          data: err.message,
+        });
+      });
+}
+
 module.exports.contactquery = contacts;
 module.exports.contactsbyid = contactsbyid;
 module.exports.contactsbydataid = contactsbydataid;
 module.exports.contactsbysiteid = contactsbysiteid;
 module.exports.contactclassbydsid = contactclassbydsid;
+module.exports.publicationsbycontactid = publicationsbycontactid;

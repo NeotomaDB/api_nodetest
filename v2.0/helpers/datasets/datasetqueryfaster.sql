@@ -25,8 +25,8 @@ WITH filtered_datasets AS (
     ORDER BY bigq.siteid, bigq.datasetid
     -- This is cheating a bit. We're querying a smaller chunk here and hoping that taking 3 times the datasets is enough
     -- to get us the actual limit.
-    LIMIT COALESCE(${limit}, 25) * 3
-    OFFSET COALESCE(${offset}, 0)
+    -- LIMIT COALESCE(${limit}, 25) * 3
+    -- OFFSET COALESCE(${offset}, 0)
 ),
 -- Now these CTEs work on a much smaller dataset
 dataset_dois AS (

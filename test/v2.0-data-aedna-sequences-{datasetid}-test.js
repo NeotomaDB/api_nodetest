@@ -4,11 +4,10 @@ var chakram = require('chakram');
 var request = chakram.request;
 var expect = chakram.expect;
 
-describe('tests for /v2.0/data/geopoliticalunits', function() {
+describe('tests for /v2.0/data/aedna/sequences/{datasetid}', function() {
     describe('tests for get', function() {
-        it('should respond 200 for "An array of geopolitical units."', function() {
-            var response = request('get', 'http://localhost:3001/v2.0/data/geopoliticalunits', { 
-                'qs': {"gpid":5392,"gpname":"Canada","rank":2,"lower":false},
+        it('should respond 200 for "aeDNA sequences grouped by taxon for the dataset."', function() {
+            var response = request('get', 'http://localhost:3001/v2.0/data/aedna/sequences/500', { 
                 'time': true
             });
 

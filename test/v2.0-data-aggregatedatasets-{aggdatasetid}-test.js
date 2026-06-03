@@ -7,7 +7,7 @@ var expect = chakram.expect;
 describe('tests for /v2.0/data/aggregatedatasets/{aggdatasetid}', function() {
     describe('tests for get', function() {
         it('should respond 200 for "An array of datasets."', function() {
-            var response = request('get', 'http://localhost:3001/v2.0/data/aggregatedatasets/5536', { 
+            var response = request('get', 'http://localhost:3001/v2.0/data/aggregatedatasets/500', { 
                 'time': true
             });
 

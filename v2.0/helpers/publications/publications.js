@@ -154,33 +154,10 @@ function publicationbydataset (req, res, next) {
 
   db.any(pubbydsid, [datasetid])
     .then(function (data) {
-      // var bibOutput = bib.formatpublbib(data);
-      var bibOutput = data;
-
-      /* This is a sequence I use to aggregate the publications by site */
-      var returner = [];
-      var uniquepubs = bibOutput.map(x => x.publicationid).filter((x, i, a) => a.indexOf(x) === i)
-
-      for (var i = 0; i < uniquepubs.length; i++) {
-        returner[i] = { 'publicationid': uniquepubs[i] }
-      }
-
-      for (i = 0; i < bibOutput.length; i++) {
-        var returnid = returner.map(x => x.publicationid).indexOf(bibOutput[i].publicationid)
-
-        if (!('title' in returner[returnid])) {
-          /* Using `title` as a placeholder for any record that hasn't been added. */
-          returner[returnid] = bibOutput[i]
-          returner[returnid].datasetid = [returner[returnid].datasetid]
-        } else {
-          returner[returnid]['datasetid'].push(bibOutput[i].datasetid);
-        }
-      }
-
       res.status(200)
         .json({
           status: 'success',
-          data: bibOutput,
+          data: data,
           message: 'Retrieved all tables'
         });
     })

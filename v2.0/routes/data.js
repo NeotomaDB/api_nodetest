@@ -15,6 +15,7 @@ const handlers = require('../handlers/data_handlers');
 
 router.get('/chronologies/:chronologyid', handlers.chronologiesbyid);
 router.get('/contacts/:contactid', handlers.contactsbyid);
+router.get('/contacts/:contactid/publications', handlers.publicationsbycontactid);
 router.get('/contacts/', handlers.contactquery);
 
 router.get(['/datasets_elc/', '/datasets_elc/:datasetid'],
@@ -87,5 +88,9 @@ router.post('/spatial/icesheet', handlers.icesheet);
 
 // SPELEOTHEMS
 router.get('/speleothems/:collectionunitid', handlers.speleothems);
+
+// AEDNA
+router.get('/aedna/sequences/:datasetid', handlers.aednasequences);
+router.get('/aedna/taxa/:taxonid/sequences', handlers.aednasequencesbytaxon);
 
 module.exports = router;
