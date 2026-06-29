@@ -38,14 +38,15 @@ const limiter = rateLimiter({
 app.engine('html', require('ejs').renderFile);
 
 const {optionalAuth} = require('./v2.0/helpers/validation/sessionauth');
-const allowedOrigins = ['https://data.neotomadb.org', 'https://apps.neotomadb.org'];
+const allowedOrigins = ['https://data.neotomadb.org', 'https://apps.neotomadb.org', 'https://yanbingchen.site'];
 const localhostRe = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
 
 const corsOptions = {
   origin: function(origin, callback) {
     if (!origin) return callback(null, true); // server-to-server, curl, R package
     if (allowedOrigins.includes(origin)) return callback(null, true);
-    if (env !== 'production' && localhostRe.test(origin)) return callback(null, true);
+    if (localhostRe.test(origin)) return callback(null, true);
+    console.error(`CORS rejected origin: ${origin}`);
     return callback(new Error(`CORS: origin ${origin} not allowed`));
   },
   credentials: true,
