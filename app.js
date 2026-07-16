@@ -6,7 +6,6 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const express = require('express');
 const morgan = require('morgan');
-const rfs = require('rotating-file-stream'); // version 2.x
 const path = require('path');
 // const helmet = require('helmet');
 const YAML = require('yamljs');
@@ -69,32 +68,60 @@ app.use(optionalAuth);
 
 app.locals.db = dbtest();
 
-// test trigger watch restart - 09/12/20
-// create a write stream (in append mode)
-
-const pad = (num) => (num > 9 ? '' : '0') + num;
-const generator = (time, index) => {
-  if (!time) return 'access.log';
-
-  const month = time.getFullYear() + '' + pad(time.getMonth() + 1);
-  const day = pad(time.getDate());
-  const hour = pad(time.getHours());
-  const minute = pad(time.getMinutes());
-
-  return `${month}/${month}${day}-${hour}${minute}-${index}-access.log`;
-};
-
-const accessLogStream = rfs.createStream(generator, {
-  interval: '1d', // rotate daily
-  //    path: path.join(__dirname, 'logs'),
-  compress: true,
-});
-
 // setup the logger
 app.enable('trust proxy');
-app.use(morgan(':date[iso]\t:remote-addr\t:method\t:url\t:status\t:res[content-length]\t:response-time[0]\t:user-agent', {
-  stream: accessLogStream,
-}));
+
+// compression() strips Content-Length, so morgan's :res[content-length] token is
+// empty for gzipped responses (i.e. almost all real traffic). Count the response
+// body bytes ourselves so the "data volume" reporting keeps working. Registered
+// after compression() so it counts the uncompressed body the app produced, which
+// matches Content-Length when that header is present.
+app.use((req, res, next) => {
+  let bytesWritten = 0;
+  const origWrite = res.write;
+  const origEnd = res.end;
+  const add = (chunk, encoding) => {
+    if (chunk && typeof chunk !== 'function') {
+      bytesWritten += Buffer.byteLength(chunk, typeof encoding === 'string' ? encoding : 'utf8');
+    }
+  };
+  res.write = function(chunk, encoding, cb) {
+    add(chunk, encoding);
+    return origWrite.apply(this, arguments);
+  };
+  res.end = function(chunk, encoding, cb) {
+    add(chunk, encoding);
+    res.locals.bytesWritten = bytesWritten;
+    return origEnd.apply(this, arguments);
+  };
+  next();
+});
+
+// Log requests to stdout (captured by CloudWatch on App Runner): JSON in prod
+// for Logs Insights, readable format in dev. Skip the health check to avoid noise.
+// Use originalUrl (not req.url): the health check is a mounted router
+// (app.use('/healthcheck/', ...)), and Express rewrites req.url to '/' inside it,
+// so req.url no longer reads '/healthcheck' by the time morgan evaluates skip.
+const skipHealthChecks = (req) => {
+  const p = (req.originalUrl || req.url).split('?')[0];
+  return p === '/healthcheck' || p === '/healthcheck/';
+};
+
+const jsonAccessFormat = (tokens, req, res) => JSON.stringify({
+  type: 'access', // discriminator for queries: filter type = "access"
+  time: tokens.date(req, res, 'iso'),
+  ip: tokens['remote-addr'](req, res),
+  method: tokens.method(req, res),
+  path: tokens.url(req, res),
+  status: Number(tokens.status(req, res)),
+  bytes: Number(tokens.res(req, res, 'content-length')) || res.locals.bytesWritten || 0,
+  ms: Number(tokens['response-time'](req, res)),
+  ua: tokens['user-agent'](req, res),
+});
+
+app.use(env === 'production'
+  ? morgan(jsonAccessFormat, { stream: process.stdout, skip: skipHealthChecks })
+  : morgan('dev'));
 
 const options = {
   // swaggerUrl: `http://localhost:${apiPort}/api-docs`,
