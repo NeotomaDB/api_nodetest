@@ -6,7 +6,6 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const express = require('express');
 const morgan = require('morgan');
-const rfs = require('rotating-file-stream'); // version 2.x
 const path = require('path');
 // const helmet = require('helmet');
 const YAML = require('yamljs');
@@ -70,32 +69,29 @@ app.use(optionalAuth);
 
 app.locals.db = dbtest();
 
-// test trigger watch restart - 09/12/20
-// create a write stream (in append mode)
-
-const pad = (num) => (num > 9 ? '' : '0') + num;
-const generator = (time, index) => {
-  if (!time) return 'access.log';
-
-  const month = time.getFullYear() + '' + pad(time.getMonth() + 1);
-  const day = pad(time.getDate());
-  const hour = pad(time.getHours());
-  const minute = pad(time.getMinutes());
-
-  return `${month}/${month}${day}-${hour}${minute}-${index}-access.log`;
-};
-
-const accessLogStream = rfs.createStream(generator, {
-  interval: '1d', // rotate daily
-  //    path: path.join(__dirname, 'logs'),
-  compress: true,
-});
-
 // setup the logger
 app.enable('trust proxy');
-app.use(morgan(':date[iso]\t:remote-addr\t:method\t:url\t:status\t:res[content-length]\t:response-time[0]\t:user-agent', {
-  stream: accessLogStream,
-}));
+
+// Log requests to stdout (captured by CloudWatch on App Runner): JSON in prod
+// for Logs Insights, readable format in dev. Skip the health check to avoid noise.
+const skipHealthChecks = (req) =>
+  req.url === '/healthcheck' || req.url.startsWith('/healthcheck/');
+
+const jsonAccessFormat = (tokens, req, res) => JSON.stringify({
+  type: 'access', // discriminator for queries: filter type = "access"
+  time: tokens.date(req, res, 'iso'),
+  ip: tokens['remote-addr'](req, res),
+  method: tokens.method(req, res),
+  path: tokens.url(req, res),
+  status: Number(tokens.status(req, res)),
+  bytes: Number(tokens.res(req, res, 'content-length')) || 0,
+  ms: Number(tokens['response-time'](req, res)),
+  ua: tokens['user-agent'](req, res),
+});
+
+app.use(env === 'production'
+  ? morgan(jsonAccessFormat, { stream: process.stdout, skip: skipHealthChecks })
+  : morgan('dev'));
 
 const options = {
   // swaggerUrl: `http://localhost:${apiPort}/api-docs`,
