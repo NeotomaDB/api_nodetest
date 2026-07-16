@@ -72,10 +72,41 @@ app.locals.db = dbtest();
 // setup the logger
 app.enable('trust proxy');
 
+// compression() strips Content-Length, so morgan's :res[content-length] token is
+// empty for gzipped responses (i.e. almost all real traffic). Count the response
+// body bytes ourselves so the "data volume" reporting keeps working. Registered
+// after compression() so it counts the uncompressed body the app produced, which
+// matches Content-Length when that header is present.
+app.use((req, res, next) => {
+  let bytesWritten = 0;
+  const origWrite = res.write;
+  const origEnd = res.end;
+  const add = (chunk, encoding) => {
+    if (chunk && typeof chunk !== 'function') {
+      bytesWritten += Buffer.byteLength(chunk, typeof encoding === 'string' ? encoding : 'utf8');
+    }
+  };
+  res.write = function(chunk, encoding, cb) {
+    add(chunk, encoding);
+    return origWrite.apply(this, arguments);
+  };
+  res.end = function(chunk, encoding, cb) {
+    add(chunk, encoding);
+    res.locals.bytesWritten = bytesWritten;
+    return origEnd.apply(this, arguments);
+  };
+  next();
+});
+
 // Log requests to stdout (captured by CloudWatch on App Runner): JSON in prod
 // for Logs Insights, readable format in dev. Skip the health check to avoid noise.
-const skipHealthChecks = (req) =>
-  req.url === '/healthcheck' || req.url.startsWith('/healthcheck/');
+// Use originalUrl (not req.url): the health check is a mounted router
+// (app.use('/healthcheck/', ...)), and Express rewrites req.url to '/' inside it,
+// so req.url no longer reads '/healthcheck' by the time morgan evaluates skip.
+const skipHealthChecks = (req) => {
+  const p = (req.originalUrl || req.url).split('?')[0];
+  return p === '/healthcheck' || p === '/healthcheck/';
+};
 
 const jsonAccessFormat = (tokens, req, res) => JSON.stringify({
   type: 'access', // discriminator for queries: filter type = "access"
@@ -84,7 +115,7 @@ const jsonAccessFormat = (tokens, req, res) => JSON.stringify({
   method: tokens.method(req, res),
   path: tokens.url(req, res),
   status: Number(tokens.status(req, res)),
-  bytes: Number(tokens.res(req, res, 'content-length')) || 0,
+  bytes: Number(tokens.res(req, res, 'content-length')) || res.locals.bytesWritten || 0,
   ms: Number(tokens['response-time'](req, res)),
   ua: tokens['user-agent'](req, res),
 });
