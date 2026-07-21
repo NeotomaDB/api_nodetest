@@ -333,6 +333,22 @@
     tags:
       - Lithology metadata
       - v2.0
+/v2.0/data/datasets/{datasetid}/projects:
+  get:
+    description: Returns the research projects (and their participants) linked to a dataset.
+    parameters:
+      - $ref: '#/components/parameters/datasetidPath'
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              type: object
+        description: Projects
+    summary: Project and participant metadata for a dataset.
+    tags:
+      - Project metadata
+      - v2.0
 /v2.0/data/datasets/{datasetid}/publications:
   get:
     description: Returns publications data associated with specific datasets.
