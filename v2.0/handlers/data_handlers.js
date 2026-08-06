@@ -240,4 +240,14 @@ module.exports = {
     const aedna = require('../helpers/aedna/aedna.js');
     aedna.sequencesbytaxonid(req, res, next);
   },
+  // PROJECTS
+  projectsbydsid: function(req, res, next) {
+    const projects = require('../helpers/projects/projects.js');
+    projects.projectsbydsid(req, res, next);
+  },
+  // ASSAYS
+  assaysbydsid: function(req, res, next) {
+    const assays = require('../helpers/assays/assays.js');
+    assays.assaysbydsid(req, res, next);
+  },
 };

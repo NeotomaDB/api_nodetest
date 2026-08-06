@@ -20,6 +20,7 @@ SELECT sts.siteid,
         sts.altitude,
         ST_AsGeoJSON(sts.geog,5,2) AS geography,
         sts.sitedescription,
+        sts.recdatecreated,
 		json_agg(collu.collectionunit) AS collectionunits
 FROM
 	ndb.sites AS sts

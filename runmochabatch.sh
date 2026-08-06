@@ -10,6 +10,7 @@ This bash script uses Mocha (and associated packages) to run tests against the A
 Options:
     [none]      run Mocha tests locally and build the reporter in ./public/tests.html
     -h          display this help and exit
+    -l          run the tests against the LOCAL DEV server at localhost:3005 (NODE_ENV=development)
     -d          run the tests against the remove development server at api-dev.neotomadb.org
     -p          run the tests against the remove production server at api.neotomadb.org
 
@@ -17,7 +18,9 @@ HELP
 }
 
 run_mocha() {
-    # Only run v2.0 tests locally 'v2.0-*.js' — v1.5 endpoints are slow and trip chakram's default timeout
+    # Runs every suite under ./test — both the oatts-generated 'v*-test.js' files and the
+    # hand-written v1.5/v2.0 suites. Shuffled so ordering bugs surface. The v1.5 endpoints
+    # are slow, hence the long timeout in test/.mocharc.yml.
     find ./test -name '*.js' | shuf | xargs mocha --config=test/.mocharc.yml --reporter-options reportDir=public,reportFilename=tests
 }
 
@@ -31,11 +34,14 @@ test=0
 # Must be set BEFORE getopts because getopts skips its loop when no flags are passed.
 export APIPATH='http://localhost:3001/'
 
- while getopts "hdpa" opt; do
+ while getopts "hdlpa" opt; do
      case $opt in
          h)
              show_help
              exit 0
+             ;;
+         l)
+             export APIPATH='http://localhost:3005/'
              ;;
          d)
              export APIPATH='https://api-dev.neotomadb.org/'
