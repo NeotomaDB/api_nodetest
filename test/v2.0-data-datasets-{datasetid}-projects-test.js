@@ -4,10 +4,10 @@ var chakram = require('chakram');
 var request = chakram.request;
 var expect = chakram.expect;
 
-describe('tests for /v1.5/data/geopoliticalunits/{gpid}', function() {
+describe('tests for /v2.0/data/datasets/{datasetid}/projects', function() {
     describe('tests for get', function() {
-        it('should respond 200 for "An array of geopolitical units."', function() {
-            var response = request('get', 'http://localhost:3001/v1.5/data/geopoliticalunits/7211', { 
+        it('should respond 200 for "Projects"', function() {
+            var response = request('get', 'http://localhost:3001/v2.0/data/datasets/500/projects', { 
                 'time': true
             });
 
