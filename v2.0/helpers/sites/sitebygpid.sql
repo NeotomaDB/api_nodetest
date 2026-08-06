@@ -41,6 +41,7 @@ SELECT 'siteid', sts.siteid AS siteid,
               'sitedescription', sts.sitedescription,
               'geography', ST_AsGeoJSON(sts.geog,5,2),
               'altitude', sts.altitude,
+              'recdatecreated', sts.recdatecreated,
          	   'collectionunits', json_agg(cus.collectionunit)) AS sites
 FROM
   allgpu  LEFT JOIN

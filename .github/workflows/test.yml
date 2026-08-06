@@ -1,0 +1,75 @@
+name: Test Neotoma API
+
+on:
+  workflow_run:
+    workflows: ["Deploy Neotoma API"]
+    types: [completed]
+    branches: [develop]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    timeout-minutes: 25
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: dev
+            flag: '-d'
+            host: https://api-dev.neotomadb.org
+          - name: production
+            flag: '-p'
+            host: https://api.neotomadb.org
+
+    name: test (${{ matrix.name }})
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      # genoatt.sh and runmochabatch.sh invoke `oatts` and `mocha` bare. Those resolve
+      # under `yarn run` but not under `run: bash …`, so put the bin dir on PATH.
+      - name: Put node_modules/.bin on PATH
+        run: echo "$PWD/node_modules/.bin" >> "$GITHUB_PATH"
+
+      - name: Build the OpenAPI spec
+        run: yarn build:openapi
+
+      - name: Wait for ${{ matrix.host }} to be ready
+        run: |
+          MAX_ATTEMPTS=10
+          ATTEMPT=1
+          until curl -sf ${{ matrix.host }}/healthcheck > /dev/null; do
+            echo "Attempt $ATTEMPT/$MAX_ATTEMPTS..."
+            [ $ATTEMPT -eq $MAX_ATTEMPTS ] && echo "${{ matrix.host }} not ready" && exit 1
+            ATTEMPT=$((ATTEMPT + 1))
+            sleep 15
+          done
+          echo "${{ matrix.host }} is ready"
+
+      # The oatts-generated suites hardcode their target host, so they must be
+      # regenerated per target — APIPATH alone only redirects the hand-written suites.
+      - name: Generate tests targeting ${{ matrix.host }}
+        run: bash genoatt.sh ${{ matrix.flag }}
+
+      - name: Run tests against ${{ matrix.host }}
+        run: bash runmochabatch.sh ${{ matrix.flag }}
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report-${{ matrix.name }}
+          path: public/tests.html

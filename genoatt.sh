@@ -25,7 +25,7 @@ HELP
 run_oatt() {
 
     rm ./test/v*.js
-    oatts generate --host $remote -s ./openapi.yaml -w test
+    oatts generate --host $remote -m $scheme -s ./openapi.yaml -w test
     yarn dlx eslint --quiet --fix ./test > genoatt.log
 
     # oatts is a bit silly in picking its variables.  We need to make sure that we're
@@ -53,6 +53,9 @@ run_oatt() {
  
 test=0
 remote=localhost:3001
+# The remote hosts 301-redirect http -> https, so generated tests must use the right
+# scheme. oatts defaults to http when the flag is absent.
+scheme=http
 
  while getopts "htldpa" opt; do
      case $opt in
@@ -68,12 +71,15 @@ remote=localhost:3001
              ;;
          d)
              remote=api-dev.neotomadb.org
+             scheme=https
              ;;
          p)
              remote=api.neotomadb.org
+             scheme=https
              ;;
          a)
              remote=neotomaapi-env.eba-wd29jtvf.us-east-2.elasticbeanstalk.com
+             scheme=https
              ;;
          *)
              echo You didn\'t use the correct flag.

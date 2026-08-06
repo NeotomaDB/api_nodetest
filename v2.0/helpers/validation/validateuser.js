@@ -1,10 +1,13 @@
 'use strict';
-// This is the module to manage the cookie:
-// The user will send a valid ORCID cookie
-// We will validate the cookie
-// We will send back a jwt token using our environment variable
-// TOKEN_SECRET.
-// The user token will expire in 1 week.
+// This is the module that turns an ORCID token into a Neotoma session:
+// The user sends the access token they received from the ORCID OAuth flow.
+// We validate it by asking orcid.org/oauth/userinfo who it belongs to.
+// If ORCID recognises it, we record a login in ap.orcidlogins, which mints an
+// opaque session UUID (see newlogin.sql), and send that UUID back to the caller.
+// The session UUID is the credential for every authenticated request afterwards,
+// passed as `Authorization: Bearer <sessionuuid>` and checked by sessionauth.js.
+// Session lifetime is set in newlogin.sql — currently 1 week — and its expiry is
+// returned alongside the UUID so clients don't have to guess.
 
 const {sql} = require('../../../src/neotomaapi.js');
 

@@ -13,7 +13,7 @@
   "scripts": {
     "start": "NODE_ENV=production nodemon --legacy-watch app.js",
     "dev": "NODE_ENV=development nodemon --legacy-watch app.js",
-    "test": "node ./node_modules/mocha/bin/mocha --config=test/.mocharc.yml --reporter-options reportDir=public,reportFilename=tests",
+    "test": "APIPATH=${APIPATH:-http://localhost:3001/} node ./node_modules/mocha/bin/mocha --config=test/.mocharc.yml --reporter-options reportDir=public,reportFilename=tests",
     "build:openapi": "(cd ./openapi && node ./scripts/build-openapi.js)",
     "validate:openapi": "yarn build:openapi && bash genoatt.sh && sleep 4 && bash runmochabatch.sh"
   },

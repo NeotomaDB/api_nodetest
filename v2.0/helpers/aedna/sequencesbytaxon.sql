@@ -1,6 +1,7 @@
 SELECT
   sq.sequenceid,
   sq.sequence,
+  sq.asv,
   am.model,
   sq.primername,
   pb.doi AS publicationdoi

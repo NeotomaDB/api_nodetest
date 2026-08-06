@@ -33,6 +33,7 @@ SELECT sts.siteid,
        sts.sitedescription AS sitedescription,
        ST_AsGeoJSON(sts.geog,5,2) as geography,
        sts.altitude AS altitude,
+       sts.recdatecreated AS recdatecreated,
        json_agg(DISTINCT cus.collectionunit) AS collectionunits
 FROM
    (SELECT * FROM collunit) AS cus

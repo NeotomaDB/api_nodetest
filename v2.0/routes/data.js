@@ -34,6 +34,8 @@ router.get('/datasets/:datasetid/chronologies', handlers.chronologiesbydsid);
 router.get('/datasets/:datasetid/contacts', handlers.contactsbydataid);
 router.get('/datasets/:datasetid/doi', handlers.doibydsid);
 router.get('/datasets/:datasetid/lithology', handlers.lithologybydsid);
+router.get('/datasets/:datasetid/assays', handlers.assaysbydsid);
+router.get('/datasets/:datasetid/projects', handlers.projectsbydsid);
 router.get('/datasets/:datasetid/publications', handlers.publicationbydataset);
 router.get(['/dbtables/:table', '/dbtables'], handlers.dbtables);
 
