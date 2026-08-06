@@ -4,7 +4,8 @@ SELECT ct.contactid,
                           'sitename', sts.sitename, 
                           'sitedescription', sts.sitedescription,
                           'geography', ST_AsGeoJSON(sts.geog,5,2),
-                          'altitude', sts.altitude, 
+                          'altitude', sts.altitude,
+                          'recdatecreated', sts.recdatecreated,
   	                      'collectionunits', bigq.collectionunit) AS sites
 FROM ap.querytable AS bigq
   INNER JOIN ndb.sites AS  sts ON sts.siteid = bigq.siteid  

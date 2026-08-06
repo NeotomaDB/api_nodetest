@@ -2345,6 +2345,8 @@ components:
           type: array
         geography:
           $ref: '#/components/schemas/geography'
+        recdatecreated:
+          $ref: '#/components/schemas/recdatecreated'
         sitedescription:
           $ref: '#/components/schemas/sitedescription'
         siteid:
