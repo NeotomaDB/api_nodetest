@@ -35,6 +35,7 @@ sequence_details AS (
     SELECT
         sq.sequenceid,
         sq.sequence,
+        sq.asv,
         sq.primername,
         am.taxonid,
         am.model,
@@ -65,6 +66,7 @@ FROM (
             json_build_object(
                 'sequenceid', sd.sequenceid,
                 'sequence', sd.sequence,
+                'asv', sd.asv,
                 'model', sd.model,
                 'primername', sd.primername,
                 'publicationdoi', sd.publicationdoi
