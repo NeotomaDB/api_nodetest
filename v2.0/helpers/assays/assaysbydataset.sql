@@ -22,6 +22,13 @@ FROM (
         'probereporter', a.probereporter,
         'probequencher', a.probequencher,
         'probeconc', a.probeconc,
+        -- FAIRe Project-section terms. The columns are underscored while every
+        -- key in this payload is not, so the aliases keep the two conventions
+        -- from meeting anywhere but here. neg_cont/pos_cont are BOOLEAN and are
+        -- passed through uncast, so NULL ("unknown") stays distinct from false.
+        'sterilisemethod', a.sterilise_method,
+        'negcont', a.neg_cont,
+        'poscont', a.pos_cont,
         'libraries', COALESCE((
             SELECT json_agg(json_build_object(
                 'libraryid', l.libraryid,
