@@ -55,8 +55,8 @@ router.get('/constdb', handlers.databasesummaries);
 router.get('/contactsummary/:datasetid', handlers.contactoverview);
 // Gives the orcid by the contactid.
 router.get('/orcids/contact', handlers.contact_orcid);
-// Gives the logged in user their orcid and contactid.
-router.get('/orcids/me', requireAuth, handlers.meHandler);
+// Gives the logged in user their orcid, contactid and steward databases.
+router.get('/orcids/steward', requireAuth, handlers.stewardHandler);
 // Gives the contact with an orcid.
 router.get('/orcids/orcid', handlers.orcid_contact);
 router.get('/datasetpi', handlers.datasetsbypi);
