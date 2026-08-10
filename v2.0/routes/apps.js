@@ -29,7 +29,35 @@ router.post('/logout', requireAuth, async function(req, res) {
     );
     res.status(200).json({status: 'success', message: 'Session ended'});
   } catch (err) {
-    res.status(500).json({status: 'error', message: 'Logout failed'});
+    // This used to discard `err` outright, so a failed logout looked identical
+    // whether the column was missing, the role lacked UPDATE, or the BEFORE
+    // UPDATE trigger's function wasn't there. pg-promise hangs the useful parts
+    // off the error object. Only a prefix of the session uuid is logged — the
+    // whole value is a live credential.
+    console.error('logout failed: ' + JSON.stringify({
+      message: err.message,
+      code: err.code,
+      detail: err.detail,
+      hint: err.hint,
+      schema: err.schema,
+      table: err.table,
+      column: err.column,
+      routine: err.routine,
+      session: String(req.user.sessionuuid).slice(0, 8) + '...',
+    }));
+    const body = {status: 'error', message: 'Logout failed'};
+    // api-dev runs with NODE_ENV=dev (cloudformation-template.yaml sets it from
+    // the Environment parameter), so the reason comes back in the response
+    // there and stays hidden in production.
+    if (process.env.NODE_ENV !== 'production') {
+      body.data = {
+        message: err.message,
+        code: err.code,
+        detail: err.detail,
+        hint: err.hint,
+      };
+    }
+    res.status(500).json(body);
   }
 });
 
@@ -55,8 +83,8 @@ router.get('/constdb', handlers.databasesummaries);
 router.get('/contactsummary/:datasetid', handlers.contactoverview);
 // Gives the orcid by the contactid.
 router.get('/orcids/contact', handlers.contact_orcid);
-// Gives the logged in user their orcid and contactid.
-router.get('/orcids/me', requireAuth, handlers.meHandler);
+// Gives the logged in user their orcid, contactid and steward databases.
+router.get('/orcids/steward', requireAuth, handlers.stewardHandler);
 // Gives the contact with an orcid.
 router.get('/orcids/orcid', handlers.orcid_contact);
 router.get('/datasetpi', handlers.datasetsbypi);

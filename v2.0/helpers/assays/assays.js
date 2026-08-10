@@ -31,10 +31,13 @@ function assaysbydsid(req, res, next) {
         });
       })
       .catch(function(err) {
-        // 42P01 is Postgres "undefined_table". The aeDNA tables are deployed ahead of
-        // this route on some hosts, so report "no assays" rather than a server error.
-        if (err.code === '42P01') {
-          console.warn('aeDNA assay tables are not deployed on this host; ' +
+        // 42P01 "undefined_table" / 42703 "undefined_column". The aeDNA tables are
+        // deployed ahead of this route on some hosts, and the FAIRe project columns
+        // (sterilise_method, neg_cont, pos_cont) were added to ndb.aednaassays after
+        // it shipped — see new_tables.sql in DataBUS_aeDNA. Report "no assays"
+        // rather than a server error in either case.
+        if (err.code === '42P01' || err.code === '42703') {
+          console.warn('aeDNA assay tables are not fully deployed on this host; ' +
                        'returning an empty assay set.');
           return res.status(200).json({
             status: 'success',

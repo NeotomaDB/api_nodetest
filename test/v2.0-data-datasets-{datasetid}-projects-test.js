@@ -4,10 +4,10 @@ var chakram = require('chakram');
 var request = chakram.request;
 var expect = chakram.expect;
 
-describe('tests for /v2.0/data/contacts/{contactid}/sites', function() {
+describe('tests for /v2.0/data/datasets/{datasetid}/projects', function() {
     describe('tests for get', function() {
-        it('should respond 200 for "A Neotoma sites object."', function() {
-            var response = request('get', 'http://localhost:3001/v2.0/data/contacts/9929/sites', { 
+        it('should respond 200 for "Projects"', function() {
+            var response = request('get', 'http://localhost:3001/v2.0/data/datasets/500/projects', { 
                 'time': true
             });
 

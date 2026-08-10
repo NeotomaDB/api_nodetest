@@ -9,7 +9,7 @@ module.exports = {
   authorpis: authorpis,
   taphonomysystems: taphonomysystems,
   depositionalenvironments: depositionalenvironments,
-  meHandler: meHandler,
+  stewardHandler: stewardHandler,
   validateusers: function(req, res, next) {
     const valuser = require('../helpers/validation/validateuser.js');
     valuser.checktoken(req, res, next);
@@ -291,7 +291,7 @@ function depositionalenvironments(req, res, next) {
       });
 }  
 
-async function meHandler(req, res) {
+async function stewardHandler(req, res) {
   const { orcid, sessionuuid } = req.user;
   const db = req.app.locals.db;
 
@@ -304,7 +304,18 @@ async function meHandler(req, res) {
         l.expiresat,
         c.contactid,
         COALESCE(c.contactname, l.orcidname) AS contactname,
-        s.stewardid
+        s.stewardid,
+        -- The databases this steward is authorized on. Kept as a scalar
+        -- subquery rather than a join: the outer query ends in LIMIT 1, so a
+        -- join against the one-row-per-database ti.stewarddatabases would
+        -- silently drop everything but the first database.
+        COALESCE(
+          (SELECT json_agg(json_build_object('databaseid', sd.databaseid)
+                           ORDER BY sd.databaseid)
+             FROM ti.stewarddatabases sd
+            WHERE sd.stewardid = s.stewardid),
+          '[]'::json
+        ) AS databases
       FROM ap.orcidlogins l
       LEFT JOIN ndb.externalcontacts ec
         ON ec.identifier = l.orcidid AND ec.extdatabaseid = 7
@@ -330,12 +341,13 @@ async function meHandler(req, res) {
         name: rows[0].contactname,
         contactid: rows[0].contactid,   // null if no link
         stewardid: rows[0].stewardid,   // null if not a steward
+        databases: rows[0].databases,   // [] if not a steward
         sessionuuid,
         expiresat: rows[0].expiresat,
       },
     });
   } catch (err) {
-    console.error('meHandler failed:', err);
+    console.error('stewardHandler failed:', err);
     return res.status(500).json({ status: 'error', message: 'Failed to load user' });
   }
 }
