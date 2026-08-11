@@ -121,11 +121,23 @@ const checktoken = async function(req, res, next) {
             message: 'ORCID did not respond in time. Please try again.',
           });
     }
-    console.error(err);
+    // Log the detail, don't return it. This used to send `data: err` straight
+    // back to the caller, which meant a failed INSERT echoed the whole
+    // statement — ORCID iD, the person's name and their IP — to anyone who
+    // could reach the endpoint. CloudWatch already has everything needed.
+    console.error('validate failed: ' + JSON.stringify({
+      message: err.message,
+      code: err.code,
+      detail: err.detail,
+      hint: err.hint,
+      schema: err.schema,
+      table: err.table,
+      column: err.column,
+      routine: err.routine,
+    }));
     return res.status(500)
         .json({
           status: 'error',
-          data: err,
           message: 'Failed to generate token.',
         });
   }
