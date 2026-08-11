@@ -305,6 +305,7 @@ async function stewardHandler(req, res) {
         c.contactid,
         COALESCE(c.contactname, l.orcidname) AS contactname,
         s.stewardid,
+        s.taxonomyexpert,
         -- The databases this steward is authorized on. Kept as a scalar
         -- subquery rather than a join: the outer query ends in LIMIT 1, so a
         -- join against the one-row-per-database ti.stewarddatabases would
@@ -341,6 +342,10 @@ async function stewardHandler(req, res) {
         name: rows[0].contactname,
         contactid: rows[0].contactid,   // null if no link
         stewardid: rows[0].stewardid,   // null if not a steward
+        // ti.stewards.taxonomyexpert is NOT NULL, so this is only null when the
+        // join found no steward at all — null means "not a steward", not "a
+        // steward who isn't a taxonomy expert".
+        taxonomyexpert: rows[0].taxonomyexpert,
         databases: rows[0].databases,   // [] if not a steward
         sessionuuid,
         expiresat: rows[0].expiresat,
