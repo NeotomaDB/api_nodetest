@@ -28,7 +28,7 @@ describe('Get aeDNA assays by datasetid:', function() {
   this.timeout(5000);
 
   it('every assay carries the FAIRe project terms:', function(done) {
-    api.get('v2.0/data/datasets/74666/assays')
+    api.get('v2.0/data/datasets/500/assays')
       .set('Accept', 'application/json')
       .expect(200)
       .expect(function(res) {

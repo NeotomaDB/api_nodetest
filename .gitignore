@@ -113,5 +113,7 @@ build_deploy.sh
 
 output.txt
 
+docs/
+test/unit/
 .yarn/
 tasks/
