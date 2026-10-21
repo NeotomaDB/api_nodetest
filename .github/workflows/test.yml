@@ -30,14 +30,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
+      # package.json pins "packageManager": "yarn@4.12.0". The runner's global
+      # Yarn is 1.22.x, which refuses such a project, so Corepack has to be on
+      # before setup-node runs `yarn` for its cache.
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'  # keep in step with FROM node:22-alpine in the Dockerfile
           cache: 'yarn'
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       # genoatt.sh and runmochabatch.sh invoke `oatts` and `mocha` bare. Those resolve
       # under `yarn run` but not under `run: bash …`, so put the bin dir on PATH.
