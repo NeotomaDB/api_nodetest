@@ -40,6 +40,11 @@ function buildOpenAPI() {
   function findYamlElements(dir) {
     // self note: you can `push()` to a const array.
     const yamlElements = [];
+    // Git does not keep empty folders, so a section with no files yet (for
+    // example components/responses) is absent from a fresh checkout.
+    if (!fs.existsSync(dir)) {
+      return yamlElements;
+    }
     const items = fs.readdirSync(dir);
     items.forEach((item) => {
       const fullPath = path.join(dir, item);
