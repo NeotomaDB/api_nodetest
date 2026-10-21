@@ -7,18 +7,21 @@ WITH constdb AS (
 						'url', cdb.url,
 						'contact',cnt.contactname,
 						'email', cnt.email) as database,
-    qt.siteid,
-    qt.datasetid,
-    qt.datasettype
+    cu.siteid,
+    ds.datasetid,
+    dst.datasettype
   from ndb.constituentdatabases AS cdb
-  left join ap.querytable as qt on cdb.databaseid = qt.databaseid
+  left join ndb.datasetdatabases as dsdb on cdb.databaseid = dsdb.databaseid
+  left join ndb.datasets as ds on ds.datasetid = dsdb.datasetid
+  left join ndb.collectionunits as cu on cu.collectionunitid = ds.collectionunitid
+  left join ndb.datasettypes as dst on dst.datasettypeid = ds.datasettypeid
   left join ndb.contacts as cnt on cdb.contactid = cnt.contactid
   WHERE (${dbid} IS NULL OR cdb.databaseid = ${dbid})
 ), sites as (
 	select
 		dst.databaseid,	
 		dst.database,
-	    COUNT(dst.siteid) as sitecount
+	    COUNT(DISTINCT dst.siteid)::int as sitecount
 	from
 		constdb as dst
 	group by
@@ -28,7 +31,9 @@ WITH constdb AS (
 	select
 	  st.database,
 	  st.sitecount,
-	  jsonb_build_object('datasettype', cdb.datasettype, 'datasets', COUNT(*)) as datasettypes
+	  CASE WHEN cdb.datasettype IS NULL THEN NULL
+	       ELSE jsonb_build_object('datasettype', cdb.datasettype, 'datasets', COUNT(DISTINCT cdb.datasetid)::int)
+	  END as datasettypes
 	  from sites as st
 	  inner join constdb as cdb on cdb.databaseid = st.databaseid
 	  group by cdb.datasettype,
@@ -38,7 +43,7 @@ WITH constdb AS (
 SELECT 
 	database,
 	sitecount,
-	array_agg(datasettypes) AS datasettypes
+	array_agg(datasettypes) FILTER (WHERE datasettypes IS NOT NULL) AS datasettypes
 from grouped
 group by
 	database,

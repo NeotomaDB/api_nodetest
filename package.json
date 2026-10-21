@@ -11,7 +11,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "NODE_ENV=production nodemon --legacy-watch app.js",
+    "start": "NODE_ENV=production nodemon --legacy-watch --exitcrash app.js",
     "dev": "NODE_ENV=development nodemon --legacy-watch app.js",
     "test": "APIPATH=${APIPATH:-http://localhost:3001/} node ./node_modules/mocha/bin/mocha --config=test/.mocharc.yml --reporter-options reportDir=public,reportFilename=tests",
     "test:unit": "node ./node_modules/mocha/bin/mocha --no-config --recursive --reporter spec --timeout 10000 test/unit",
