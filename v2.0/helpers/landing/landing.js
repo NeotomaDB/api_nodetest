@@ -193,7 +193,7 @@ function databasesummaries(req, res, next) {
   const paramgrab = getparam(req);
 
   if (!paramgrab.success) {
-    res.status(500)
+    return res.status(500)
         .json({
           status: 'failure',
           data: null,
