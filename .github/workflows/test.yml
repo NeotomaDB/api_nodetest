@@ -4,7 +4,7 @@ on:
   workflow_run:
     workflows: ["Deploy Neotoma API"]
     types: [completed]
-    branches: [develop]
+    branches: [develop, production]
   workflow_dispatch:
 
 jobs:
@@ -13,22 +13,25 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     timeout-minutes: 25
 
+    # Test only the server that was just deployed: a push to `production` tests
+    # production, anything else (a push to `develop`, or a manual run started
+    # from another branch) tests dev. After a deploy the branch is the one that
+    # triggered the Deploy run; for a manual run it is the branch it started on.
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - name: dev
-            flag: '-d'
-            host: https://api-dev.neotomadb.org
-          - name: production
-            flag: '-p'
-            host: https://api.neotomadb.org
+        include: ${{ fromJSON((github.event.workflow_run.head_branch || github.ref_name) == 'production' && '[{"name":"production","flag":"-p","host":"https://api.neotomadb.org"}]' || '[{"name":"dev","flag":"-d","host":"https://api-dev.neotomadb.org"}]') }}
 
     name: test (${{ matrix.name }})
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+        with:
+          # A workflow_run job checks out the default branch unless told
+          # otherwise. Check out the commit that was deployed so its own tests
+          # and openapi.yaml are what runs.
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       # package.json pins "packageManager": "yarn@4.12.0". The runner's global
       # Yarn is 1.22.x, which refuses such a project, so Corepack has to be on
