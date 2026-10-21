@@ -42,7 +42,8 @@ function depenvbyid(req, res, next) {
           res.status(500)
               .json({
                 status: 'failure',
-                data: err.message,
+                data: null,
+                message: err.message,
               });
         });
   };

@@ -39,8 +39,8 @@ function datasettypesbymonths(req, res, next) {
         res.status(500)
             .json({
               status: 'failure',
-              data: err.message,
-              message: 'Must pass either queries or a comma separated integer sequence.',
+              data: null,
+              message: err.message,
             });
       });
 }
@@ -82,8 +82,8 @@ function rawbymonth(req, res, next) {
         res.status(500)
             .json({
               status: 'failure',
-              data: err.message,
-              message: 'Must pass either queries or a comma separated integer sequence.',
+              data: null,
+              message: err.message,
             });
       });
 }
@@ -125,8 +125,8 @@ function datasetdbsbymonths(req, res, next) {
         res.status(500)
             .json({
               status: 'failure',
-              data: err.message,
-              message: 'Must pass either queries or a comma separated integer sequence.',
+              data: null,
+              message: err.message,
             });
       });
 }
@@ -170,8 +170,8 @@ function sparklines(req, res, next) {
         res.status(500)
             .json({
               status: 'failure',
-              data: err.message,
-              message: 'Must pass either queries or a comma separated integer sequence.',
+              data: null,
+              message: err.message,
             });
       });
 }

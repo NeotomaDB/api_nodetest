@@ -70,8 +70,8 @@ function dbtables(req, res, next) {
           res.status(500)
               .json({
                 status: 'failure',
-                data: err.message,
-                message: 'Ran into an error.',
+                data: null,
+                message: err.message,
               });
         }
       });

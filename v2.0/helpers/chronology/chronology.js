@@ -39,7 +39,8 @@ function chronologybyid (req, res, next) {
       res.status(500)
         .json({
           status: 'failure',
-          data: err.message
+          data: null,
+          message: err.message
         });
     });
 }
@@ -76,7 +77,8 @@ function chronologybydsid (req, res, next) {
       res.status(500)
         .json({
           status: 'failure',
-          data: err.message
+          data: null,
+          message: err.message
         });
     });
 }
@@ -111,7 +113,8 @@ function chronologybystid (req, res, next) {
       res.status(500)
         .json({
           status: 'failure',
-          data: err.message
+          data: null,
+          message: err.message
         });
     });
 }

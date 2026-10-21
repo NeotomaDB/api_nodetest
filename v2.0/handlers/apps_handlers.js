@@ -89,7 +89,8 @@ function collectiontypes(req, res, next) {
         res.status(500)
             .json({
               status: 'failure',
-              data: err.message,
+              data: null,
+              message: err.message,
             });
       });
 }
@@ -115,7 +116,8 @@ function datasettypes(req, res, next) {
         res.status(500)
             .json({
               status: 'failure',
-              data: err.message,
+              data: null,
+              message: err.message,
             });
       });
 }
@@ -141,7 +143,8 @@ function taxaindatasets(req, res, next) {
         res.status(500)
             .json({
               status: 'failure',
-              data: err.message,
+              data: null,
+              message: err.message,
             });
       });
 }
@@ -167,7 +170,8 @@ function taxagrouptypes(req, res, next) {
         res.status(500)
             .json({
               status: 'failure',
-              data: err.message,
+              data: null,
+              message: err.message,
             });
       });
 }
@@ -193,7 +197,8 @@ function keywords(req, res, next) {
         res.status(500)
             .json({
               status: 'failure',
-              data: err.message,
+              data: null,
+              message: err.message,
             });
       });
 }
@@ -219,7 +224,8 @@ function authorpis(req, res, next) {
         res.status(500)
             .json({
               status: 'failure',
-              data: err.message,
+              data: null,
+              message: err.message,
             });
       });
 }
@@ -258,7 +264,8 @@ function taphonomysystems(req, res, next) {
           res.status(500)
               .json({
                 status: 'failure',
-                data: err.message,
+                data: null,
+                message: err.message,
               });
         });
   }
@@ -286,7 +293,8 @@ function depositionalenvironments(req, res, next) {
         res.status(500)
             .json({
               status: 'failure',
-              data: err.message,
+              data: null,
+              message: err.message,
             });
       });
 }  
