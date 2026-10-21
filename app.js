@@ -222,4 +222,16 @@ app.listen(apiPort, () => {
   console.log(`Neotoma API listening on port ${apiPort} (NODE_ENV=${process.env.NODE_ENV})`);
 });
 
+// Log the reason before the process dies. Node exits on these, and under
+// `node app.js` (no nodemon) App Runner then restarts the container promptly.
+// Message and stack only: error objects from pg can carry query parameters.
+process.on('unhandledRejection', (reason) => {
+  console.error('unhandledRejection:', reason && reason.stack ? reason.stack : String(reason));
+  process.exit(1);
+});
+process.on('uncaughtException', (err) => {
+  console.error('uncaughtException:', err && err.stack ? err.stack : String(err));
+  process.exit(1);
+});
+
 module.exports = app;
