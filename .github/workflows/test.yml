@@ -30,7 +30,11 @@ jobs:
       matrix:
         include: ${{ fromJSON((github.event.workflow_run.head_branch || github.ref_name) == 'production' && '[{"name":"production","flag":"-p","host":"https://api.neotomadb.org"}]' || '[{"name":"dev","flag":"-d","host":"https://api-dev.neotomadb.org"}]') }}
 
-    name: test (${{ matrix.name }})
+    # A fixed name: when this job is skipped (push and pull_request runs) GitHub
+    # never expands the matrix, so a name that used matrix.name showed up as the
+    # raw "${{ matrix.name }}" text. The target (dev or production) is in the
+    # step names and the test-report artifact name instead.
+    name: Test deployed server
 
     steps:
       - name: Checkout code
