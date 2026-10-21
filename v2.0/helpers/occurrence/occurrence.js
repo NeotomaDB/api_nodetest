@@ -114,7 +114,8 @@ function occurrencequery(req, res, next) {
             res.status(500)
                 .json({
                   status: 'failure',
-                  data: err.message,
+                  data: null,
+                  message: err.message,
                   params: outobj,
                 });
           });
@@ -132,7 +133,8 @@ function occurrencequery(req, res, next) {
             res.status(500)
                 .json({
                   status: 'failure',
-                  data: err.message,
+                  data: null,
+                  message: err.message,
                   params: outobj,
                 });
           });
@@ -167,8 +169,8 @@ function occurrencebytaxon(req, res, next) {
         res.status(500)
             .json({
               status: 'failure',
-              data: err.message,
-              message: 'Must pass either queries or a comma separated integer sequence.',
+              data: null,
+              message: err.message,
             });
       });
 };

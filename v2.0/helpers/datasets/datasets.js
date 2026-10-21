@@ -66,8 +66,8 @@ function datasetsbygeopol(req, res, next) {
         res.status(500)
             .json({
               status: 'failure',
-              data: err.message,
-              message: 'Error in passing query.',
+              data: null,
+              message: err.message,
             });
       });
 }
@@ -116,8 +116,8 @@ function datasetbyid(req, res, next) {
       res.status(500)
         .json({
           status: 'failure',
-          data: err.message,
-          message: 'Must pass either queries or a comma separated integer sequence.'
+          data: null,
+          message: err.message
         });
       next(err)
     });
@@ -168,8 +168,8 @@ function datasetsbyaggid(req, res, next) {
         res.status(500)
             .json({
               status: 'failure',
-              data: err.message,
-              message: 'Must pass either queries or a comma separated integer sequence.',
+              data: null,
+              message: err.message,
             });
         next(err);
       });
@@ -218,8 +218,8 @@ function datasetbydb(req, res, next) {
       res.status(500)
         .json({
           status: 'failure',
-          data: err.message,
-          message: 'Must pass either queries or a comma separated integer sequence.'
+          data: null,
+          message: err.message
         });
       next(err)
     });
@@ -267,8 +267,8 @@ function datasetbysiteid(req, res, next) {
       res.status(500)
         .json({
           status: 'failure',
-          data: err.message,
-          message: 'Must pass either queries or a comma separated integer sequence.'
+          data: null,
+          message: err.message
         });
       next(err)
     });
@@ -322,8 +322,8 @@ function datasetbypi(req, res, next) {
         res.status(500)
             .json({
               status: 'failure',
-              data: err.message,
-              message: 'Must pass either queries or a comma separated integer sequence.',
+              data: null,
+              message: err.message,
             });
         next(err);
       });

@@ -49,7 +49,8 @@ function geopoliticalbyid (req, res, next) {
       res.status(500)
         .json({
           status: 'failure',
-          data: err.message
+          data: null,
+          message: err.message
         });
     });
 }
@@ -112,7 +113,8 @@ function geopoliticalunits (req, res, next) {
         res.status(500)
           .json({
             status: 'failure',
-            data: err.message
+            data: null,
+            message: err.message
           });
       });
   }
@@ -155,7 +157,8 @@ function geopolbysite (req, res, next) {
         res.status(500)
           .json({
             status: 'failure',
-            data: err.message
+            data: null,
+            message: err.message
           });
       });
   } else {

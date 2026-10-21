@@ -59,7 +59,8 @@ function contacts(req, res, next) {
           res.status(500)
               .json({
                 status: 'failure',
-                data: err.message,
+                data: null,
+                message: err.message,
               });
         });
   };
@@ -108,7 +109,8 @@ function contactsbyid(req, res, next) {
         res.status(500)
             .json({
               status: 'failure',
-              data: err.message,
+              data: null,
+              message: err.message,
             });
       });
 }
@@ -157,7 +159,8 @@ function contactsbydataid(req, res, next) {
         res.status(500)
             .json({
               status: 'failure',
-              data: err.message,
+              data: null,
+              message: err.message,
             });
       });
 }
@@ -205,7 +208,8 @@ function contactclassbydsid(req, res, next) {
         res.status(500)
             .json({
               status: 'failure',
-              data: err.message,
+              data: null,
+              message: err.message,
             });
       });
 }
@@ -252,7 +256,8 @@ function contactsbysiteid(req, res, next) {
         res.status(500)
             .json({
               status: 'failure',
-              data: err.message,
+              data: null,
+              message: err.message,
             });
       });
 }
@@ -286,7 +291,8 @@ function publicationsbycontactid(req, res, next) {
       .catch(function(err) {
         res.status(500).json({
           status: 'failure',
-          data: err.message,
+          data: null,
+          message: err.message,
         });
       });
 }

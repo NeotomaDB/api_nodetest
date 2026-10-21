@@ -145,8 +145,8 @@ function downloadbyid (req, res, next) {
           res.status(500)
             .json({
               status: 'failure',
-              data: err.message,
-              message: 'SQL Error.'
+              data: null,
+              message: err.message
             });
         });
     }

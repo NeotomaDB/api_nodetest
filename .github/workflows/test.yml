@@ -4,7 +4,15 @@ on:
   workflow_run:
     workflows: ["Deploy Neotoma API"]
     types: [completed]
-    branches: [develop]
+    branches: [develop, production]
+  # The `checks` job runs on every pull request into develop or production (so
+  # develop -> production too) and on every push to those branches. The `test`
+  # job does not: it tests a deployed server, and neither a pull request nor a
+  # push that has not been deployed yet is running anywhere.
+  pull_request:
+    branches: [develop, production]
+  push:
+    branches: [develop, production]
   workflow_dispatch:
 
 jobs:
@@ -13,31 +21,44 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     timeout-minutes: 25
 
+    # Test only the server that was just deployed: a push to `production` tests
+    # production, anything else (a push to `develop`, or a manual run started
+    # from another branch) tests dev. After a deploy the branch is the one that
+    # triggered the Deploy run; for a manual run it is the branch it started on.
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - name: dev
-            flag: '-d'
-            host: https://api-dev.neotomadb.org
-          - name: production
-            flag: '-p'
-            host: https://api.neotomadb.org
+        include: ${{ fromJSON((github.event.workflow_run.head_branch || github.ref_name) == 'production' && '[{"name":"production","flag":"-p","host":"https://api.neotomadb.org"}]' || '[{"name":"dev","flag":"-d","host":"https://api-dev.neotomadb.org"}]') }}
 
-    name: test (${{ matrix.name }})
+    # A fixed name: when this job is skipped (push and pull_request runs) GitHub
+    # never expands the matrix, so a name that used matrix.name showed up as the
+    # raw "${{ matrix.name }}" text. The target (dev or production) is in the
+    # step names and the test-report artifact name instead.
+    name: Test deployed server
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+        with:
+          # A workflow_run job checks out the default branch unless told
+          # otherwise. Check out the commit that was deployed so its own tests
+          # and openapi.yaml are what runs.
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      # package.json pins "packageManager": "yarn@4.12.0". The runner's global
+      # Yarn is 1.22.x, which refuses such a project, so Corepack has to be on
+      # before setup-node runs `yarn` for its cache.
+      - name: Enable Corepack
+        run: corepack enable
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'  # keep in step with FROM node:22-alpine in the Dockerfile
           cache: 'yarn'
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       # genoatt.sh and runmochabatch.sh invoke `oatts` and `mocha` bare. Those resolve
       # under `yarn run` but not under `run: bash …`, so put the bin dir on PATH.
@@ -73,3 +94,67 @@ jobs:
         with:
           name: test-report-${{ matrix.name }}
           path: public/tests.html
+
+  # Checks that need no database, so they test the pushed or proposed code on
+  # the runner. The mocha suite needs a live API and database, so it only runs
+  # after a deploy (the `test` job above).
+  checks:
+    name: Checks (syntax, OpenAPI spec, startup)
+    if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    concurrency:
+      # A newer push to a pull request replaces that pull request's older run.
+      # Every push to develop/production gets its own group (the run id), so
+      # nothing is cancelled and every commit has a result.
+      group: checks-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+      cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'  # keep in step with FROM node:22-alpine in the Dockerfile
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Check JavaScript syntax
+        run: find app.js database src v1.5 v2.0 openapi/scripts -name '*.js' -print0 | xargs -0 -n1 node --check
+
+      - name: Build the OpenAPI spec and check openapi.yaml is up to date
+        run: |
+          yarn build:openapi
+          if ! git diff --exit-code -- openapi.yaml; then
+            echo "::error file=openapi.yaml::openapi.yaml is out of date. Run 'yarn build:openapi' and commit the result."
+            exit 1
+          fi
+
+      - name: Start the API without a database and check /healthcheck
+        env:
+          APIPORT: '3999'
+          NODE_ENV: development
+        run: |
+          node app.js > app.log 2>&1 &
+          pid=$!
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:3999/healthcheck/ > /dev/null; then
+              echo "healthcheck answered after ${i}s"
+              kill "$pid"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "::error::The API did not answer /healthcheck/ within 30 s"
+          cat app.log
+          kill "$pid" 2>/dev/null || true
+          exit 1

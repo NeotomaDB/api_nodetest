@@ -74,8 +74,8 @@ function calibrate(req, res, next) {
       res.status(500)
         .json({
           status: 'error',
-          data: err.message,
-          message: 'Hit an unexpected error'
+          data: null,
+          message: err.message
         });
       next(err)
     })
@@ -127,8 +127,8 @@ function calibrate(req, res, next) {
       res.status(500)
         .json({
           status: 'error',
-          data: err.message,
-          message: 'Hit an unexpected error'
+          data: null,
+          message: err.message
         });
       next(err)
     })

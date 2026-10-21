@@ -9,10 +9,12 @@
 // passed as `Authorization: Bearer <sessionuuid>` and checked by sessionauth.js.
 // Session lifetime is set in newlogin.sql — currently 1 week — and its expiry is
 // returned alongside the UUID so clients don't have to guess.
+// Logging in again does not mint another key: sessionlogin.js hands back the
+// person's live session unless it is about to expire.
 
 const {sql} = require('../../../src/neotomaapi.js');
 
-const insertuserlogin = sql('../v2.0/helpers/validation/newlogin.sql');
+const {getOrCreateSession} = require('./sessionlogin.js');
 const stewardbyorcid = sql('../v2.0/helpers/validation/stewardbyorcid.sql');
 
 // How long we're willing to wait on orcid.org. fetch() has no overall timeout of
@@ -93,7 +95,9 @@ const checktoken = async function(req, res, next) {
           });
     }
 
-    const uuidres = await db.one(insertuserlogin,
+    // A returning user gets their live session back rather than a new key; only
+    // when there isn't one worth reusing is a new session minted.
+    const session = await getOrCreateSession(db,
         {'orcidid': orcidid, 'ipaddr': ipaddr,
           'orcidname': result['name'] ||
             [result['given_name'], result['family_name']].filter(Boolean).join(' ') ||
@@ -104,9 +108,13 @@ const checktoken = async function(req, res, next) {
           status: 'success',
           data: {
             user: result,
-            neotoken: uuidres,
+            neotoken: {
+              sessionuuid: session.sessionuuid,
+              expiresat: session.expiresat,
+            },
           },
-          message: 'Neotoma token expires in 1wk',
+          message: 'Neotoma session is valid until ' +
+            new Date(session.expiresat).toISOString(),
         });
   } catch (err) {
     // An aborted fetch lands here rather than returning a response, so it needs
@@ -121,11 +129,23 @@ const checktoken = async function(req, res, next) {
             message: 'ORCID did not respond in time. Please try again.',
           });
     }
-    console.error(err);
+    // Log the detail, don't return it. This used to send `data: err` straight
+    // back to the caller, which meant a failed INSERT echoed the whole
+    // statement — ORCID iD, the person's name and their IP — to anyone who
+    // could reach the endpoint. CloudWatch already has everything needed.
+    console.error('validate failed: ' + JSON.stringify({
+      message: err.message,
+      code: err.code,
+      detail: err.detail,
+      hint: err.hint,
+      schema: err.schema,
+      table: err.table,
+      column: err.column,
+      routine: err.routine,
+    }));
     return res.status(500)
         .json({
           status: 'error',
-          data: err,
           message: 'Failed to generate token.',
         });
   }

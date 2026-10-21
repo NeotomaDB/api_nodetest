@@ -8,7 +8,7 @@ describe('tests for /v2.0/data/sites', function() {
     describe('tests for get', function() {
         it('should respond 200 for "An array of sites."', function() {
             var response = request('get', 'http://localhost:3001/v2.0/data/sites', { 
-                'qs': {"sitename":"dolore","database":"Alpine Pollen Database","datasettype":"vertebrate fauna","altmin": 10,"altmax": 100,"loc":"{\"type\":\"Polygon\",\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}},\"coordinates\":[[[13.4,55.92],[13.5,55.92],[13.5,55.95],[13.4,55.95],[13.4,55.92]]]}","siteid":34594,"datasetid":20523832,"doi":"10u7613/HNFJAT","gpid":5392,"keyword":"beyond radiocarbon","contactid":17893,"taxa":"laborum Excepteur ut enim","ageyoung": 1000,"ageold": 10000,"ageof":608776,"limit": 10,"offset": 0},
+                'qs': {"sitename":"eiusmod magna ea non","database":"Canadian Museum of Nature-Delorme Ostracoda-Surface Samples","datasettype":"physical sedimentology","altmin": 10,"altmax": 100,"loc":"{\"type\":\"Polygon\",\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}},\"coordinates\":[[[13.4,55.92],[13.5,55.92],[13.5,55.95],[13.4,55.95],[13.4,55.92]]]}","siteid":12024,"datasetid":10862338,"doi":"108997793/60W554Q","gpid":5392,"keyword":"pre-European","contactid":8422,"taxa":"cillum aliqua ex","ageyoung": 1000,"ageold": 10000,"ageof":15621576,"limit": 10,"offset": 0},
                 'time': true
             });
 

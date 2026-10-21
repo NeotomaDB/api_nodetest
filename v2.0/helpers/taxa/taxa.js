@@ -47,7 +47,8 @@ function taxonbydsid(req, res, next) {
         res.status(500)
             .json({
               status: 'failure',
-              data: err.message,
+              data: null,
+              message: err.message,
             });
       });
 }
@@ -118,23 +119,17 @@ function taxonquery(req, res, next) {
             }
           }
 
-          db.any(taxonsql, outobj)
+          // Returned so a failure here reaches the .catch below. A .catch
+          // placed before the success .then would send a 500 and then try to
+          // send a 200 on the same response, which throws ERR_HTTP_HEADERS_SENT
+          // as an unhandled rejection and kills the process.
+          return db.any(taxonsql, outobj)
               .then(function(data) {
                 if (outobj.lower) {
                   outobj.taxonid = data.map((x) => x.taxonid);
-                  data = db.any(taxonsqlr, outobj)
-                      .then(function(data) {
-                        return data;
-                      });
+                  return db.any(taxonsqlr, outobj);
                 }
                 return data;
-              })
-              .catch(function(err) {
-                res.status(500)
-                    .json({
-                      status: 'failure',
-                      data: err.message,
-                    });
               })
               .then(function(data) {
                 res.status(200)
@@ -146,6 +141,7 @@ function taxonquery(req, res, next) {
               });
         })
         .catch(function(err) {
+          if (res.headersSent) return;
           res.status(500)
               .json({
                 status: 'failure',
@@ -200,8 +196,8 @@ function externaltaxonquery (req, res, next) {
       res.status(500)
         .json({
           status: 'failure',
-          data: err.message,
-          message: 'Must pass either queries or a comma separated integer sequence.'
+          data: null,
+          message: err.message
         });
       next(err)
     });
