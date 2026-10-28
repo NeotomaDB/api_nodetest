@@ -12,6 +12,15 @@ const onlyStatus200 = (req, res) => res.statusCode === 200;
 const cacheSuccesses = cache('5 minutes', onlyStatus200);
 
 const handlers = require('../handlers/data_handlers');
+const {integerParam} = require('../../src/neotomaapi.js');
+
+// Path parameters that are always integer ids. A value such as `abc` used to
+// reach the database and come back as HTTP 500 with a Postgres message; it is
+// now answered with HTTP 400 before any query runs.
+['siteid', 'datasetid', 'taxonid', 'contactid', 'pubid', 'specimenid',
+  'chronologyid', 'collectionunitid', 'aggdatasetid'].forEach((name) => {
+  router.param(name, integerParam);
+});
 
 router.get('/chronologies/:chronologyid', handlers.chronologiesbyid);
 router.get('/contacts/:contactid', handlers.contactsbyid);

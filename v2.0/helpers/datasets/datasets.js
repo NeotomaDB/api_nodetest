@@ -5,6 +5,7 @@ const he = require('he');
 // get global database object
 
 const {sql, ifUndef, checkObject,
+  allIntegers, badRequest,
   validateOut, getparam,
   parseLocations, checkCookies} = require('../../../src/neotomaapi.js');
 
@@ -38,7 +39,7 @@ function datasetsbygeopol(req, res, next) {
     };
     gpData = validateOut(gpData);
   } else {
-    res.status(500)
+    return res.status(500)
         .json({
           status: 'failure',
           data: null,
@@ -89,7 +90,7 @@ function datasetbyid(req, res, next) {
         return parseInt(item, 10);
       });
   } else {
-    res.status(500)
+    return res.status(500)
       .json({
         status: 'failure',
         data: null,
@@ -119,7 +120,6 @@ function datasetbyid(req, res, next) {
           data: null,
           message: err.message
         });
-      next(err)
     });
 }
 
@@ -134,7 +134,7 @@ function datasetsbyaggid(req, res, next) {
   let dsIdUsed = !!req.params.aggdatasetid;
 
   if (!dsIdUsed) {
-    res.status(500)
+    return res.status(500)
         .json({
           status: 'failure',
           data: null,
@@ -171,7 +171,6 @@ function datasetsbyaggid(req, res, next) {
               data: null,
               message: err.message,
             });
-        next(err);
       });
 }
 
@@ -221,7 +220,6 @@ function datasetbydb(req, res, next) {
           data: null,
           message: err.message
         });
-      next(err)
     });
 }
 
@@ -240,7 +238,7 @@ function datasetbysiteid(req, res, next) {
       return parseInt(item, 10);
     });
   } else {
-    res.status(500)
+    return res.status(500)
       .json({
         status: 'failure',
         data: null,
@@ -270,7 +268,6 @@ function datasetbysiteid(req, res, next) {
           data: null,
           message: err.message
         });
-      next(err)
     });
 }
 
@@ -287,7 +284,7 @@ function datasetbypi(req, res, next) {
   const paramgrab = getparam(req);
 
   if (!paramgrab.success) {
-    res.status(500)
+    return res.status(500)
         .json({
           status: 'failure',
           data: null,
@@ -325,7 +322,6 @@ function datasetbypi(req, res, next) {
               data: null,
               message: err.message,
             });
-        next(err);
       });
 }
 
@@ -361,7 +357,7 @@ function datasetquery(req, res, next) {
       'contacts': ifUndef(resultset.contacts, 'sep'),
       'database': ifUndef(resultset.database, 'sep'),
       'datasetid': ifUndef(resultset.datasetid, 'sep'),
-      'datasettype': ifUndef(resultset.datasettype, 'string'),
+      'datasettype': ifUndef(resultset.datasettype, 'sep'),
       'doi': ifUndef(resultset.doi, 'sep'),
       'gpid': ifUndef(resultset.gpid, 'sep'),
       'keywords': ifUndef(resultset.keywords, 'sep'),
@@ -382,6 +378,19 @@ function datasetquery(req, res, next) {
       if (outobj.datasetid[0] === 'db') {
         outobj.datasetid = null;
       }
+    }
+
+    if (!allIntegers(outobj.siteid) || !allIntegers(outobj.datasetid)) {
+      return badRequest(res, 'siteid and datasetid must be integers or ' +
+        'comma separated lists of integers.');
+    }
+
+    // A dataset id lookup returns the datasets that were asked for. A page
+    // counts collection units, never more than the datasets requested, so the
+    // number of ids is a safe limit. Without it the default of 25 silently
+    // dropped everything after the 25th collection unit.
+    if (outobj.limit === null && outobj.datasetid !== null) {
+      outobj.limit = outobj.datasetid.length;
     }
 
     if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
@@ -419,7 +428,9 @@ function datasetquery(req, res, next) {
       const contacts = 'SELECT contactid AS output FROM ndb.contacts WHERE contactname ILIKE ANY(${contacts});';
       const keyword = 'SELECT keywordid AS output FROM ndb.keywords WHERE keyword ILIKE ANY(${keywords})';
 
-      Promise.all([checkObject(req, res, geopol, outobj.gpid, outobj),
+      // Returned so a failure anywhere in the chain reaches the single .catch.
+      // An unhandled rejection exits the process (see app.js).
+      return Promise.all([checkObject(req, res, geopol, outobj.gpid, outobj),
         checkObject(req, res, keyword, outobj.keywords, outobj),
         checkObject(req, res, taxa, outobj.taxa, outobj),
         checkObject(req, res, contacts, outobj.contacts, outobj)])
@@ -429,7 +440,7 @@ function datasetquery(req, res, next) {
           outobj.taxa = result[2]
           outobj.contacts = result[3]
 
-          db.any(datasetquerysql, outobj)
+          return db.any(datasetquerysql, outobj)
             .then(function (data) {
               res.status(200)
                 .json({
@@ -437,14 +448,15 @@ function datasetquery(req, res, next) {
                   data: data,
                   message: 'Retrieved all tables'
                 });
-            })
-            .catch(function (err) {
-              return res.status(500)
-                .json({
-                  status: 'failure',
-                  message: err.message,
-                  query: outobj
-                });
+            });
+        })
+        .catch(function (err) {
+          if (res.headersSent) return;
+          return res.status(500)
+            .json({
+              status: 'failure',
+              message: err.message,
+              query: outobj
             });
         });
     }
