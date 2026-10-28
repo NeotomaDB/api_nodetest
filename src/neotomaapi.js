@@ -75,7 +75,13 @@ function sql(file) {
    * @return {array} An array of integers or strings.
    */
 function commaSep(x) {
-  const sep = String(x).split(',').map((x) => x.trim());
+  let sep = String(x).split(',').map((x) => x.trim());
+  // A trailing or doubled comma ("1,2,3,") would otherwise become NaN and a
+  // database error. If nothing is left the original behaviour is kept.
+  const tokens = sep.filter((x) => x !== '');
+  if (tokens.length > 0) {
+    sep = tokens;
+  }
 
   if (sep.map((x) => /^\d+$/.test(x)).every((x) => x === false)) {
     return sep;
@@ -100,25 +106,71 @@ function commaSep(x) {
  */
 function checkObject (req, res, query, value, outobj) {
   const db = req.app.locals.db;
-  if (value) {
-    if (!value.every(Number.isInteger)) {
-      value = db.any(query, outobj)
-          .then(function(data) {
-            return data.map((x) => x.output);
-          })
-          .catch(function(err) {
-            return res.status(500)
-                .json({
-                  status: 'failure',
-                  message: err.message,
-                  query: outobj,
-                });
-          });
-    }
+  if (value && !value.every(Number.isInteger)) {
+    // A database failure rejects the promise. The caller owns the response
+    // and answers it once in its own .catch. Answering here as well, and
+    // returning `res` as if it were the looked-up ids, sent two responses and
+    // passed the response object into the next query.
+    return db.any(query, outobj)
+        .then(function(data) {
+          return data.map((x) => x.output);
+        });
   }
   return Promise.resolve(value);
 }
 
+
+/**
+ * True when a parsed id list (from `ifUndef(x, 'sep')`) is absent or holds only
+ * integers. Anything else ("abc", "null") would reach the database as text and
+ * fail there with an HTTP 500 that names an internal function.
+ * @param {any} ids An array from commaSep(), or null.
+ * @return {boolean}
+ */
+function allIntegers(ids) {
+  return ids === null || typeof ids === 'undefined' ||
+    (Array.isArray(ids) && ids.every(Number.isInteger));
+}
+
+/**
+ * Send an HTTP 400 in the standard failure shape.
+ * @param {res} res An Express response object.
+ * @param {string} message What the caller should change.
+ * @return {res} The response.
+ */
+function badRequest(res, message) {
+  return res.status(400)
+      .json({
+        status: 'failure',
+        data: null,
+        message: message,
+      });
+}
+
+/**
+ * Express `router.param` callback: path parameters that must be integer lists.
+ * Used for routes such as /sites/:siteid, where 'abc' used to reach the
+ * database and come back as HTTP 500.
+ * @param {req} req An Express request object.
+ * @param {res} res An Express response object.
+ * @param {next} next The Express next function.
+ * @param {string} value The value of the path parameter.
+ * @param {string} name The name of the path parameter.
+ * @return {any}
+ */
+function integerParam(req, res, next, value, name) {
+  const tokens = String(value).split(',').map((x) => x.trim())
+      .filter((x) => x !== '');
+  if (tokens.length > 0 && tokens.every((x) => /^\d+$/.test(x))) {
+    return next();
+  }
+  // /datasets/db is a documented route that shares the :datasetid name.
+  if (name === 'datasetid' && String(value) === 'db') {
+    return next();
+  }
+  return badRequest(res, name + ' must be an integer or a comma separated ' +
+    'list of integers.');
+}
 
 /**
  * Quickly return value or null.
@@ -343,5 +395,8 @@ module.exports.ifUndef = ifUndef;
 module.exports.commaSep = commaSep;
 module.exports.removeEmpty = removeEmpty;
 module.exports.checkObject = checkObject;
+module.exports.allIntegers = allIntegers;
+module.exports.badRequest = badRequest;
+module.exports.integerParam = integerParam;
 module.exports.getparam = getparam;
 module.exports.parseLocations = parseLocations;

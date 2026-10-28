@@ -351,7 +351,7 @@ components:
     datasettypeQuery:
       description: >-
         Neotoma contains data for a number of dataset types (see /dbtables/datasettypes.  This returns a subset of data
-        types.
+        types. Several types can be given as a comma separated list (pollen,diatom).
       in: query
       name: datasettype
       required: false
@@ -475,7 +475,12 @@ components:
           - beyond radiocarbon
           - null
     limitParam:
-      description: The maximum number of records to be returned, default is 25.
+      description: >-
+        The maximum number of records to be returned, default is 25. When records are requested by identifier (for
+        example siteid or datasetid, in the path, query or body) and no limit is given, the limit is the number of
+        identifiers sent, so every requested record is returned. Pages are made of whole sites (sites), whole collection
+        units (datasets) or datasets (downloads), so that limit and offset can be used to walk a result: a page shorter
+        than the limit is the last page.
       in: query
       name: limit
       required: false
