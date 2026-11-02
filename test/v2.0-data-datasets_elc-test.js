@@ -8,7 +8,7 @@ describe('tests for /v2.0/data/datasets_elc', function() {
     describe('tests for get', function() {
         it('should respond 200 for "A Neotoma datasets object suitable for the EarthLife Consortium API."', function() {
             var response = request('get', 'http://localhost:3001/v2.0/data/datasets_elc', { 
-                'qs': {"siteid":1671,"contactid":5440,"datasettype":"insect","altmin":626,"altmax":1826,"loc":"{\"type\":\"Polygon\",\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}},\"coordinates\":[[[13.4,55.92],[13.5,55.92],[13.5,55.95],[13.4,55.95],[13.4,55.92]]]}","ageyoung":15716213,"ageold":1959137,"ageof":9826770},
+                'qs': {"siteid":1671,"contactid":5440,"datasettype":"insect","altmin":626,"altmax":1826,"loc":"{\"type\":\"Polygon\",\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}},\"coordinates\":[[[13.4,55.92],[13.5,55.92],[13.5,55.95],[13.4,55.95],[13.4,55.92]]]}","ageyoung":1959137,"ageold":15716213,"ageof":9826770},
                 'time': true
             });
 
