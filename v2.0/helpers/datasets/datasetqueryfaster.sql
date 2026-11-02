@@ -80,54 +80,6 @@ page_datasets AS (
     FROM filtered_datasets fds
     JOIN ndb.datasets dts ON dts.datasetid = fds.datasetid
     WHERE dts.collectionunitid IN (SELECT collectionunitid FROM page_units)
-),
--- Now these CTEs work on the page only
-dataset_dois AS (
-    SELECT 
-        ddoi.datasetid,
-        json_agg(DISTINCT ddoi.doi) as dois
-    FROM ndb.datasetdoi ddoi
-    WHERE ddoi.datasetid IN (SELECT datasetid FROM page_datasets)
-    GROUP BY ddoi.datasetid
-),
-dataset_pis AS (
-    SELECT 
-        dspi.datasetid,
-        json_agg(DISTINCT jsonb_build_object(
-            'contactid', cnt.contactid,
-            'contactname', cnt.contactname,
-            'familyname', cnt.familyname,
-            'firstname', cnt.givennames,
-            'initials', cnt.leadinginitials
-        )) as pis
-    FROM ndb.datasetpis dspi
-    JOIN ndb.contacts cnt ON cnt.contactid = dspi.contactid
-    WHERE dspi.datasetid IN (SELECT datasetid FROM page_datasets)
-    GROUP BY dspi.datasetid
-),
-dataset_ages AS (
-    SELECT 
-        age_summary.datasetid,
-        json_agg(DISTINCT jsonb_build_object(
-            'ageyoung', age_summary.min_age,
-            'ageold', age_summary.max_age,
-            'units', at.agetype
-        )) as ageranges
-    FROM (
-        SELECT 
-            smp.datasetid,
-            chrons.agetypeid,
-            MIN(COALESCE(ages.ageyounger, ages.age)) as min_age,
-            MAX(COALESCE(ages.ageolder, ages.age)) as max_age
-        FROM ndb.samples smp
-        JOIN ndb.sampleages ages ON ages.sampleid = smp.sampleid
-        JOIN ndb.chronologies chrons ON chrons.chronologyid = ages.chronologyid
-        WHERE smp.datasetid IN (SELECT datasetid FROM page_datasets)
-          AND chrons.isdefault = true
-        GROUP BY smp.datasetid, chrons.agetypeid
-    ) age_summary
-    JOIN ndb.agetypes at ON at.agetypeid = age_summary.agetypeid
-    GROUP BY age_summary.datasetid
 )
 SELECT json_build_object(
     'siteid', sts.siteid,
@@ -161,9 +113,46 @@ LEFT JOIN ndb.datasettypes dst ON dst.datasettypeid = dts.datasettypeid
 LEFT JOIN ndb.datasetdatabases dsdb ON dsdb.datasetid = dts.datasetid
 LEFT JOIN ndb.constituentdatabases cstdb ON dsdb.databaseid = cstdb.databaseid
 LEFT JOIN ndb.collectiontypes cts ON clu.colltypeid = cts.colltypeid
-LEFT JOIN dataset_dois ddoi ON ddoi.datasetid = fds.datasetid
-LEFT JOIN dataset_pis dpis ON dpis.datasetid = fds.datasetid
-LEFT JOIN dataset_ages dage ON dage.datasetid = fds.datasetid
+-- DOIs, PIs and age ranges are looked up per dataset of the page (LATERAL, index lookups).
+-- They used to be CTEs joined on datasetid; the planner estimated the page at 1 dataset, chose a
+-- nested loop and re-ran each aggregate for every dataset (37 s for limit=2000 instead of 3 s).
+LEFT JOIN LATERAL (
+    SELECT json_agg(DISTINCT d.doi) AS dois
+    FROM ndb.datasetdoi d
+    WHERE d.datasetid = fds.datasetid
+) ddoi ON true
+LEFT JOIN LATERAL (
+    SELECT json_agg(DISTINCT jsonb_build_object(
+        'contactid', cnt.contactid,
+        'contactname', cnt.contactname,
+        'familyname', cnt.familyname,
+        'firstname', cnt.givennames,
+        'initials', cnt.leadinginitials
+    )) AS pis
+    FROM ndb.datasetpis dspi
+    JOIN ndb.contacts cnt ON cnt.contactid = dspi.contactid
+    WHERE dspi.datasetid = fds.datasetid
+) dpis ON true
+LEFT JOIN LATERAL (
+    SELECT json_agg(DISTINCT jsonb_build_object(
+        'ageyoung', age_summary.min_age,
+        'ageold', age_summary.max_age,
+        'units', at.agetype
+    )) AS ageranges
+    FROM (
+        SELECT
+            chrons.agetypeid,
+            MIN(COALESCE(ages.ageyounger, ages.age)) AS min_age,
+            MAX(COALESCE(ages.ageolder, ages.age)) AS max_age
+        FROM ndb.samples smp
+        JOIN ndb.sampleages ages ON ages.sampleid = smp.sampleid
+        JOIN ndb.chronologies chrons ON chrons.chronologyid = ages.chronologyid
+        WHERE smp.datasetid = fds.datasetid
+          AND chrons.isdefault = true
+        GROUP BY chrons.agetypeid
+    ) age_summary
+    JOIN ndb.agetypes at ON at.agetypeid = age_summary.agetypeid
+) dage ON true
 GROUP BY 
     sts.siteid, sts.sitename, sts.sitedescription, sts.notes, sts.geog, sts.altitude,
     clu.collectionunitid, clu.collunitname, clu.handle, cts.colltype
