@@ -174,7 +174,7 @@
     parameters:
       - $ref: '#/components/parameters/sitenameQuery'
       - $ref: '#/components/parameters/databaseQuery'
-      - $ref: '#/components/parameters/datasettypeQuery'
+      - $ref: '#/components/parameters/datasettypeListQuery'
       - $ref: '#/components/parameters/altMinQuery'
       - $ref: '#/components/parameters/altMaxQuery'
       - $ref: '#/components/parameters/locQuery'
@@ -729,7 +729,7 @@
     parameters:
       - $ref: '#/components/parameters/sitenameQuery'
       - $ref: '#/components/parameters/databaseQuery'
-      - $ref: '#/components/parameters/datasettypeQuery'
+      - $ref: '#/components/parameters/datasettypeListQuery'
       - $ref: '#/components/parameters/altMinQuery'
       - $ref: '#/components/parameters/altMaxQuery'
       - $ref: '#/components/parameters/locQuery'
