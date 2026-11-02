@@ -8,7 +8,7 @@ describe('tests for /v2.0/data/summary/dsdbmonth', function() {
     describe('tests for get', function() {
         it('should respond 200 for "A count of the datasets added by database for the requested period."', function() {
             var response = request('get', 'http://localhost:3001/v2.0/data/summary/dsdbmonth', { 
-                'qs': {"start": 1,"end": 10},
+                'qs': {"start":0,"end":1},
                 'time': true
             });
 

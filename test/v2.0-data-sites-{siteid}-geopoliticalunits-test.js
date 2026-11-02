@@ -7,8 +7,8 @@ var expect = chakram.expect;
 describe('tests for /v2.0/data/sites/{siteid}/geopoliticalunits', function() {
     describe('tests for get', function() {
         it('should respond 200 for "An array of geopolitical units."', function() {
-            var response = request('get', 'http://localhost:3001/v2.0/data/sites/500/geopoliticalunits', { 
-                'qs': {"limit": 10,"offset": 0},
+            var response = request('get', 'http://localhost:3001/v2.0/data/sites/36918/geopoliticalunits', { 
+                'qs': {"limit":8137,"offset":51051628},
                 'time': true
             });
 

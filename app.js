@@ -212,6 +212,17 @@ app.use(function(err, req, res, next) {
 });
 
 app.all('*', function(req, res) {
+  // A browser that mistypes a URL is sent to the documentation. A program that
+  // POSTs to a route that has no POST handler (for example data/taxa) used to
+  // get the same 302 to an HTML page, and failed while parsing it as JSON.
+  if (req.method !== 'GET' && req.path.startsWith('/v2.0')) {
+    return res.status(404).json({
+      status: 'failure',
+      data: null,
+      message: 'There is no ' + req.method + ' route ' + req.path +
+        ' in the Neotoma API. See /api-docs for the available routes.',
+    });
+  }
   res.redirect('/api-docs');
 });
 

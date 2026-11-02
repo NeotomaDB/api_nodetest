@@ -7,8 +7,8 @@ var expect = chakram.expect;
 describe('tests for /v2.0/data/occurrences/{occurrenceid}', function() {
     describe('tests for get', function() {
         it('should respond 200 for "occurrence"', function() {
-            var response = request('get', 'http://localhost:3001/v2.0/data/occurrences/500', { 
-                'qs': {"limit": 10,"offset": 0},
+            var response = request('get', 'http://localhost:3001/v2.0/data/occurrences/6002377', { 
+                'qs': {"limit":86,"offset":87344435},
                 'time': true
             });
 

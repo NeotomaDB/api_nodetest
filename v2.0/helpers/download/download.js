@@ -1,21 +1,26 @@
 // Building and returning the downloads objects.
 // Currently returns only for download selection using dataset IDs.
-const { sql, getparam, ifUndef } = require('../../../src/neotomaapi.js');
+const { sql, getparam, ifUndef, allIntegers, badRequest } = require('../../../src/neotomaapi.js');
+
+// Largest number of datasets sent in one request when the caller sets no limit.
+// A download response can reach tens of megabytes.
+const MAX_IDS_WITHOUT_LIMIT = 200;
 
 const downloadsql = sql('../v2.0/helpers/download/downloadbydsid.sql');
 const sequencesql = sql('../v2.0/helpers/download/sequencebydata.sql');
 
 function getdefault (chron) {
+  const chronorder = [{ 'order': 1, 'agetype': 'Calendar years BP' },
+    { 'order': 2, 'agetype': 'Calendar years AD/BC' },
+    { 'order': 3, 'agetype': 'Calibrated radiocarbon years BP' },
+    { 'order': 4, 'agetype': 'Varve years BP' },
+    { 'order': 5, 'agetype': 'Radiocarbon years BP' }]
+
+  // An age type that is not in the list (for example a U-series model) sorts
+  // last. It used to throw, which turned the whole download into a 500.
   function quickrank (chronrank) {
-    let chronorder = [{ 'order': 1, 'agetype': 'Calendar years BP' },
-      { 'order': 2, 'agetype': 'Calendar years AD/BC' },
-      { 'order': 3, 'agetype': 'Calibrated radiocarbon years BP' },
-      { 'order': 4, 'agetype': 'Varve years BP' },
-      { 'order': 5, 'agetype': 'Radiocarbon years BP' }]
-
     const rank = chronorder.map(x => x['agetype']).indexOf(chronrank['chronology']['chronology']['modelagetype'])
-
-    return chronorder[rank]['order']
+    return rank === -1 ? chronorder.length + 1 : chronorder[rank]['order']
   }
 
   var chrons = chron
@@ -26,7 +31,7 @@ function getdefault (chron) {
         return false
       }
     })
-    .sort((ela, elb) => quickrank(ela) > quickrank(elb))
+    .sort((ela, elb) => quickrank(ela) - quickrank(elb))
 
   if (chrons.length === 0) {
     return null;
@@ -54,13 +59,19 @@ function downloadbyid (req, res, next) {
     };
 
     if (outobj.datasetid === null) {
-      res.status(500)
-        .json({
-          status: 'failure',
-          data: null,
-          message: 'Must pass either queries or a comma separated integer sequence.'
-        });
+      badRequest(res, 'Must pass either queries or a comma separated integer sequence.');
+    } else if (!allIntegers(outobj.datasetid)) {
+      badRequest(res, 'datasetid must be an integer or a comma separated list of integers.');
+    } else if (outobj.limit === null && outobj.datasetid.length > MAX_IDS_WITHOUT_LIMIT) {
+      // Used to return the first 25 and say nothing.
+      badRequest(res, 'At most ' + MAX_IDS_WITHOUT_LIMIT + ' datasetid values are accepted ' +
+        'per request. Send fewer ids, or page through them with limit and offset.');
     } else {
+      // The ids that were asked for are returned; the default limit of 25
+      // used to drop the rest without any message.
+      if (outobj.limit === null) {
+        outobj.limit = outobj.datasetid.length;
+      }
       db.any(downloadsql, outobj)
         .then(function (data) {
           var returner = data.map(x => {
@@ -154,3 +165,4 @@ function downloadbyid (req, res, next) {
 }
 
 module.exports.downloadbyid = downloadbyid;
+module.exports.getdefault = getdefault;
