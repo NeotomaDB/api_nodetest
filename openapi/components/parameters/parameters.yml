@@ -286,7 +286,7 @@ doidataQuery:
     pattern: ^10.\d{4,9}/[-._;()/:A-Z0-9]+$
     example: 10.21233/znex-sp94
 datasettypeQuery:
-  description: Neotoma contains data for a number of dataset types (see /dbtables/datasettypes.  This returns a subset of data types.
+  description: Neotoma contains data for a number of dataset types (see /dbtables/datasettypes).  This returns a subset of data types. A single dataset type is accepted here; a list of types is only supported by the routes that use `datasettypeListQuery` (/data/datasets and /data/sites).
   in: query
   name: datasettype
   required: false
@@ -298,6 +298,24 @@ datasettypeQuery:
       - geochronologic
       - loss-on-ignition
       - pollen
+datasettypeListQuery:
+  description: Neotoma contains data for a number of dataset types (see /dbtables/datasettypes).  This returns a subset of data types. Several types can be given as a comma separated list (pollen,diatom).
+  in: query
+  name: datasettype
+  required: false
+  style: form
+  explode: false
+  schema:
+    type: array
+    items:
+      type: string
+      enum:
+        - geochronologic
+        - loss-on-ignition
+        - pollen
+    example:
+      - pollen
+      - diatom
       - plant macrofossil
       - vertebrate fauna
       - macroinvertebrate
@@ -408,7 +426,15 @@ keywordQuery:
       - beyond radiocarbon
       - null
 limitParam:
-  description: The maximum number of records to be returned, default is 25.
+  description: >-
+    The maximum number of records to be returned, default is 25. For sites requested by
+    siteid, datasets requested by datasetid, and downloads (/data/downloads), when no limit
+    is given the limit is the number of identifiers sent, so every requested record is
+    returned; downloads accept at most 200 datasetid values per request when no limit is
+    given (send fewer, or page with limit and offset). Other routes use the default of 25.
+    Pages are made of whole sites (sites), whole collection units (datasets) or datasets
+    (downloads), so that limit and offset can be used to walk a result: a page shorter than
+    the limit is the last page.
   in: query
   name: limit
   required: false

@@ -6,7 +6,7 @@ const he = require('he');
 // Helper for linking to external query files:
 const {
   sql, commaSep,
-  ifUndef, checkObject,
+  ifUndef, checkObject, allIntegers, badRequest,
   getparam, parseLocations} = require('../../../src/neotomaapi.js');
 
 // Create a QueryFile globally, once per file:
@@ -87,7 +87,7 @@ function sitesquery(req, res, next) {
       'contactid': ifUndef(resultset.contactid, 'sep'),
       'database': ifUndef(resultset.database, 'sep'),
       'datasetid': ifUndef(resultset.datasetid, 'sep'),
-      'datasettype': ifUndef(resultset.datasettype, 'string'),
+      'datasettype': ifUndef(resultset.datasettype, 'sep'),
       'doi': ifUndef(resultset.doi, 'sep'),
       'gpid': ifUndef(resultset.gpid, 'sep'),
       'keywords': ifUndef(resultset.keywords, 'sep'),
@@ -108,6 +108,17 @@ function sitesquery(req, res, next) {
     if (outobj.loc) {
       outobj.loc = he.decode(outobj.loc);
     }
+    if (!allIntegers(outobj.siteid) || !allIntegers(outobj.datasetid)) {
+      return badRequest(res, 'siteid and datasetid must be integers or ' +
+        'comma separated lists of integers.');
+    }
+
+    // An id lookup returns the ids that were asked for. Without this the
+    // default limit of 25 silently dropped everything after the 25th id.
+    if (outobj.limit === null && outobj.siteid !== null) {
+      outobj.limit = outobj.siteid.length;
+    }
+
     if (outobj.altmin > outobj.altmax & !!outobj.altmax & !!outobj.altmin) {
       return res.status(500)
           .json({
@@ -146,7 +157,10 @@ function sitesquery(req, res, next) {
                       'FROM ndb.keywords ' +
                       'WHERE keyword ILIKE ANY(${keywords})';
 
-      Promise.all([checkObject(req, res, geopol, outobj.gpid, outobj),
+      // Returned so that a failure anywhere in the chain reaches the single
+      // .catch below. Without it a rejection was unhandled, and app.js exits
+      // the process on an unhandled rejection.
+      return Promise.all([checkObject(req, res, geopol, outobj.gpid, outobj),
         checkObject(req, res, keyword, outobj.keywords, outobj),
         checkObject(req, res, taxa, outobj.taxa, outobj),
         checkObject(req, res, contacts, outobj.contacts, outobj)])
@@ -155,7 +169,7 @@ function sitesquery(req, res, next) {
             outobj.keywords = result[1];
             outobj.taxa = result[2];
             outobj.contacts = result[3];
-            db.any(siteQuery, outobj)
+            return db.any(siteQuery, outobj)
                 .then(function(data) {
                   res.status(200)
                       .json({
@@ -163,14 +177,15 @@ function sitesquery(req, res, next) {
                         data: data,
                         message: 'Retrieved all tables',
                       });
-                })
-                .catch(function(err) {
-                  return res.status(500)
-                      .json({
-                        status: 'failure',
-                        message: err.message,
-                        query: outobj,
-                      });
+                });
+          })
+          .catch(function(err) {
+            if (res.headersSent) return;
+            return res.status(500)
+                .json({
+                  status: 'failure',
+                  message: err.message,
+                  query: outobj,
                 });
           });
     }
@@ -187,30 +202,26 @@ function sitesbydataset(req, res, next) {
   const db = req.app.locals.db;
 
   const paramgrab = getparam(req);
-  let resultset = null;
-  let datasetid = null;
 
   if (!paramgrab.success) {
-    res.status(500)
+    return res.status(500)
         .json({
           status: 'failure',
           data: null,
           message: paramgrab.message,
         });
-  } else {
-    resultset = paramgrab.data;
   }
 
-  if (Object.keys(resultset).indexOf('datasetid') !== -1) {
-    datasetid = commaSep(resultset.datasetid);
-  } else {
-    res.status(500)
+  const resultset = paramgrab.data;
+  if (Object.keys(resultset).indexOf('datasetid') === -1) {
+    return res.status(500)
         .json({
           status: 'failure',
           data: null,
           message: 'Must pass either queries or an integer sequence.',
         });
   }
+  const datasetid = commaSep(resultset.datasetid);
 
   db.any(sitebydsid, [datasetid])
       .then(function(data) {
@@ -242,7 +253,7 @@ function sitesbygeopol(req, res, next) {
   const goodgp = !!req.params.gpid;
 
   if (!goodgp) {
-    res.status(500)
+    return res.status(500)
         .json({
           status: 'failure',
           data: null,
@@ -261,7 +272,7 @@ function sitesbygeopol(req, res, next) {
   if (req.query.offset) {
     gpid.offset = req.query.offset;
   } else {
-    gpid.offset = 25;
+    gpid.offset = 0;
   }
 
   db.any(sitebygpid, gpid)
@@ -295,7 +306,7 @@ function sitesbycontact(req, res, next) {
   const goodctc = !!req.params.contactid;
 
   if (!goodctc) {
-    res.status(500)
+    return res.status(500)
         .json({
           status: 'failure',
           data: null,

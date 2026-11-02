@@ -8,7 +8,7 @@ describe('tests for /v2.0/data/dbtables', function() {
     describe('tests for get', function() {
         it('should respond 200 for "Returned table."', function() {
             var response = request('get', 'http://localhost:3001/v2.0/data/dbtables', { 
-                'qs': {"table":"minim adipisicing","count":true,"limit": 10,"offset": 0},
+                'qs': {"table":"Excepteur Duis","count":false,"limit":2440,"offset":73056327},
                 'time': true
             });
 

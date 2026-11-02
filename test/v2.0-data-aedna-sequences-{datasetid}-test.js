@@ -7,7 +7,7 @@ var expect = chakram.expect;
 describe('tests for /v2.0/data/aedna/sequences/{datasetid}', function() {
     describe('tests for get', function() {
         it('should respond 200 for "aeDNA sequences grouped by taxon for the dataset."', function() {
-            var response = request('get', 'http://localhost:3001/v2.0/data/aedna/sequences/500', { 
+            var response = request('get', 'http://localhost:3001/v2.0/data/aedna/sequences/46346184', { 
                 'time': true
             });
 
