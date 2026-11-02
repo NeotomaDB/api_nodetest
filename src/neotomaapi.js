@@ -83,10 +83,13 @@ function commaSep(x) {
     sep = tokens;
   }
 
-  if (sep.map((x) => /^\d+$/.test(x)).every((x) => x === false)) {
-    return sep;
-  } else {
+  // Only a list made entirely of digits becomes integers. A mixed list such as
+  // "24,2abc" or "24,2.5" stays text, so parseInt cannot silently turn it into
+  // [24, 2]; allIntegers() then rejects it.
+  if (sep.every((x) => /^\d+$/.test(x))) {
     return sep.map((x) => parseInt(x, 10));
+  } else {
+    return sep;
   }
 }
 
@@ -162,6 +165,9 @@ function integerParam(req, res, next, value, name) {
   const tokens = String(value).split(',').map((x) => x.trim())
       .filter((x) => x !== '');
   if (tokens.length > 0 && tokens.every((x) => /^\d+$/.test(x))) {
+    // Hand the routes the cleaned list, so "24,25," does not reach commaSep or
+    // the database with an empty last element.
+    req.params[name] = tokens.join(',');
     return next();
   }
   // /datasets/db is a documented route that shares the :datasetid name.
