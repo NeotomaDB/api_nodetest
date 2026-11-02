@@ -285,8 +285,8 @@ doidataQuery:
     type: string
     pattern: ^10.\d{4,9}/[-._;()/:A-Z0-9]+$
     example: 10.21233/znex-sp94
-datasettypeQuery:
-  description: Neotoma contains data for a number of dataset types (see /dbtables/datasettypes).  This returns a subset of data types. A single dataset type is accepted here; a list of types is only supported by the routes that use `datasettypeListQuery` (/data/datasets and /data/sites).
+datasettypeSingleQuery:
+  description: Neotoma contains data for a number of dataset types (see /dbtables/datasettypes).  This returns a subset of data types. A single dataset type is accepted here; a list of types is only supported by the routes that use `datasettypeQuery` (/data/datasets and /data/sites).
   in: query
   name: datasettype
   required: false
@@ -298,7 +298,10 @@ datasettypeQuery:
       - geochronologic
       - loss-on-ignition
       - pollen
-datasettypeListQuery:
+# The key must stay `datasettypeQuery`: the neotoma2 R package derives its accepted
+# argument names from the component key minus the `Query` suffix, so any other key
+# (e.g. `datasettypeListQuery`) turns the R argument into `datasettypelist`.
+datasettypeQuery:
   description: Neotoma contains data for a number of dataset types (see /dbtables/datasettypes).  This returns a subset of data types. Several types can be given as a comma separated list (pollen,diatom).
   in: query
   name: datasettype
