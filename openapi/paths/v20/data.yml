@@ -188,6 +188,8 @@
       - $ref: '#/components/parameters/ageYoungQuery'
       - $ref: '#/components/parameters/ageOldQuery'
       - $ref: '#/components/parameters/ageOfQuery'
+      - $ref: '#/components/parameters/minAgeQuery'
+      - $ref: '#/components/parameters/maxAgeQuery'
       - $ref: '#/components/parameters/limitParam'
       - $ref: '#/components/parameters/offsetParam'
     responses:
@@ -743,6 +745,8 @@
       - $ref: '#/components/parameters/ageYoungQuery'
       - $ref: '#/components/parameters/ageOldQuery'
       - $ref: '#/components/parameters/ageOfQuery'
+      - $ref: '#/components/parameters/minAgeQuery'
+      - $ref: '#/components/parameters/maxAgeQuery'
       - $ref: '#/components/parameters/limitParam'
       - $ref: '#/components/parameters/offsetParam'
     responses:
