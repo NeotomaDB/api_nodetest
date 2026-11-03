@@ -140,6 +140,33 @@ components:
         maximum: 23900000
         minimum: -100
         type: integer
+    minAgeQuery:
+      description: >-
+        Minimum age of the search window (in calibrated years before present, with 0 at 1950CE). Returns records with
+        any age at or after this age; the record does not need to span the whole window. Usually combined with `maxage`.
+      in: query
+      name: minage
+      required: false
+      schema:
+        example: 5000
+        format: int64
+        maximum: 23900000
+        minimum: -100
+        type: integer
+    maxAgeQuery:
+      description: >-
+        Maximum age of the search window (in calibrated years before present, with 0 at 1950CE). Returns records with
+        any age at or before this age; the record does not need to span the whole window. Usually combined with
+        `minage`.
+      in: query
+      name: maxage
+      required: false
+      schema:
+        example: 8000
+        format: int64
+        maximum: 23900000
+        minimum: -100
+        type: integer
     altMaxQuery:
       description: Maximum altitude of the dataset site location (in meters)
       in: query
@@ -3230,6 +3257,8 @@ paths:
         - $ref: '#/components/parameters/ageYoungQuery'
         - $ref: '#/components/parameters/ageOldQuery'
         - $ref: '#/components/parameters/ageOfQuery'
+        - $ref: '#/components/parameters/minAgeQuery'
+        - $ref: '#/components/parameters/maxAgeQuery'
         - $ref: '#/components/parameters/limitParam'
         - $ref: '#/components/parameters/offsetParam'
       responses:
@@ -3780,6 +3809,8 @@ paths:
         - $ref: '#/components/parameters/ageYoungQuery'
         - $ref: '#/components/parameters/ageOldQuery'
         - $ref: '#/components/parameters/ageOfQuery'
+        - $ref: '#/components/parameters/minAgeQuery'
+        - $ref: '#/components/parameters/maxAgeQuery'
         - $ref: '#/components/parameters/limitParam'
         - $ref: '#/components/parameters/offsetParam'
       responses:
